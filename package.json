@@ -1,0 +1,44 @@
+{
+  "name": "lunar",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "npx astro dev",
+    "start": "tsx index.ts",
+    "build": "npx astro check && npx astro build",
+    "astro": "npx astro",
+    "format": "prettier . --write",
+    "revert": "git reset HEAD --hard && git clean -fd",
+    "precommit": "npx astro check && npm run format"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/node": "^9.0.1",
+    "@astrojs/tailwind": "^5.1.4",
+    "@fastify/basic-auth": "^6.0.3",
+    "@fastify/compress": "^8.0.1",
+    "@fastify/middie": "^9.0.3",
+    "@fastify/static": "^8.0.4",
+    "@mercuryworkshop/bare-mux": "^2.1.7",
+    "@mercuryworkshop/epoxy-transport": "^2.1.27",
+    "@mercuryworkshop/wisp-js": "^0.3.3",
+    "@playform/compress": "^0.1.7",
+    "@types/node": "^22.10.7",
+    "astro": "5.1.7",
+    "chalk": "^5.4.1",
+    "fastify": "^5.2.1",
+    "lucide-astro": "^0.471.0",
+    "tailwindcss": "^3.4.17",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3",
+    "vite": "6.0.7",
+    "vite-plugin-static-copy": "^2.2.0"
+  },
+  "engines": {
+    "node": ">=18.x"
+  },
+  "devDependencies": {
+    "prettier": "^3.4.2",
+    "prettier-plugin-astro": "^0.14.1"
+  }
+}
