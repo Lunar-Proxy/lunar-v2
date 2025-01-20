@@ -9,7 +9,6 @@ import '@/main.css';
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>Home - Google Drive</title>
-    <script src="@/utils/index.ts"></script>
     <link rel="shortcut icon" href="favicon.ico" />
   </head>
   <body class="flex items-center justify-center min-h-screen">
@@ -21,17 +20,21 @@ import '@/main.css';
       </h1>
       <p class="font-semibold text-lg text-text-SECONDARY">Cats go meow, crazy right.</p>
       <div class="relative w-full">
-        <form method="post" id="startForm" class="flex justify-center">
+        <form method="post" id="fm" class="flex justify-center">
           <input
             class="w-full pl-12 pr-6 py-4 text-xl text-text-SECONDARY bg-background-overlay border border-gray-700 rounded-lg shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-500 focus:border-transparent transition duration-300"
             type="text"
+            id="inp"
             placeholder="Search something..."
           />
+          <button type="button" id="sbtn">
           <Search
             class="hover:text-text-HEADER absolute left-4 top-1/2 transform -translate-y-1/2 transition duration-300 text-gray-400"
           />
+        </button>
         </form>
       </div>
     </div>
   </body>
+  <script src="@/utils/index.ts"></script>
 </html>
