@@ -32,7 +32,10 @@ export default defineConfig({
   vite: {
     define: {
       VERSION: JSON.stringify(version),
-      LAST_UPDATED: JSON.stringify(execSync('git log -1 --format=%cd').toString().trim() || "Failed to fetch."),
+      LAST_UPDATED: JSON.stringify(
+        execSync('git log -1 --format=%cd').toString().trim() ||
+          'Failed to fetch.'
+      ),
     },
     plugins: [
       {
