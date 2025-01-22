@@ -4,13 +4,15 @@
 
 @layer base {
   :root {
-    --background: #111827;
-    --background-overlay: #1f2937;
-    --text-header: #f9fafb;
-    --text-secondary: #9ca3af;
+    --background: url('/assets/images/bg/default.png');
+    --background-overlay: #2a273f;
+    --text-header: #F9FAFB;
+    --text-secondary: #0A1520;
   }
 
-  body {
-    @apply bg-background;
+   body {
+    background-image: var(--background);
+    background-size: cover;
+    background-position: center;
   }
 }

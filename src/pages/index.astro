@@ -12,28 +12,33 @@ import '@/main.css';
     <link rel="shortcut icon" href="favicon.ico" />
   </head>
   <body class="flex items-center justify-center min-h-screen">
-    <div
-      class="flex flex-col items-center text-center px-4 space-y-12 max-w-lg w-full"
-    >
-      <h1 class="text-5xl font-extrabold tracking-tight text-text-HEADER">
-        Welcome to <span class="text-blue-500">Lunar</span>
+    <div class="">
+      <h1 class="text-5xl uppercase font-extrabold tracking-tight absolute top-3 left-5 text-text-HEADER drop-shadow-md">
+        Lunar
       </h1>
-      <p class="font-semibold text-lg text-text-SECONDARY">Cats go meow, crazy right.</p>
+      </div>
+    <div class="flex flex-col items-center text-center px-6 py-12 space-y-8 max-w-lg w-full">
       <div class="relative w-full">
-        <form method="post" id="fm" class="flex justify-center">
+        <form method="post" id="fm" class="flex items-center">
           <input
-            class="w-full pl-12 pr-6 py-4 text-xl text-text-SECONDARY bg-background-overlay border border-gray-700 rounded-lg shadow-lg focus:outline-none focus:ring-4 focus:ring-blue-500 focus:border-transparent transition duration-300"
+            class="w-full pl-12 pr-4 py-4 text-lg text-text-SECONDARY bg-gray-800 border border-gray-700 rounded-lg shadow-lg focus:outline-none transition duration-300 focus:border-transparent"
             type="text"
             id="inp"
             placeholder="Search something..."
           />
-          <button type="button" id="sbtn">
-          <Search
-            class="hover:text-text-HEADER absolute left-4 top-1/2 transform -translate-y-1/2 transition duration-300 text-gray-400"
-          />
-        </button>
+          <button 
+            type="submit" 
+            id="sbtn"
+            class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-text-HEADER transition duration-300"
+            aria-label="Search"
+          >
+            <Search />
+          </button>
         </form>
       </div>
+      <p class="text-lg font-medium text-white">
+        Cats go meow, crazy right.
+      </p>
     </div>
   </body>
   <script src="@/utils/index.ts"></script>
