@@ -12,16 +12,14 @@ import '@/main.css';
     <link rel="shortcut icon" href="favicon.ico" />
   </head>
   <body class="flex items-center justify-center min-h-screen">
-    <div class="">
       <h1 class="text-5xl uppercase font-extrabold tracking-tight absolute top-3 left-5 text-text-HEADER drop-shadow-md">
         Lunar
       </h1>
-      </div>
     <div class="flex flex-col items-center text-center px-6 py-12 space-y-8 max-w-lg w-full">
       <div class="relative w-full">
         <form method="post" id="fm" class="flex items-center">
           <input
-            class="w-full pl-12 pr-4 py-4 text-lg text-text-SECONDARY bg-gray-800 border border-gray-700 rounded-lg shadow-lg focus:outline-none transition duration-300 focus:border-transparent"
+            class="w-full pl-12 pr-4 py-4 text-lg text-text-SECONDARY bg-background-overlay border border-gray-700 rounded-lg shadow-lg focus:outline-none transition duration-300 focus:border-transparent"
             type="text"
             id="inp"
             placeholder="Search something..."
@@ -36,7 +34,7 @@ import '@/main.css';
           </button>
         </form>
       </div>
-      <p class="text-lg font-medium text-white">
+      <p class="text-lg font-medium text-text-SECONDARY">
         Cats go meow, crazy right.
       </p>
     </div>

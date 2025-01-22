@@ -5,9 +5,9 @@
 @layer base {
   :root {
     --background: url('/assets/images/bg/default.png');
-    --background-overlay: #2a273f;
-    --text-header: #F9FAFB;
-    --text-secondary: #0A1520;
+    --background-overlay: #1F2937;
+    --text-header: #0F2F42;
+    --text-secondary: #b3b8bd;
   }
 
    body {
