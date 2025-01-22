@@ -2,7 +2,6 @@ import Fastify from 'fastify';
 import fastifyMiddie from '@fastify/middie';
 import fastifyStatic from '@fastify/static';
 import fastifyCompress from '@fastify/compress';
-import basicAuth from '@fastify/basic-auth';
 import fs from 'node:fs';
 import { execSync } from 'child_process';
 import chalk from 'chalk';
