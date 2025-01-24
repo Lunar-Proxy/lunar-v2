@@ -4,12 +4,12 @@ import tailwind from '@astrojs/tailwind';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { server as wisp } from '@mercuryworkshop/wisp-js/server';
 import { baremuxPath } from '@mercuryworkshop/bare-mux/node';
-import { scramjetPath } from "@mercuryworkshop/scramjet";
+import { scramjetPath } from '@mercuryworkshop/scramjet';
 import { epoxyPath } from '@mercuryworkshop/epoxy-transport';
 import { version } from './package.json';
 import { execSync } from 'child_process';
 import playformCompress from '@playform/compress';
-import { uvPath } from "uv"
+import { uvPath } from 'uv';
 export default defineConfig({
   output: 'static',
   adapter: node({ mode: 'middleware' }),
@@ -49,29 +49,27 @@ export default defineConfig({
       viteStaticCopy({
         targets: [
           {
-            src: `${epoxyPath}/**/*`.replace(/\\/g, '/'),
-            dest: 'assets/packages/ep',
+            src: `${epoxyPath}/**/*.mjs`.replace(/\\/g, '/'),
+            dest: 'assets/packaged/ep',
             overwrite: false,
           },
           {
-            src: `${baremuxPath}/**/*`.replace(/\\/g, '/'),
-            dest: 'assets/packages/bm',
+            src: `${baremuxPath}/**/*.js`.replace(/\\/g, '/'),
+            dest: 'assets/packaged/bm',
             overwrite: false,
           },
           {
             src: `${scramjetPath}/**/*.js`.replace(/\\/g, '/'),
-            dest: 'assets/packages/scram',
+            dest: 'assets/packaged/scram',
             overwrite: false,
-            rename: (name) => 
-              `${name.replace("scramjet.", '')}.js`,
+            rename: (name) => `${name.replace('scramjet.', '')}.js`,
           },
           {
             src: `${uvPath}/**/*.js`.replace(/\\/g, '/'),
-            dest: 'assets/packages/u',
+            dest: 'assets/packaged/u',
             overwrite: false,
-            rename: (name) => 
-              `${name.replace("uv.", '')}.js`,
-          } 
+            rename: (name) => `${name.replace('uv.', '')}.js`,
+          },
         ],
       }),
     ],

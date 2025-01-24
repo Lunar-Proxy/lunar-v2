@@ -1,16 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: url('/assets/images/bg/default.png');
-    --background-overlay: #1F2937;
-    --text-header: #0F2F42;
-    --text-secondary: #b3b8bd;
+    --background: url('/assets/images/bg/default.webp');
+    --background-overlay: #1f2937;
+    --text-header: #133953;
+    --text-secondary: #7a8086;
   }
 
-   body {
+  body {
     background-image: var(--background);
     background-size: cover;
     background-position: center;

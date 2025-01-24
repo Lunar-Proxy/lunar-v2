@@ -3,6 +3,10 @@ module.exports = {
   content: ['./src/**/*.{astro,html,js,md,ts,vue}'],
   theme: {
     extend: {
+      fontFamily: {
+        Header: ['Kanit'],
+        Secondary: ['Jost'],
+      },
       colors: {
         background: {
           DEFAULT: 'var(--background)',

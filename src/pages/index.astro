@@ -2,6 +2,7 @@
 import { Search } from 'lucide-astro';
 import '@/main.css';
 ---
+
 <!doctype html>
 <html lang="en" class="h-screen">
   <head>
@@ -10,34 +11,39 @@ import '@/main.css';
     <meta name="generator" content={Astro.generator} />
     <title>Home - Google Drive</title>
     <link rel="shortcut icon" href="favicon.ico" />
+    <script src="@/utils/index.ts"></script>
+    <script is:inline src="/assets/packaged/u/config.js"></script>
   </head>
   <body class="flex items-center justify-center min-h-screen">
-      <h1 class="text-5xl uppercase font-extrabold tracking-tight absolute top-3 left-5 text-text-HEADER drop-shadow-md">
-        Lunar
-      </h1>
-    <div class="flex flex-col items-center text-center px-6 py-12 space-y-8 max-w-lg w-full">
+    <h1
+      class="font-Header text-5xl uppercase font-extrabold tracking-tight absolute top-3 left-5 text-text-HEADER drop-shadow-md"
+    >
+      Lunar
+    </h1>
+    <div
+      class="flex flex-col items-center text-center px-6 py-12 space-y-8 max-w-lg w-full"
+    >
       <div class="relative w-full">
         <form method="post" id="fm" class="flex items-center">
           <input
-            class="w-full pl-12 pr-4 py-4 text-lg text-text-SECONDARY bg-background-overlay border border-gray-700 rounded-lg shadow-lg focus:outline-none transition duration-300 focus:border-transparent"
+            class="w-full font-Secondary pl-12 pr-4 py-4 text-lg text-text-SECONDARY bg-background-overlay border border-gray-700 rounded-lg shadow-lg focus:outline-none transition duration-300 focus:border-transparent"
             type="text"
             id="inp"
             placeholder="Search something..."
           />
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             id="sbtn"
-            class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-text-HEADER transition duration-300"
+            class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition duration-300"
             aria-label="Search"
           >
             <Search />
           </button>
         </form>
       </div>
-      <p class="text-lg font-medium text-text-SECONDARY">
-        Cats go meow, crazy right.
+      <p class="font-Secondary text-lg text-text-SECONDARY">
+        Cats go meow, crazy.
       </p>
     </div>
   </body>
-  <script src="@/utils/index.ts"></script>
 </html>
