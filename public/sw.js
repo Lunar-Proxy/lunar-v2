@@ -5,9 +5,9 @@ if (navigator.userAgent.includes('Firefox')) {
   });
 }
 importScripts(
-  '/assets/packaged/v/bundle.js',
-  '/assets/packaged/v/config.js',
-  '/assets/packaged/v/sw.js',
+  '/assets/packaged/u/bundle.js',
+  '/assets/packaged/u/config.js',
+  '/assets/packaged/u/sw.js',
   '/assets/packaged/scram/wasm.js',
   '/assets/packaged/scram/shared.js',
   '/assets/packaged/scram/worker.js'
@@ -28,7 +28,6 @@ async function handleRequest(event) {
   if (uv.route(event)) {
     return await uv.fetch(event);
   }
-
   await scramjet.loadConfig();
   if (scramjet.route(event)) {
     return scramjet.fetch(event);

@@ -10,7 +10,7 @@ if (form && input) {
     const value = input.value.trim();
     let url = Search(value);
     localStorage.setItem('@lunar/search', `/p/${UltraConfig.encodeUrl(url)}`);
-    console.log('url is:', url);
+    console.log('the url is:', url);
    window.location.href = `/browse`;
   });
 } else {
