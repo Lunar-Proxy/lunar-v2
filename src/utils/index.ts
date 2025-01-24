@@ -10,7 +10,8 @@ if (form && input) {
     const value = input.value.trim();
     let url = Search(value);
     localStorage.setItem('@lunar/search', `/p/${UltraConfig.encodeUrl(url)}`);
-    window.location.href = `/browse`;
+    console.log('url is:', url);
+   window.location.href = `/browse`;
   });
 } else {
   throw new Error('Form or input is not found.');
