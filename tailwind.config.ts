@@ -9,22 +9,14 @@ module.exports = {
       },
       colors: {
         background: {
-          DEFAULT: 'var(--background)',
-          overlay: 'var(--background-overlay)',
+          background: 'var(--background)',
+          primary: 'var(--bg-primary)',
+          secondary: 'var(--bg-secondary)',
         },
         text: {
-          HEADER: 'var(--text-header)',
-          SECONDARY: 'var(--text-secondary)',
+          primary: 'var(--text-primary)',
+          secondary: 'var(--text-secondary)',
         },
-      },
-      keyframes: {
-        spin: {
-          '0%': { transform: 'rotate(0deg)' },
-          '100%': { transform: 'rotate(360deg)' },
-        },
-      },
-      animation: {
-        spin: 'spin 1s linear 1',
       },
     },
   },

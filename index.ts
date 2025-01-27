@@ -15,9 +15,9 @@ const HOST = '0.0.0.0';
 
 async function build() {
   if (!fs.existsSync(path.resolve('dist'))) {
-    console.log(chalk.yellow.bold('Lunar is not built yet. Building...'));
+    console.log(chalk.yellow.bold('Lunar is not built yet, Building...'));
     try {
-      execSync('pnpm build', { stdio: 'inherit' });
+      execSync('npm build', { stdio: 'inherit' });
       console.log(chalk.green.bold('✅ Lunar has been built successfully!'));
     } catch (error) {
       const errorMessage =
@@ -40,7 +40,7 @@ async function build() {
   try {
     await app.register(fastifyCompress, { encodings: ['deflate', 'gzip', 'br'] });
     await build();
-     // @ts-ignore - May be a error due to not existing
+     // @ts-ignore - May be a error due to file not existing
     const { handler } = await import('./dist/server/entry.mjs');
     app.register(fastifyStatic, {
       root: path.resolve('dist', 'client'),
