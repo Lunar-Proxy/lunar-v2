@@ -7,8 +7,9 @@
 @layer base {
   :root {
     --background: url('/assets/images/bg/default.webp');
-    --background-overlay: #1f2937;
-    --text-header: #133953;
+    --bg-primary: #f0f4ff;
+    --bg-secondary: #d1d5db;
+    --text-primary: #133953;
     --text-secondary: #7a8086;
   }
 
