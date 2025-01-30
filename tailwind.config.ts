@@ -9,8 +9,7 @@ module.exports = {
       },
       colors: {
         background: {
-          background: 'var(--background)',
-          primary: 'var(--bg-primary)',
+          default: 'var(--bg-default)',
           secondary: 'var(--bg-secondary)',
         },
         text: {

@@ -1,7 +1,8 @@
 ---
-import { Search, X } from 'lucide-astro';
 import '@/main.css';
+import { AppWindowMac, ChevronLeft, ChevronRight } from 'lucide-astro';
 ---
+
 <!doctype html>
 <html lang="en" class="h-screen">
   <head>
@@ -10,49 +11,71 @@ import '@/main.css';
     <meta name="generator" content={Astro.generator} />
     <title>Home - Google Drive</title>
     <link rel="shortcut icon" href="favicon.ico" />
-    <script src="@/utils/index.ts"></script>
-    <script is:inline src="/assets/packaged/u/config.js"></script>
   </head>
-  <body class="flex items-center justify-center min-h-screen bg-background-background">
-    <div class="rounded-md bg-background-primary shadow-lg">
-    <h1
-      class="font-Header text-5xl uppercase font-extrabold tracking-tight absolute top-3 left-5 text-text-primary drop-shadow-md"
-    >
-      Lunar
-    </h1>
-    <div
-      class="flex flex-col items-center text-center px-6 py-12 space-y-8 max-w-lg w-full"
-    >
-      <div class="relative w-full">
-        <form method="post" id="fm" class="flex items-center">
+  <body>
+    <nav class="bg-gray-800 h-18 p-4">
+      <div class="mx-auto flex items-center justify-between space-x-4">
+        <ul class="flex space-x-4">
+          <li class="mr-4 group relative">
+            <a href="#tabs">
+              <AppWindowMac
+                class="w-6 h-6 text-gray-300 hover:text-white transition-all duration-200 transform hover:scale-110 hover:translate-y-[-5px]"
+              />
+            </a>
+            <div
+              class="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 w-max px-2 py-1 bg-gray-800 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+            >
+              Tabs
+            </div>
+          </li>
+          <li class="group relative">
+            <a href="#back">
+              <ChevronLeft
+                class="w-6 h-6 text-gray-300 hover:text-white transition-all duration-200 transform hover:scale-110 hover:translate-y-[-5px]"
+              />
+            </a>
+            <div
+              class="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 w-max px-2 py-1 bg-gray-800 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+            >
+              Back
+            </div>
+          </li>
+          <li class="group relative">
+            <a href="#forward">
+              <ChevronRight
+                class="w-6 h-6 text-gray-300 hover:text-white transition-all duration-200 transform hover:scale-110 hover:translate-y-[-5px]"
+              />
+            </a>
+            <div
+              class="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 w-max px-2 py-1 bg-gray-800 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+            >
+              Forward
+            </div>
+          </li>
+        </ul>
+        <div class="flex-1 max-w-lg flex justify-center">
           <input
-            class="w-full font-Secondary pl-12 pr-4 py-4 text-lg text-text-secondary bg-background-secondary border border-gray-700 rounded-lg shadow-lg focus:outline-none transition duration-300 focus:border-transparent"
             type="text"
-            id="inp"
-            placeholder="Search something..."
+            placeholder="Search..."
+            class="h-8 rounded-md w-full px-4 py-2 bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <button
-      type="submit"
-      id="sbtn"
-      class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition duration-300"
-      aria-label="Search"
-    >
-      <Search />
-    </button>
-    <button
-      type="button"
-      id="cbtn"
-      class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-400 transition duration-300"
-      aria-label="Clear"
-    >
-      <X />
-    </button>
-        </form>
+        </div>
+        <ul class="flex space-x-4">
+          <li class="group relative">
+            <a
+              href="#"
+              class="text-gray-300 hover:text-white transition-all duration-200 transform hover:scale-125 hover:translate-y-[-5px]"
+            >
+              Contact
+            </a>
+            <div
+              class="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 w-max px-2 py-1 bg-gray-800 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+            >
+              Contact
+            </div>
+          </li>
+        </ul>
       </div>
-      <p class="max-w-md truncate font-Secondary text-lg text-text-secondary">
-        Cats go meow, dogs go woof, and I go to the moonnn.
-      </p>
-    </div>
-  </div>
+    </nav>
   </body>
 </html>

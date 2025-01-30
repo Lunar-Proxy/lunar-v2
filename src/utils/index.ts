@@ -11,7 +11,7 @@ if (form && input) {
     let url = Search(query);
     localStorage.setItem('@lunar/search', `/p/${UltraConfig.encodeUrl(url)}`);
     console.log('the url is:', url);
-   window.location.href = `/browse`;
+    window.location.href = `/browse`;
   });
 } else {
   throw new Error('Form or input is not found.');
@@ -24,6 +24,6 @@ search?.addEventListener('click', (event) => {
 
 clear?.addEventListener('click', (event) => {
   event.preventDefault();
-input.value = '';
-input.focus();
+  input.value = '';
+  input.focus();
 });

@@ -6,16 +6,13 @@
 
 @layer base {
   :root {
-    --background: url('/assets/images/bg/default.webp');
-    --bg-primary: #f0f4ff;
-    --bg-secondary: #d1d5db;
-    --text-primary: #133953;
-    --text-secondary: #7a8086;
+    --bg-default: #1e1e2e;
+    --bg-secondary: #fff;
+    --text-primary: #fff;
+    --text-secondary: #fff;
   }
 
   body {
-    background-image: var(--background);
-    background-size: cover;
-    background-position: center;
+    @apply bg-background-default;
   }
 }
