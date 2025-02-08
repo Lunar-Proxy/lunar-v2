@@ -16,8 +16,7 @@ import { ShieldEllipsis, Palette, Info, Globe } from 'lucide-astro';
   </head>
   <body class="flex h-screen overflow-hidden">
     <div
-      class="flex flex-col border-r-[3px] border-black border-solid w-44 h-full bg-background-overlay text-text-SECONDARY p-5"
-    >
+      class="flex flex-col border-r-[3px] border-black border-solid w-44 h-full bg-background-overlay text-text-SECONDARY p-5">
       <h2 class="text-2xl text-text-HEADER text-center font-semibold mb-6">
         Settings
       </h2>
@@ -25,8 +24,7 @@ import { ShieldEllipsis, Palette, Info, Globe } from 'lucide-astro';
         <ul id="menu" class="flex flex-col items-center space-y-2 w-full">
           <li
             data-section="site"
-            class="font-semibold cursor-pointer w-full px-4 py-2 bg-background rounded hover:bg-gray-700 text-center"
-          >
+            class="font-semibold cursor-pointer w-full px-4 py-2 bg-background rounded hover:bg-gray-700 text-center">
             <div class="flex items-center">
               <Globe class="h-6 w-6 align-middle" />
               <span class="ml-2 align-middle">Site</span>
@@ -34,8 +32,7 @@ import { ShieldEllipsis, Palette, Info, Globe } from 'lucide-astro';
           </li>
           <li
             data-section="proxy"
-            class="font-semibold cursor-pointer w-full px-4 py-2 bg-background rounded hover:bg-gray-700 text-center"
-          >
+            class="font-semibold cursor-pointer w-full px-4 py-2 bg-background rounded hover:bg-gray-700 text-center">
             <div class="flex items-center">
               <ShieldEllipsis class="h-6 w-6 inline" />
               <span class="ml-2">Proxy</span>
@@ -43,8 +40,7 @@ import { ShieldEllipsis, Palette, Info, Globe } from 'lucide-astro';
           </li>
           <li
             data-section="customization"
-            class="font-semibold cursor-pointer w-full px-4 py-2 bg-background rounded hover:bg-gray-700 text-center"
-          >
+            class="font-semibold cursor-pointer w-full px-4 py-2 bg-background rounded hover:bg-gray-700 text-center">
             <div class="flex items-center">
               <Palette class="h-6 w-6 align-middle" />
               <span class="ml-2 align-middle">Styling</span>
@@ -52,8 +48,7 @@ import { ShieldEllipsis, Palette, Info, Globe } from 'lucide-astro';
           </li>
           <li
             data-section="about"
-            class="font-semibold cursor-pointer w-full px-4 py-2 bg-background rounded hover:bg-gray-700 text-center"
-          >
+            class="font-semibold cursor-pointer w-full px-4 py-2 bg-background rounded hover:bg-gray-700 text-center">
             <div class="flex items-center">
               <Info class="h-6 w-6 align-middle" />
               <span class="ml-2 align-middle">About</span>
@@ -64,11 +59,9 @@ import { ShieldEllipsis, Palette, Info, Globe } from 'lucide-astro';
     </div>
     <div
       id="site"
-      class="flex flex-col items-center justify-center h-full w-[calc(100%-11rem)] content-section"
-    >
+      class="flex flex-col items-center justify-center h-full w-[calc(100%-11rem)] content-section">
       <div
-        class="flex flex-col items-center justify-center p-6 bg-background-overlay rounded-lg shadow-md"
-      >
+        class="flex flex-col items-center justify-center p-6 bg-background-overlay rounded-lg shadow-md">
         <h1 class="text-2xl text-text-HEADER font-bold mb-2">
           Leave Confirmation
         </h1>
@@ -77,27 +70,24 @@ import { ShieldEllipsis, Palette, Info, Globe } from 'lucide-astro';
         </p>
         <button
           id="confirm"
-          class="px-4 py-2 mt-4 bg-background text-text-SECONDARY font-semibold rounded-lg shadow hover:bg-gray-700 focus:outline-none focus:ring-2"
-        >
+          class="px-4 py-2 mt-4 bg-background text-text-SECONDARY font-semibold rounded-lg shadow hover:bg-gray-700 focus:outline-none focus:ring-2">
           Toggle
         </button>
       </div>
     </div>
     <div
       id="proxy"
-      class="hidden flex flex-col items-center justify-center h-full w-[calc(100%-11rem)] content-section"
-    >
+      class="hidden flex flex-col items-center justify-center h-full w-[calc(100%-11rem)] content-section">
       <div
-        class="flex flex-col items-center justify-center p-6 bg-background-overlay rounded-lg shadow-md"
-      >
+        class="flex flex-col items-center justify-center p-6 bg-background-overlay rounded-lg shadow-md">
         <h1 class="text-2xl text-text-HEADER font-bold mb-2">Proxy Type</h1>
         <p class="text-text-SECONDARY text-center">
           Choose a proxy that is used to search.
           <br /><br />
-          <strong>Ultraviolet (Default)</strong> - Fast, but some sites may not work.
+          <strong>Ultraviolet (Default)</strong> - Fast, site supportive, and reliable.
           <br />
-          <strong>Scramjet (BETA)</strong> - Alot faster then UV, also more sites
-          work then UV.
+          <strong>Scramjet (BETA)</strong> - Much faster and somewhat more site supportive
+          than UV.
         </p>
         <br />
         <Dropdown
@@ -110,8 +100,7 @@ import { ShieldEllipsis, Palette, Info, Globe } from 'lucide-astro';
       </div>
       <br />
       <div
-        class="flex flex-col items-center justify-center p-6 bg-background-overlay rounded-lg shadow-md"
-      >
+        class="flex flex-col items-center justify-center p-6 bg-background-overlay rounded-lg shadow-md">
         <h1 class="text-2xl text-text-HEADER font-bold mb-2">Search Engine</h1>
         <p class="text-text-SECONDARY text-center">
           Choose a search engine to use.
@@ -124,28 +113,27 @@ import { ShieldEllipsis, Palette, Info, Globe } from 'lucide-astro';
               value: 'https://www.google.com/search?q=',
               label: 'Google',
             },
-            { value: 'https://duckduckgo.com/?q=', label: 'DuckDuckGo (Default)' },
+            {
+              value: 'https://duckduckgo.com/?q=',
+              label: 'DuckDuckGo (Default)',
+            },
           ]}
         />
       </div>
     </div>
     <div
       id="customization"
-      class="flex flex-col items-center justify-center h-full w-[calc(100%-11rem)] content-section hidden"
-    >
+      class="flex flex-col items-center justify-center h-full w-[calc(100%-11rem)] content-section hidden">
       <div
-        class="flex flex-col items-center justify-center p-6 bg-background-overlay rounded-lg shadow-md"
-      >
+        class="flex flex-col items-center justify-center p-6 bg-background-overlay rounded-lg shadow-md">
         <h1 class="text-2xl text-text-HEADER font-bold mb-2">Coming Soon.</h1>
       </div>
     </div>
     <div
       id="about"
-      class="hidden flex flex-col items-center justify-center h-full w-full p-6 lg:w-[calc(100%-11rem)] content-section"
-    >
+      class="hidden flex flex-col items-center justify-center h-full w-full p-6 lg:w-[calc(100%-11rem)] content-section">
       <div
-        class="flex flex-col items-center justify-center p-8 bg-background-overlay rounded-lg shadow-md max-w-lg"
-      >
+        class="flex flex-col items-center justify-center p-8 bg-background-overlay rounded-lg shadow-md max-w-lg">
         <h1 class="text-2xl text-text-HEADER font-semibold mb-4 text-center">
           About Lunar
         </h1>
@@ -161,14 +149,12 @@ import { ShieldEllipsis, Palette, Info, Globe } from 'lucide-astro';
             href="https://discord.gg/RzvJmf4W"
             target="_blank"
             rel="noopener noreferrer"
-            class="text-text-SECONDARY font-medium hover:underline flex items-center space-x-2"
-          >
+            class="text-text-SECONDARY font-medium hover:underline flex items-center space-x-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-5 w-5"
               viewBox="0 0 24 24"
-              fill="currentColor"
-            >
+              fill="currentColor">
               <path
                 d="M20.317 4.369a19.791 19.791 0 0 0-4.885-1.375.073.073 0 0 0-.078.037c-.211.375-.444.859-.608 1.269-1.201-1.125-2.63-1.595-3.867-1.595-3.604 0-6.522 2.743-6.522 6.132 0 2.416 1.268 4.539 3.282 5.736-.408.015-.801.073-1.22.138-1.408.172-2.71.594-3.7 1.137 0 0-.305 1.3-.57 1.446-1.81-1.207-3.662-2.42-4.537-4.46-.338-.779-.38-1.662-.076-2.468.803-2.075 2.72-3.048 5.015-3.048 2.606 0 5.18 1.363 6.688 3.674-.423 0-.805-.056-1.228-.056-2.788 0-5.063 2.206-5.063 4.932 0 .304-.233.548-.528.548-1.503 0-2.708-1.203-2.708-2.692 0-2.316 1.888-4.214 4.204-4.214 1.006 0 2.072.273 2.998.804-.181-.281-.364-.533-.579-.774.314-.182.672-.326 1.065-.441a7.89 7.89 0 0 0 1.618-.46c.025-.008.06.017.05.046-.347 1.176-.68 1.932-1.1 2.512-.662 1.047-1.463 1.98-2.365 2.775-.017-.095.055-.14.078-.215-.186-.323.132-.458-.052-.573.074-.115-.12-.156.064-.271.37-.02.436.315.537.542 1.591 2.764 2.717 3.912 3.512 6.292.696.617.155 1.057 0 .784.879 0 .551-1.403.635-2.165-.054-.153.191-.2.225-.234 3.623.407 6.563-1.88 9.4-6.318.562-.015.759-.103.985-.428-.103-.128-.05-.24.014-.368z"
               ></path>
@@ -179,14 +165,12 @@ import { ShieldEllipsis, Palette, Info, Globe } from 'lucide-astro';
             href="https://github.com/Lunar-Proxy/lunar-v1"
             target="_blank"
             rel="noopener noreferrer"
-            class="text-text-SECONDARY font-medium hover:underline flex items-center space-x-2"
-          >
+            class="text-text-SECONDARY font-medium hover:underline flex items-center space-x-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-5 w-5"
               viewBox="0 0 24 24"
-              fill="currentColor"
-            >
+              fill="currentColor">
               <path
                 d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.483 0-.237-.009-.868-.013-1.704-2.782.604-3.369-1.342-3.369-1.342-.455-1.157-1.11-1.465-1.11-1.465-.908-.621.069-.609.069-.609 1.003.07 1.532 1.031 1.532 1.031.892 1.53 2.341 1.088 2.91.832.091-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.945 0-1.092.39-1.984 1.029-2.683-.103-.253-.447-1.272.098-2.65 0 0 .84-.27 2.75 1.025A9.58 9.58 0 0 1 12 6.8c.851.004 1.706.115 2.504.336 1.909-1.296 2.747-1.025 2.747-1.025.546 1.378.202 2.397.099 2.65.64.7 1.028 1.591 1.028 2.683 0 3.845-2.339 4.687-4.566 4.935.36.31.682.922.682 1.857 0 1.34-.012 2.422-.012 2.75 0 .269.18.58.688.481C19.135 20.164 22 16.418 22 12c0-5.523-4.477-10-10-10z"
               ></path>
