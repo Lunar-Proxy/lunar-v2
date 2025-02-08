@@ -1,8 +1,7 @@
 ---
 import '@/main.css';
-import { AppWindowMac, ChevronLeft, ChevronRight } from 'lucide-astro';
+import { AppWindowMac, ChevronLeft, ChevronRight, RotateCw, Search, X } from 'lucide-astro';
 ---
-
 <!doctype html>
 <html lang="en" class="h-screen">
   <head>
@@ -11,57 +10,80 @@ import { AppWindowMac, ChevronLeft, ChevronRight } from 'lucide-astro';
     <meta name="generator" content={Astro.generator} />
     <title>Home - Google Drive</title>
     <link rel="shortcut icon" href="favicon.ico" />
+    <script src="@/utils/index.ts"></script>
   </head>
   <body>
-    <nav class="bg-gray-800 h-18 p-4">
+    <nav class="bg-[#232634] h-18 p-4">
       <div class="mx-auto flex items-center justify-between space-x-4">
         <ul class="flex space-x-4">
-          <li class="mr-4 group relative">
+          <li class="mr-4 relative group">
             <a href="#tabs">
               <AppWindowMac
                 class="w-6 h-6 text-gray-300 hover:text-white transition-all duration-200 transform hover:scale-110 hover:translate-y-[-5px]"
               />
             </a>
             <div
-              class="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 w-max px-2 py-1 bg-gray-800 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+              class="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 w-max px-2 py-1 bg-gray-800 text-white text-xs rounded-md opacity-0 transition-opacity duration-200 border border-gray-600 group-hover:opacity-100 group-hover:pointer-events-none"
             >
               Tabs
             </div>
           </li>
-          <li class="group relative">
+          <li class="relative group">
             <a href="#back">
               <ChevronLeft
                 class="w-6 h-6 text-gray-300 hover:text-white transition-all duration-200 transform hover:scale-110 hover:translate-y-[-5px]"
               />
             </a>
             <div
-              class="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 w-max px-2 py-1 bg-gray-800 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+              class="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 w-max px-2 py-1 bg-gray-800 text-white text-xs rounded-md opacity-0 transition-opacity duration-200 border border-gray-600 group-hover:opacity-100 group-hover:pointer-events-none"
             >
               Back
             </div>
           </li>
-          <li class="group relative">
+          <li class="relative group">
             <a href="#forward">
               <ChevronRight
                 class="w-6 h-6 text-gray-300 hover:text-white transition-all duration-200 transform hover:scale-110 hover:translate-y-[-5px]"
               />
             </a>
             <div
-              class="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 w-max px-2 py-1 bg-gray-800 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+              class="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 w-max px-2 py-1 bg-gray-800 text-white text-xs rounded-md opacity-0 transition-opacity duration-200 border border-gray-600 group-hover:opacity-100 group-hover:pointer-events-none"
             >
               Forward
             </div>
           </li>
+          <li class="relative group">
+            <a href="#refresh">
+              <RotateCw
+                class="w-6 h-6 text-gray-300 hover:text-white transition-all duration-200 transform hover:scale-110 hover:translate-y-[-5px]"
+              />
+            </a>
+            <div
+              class="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 w-max px-2 py-1 bg-gray-800 text-white text-xs rounded-md opacity-0 transition-opacity duration-200 border border-gray-600 group-hover:opacity-100 group-hover:pointer-events-none"
+            >
+              Refresh
+            </div>
+          </li>
         </ul>
         <div class="flex-1 max-w-lg flex justify-center">
-          <input
-            type="text"
-            placeholder="Search..."
-            class="h-8 rounded-md w-full px-4 py-2 bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
+            <div class="relative w-full">
+                <X id="cbtn" class="hidden h-5 w-5 absolute right-2 top-1/2 -translate-y-1/2 text-gray-300 hover:text-red-400 transition-all duration-200 transform hover:scale-110"/>
+              <Search id="sbtn" class="h-5 w-5 absolute left-2 top-1/2 -translate-y-1/2 text-gray-300 hover:text-white transition-all duration-200 transform hover:scale-110" />
+            <form id="fm" method="post">
+              <input
+                type="text"
+                autofocus="off"
+                autocomplete="off"
+                id="inp"
+                type="text"
+                placeholder="Search..."
+                class="h-8 pl-10 rounded-md w-full px-4 py-2 bg-[#494d64] font-light font-Secondary text-white border border-gray-600 focus:outline-none"
+              />
+            </form>
+            </div>
+          </div>          
         <ul class="flex space-x-4">
-          <li class="group relative">
+          <li class="relative group">
             <a
               href="#"
               class="text-gray-300 hover:text-white transition-all duration-200 transform hover:scale-125 hover:translate-y-[-5px]"
@@ -69,7 +91,7 @@ import { AppWindowMac, ChevronLeft, ChevronRight } from 'lucide-astro';
               Contact
             </a>
             <div
-              class="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 w-max px-2 py-1 bg-gray-800 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+              class="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 w-max px-2 py-1 bg-gray-800 text-white text-xs rounded-md opacity-0 transition-opacity duration-200 border border-gray-600 group-hover:opacity-100 group-hover:pointer-events-none"
             >
               Contact
             </div>

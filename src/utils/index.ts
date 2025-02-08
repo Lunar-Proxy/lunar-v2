@@ -4,14 +4,12 @@ const input = document.getElementById('inp') as HTMLInputElement | null;
 const search = document.getElementById('sbtn') as HTMLButtonElement | null;
 const clear = document.getElementById('cbtn') as HTMLButtonElement | null;
 if (form && input) {
-  input.focus();
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const query = input.value.trim();
     let url = Search(query);
     localStorage.setItem('@lunar/search', `/p/${UltraConfig.encodeUrl(url)}`);
-    console.log('the url is:', url);
-    window.location.href = `/browse`;
+    console.log('URL:', url);
   });
 } else {
   throw new Error('Form or input is not found.');
@@ -23,7 +21,16 @@ search?.addEventListener('click', (event) => {
 });
 
 clear?.addEventListener('click', (event) => {
-  event.preventDefault();
   input.value = '';
+  clear.classList.add('hidden');
+  event.preventDefault();
   input.focus();
+});
+
+input?.addEventListener('input', function() {
+  if (this.value.length >= 1) {
+    clear?.classList.remove('hidden'); 
+  } else {
+    clear?.classList.add('hidden'); 
+  }
 });
