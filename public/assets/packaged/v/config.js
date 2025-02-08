@@ -20,11 +20,11 @@ const UltraConfig = {
     }
     return result.join('') + (search.length ? '?' + search.join('?') : '');
   },
-  handler: '/assets/packaged/u/handler.js',
-  client: '/assets/packaged/u/client.js',
-  bundle: '/assets/packaged/u/bundle.js',
-  config: '/assets/packaged/u/config.js',
-  sw: '/assets/packaged/u/sw.js',
+  handler: '/assets/packaged/v/handler.js',
+  client: '/assets/packaged/v/client.js',
+  bundle: '/assets/packaged/v/bundle.js',
+  config: '/assets/packaged/v/config.js',
+  sw: '/assets/packaged/v/sw.js',
 };
 
 self.__uv$config = UltraConfig;

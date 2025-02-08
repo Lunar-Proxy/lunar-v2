@@ -1,0 +1,51 @@
+[
+  {
+    "name": "Discord - Login",
+    "image": "/assets/images/icons/dis.png",
+    "link": [
+      { "name": "Discord", "url": "https://discord.com/login" },
+      { "name": "Discord Canary", "url": "https://canary.discord.com/login" },
+      {
+        "name": "Discord PTB (Public Testing Build)",
+        "url": "https://ptb.discord.com/login"
+      }
+    ],
+    "error": false
+  },
+  {
+    "name": "W3schools",
+    "image": "/assets/images/icons/w3.png",
+    "link": "https://www.w3schools.com/",
+    "error": false
+  },
+  {
+    "name": "VS Code",
+    "image": "/assets/images/icons/vs.jpeg",
+    "link": "https://code.visualstudio.com/",
+    "error": false
+  },
+  {
+    "name": "Youtube",
+    "image": "/assets/images/icons/yt.webp",
+    "link": "https://youtube.com",
+    "error": false
+  },
+  {
+    "name": "Amazon",
+    "image": "/assets/images/icons/ama.jpeg",
+    "link": "https://www.amazon.com/",
+    "error": false
+  },
+  {
+    "name": "Spotify",
+    "image": "/assets/images/icons/spot.jpg",
+    "link": "https://spotify.com",
+    "error": false
+  },
+  {
+    "name": "ESPN",
+    "image": "/assets/images/icons/espn.webp",
+    "link": "https://www.espn.com",
+    "error": false
+  }
+]

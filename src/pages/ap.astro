@@ -1,0 +1,76 @@
+---
+import '@src/main.css';
+import Card from '@src/components/asset.astro';
+import { Maximize, LogOut, RotateCw } from 'lucide-astro';
+import data from '../../public/assets/json/ap.json';
+const apps = data;
+---
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width" />
+  <meta name="generator" content={Astro.generator} />
+  <title>Home</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <script is:inline src="/assets/packaged/v/config.js" defer></script>
+  <script is:inline src="/assets/packaged/v/bundle.js" defer></script>
+  <link rel="prefetch" href="/assets/packaged/scram/worker.js" />
+  <link rel="prefetch" href="/assets/packaged/scram/shared.js" />
+  <script is:inline src="/assets/packaged/scram/controller.js" defer></script>
+  <script src="@src/utils/search.ts"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap"
+    rel="stylesheet"
+  />
+</head>
+
+<body>
+  <p class="text-text-HEADER uppercase text-center mt-6 text-4xl font-bold">
+    Apps
+  </p>
+
+  <div class="flex justify-center items-center mt-4">
+    <input
+      id="input"
+      class="bg-background-overlay pl-14 py-2 pr-4 w-86 mt-9 text-center rounded-full border border-[#a5adce] text-text-SECONDARY"
+      placeholder="Search..."
+    />
+  </div>
+
+  <div class="flex flex-wrap justify-center gap-4 flex-row" id="section">
+    <Card AssetList={apps} />
+  </div>
+
+  <div
+    class="hidden fixed inset-0 bg-background-overlay shadow-lg p-5 z-50"
+    id="game-frame"
+  >
+    <div class="flex justify-end items-center gap-4 mb-4">
+      <button
+        class="text-[#a5adce] hover:text-white px-4 py-2 rounded transition duration-150 transform hover:scale-110"
+        id="rotate"
+      >
+        <RotateCw class="w-6 h-6" />
+      </button>
+      <button
+        class="text-[#a5adce] hover:text-white px-4 py-2 rounded transition duration-150 transform hover:scale-110"
+        id="maximize"
+      >
+        <Maximize class="w-6 h-6" />
+      </button>
+      <button
+        class="text-[#a5adce] hover:text-red-600 px-4 py-2 rounded transition duration-150 transform hover:scale-110"
+        id="return"
+      >
+        <LogOut class="w-6 h-6" />
+      </button>
+    </div>
+    <iframe
+      id="display"
+      class="w-full h-[calc(100%-64px)] bg-gray-100 rounded-lg"
+      loading="lazy"></iframe>
+  </div>
+
+  <script src="@src/utils/frame.ts"></script>
+  <script src="@src/utils/as.ts"></script>
+</body>

@@ -1,0 +1,47 @@
+---
+interface Props {
+  id: string;
+  options: { value: string; label: string }[];
+}
+
+const { id, options } = Astro.props;
+---
+
+<div class="relative inline-block w-42">
+  <button
+    id={`${id}button`}
+    type="button"
+    class="w-full flex justify-between items-center rounded-lg border border-gray-300 bg-background px-4 py-3 text-sm font-medium text-text-HEADER shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 transition"
+  >
+    <span id="text">Select an option</span>
+    <svg
+      class="h-5 w-5 text-text-HEADER transition-transform duration-200"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path
+        fill-rule="evenodd"
+        d="M5.23 7.21a.75.75 0 011.06 0L10 10.293l3.71-3.08a.75.75 0 111.04 1.08l-4.25 3.5a.75.75 0 01-1.04 0l-4.25-3.5a.75.75 0 010-1.08z"
+        clip-rule="evenodd"
+      ></path>
+    </svg>
+  </button>
+
+  <div
+    id={id}
+    class="hidden absolute left-0 z-50 mt-2 w-full max-h-60 overflow-y-auto rounded-lg border border-gray-600 bg-background-overlay shadow-lg"
+  >
+    <div class="overflow-auto text-center py-2">
+      {options.map((option) => (
+        <button
+          id={option.value}
+          class="w-full text-left px-4 py-2 text-sm text-text-SECONDARY hover:bg-gray-700 focus:bg-gray-800 focus:text-white focus:outline-none transition"
+        >
+          {option.label}
+        </button>
+      ))}
+    </div>
+  </div>
+</div>

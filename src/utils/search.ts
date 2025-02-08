@@ -1,16 +1,19 @@
-export function Search(query: string) {
-  const engine =
-    localStorage.getItem('@lunar/engine') || 'https://www.google.com/search?q=';
-  if (validateUrl(query)) {
-    if (!query.startsWith('https://') && !query.startsWith('http://')) {
-      return `https://${query}`;
-    }
-    return query;
+import { Settings } from '@src/utils/config';
+
+export async function Search(query: string) {
+  const engine = await Settings.get('engine');
+
+  if (validateUrl(query) || isDomain(query)) {
+    return query.startsWith('http://') || query.startsWith('https://') ? query : `https://${query}`;
   }
-  return engine + encodeURIComponent(query);
+
+  return `${engine}${encodeURIComponent(query)}`;
 }
 
 function validateUrl(url: string): boolean {
-  const urlPattern = /^(https?:\/\/)?[^\s.]+\.[^\s]+$/;
-  return urlPattern.test(url);
+  return /^https?:\/\/[^\s/$.?#].[^\s]*$/.test(url);
+}
+
+function isDomain(query: string): boolean {
+  return /^(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/.test(query);
 }

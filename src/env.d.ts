@@ -1,4 +1,5 @@
 /// <reference path="../.astro/types.d.ts" />
+
 const LAST_UPDATED: string;
 const VERSION: string;
 

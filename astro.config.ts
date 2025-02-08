@@ -4,12 +4,20 @@ import tailwind from '@astrojs/tailwind';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { server as wisp } from '@mercuryworkshop/wisp-js/server';
 import { baremuxPath } from '@mercuryworkshop/bare-mux/node';
-import { scramjetPath } from '@mercuryworkshop/scramjet';
 import { epoxyPath } from '@mercuryworkshop/epoxy-transport';
 import { version } from './package.json';
 import { execSync } from 'child_process';
 import playformCompress from '@playform/compress';
-import { uvPath } from 'uv';
+import { normalizePath } from 'vite';
+import { scramjetPath } from '@mercuryworkshop/scramjet';
+
+function check() {
+  try {
+    return execSync('git log -1 --format=%cd', { stdio: 'pipe' }).toString().trim();
+  } catch {
+    return new Date().toISOString();
+  }
+  }
 export default defineConfig({
   output: 'static',
   adapter: node({ mode: 'middleware' }),
@@ -30,14 +38,11 @@ export default defineConfig({
   vite: {
     define: {
       VERSION: JSON.stringify(version),
-      LAST_UPDATED: JSON.stringify(
-        execSync('git log -1 --format=%cd').toString().trim() ||
-          'Failed to fetch.'
-      ),
+      LAST_UPDATED: JSON.stringify(check()),
     },
     plugins: [
       {
-        name: 'wisp-vite-server',
+        name: 'viteserver',
         configureServer(server) {
           server.httpServer?.on('upgrade', (req, socket, head) => {
             if (req.url?.startsWith('/wsp/')) {
@@ -49,12 +54,12 @@ export default defineConfig({
       viteStaticCopy({
         targets: [
           {
-            src: `${epoxyPath}/**/*.mjs`.replace(/\\/g, '/'),
+            src: normalizePath(epoxyPath + '/**/*.mjs'),
             dest: 'assets/packaged/ep',
             overwrite: false,
           },
           {
-            src: `${baremuxPath}/**/*.js`.replace(/\\/g, '/'),
+            src: normalizePath(baremuxPath + '/**/*.js'),
             dest: 'assets/packaged/bm',
             overwrite: false,
           },
@@ -63,12 +68,6 @@ export default defineConfig({
             dest: 'assets/packaged/scram',
             overwrite: false,
             rename: (name) => `${name.replace('scramjet.', '')}.js`,
-          },
-          {
-            src: `${uvPath}/**/*.js`.replace(/\\/g, '/'),
-            dest: 'assets/packaged/u',
-            overwrite: false,
-            rename: (name) => `${name.replace('uv.', '')}.js`,
           },
         ],
       }),
