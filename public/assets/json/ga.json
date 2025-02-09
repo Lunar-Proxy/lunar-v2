@@ -198,15 +198,21 @@
     "error": false
   },
   {
-    "name": "Parking Fury",
-    "image": "/assets/images/icons/pf.png",
-    "link": "https://webglmath.github.io/parking-fury/",
-    "error": false
-  },
-  {
     "name": "Roblox",
     "image": "/assets/images/icons/rb.png",
     "link": "https://nowgg.lol/",
+    "error": false
+  },
+  {
+    "name": "Tiny Fishing",
+    "image": "/assets/images/icons/tf.jpeg",
+    "link": "https://legalizenuclearbombs5.github.io/games/Tiny%20Fishing",
+    "error": false
+  },
+  {
+    "name": "Slope",
+    "image": "/assets/images/icons/slow.jpg",
+    "link": "https://coderguytedd.github.io/Slope-Game-Test/",
     "error": false
   }
 ]

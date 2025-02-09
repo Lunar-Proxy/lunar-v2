@@ -19,9 +19,9 @@ const engine = await Settings.get('engine');
 const favicon = document.getElementById('favicon') as HTMLImageElement;
 
 if (engine === 'https://duckduckgo.com/?q=') {
-  favicon.src = 'assets/images/engines/ddg.png'
+  favicon.src = 'assets/images/engines/ddg.png';
 } else {
-  favicon.src = 'assets/images/engines/google.png'
+  favicon.src = 'assets/images/engines/google.png';
 }
 
 let cloak: CloakDetails[] = [];
@@ -133,4 +133,3 @@ fetch('/assets/json/quotes.json')
   .catch((error) => {
     throw new Error(`error: ${error}`);
   });
-

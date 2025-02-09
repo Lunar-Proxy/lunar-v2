@@ -4,7 +4,9 @@ export async function Search(query: string) {
   const engine = await Settings.get('engine');
 
   if (validateUrl(query) || isDomain(query)) {
-    return query.startsWith('http://') || query.startsWith('https://') ? query : `https://${query}`;
+    return query.startsWith('http://') || query.startsWith('https://')
+      ? query
+      : `https://${query}`;
   }
 
   return `${engine}${encodeURIComponent(query)}`;

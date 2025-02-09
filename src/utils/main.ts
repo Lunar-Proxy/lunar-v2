@@ -29,7 +29,7 @@ window.sj = scram;
 scram.init();
 
 try {
- await navigator.serviceWorker.register('/sw.js').then(() => {
+  await navigator.serviceWorker.register('/sw.js').then(() => {
     console.log('Service Workers are registered.');
   });
 } catch (error) {
@@ -66,9 +66,9 @@ async function launch(link: string) {
       );
       favicon.src = `https://s2.googleusercontent.com/s2/favicons?sz=64&domain_url=${url}`;
       input.value = url || '';
-      copy.style.right = "40px"; 
-      clear.style.right = "10px"; 
-      clear.classList.remove("hidden");
+      copy.style.right = '40px';
+      clear.style.right = '10px';
+      clear.classList.remove('hidden');
     } else {
       let url = scram.decodeUrl(
         frame.contentWindow?.location.href.split('/scram/')[1] ||
@@ -76,9 +76,9 @@ async function launch(link: string) {
       );
       input.value = url || '';
       favicon.src = `https://s2.googleusercontent.com/s2/favicons?sz=64&domain_url=${url}`;
-      copy.style.right = "40px"; 
-      clear.style.right = "10px"; 
-      clear.classList.remove("hidden");
+      copy.style.right = '40px';
+      clear.style.right = '10px';
+      clear.classList.remove('hidden');
     }
   });
 }
@@ -86,6 +86,10 @@ fm.addEventListener('submit', async (event) => {
   event.preventDefault();
   welcome.classList.add('hidden');
   loading.classList.remove('hidden');
+  if (input.value.startsWith('lunar://')) {
+    LunarPaths(input.value.trim());
+    return;
+  }
   let value = input.value.trim();
   launch(value);
 });
@@ -93,7 +97,7 @@ fm.addEventListener('submit', async (event) => {
 sbtn.addEventListener('click', async (event) => {
   event.preventDefault();
   fm.dispatchEvent(new Event('submit'));
-}); 
+});
 
 sf.addEventListener('submit', async (event) => {
   event.preventDefault();
@@ -143,37 +147,33 @@ sf.addEventListener('submit', async (event) => {
   fm.dispatchEvent(new Event('submit'));
 });
 
-input?.addEventListener("input", function () {
-  if (this.value.length >= 1) {
-    copy.style.right = "40px"; 
-    clear.style.right = "10px"; 
-    clear.classList.remove("hidden");
-  } else {
-    clear.classList.add("hidden");
-    copy.style.right = "10px";
-  }
-});
-
-clear?.addEventListener("click", function () {
-  input.value = "";
-  clear.classList.add("hidden");
-  copy.style.right = "10px";  
-  input.focus();
-});
-
-startclear?.addEventListener("click", function () {
-  si.value = "";
-  startclear.classList.add("hidden");
+startclear?.addEventListener('click', function () {
+  si.value = '';
+  startclear.classList.add('hidden');
   si.focus();
 });
 
-si?.addEventListener("input", function () {
+si?.addEventListener('input', function () {
   if (this.value.length >= 1) {
-    startclear.classList.remove("hidden");
+    startclear.classList.remove('hidden');
   } else {
-    startclear.classList.add("hidden");
+    startclear.classList.add('hidden');
   }
 });
 
+function LunarPaths(path: string) {
+  if (path == 'lunar://apps') {
+    input.value = 'lunar://apps';
+    frame.src = './ap';
+  } else if (path == 'lunar://games') {
+    input.value = 'lunar://games';
+    frame.src = './gm';
+  } else if (path == 'lunar://settings') {
+    input.value = 'lunar://settings';
+    frame.src = './s';
+  } else {
+    throw new Error('Invalid Path');
+  }
+}
 
 window.history.replaceState?.('', '', window.location.href); // This prevents the are you sure you want to reload prompt

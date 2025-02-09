@@ -6,7 +6,7 @@
 
 > [!NOTE]
 > Lunar is currently in beta.
-Lunar is a web proxy designed to bypass censorship and provide an exceptional user experience.
+> Lunar is a web proxy designed to bypass censorship and provide an exceptional user experience.
 
 ## Features
 

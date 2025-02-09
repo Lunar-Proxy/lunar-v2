@@ -6,9 +6,11 @@ const refresh = document.getElementById('reload') as HTMLButtonElement;
 const starting = document.getElementById('starting') as HTMLDivElement;
 const frame = document.getElementById('frame') as HTMLIFrameElement;
 const ff = document.getElementById('full-screen') as HTMLButtonElement;
+const clear = document.getElementById('clear') as HTMLButtonElement;
 const cnsl = document.getElementById('console') as HTMLButtonElement;
 const star = document.getElementById('fav') as HTMLButtonElement;
 const copy = document.getElementById('link') as HTMLButtonElement;
+const input = document.getElementById('input') as HTMLInputElement;
 const scram = new ScramjetController({
   prefix: '/scram/',
   files: {
@@ -41,6 +43,13 @@ Object.entries(elements).forEach(([key, path]) => {
       starting.classList.add('hidden');
       console.debug('Navigating to ' + path);
       if (frame) frame.src = path as string;
+      if (path === './ap') {
+        input.value = 'lunar://apps';
+      } else if (path === './gm') {
+        input.value = 'lunar://games';
+      } else if (path) {
+        input.value = 'lunar://settings';
+      }
     });
   }
 });
@@ -189,3 +198,21 @@ if (star) {
     }
   });
 }
+
+input?.addEventListener('input', function () {
+  if (this.value.length >= 1) {
+    copy.style.right = '40px';
+    clear.style.right = '10px';
+    clear.classList.remove('hidden');
+  } else {
+    clear.classList.add('hidden');
+    copy.style.right = '10px';
+  }
+});
+
+clear?.addEventListener('click', function () {
+  input.value = '';
+  clear.classList.add('hidden');
+  copy.style.right = '10px';
+  input.focus();
+});

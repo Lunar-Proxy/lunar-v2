@@ -42,7 +42,7 @@ const Settings = (function () {
   async function ensureDefaultSettings(): Promise<void> {
     await dbReady;
     if (!db) {
-      throw new Error("Database is not initialized.");
+      throw new Error('Database is not initialized.');
     }
 
     const transaction = db.transaction([LunarSettings], 'readwrite');
@@ -64,8 +64,8 @@ const Settings = (function () {
 
   async function add(settingName: string, value: any): Promise<void> {
     await dbReady;
-    if (!db) throw new Error("Database not ready.");
-    
+    if (!db) throw new Error('Database not ready.');
+
     const transaction = db.transaction([LunarSettings], 'readwrite');
     const store = transaction.objectStore(LunarSettings);
 
@@ -87,8 +87,8 @@ const Settings = (function () {
 
   async function edit(settingName: string, value: any): Promise<void> {
     await dbReady;
-    if (!db) throw new Error("Database not ready.");
-    
+    if (!db) throw new Error('Database not ready.');
+
     const transaction = db.transaction([LunarSettings], 'readwrite');
     const store = transaction.objectStore(LunarSettings);
 
@@ -109,14 +109,14 @@ const Settings = (function () {
 
   async function get(settingName: string): Promise<any> {
     await dbReady;
-    if (!db) throw new Error("Database not ready.");
-    
+    if (!db) throw new Error('Database not ready.');
+
     return new Promise((resolve, reject) => {
-      if (!db) throw new Error("Database not ready.");
+      if (!db) throw new Error('Database not ready.');
       const transaction = db.transaction([LunarSettings], 'readonly');
       const store = transaction.objectStore(LunarSettings);
       const cursorRequest: IDBRequest = store.openCursor();
-      
+
       cursorRequest.onsuccess = function () {
         const cursor: IDBCursorWithValue = cursorRequest.result;
         if (cursor) {
@@ -129,7 +129,7 @@ const Settings = (function () {
           resolve(undefined);
         }
       };
-      
+
       cursorRequest.onerror = function () {
         reject(new Error('Error retrieving setting by name.'));
       };
