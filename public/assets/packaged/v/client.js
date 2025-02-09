@@ -1,4 +1,3 @@
-'use strict';
 (() => {
   var Qe = Object.create;
   var K = Object.defineProperty;
@@ -11,7 +10,7 @@
   );
   var tt = (s, t, r, e) => {
     if ((t && typeof t == 'object') || typeof t == 'function')
-      for (let n of Je(t))
+      for (const n of Je(t))
         !Ze.call(s, n) &&
           n !== r &&
           K(s, n, {
@@ -26,38 +25,28 @@
       t || !s || !s.__esModule
         ? K(r, 'default', { value: s, enumerable: !0 })
         : r,
-      s
+      s,
     )
   );
   var f = et((ut, k) => {
-    'use strict';
     var y = typeof Reflect == 'object' ? Reflect : null,
       X =
         y && typeof y.apply == 'function'
           ? y.apply
-          : function (t, r, e) {
-              return Function.prototype.apply.call(t, r, e);
-            },
+          : (t, r, e) => Function.prototype.apply.call(t, r, e),
       g;
     y && typeof y.ownKeys == 'function'
       ? (g = y.ownKeys)
       : Object.getOwnPropertySymbols
-        ? (g = function (t) {
-            return Object.getOwnPropertyNames(t).concat(
-              Object.getOwnPropertySymbols(t)
-            );
-          })
-        : (g = function (t) {
-            return Object.getOwnPropertyNames(t);
-          });
+        ? (g = (t) =>
+            Object.getOwnPropertyNames(t).concat(
+              Object.getOwnPropertySymbols(t),
+            ))
+        : (g = (t) => Object.getOwnPropertyNames(t));
     function rt(s) {
       console && console.warn && console.warn(s);
     }
-    var z =
-      Number.isNaN ||
-      function (t) {
-        return t !== t;
-      };
+    var z = Number.isNaN || ((t) => t !== t);
     function d() {
       d.init.call(this);
     }
@@ -72,20 +61,18 @@
       if (typeof s != 'function')
         throw new TypeError(
           'The "listener" argument must be of type Function. Received type ' +
-            typeof s
+            typeof s,
         );
     }
     Object.defineProperty(d, 'defaultMaxListeners', {
       enumerable: !0,
-      get: function () {
-        return Q;
-      },
-      set: function (s) {
+      get: () => Q,
+      set: (s) => {
         if (typeof s != 'number' || s < 0 || z(s))
           throw new RangeError(
             'The value of "defaultMaxListeners" is out of range. It must be a non-negative number. Received ' +
               s +
-              '.'
+              '.',
           );
         Q = s;
       },
@@ -101,7 +88,7 @@
         throw new RangeError(
           'The value of "n" is out of range. It must be a non-negative number. Received ' +
             t +
-            '.'
+            '.',
         );
       return (this._maxListeners = t), this;
     };
@@ -123,7 +110,7 @@
         var i;
         if ((r.length > 0 && (i = r[0]), i instanceof Error)) throw i;
         var c = new Error(
-          'Unhandled error.' + (i ? ' (' + i.message + ')' : '')
+          'Unhandled error.' + (i ? ' (' + i.message + ')' : ''),
         );
         throw ((c.context = i), c);
       }
@@ -164,7 +151,7 @@
             i.length +
             ' ' +
             String(t) +
-            ' listeners added. Use emitter.setMaxListeners() to increase limit'
+            ' listeners added. Use emitter.setMaxListeners() to increase limit',
         );
         (c.name = 'MaxListenersExceededWarning'),
           (c.emitter = s),
@@ -276,11 +263,8 @@
     d.prototype.rawListeners = function (t) {
       return ee(this, t, !1);
     };
-    d.listenerCount = function (s, t) {
-      return typeof s.listenerCount == 'function'
-        ? s.listenerCount(t)
-        : te.call(s, t);
-    };
+    d.listenerCount = (s, t) =>
+      typeof s.listenerCount == 'function' ? s.listenerCount(t) : te.call(s, t);
     d.prototype.listenerCount = te;
     function te(s) {
       var t = this._events;
@@ -308,7 +292,7 @@
       return t;
     }
     function st(s, t) {
-      return new Promise(function (r, e) {
+      return new Promise((r, e) => {
         function n(i) {
           s.removeListener(t, o), e(i);
         }
@@ -331,7 +315,7 @@
       else
         throw new TypeError(
           'The "emitter" argument must be of type EventEmitter. Received type ' +
-            typeof s
+            typeof s,
         );
     }
   });
@@ -369,23 +353,23 @@
           (this.domProto = this.DOMParser.prototype || {}),
           (this.title = t.nativeMethods.getOwnPropertyDescriptor(
             this.docProto,
-            'title'
+            'title',
           )),
           (this.cookie = t.nativeMethods.getOwnPropertyDescriptor(
             this.docProto,
-            'cookie'
+            'cookie',
           )),
           (this.referrer = t.nativeMethods.getOwnPropertyDescriptor(
             this.docProto,
-            'referrer'
+            'referrer',
           )),
           (this.domain = t.nativeMethods.getOwnPropertyDescriptor(
             this.docProto,
-            'domain'
+            'domain',
           )),
           (this.documentURI = t.nativeMethods.getOwnPropertyDescriptor(
             this.docProto,
-            'documentURI'
+            'documentURI',
           )),
           (this.write = this.docProto.write),
           (this.writeln = this.docProto.writeln),
@@ -394,13 +378,13 @@
           (this.parseFromString = this.domProto.parseFromString),
           (this.URL = t.nativeMethods.getOwnPropertyDescriptor(
             this.docProto,
-            'URL'
+            'URL',
           ));
       }
       overrideParseFromString() {
         this.ctx.override(this.domProto, 'parseFromString', (t, r, e) => {
           if (2 > e.length) return t.apply(r, e);
-          let [n, o] = e,
+          const [n, o] = e,
             i = new a({ string: n, type: o }, t, r);
           return (
             this.emit('parseFromString', i),
@@ -413,7 +397,7 @@
       overrideQuerySelector() {
         this.ctx.override(this.docProto, 'querySelector', (t, r, e) => {
           if (!e.length) return t.apply(r, e);
-          let [n] = e,
+          const [n] = e,
             o = new a({ selectors: n }, t, r);
           return (
             this.emit('querySelector', o),
@@ -426,14 +410,14 @@
       overrideDomain() {
         this.ctx.overrideDescriptor(this.docProto, 'domain', {
           get: (t, r) => {
-            let e = new a({ value: t.call(r) }, t, r);
+            const e = new a({ value: t.call(r) }, t, r);
             return (
               this.emit('getDomain', e),
               e.intercepted ? e.returnValue : e.data.value
             );
           },
           set: (t, r, [e]) => {
-            let n = new a({ value: e }, t, r);
+            const n = new a({ value: e }, t, r);
             return (
               this.emit('setDomain', n),
               n.intercepted
@@ -446,7 +430,7 @@
       overrideReferrer() {
         this.ctx.overrideDescriptor(this.docProto, 'referrer', {
           get: (t, r) => {
-            let e = new a({ value: t.call(r) }, t, r);
+            const e = new a({ value: t.call(r) }, t, r);
             return (
               this.emit('referrer', e),
               e.intercepted ? e.returnValue : e.data.value
@@ -457,11 +441,11 @@
       overrideCreateTreeWalker() {
         this.ctx.override(this.docProto, 'createTreeWalker', (t, r, e) => {
           if (!e.length) return t.apply(r, e);
-          let [n, o = 4294967295, i, c] = e,
+          const [n, o = 4294967295, i, c] = e,
             l = new a(
               { root: n, show: o, filter: i, expandEntityReferences: c },
               t,
-              r
+              r,
             );
           return (
             this.emit('createTreeWalker', l),
@@ -472,7 +456,7 @@
                   l.data.root,
                   l.data.show,
                   l.data.filter,
-                  l.data.expandEntityReferences
+                  l.data.expandEntityReferences,
                 )
           );
         });
@@ -480,7 +464,7 @@
       overrideWrite() {
         this.ctx.override(this.docProto, 'write', (t, r, e) => {
           if (!e.length) return t.apply(r, e);
-          let [...n] = e,
+          const [...n] = e,
             o = new a({ html: n }, t, r);
           return (
             this.emit('write', o),
@@ -489,7 +473,7 @@
         }),
           this.ctx.override(this.docProto, 'writeln', (t, r, e) => {
             if (!e.length) return t.apply(r, e);
-            let [...n] = e,
+            const [...n] = e,
               o = new a({ html: n }, t, r);
             return (
               this.emit('writeln', o),
@@ -502,7 +486,7 @@
       overrideDocumentURI() {
         this.ctx.overrideDescriptor(this.docProto, 'documentURI', {
           get: (t, r) => {
-            let e = new a({ value: t.call(r) }, t, r);
+            const e = new a({ value: t.call(r) }, t, r);
             return (
               this.emit('documentURI', e),
               e.intercepted ? e.returnValue : e.data.value
@@ -513,7 +497,7 @@
       overrideURL() {
         this.ctx.overrideDescriptor(this.docProto, 'URL', {
           get: (t, r) => {
-            let e = new a({ value: t.call(r) }, t, r);
+            const e = new a({ value: t.call(r) }, t, r);
             return (
               this.emit('url', e), e.intercepted ? e.returnValue : e.data.value
             );
@@ -523,14 +507,14 @@
       overrideCookie() {
         this.ctx.overrideDescriptor(this.docProto, 'cookie', {
           get: (t, r) => {
-            let e = new a({ value: t.call(r) }, t, r);
+            const e = new a({ value: t.call(r) }, t, r);
             return (
               this.emit('getCookie', e),
               e.intercepted ? e.returnValue : e.data.value
             );
           },
           set: (t, r, [e]) => {
-            let n = new a({ value: e }, t, r);
+            const n = new a({ value: e }, t, r);
             return (
               this.emit('setCookie', n),
               n.intercepted
@@ -543,14 +527,14 @@
       overrideTitle() {
         this.ctx.overrideDescriptor(this.docProto, 'title', {
           get: (t, r) => {
-            let e = new a({ value: t.call(r) }, t, r);
+            const e = new a({ value: t.call(r) }, t, r);
             return (
               this.emit('getTitle', e),
               e.intercepted ? e.returnValue : e.data.value
             );
           },
           set: (t, r, [e]) => {
-            let n = new a({ value: e }, t, r);
+            const n = new a({ value: e }, t, r);
             return (
               this.emit('setTitle', n),
               n.intercepted
@@ -573,11 +557,11 @@
           (this.elemProto = this.Element ? this.Element.prototype : {}),
           (this.innerHTML = t.nativeMethods.getOwnPropertyDescriptor(
             this.elemProto,
-            'innerHTML'
+            'innerHTML',
           )),
           (this.outerHTML = t.nativeMethods.getOwnPropertyDescriptor(
             this.elemProto,
-            'outerHTML'
+            'outerHTML',
           )),
           (this.setAttribute = this.elemProto.setAttribute),
           (this.getAttribute = this.elemProto.getAttribute),
@@ -591,7 +575,7 @@
       overrideQuerySelector() {
         this.ctx.override(this.elemProto, 'querySelector', (t, r, e) => {
           if (!e.length) return t.apply(r, e);
-          let [n] = e,
+          const [n] = e,
             o = new a({ selectors: n }, t, r);
           return (
             this.emit('querySelector', o),
@@ -604,7 +588,7 @@
       overrideAttribute() {
         this.ctx.override(this.elemProto, 'getAttribute', (t, r, e) => {
           if (!e.length) return t.apply(r, e);
-          let [n] = e,
+          const [n] = e,
             o = new a({ name: n }, t, r);
           return (
             this.emit('getAttribute', o),
@@ -613,7 +597,7 @@
         }),
           this.ctx.override(this.elemProto, 'setAttribute', (t, r, e) => {
             if (2 > e.length) return t.apply(r, e);
-            let [n, o] = e,
+            const [n, o] = e,
               i = new a({ name: n, value: o }, t, r);
             return (
               this.emit('setAttribute', i),
@@ -624,7 +608,7 @@
           }),
           this.ctx.override(this.elemProto, 'hasAttribute', (t, r, e) => {
             if (!e.length) return t.apply(r, e);
-            let [n] = e,
+            const [n] = e,
               o = new a({ name: n }, t, r);
             return (
               this.emit('hasAttribute', o),
@@ -633,7 +617,7 @@
           }),
           this.ctx.override(this.elemProto, 'removeAttribute', (t, r, e) => {
             if (!e.length) return t.apply(r, e);
-            let [n] = e,
+            const [n] = e,
               o = new a({ name: n }, t, r);
             return (
               this.emit('removeAttribute', o),
@@ -647,27 +631,27 @@
           'Audio',
           (t, r, e) => {
             if (!e.length) return new t(...e);
-            let [n] = e,
+            const [n] = e,
               o = new a({ url: n }, t, r);
             return (
               this.emit('audio', o),
               o.intercepted ? o.returnValue : new o.target(o.data.url)
             );
           },
-          !0
+          !0,
         );
       }
       overrideHtml() {
         this.hookProperty(this.Element, 'innerHTML', {
           get: (t, r) => {
-            let e = new a({ value: t.call(r) }, t, r);
+            const e = new a({ value: t.call(r) }, t, r);
             return (
               this.emit('getInnerHTML', e),
               e.intercepted ? e.returnValue : e.data.value
             );
           },
           set: (t, r, [e]) => {
-            let n = new a({ value: e }, t, r);
+            const n = new a({ value: e }, t, r);
             if ((this.emit('setInnerHTML', n), n.intercepted))
               return n.returnValue;
             t.call(r, n.data.value);
@@ -675,14 +659,14 @@
         }),
           this.hookProperty(this.Element, 'outerHTML', {
             get: (t, r) => {
-              let e = new a({ value: t.call(r) }, t, r);
+              const e = new a({ value: t.call(r) }, t, r);
               return (
                 this.emit('getOuterHTML', e),
                 e.intercepted ? e.returnValue : e.data.value
               );
             },
             set: (t, r, [e]) => {
-              let n = new a({ value: e }, t, r);
+              const n = new a({ value: e }, t, r);
               if ((this.emit('setOuterHTML', n), n.intercepted))
                 return n.returnValue;
               t.call(r, n.data.value);
@@ -692,7 +676,7 @@
       overrideInsertAdjacentHTML() {
         this.ctx.override(this.elemProto, 'insertAdjacentHTML', (t, r, e) => {
           if (2 > e.length) return t.apply(r, e);
-          let [n, o] = e,
+          const [n, o] = e,
             i = new a({ position: n, html: o }, t, r);
           return (
             this.emit('insertAdjacentHTML', i),
@@ -705,7 +689,7 @@
       overrideInsertAdjacentText() {
         this.ctx.override(this.elemProto, 'insertAdjacentText', (t, r, e) => {
           if (2 > e.length) return t.apply(r, e);
-          let [n, o] = e,
+          const [n, o] = e,
             i = new a({ position: n, text: o }, t, r);
           return (
             this.emit('insertAdjacentText', i),
@@ -718,10 +702,10 @@
       hookProperty(t, r, e) {
         if (!t) return !1;
         if (this.ctx.nativeMethods.isArray(t)) {
-          for (let o of t) this.hookProperty(o, r, e);
+          for (const o of t) this.hookProperty(o, r, e);
           return !0;
         }
-        let n = t.prototype;
+        const n = t.prototype;
         return this.ctx.overrideDescriptor(n, r, e), !0;
       }
     },
@@ -744,44 +728,44 @@
           (this.removeChild = this.nodeProto.removeChild),
           (this.textContent = t.nativeMethods.getOwnPropertyDescriptor(
             this.nodeProto,
-            'textContent'
+            'textContent',
           )),
           (this.parentNode = t.nativeMethods.getOwnPropertyDescriptor(
             this.nodeProto,
-            'parentNode'
+            'parentNode',
           )),
           (this.parentElement = t.nativeMethods.getOwnPropertyDescriptor(
             this.nodeProto,
-            'parentElement'
+            'parentElement',
           )),
           (this.childNodes = t.nativeMethods.getOwnPropertyDescriptor(
             this.nodeProto,
-            'childNodes'
+            'childNodes',
           )),
           (this.baseURI = t.nativeMethods.getOwnPropertyDescriptor(
             this.nodeProto,
-            'baseURI'
+            'baseURI',
           )),
           (this.previousSibling = t.nativeMethods.getOwnPropertyDescriptor(
             this.nodeProto,
-            'previousSibling'
+            'previousSibling',
           )),
           (this.ownerDocument = t.nativeMethods.getOwnPropertyDescriptor(
             this.nodeProto,
-            'ownerDocument'
+            'ownerDocument',
           ));
       }
       overrideTextContent() {
         this.ctx.overrideDescriptor(this.nodeProto, 'textContent', {
           get: (t, r) => {
-            let e = new a({ value: t.call(r) }, t, r);
+            const e = new a({ value: t.call(r) }, t, r);
             return (
               this.emit('getTextContent', e),
               e.intercepted ? e.returnValue : e.data.value
             );
           },
           set: (t, r, [e]) => {
-            let n = new a({ value: e }, t, r);
+            const n = new a({ value: e }, t, r);
             if ((this.emit('setTextContent', n), n.intercepted))
               return n.returnValue;
             t.call(r, n.data.value);
@@ -790,7 +774,7 @@
       }
       overrideAppend() {
         this.ctx.override(this.nodeProto, 'append', (t, r, [...e]) => {
-          let n = new a({ nodes: e }, t, r);
+          const n = new a({ nodes: e }, t, r);
           return (
             this.emit('append', n),
             n.intercepted ? n.returnValue : n.target.call(n.that, n.data.nodes)
@@ -798,7 +782,7 @@
         }),
           this.ctx.override(this.nodeProto, 'appendChild', (t, r, e) => {
             if (!e.length) return t.apply(r, e);
-            let [n] = e,
+            const [n] = e,
               o = new a({ node: n }, t, r);
             return (
               this.emit('appendChild', o),
@@ -809,7 +793,7 @@
       overrideBaseURI() {
         this.ctx.overrideDescriptor(this.nodeProto, 'baseURI', {
           get: (t, r) => {
-            let e = new a({ value: t.call(r) }, t, r);
+            const e = new a({ value: t.call(r) }, t, r);
             return (
               this.emit('baseURI', e),
               e.intercepted ? e.returnValue : e.data.value
@@ -820,7 +804,7 @@
       overrideParent() {
         this.ctx.overrideDescriptor(this.nodeProto, 'parentNode', {
           get: (t, r) => {
-            let e = new a({ node: t.call(r) }, t, r);
+            const e = new a({ node: t.call(r) }, t, r);
             return (
               this.emit('parentNode', e),
               e.intercepted ? e.returnValue : e.data.node
@@ -829,7 +813,7 @@
         }),
           this.ctx.overrideDescriptor(this.nodeProto, 'parentElement', {
             get: (t, r) => {
-              let e = new a({ element: t.call(r) }, t, r);
+              const e = new a({ element: t.call(r) }, t, r);
               return (
                 this.emit('parentElement', e),
                 e.intercepted ? e.returnValue : e.data.node
@@ -840,7 +824,7 @@
       overrideOwnerDocument() {
         this.ctx.overrideDescriptor(this.nodeProto, 'ownerDocument', {
           get: (t, r) => {
-            let e = new a({ document: t.call(r) }, t, r);
+            const e = new a({ document: t.call(r) }, t, r);
             return (
               this.emit('ownerDocument', e),
               e.intercepted ? e.returnValue : e.data.document
@@ -854,12 +838,12 @@
           'compareDocumentPosition',
           (t, r, e) => {
             if (!e.length) return t.apply(r, e);
-            let [n] = e,
+            const [n] = e,
               o = new a({ node: n }, t, r);
             return o.intercepted
               ? o.returnValue
               : o.target.call(o.that, o.data.node);
-          }
+          },
         );
       }
       overrideChildMethods() {
@@ -877,11 +861,11 @@
           (this.attrProto = this.Attr.prototype || {}),
           (this.value = t.nativeMethods.getOwnPropertyDescriptor(
             this.attrProto,
-            'value'
+            'value',
           )),
           (this.name = t.nativeMethods.getOwnPropertyDescriptor(
             this.attrProto,
-            'name'
+            'name',
           )),
           (this.getNamedItem = this.attrProto.getNamedItem || null),
           (this.setNamedItem = this.attrProto.setNamedItem || null),
@@ -894,7 +878,7 @@
       overrideNameValue() {
         this.ctx.overrideDescriptor(this.attrProto, 'name', {
           get: (t, r) => {
-            let e = new a({ value: t.call(r) }, t, r);
+            const e = new a({ value: t.call(r) }, t, r);
             return (
               this.emit('name', e), e.intercepted ? e.returnValue : e.data.value
             );
@@ -902,10 +886,10 @@
         }),
           this.ctx.overrideDescriptor(this.attrProto, 'value', {
             get: (t, r) => {
-              let e = new a(
+              const e = new a(
                 { name: this.name.get.call(r), value: t.call(r) },
                 t,
-                r
+                r,
               );
               return (
                 this.emit('getValue', e),
@@ -913,7 +897,7 @@
               );
             },
             set: (t, r, [e]) => {
-              let n = new a({ name: this.name.get.call(r), value: e }, t, r);
+              const n = new a({ name: this.name.get.call(r), value: e }, t, r);
               if ((this.emit('setValue', n), n.intercepted))
                 return n.returnValue;
               n.target.call(n.that, n.data.value);
@@ -923,7 +907,7 @@
       overrideItemMethods() {
         this.ctx.override(this.attrProto, 'getNamedItem', (t, r, e) => {
           if (!e.length) return t.apply(r, e);
-          let [n] = e,
+          const [n] = e,
             o = new a({ name: n }, t, r);
           return (
             this.emit('getNamedItem', o),
@@ -932,7 +916,7 @@
         }),
           this.ctx.override(this.attrProto, 'setNamedItem', (t, r, e) => {
             if (2 > e.length) return t.apply(r, e);
-            let [n, o] = e,
+            const [n, o] = e,
               i = new a({ name: n, value: o }, t, r);
             return (
               this.emit('setNamedItem', i),
@@ -943,7 +927,7 @@
           }),
           this.ctx.override(this.attrProto, 'removeNamedItem', (t, r, e) => {
             if (!e.length) return t.apply(r, e);
-            let [n] = e,
+            const [n] = e,
               o = new a({ name: n }, t, r);
             return (
               this.emit('removeNamedItem', o),
@@ -952,7 +936,7 @@
           }),
           this.ctx.override(this.attrProto, 'item', (t, r, e) => {
             if (!e.length) return t.apply(r, e);
-            let [n] = e,
+            const [n] = e,
               o = new a({ index: n }, t, r);
             return (
               this.emit('item', o),
@@ -961,7 +945,7 @@
           }),
           this.ctx.override(this.attrProto, 'getNamedItemNS', (t, r, e) => {
             if (2 > e.length) return t.apply(r, e);
-            let [n, o] = e,
+            const [n, o] = e,
               i = new a({ namespace: n, localName: o }, t, r);
             return (
               this.emit('getNamedItemNS', i),
@@ -972,7 +956,7 @@
           }),
           this.ctx.override(this.attrProto, 'setNamedItemNS', (t, r, e) => {
             if (!e.length) return t.apply(r, e);
-            let [n] = e,
+            const [n] = e,
               o = new a({ attr: n }, t, r);
             return (
               this.emit('setNamedItemNS', o),
@@ -981,7 +965,7 @@
           }),
           this.ctx.override(this.attrProto, 'removeNamedItemNS', (t, r, e) => {
             if (2 > e.length) return t.apply(r, e);
-            let [n, o] = e,
+            const [n, o] = e,
               i = new a({ namespace: n, localName: o }, t, r);
             return (
               this.emit('removeNamedItemNS', i),
@@ -1013,10 +997,10 @@
           'Function',
           (t, r, e) => {
             if (!e.length) return t.apply(r, e);
-            let n = e[e.length - 1],
+            const n = e[e.length - 1],
               o = [];
             for (let c = 0; c < e.length - 1; c++) o.push(e[c]);
-            let i = new a({ script: n, args: o }, t, r);
+            const i = new a({ script: n, args: o }, t, r);
             return (
               this.emit('function', i),
               i.intercepted
@@ -1024,12 +1008,12 @@
                 : i.target.call(i.that, ...i.data.args, i.data.script)
             );
           },
-          !0
+          !0,
         );
       }
       overrideToString() {
         this.ctx.override(this.fnProto, 'toString', (t, r) => {
-          let e = new a({ fn: r }, t, r);
+          const e = new a({ fn: r }, t, r);
           return (
             this.emit('toString', e),
             e.intercepted ? e.returnValue : e.target.call(e.data.fn)
@@ -1054,7 +1038,7 @@
       overrideGetPropertyNames() {
         this.ctx.override(this.Object, 'getOwnPropertyNames', (t, r, e) => {
           if (!e.length) return t.apply(r, e);
-          let [n] = e,
+          const [n] = e,
             o = new a({ names: t.call(r, n) }, t, r);
           return (
             this.emit('getOwnPropertyNames', o),
@@ -1068,13 +1052,13 @@
           'getOwnPropertyDescriptors',
           (t, r, e) => {
             if (!e.length) return t.apply(r, e);
-            let [n] = e,
+            const [n] = e,
               o = new a({ descriptors: t.call(r, n) }, t, r);
             return (
               this.emit('getOwnPropertyDescriptors', o),
               o.intercepted ? o.returnValue : o.data.descriptors
             );
-          }
+          },
         );
       }
     },
@@ -1094,19 +1078,19 @@
           (this.headersProto = this.Headers ? this.Headers.prototype : {}),
           (this.reqUrl = t.nativeMethods.getOwnPropertyDescriptor(
             this.reqProto,
-            'url'
+            'url',
           )),
           (this.resUrl = t.nativeMethods.getOwnPropertyDescriptor(
             this.resProto,
-            'url'
+            'url',
           )),
           (this.reqHeaders = t.nativeMethods.getOwnPropertyDescriptor(
             this.reqProto,
-            'headers'
+            'headers',
           )),
           (this.resHeaders = t.nativeMethods.getOwnPropertyDescriptor(
             this.resProto,
-            'headers'
+            'headers',
           ));
       }
       override() {
@@ -1119,7 +1103,7 @@
           ? (this.ctx.override(this.window, 'fetch', (t, r, e) => {
               if (!e.length || e[0] instanceof this.Request)
                 return t.apply(r, e);
-              let [n, o = {}] = e,
+              const [n, o = {}] = e,
                 i = new a({ input: n, options: o }, t, r);
               return (
                 this.emit('request', i),
@@ -1133,7 +1117,7 @@
               'Request',
               (t, r, e) => {
                 if (!e.length) return new t(...e);
-                let [n, o = {}] = e,
+                const [n, o = {}] = e,
                   i = new a({ input: n, options: o }, t);
                 return (
                   this.emit('request', i),
@@ -1142,7 +1126,7 @@
                     : new i.target(i.data.input, i.data.options)
                 );
               },
-              !0
+              !0,
             ),
             !0)
           : !1;
@@ -1151,7 +1135,7 @@
         return (
           this.ctx.overrideDescriptor(this.reqProto, 'url', {
             get: (t, r) => {
-              let e = new a({ value: t.call(r) }, t, r);
+              const e = new a({ value: t.call(r) }, t, r);
               return (
                 this.emit('requestUrl', e),
                 e.intercepted ? e.returnValue : e.data.value
@@ -1160,7 +1144,7 @@
           }),
           this.ctx.overrideDescriptor(this.resProto, 'url', {
             get: (t, r) => {
-              let e = new a({ value: t.call(r) }, t, r);
+              const e = new a({ value: t.call(r) }, t, r);
               return (
                 this.emit('responseUrl', e),
                 e.intercepted ? e.returnValue : e.data.value
@@ -1174,7 +1158,7 @@
         return this.Headers
           ? (this.ctx.overrideDescriptor(this.reqProto, 'headers', {
               get: (t, r) => {
-                let e = new a({ value: t.call(r) }, t, r);
+                const e = new a({ value: t.call(r) }, t, r);
                 return (
                   this.emit('requestHeaders', e),
                   e.intercepted ? e.returnValue : e.data.value
@@ -1183,7 +1167,7 @@
             }),
             this.ctx.overrideDescriptor(this.resProto, 'headers', {
               get: (t, r) => {
-                let e = new a({ value: t.call(r) }, t, r);
+                const e = new a({ value: t.call(r) }, t, r);
                 return (
                   this.emit('responseHeaders', e),
                   e.intercepted ? e.returnValue : e.data.value
@@ -1192,7 +1176,7 @@
             }),
             this.ctx.override(this.headersProto, 'get', (t, r, [e]) => {
               if (!e) return t.call(r);
-              let n = new a({ name: e, value: t.call(r, e) }, t, r);
+              const n = new a({ name: e, value: t.call(r, e) }, t, r);
               return (
                 this.emit('getHeader', n),
                 n.intercepted ? n.returnValue : n.data.value
@@ -1200,7 +1184,7 @@
             }),
             this.ctx.override(this.headersProto, 'set', (t, r, e) => {
               if (2 > e.length) return t.apply(r, e);
-              let [n, o] = e,
+              const [n, o] = e,
                 i = new a({ name: n, value: o }, t, r);
               return (
                 this.emit('setHeader', i),
@@ -1211,7 +1195,7 @@
             }),
             this.ctx.override(this.headersProto, 'has', (t, r, e) => {
               if (!e.length) return t.call(r);
-              let [n] = e,
+              const [n] = e,
                 o = new a({ name: n, value: t.call(r, n) }, t, r);
               return (
                 this.emit('hasHeader', o),
@@ -1220,7 +1204,7 @@
             }),
             this.ctx.override(this.headersProto, 'append', (t, r, e) => {
               if (2 > e.length) return t.apply(r, e);
-              let [n, o] = e,
+              const [n, o] = e,
                 i = new a({ name: n, value: o }, t, r);
               return (
                 this.emit('appendHeader', i),
@@ -1231,7 +1215,7 @@
             }),
             this.ctx.override(this.headersProto, 'delete', (t, r, e) => {
               if (!e.length) return t.apply(r, e);
-              let [n] = e,
+              const [n] = e,
                 o = new a({ name: n }, t, r);
               return (
                 this.emit('deleteHeader', o),
@@ -1264,11 +1248,11 @@
           (this.setRequestHeader = this.xhrProto.setRequestHeader),
           (this.responseURL = t.nativeMethods.getOwnPropertyDescriptor(
             this.xhrProto,
-            'responseURL'
+            'responseURL',
           )),
           (this.responseText = t.nativeMethods.getOwnPropertyDescriptor(
             this.xhrProto,
-            'responseText'
+            'responseText',
           ));
       }
       override() {
@@ -1282,11 +1266,11 @@
       overrideOpen() {
         this.ctx.override(this.xhrProto, 'open', (t, r, e) => {
           if (2 > e.length) return t.apply(r, e);
-          let [n, o, i = !0, c = null, l = null] = e,
+          const [n, o, i = !0, c = null, l = null] = e,
             u = new a(
               { method: n, input: o, async: i, user: c, password: l },
               t,
-              r
+              r,
             );
           return (
             this.emit('open', u),
@@ -1298,7 +1282,7 @@
                   u.data.input,
                   u.data.async,
                   u.data.user,
-                  u.data.password
+                  u.data.password,
                 )
           );
         });
@@ -1306,7 +1290,7 @@
       overrideResponseUrl() {
         this.ctx.overrideDescriptor(this.xhrProto, 'responseURL', {
           get: (t, r) => {
-            let e = new a({ value: t.call(r) }, t, r);
+            const e = new a({ value: t.call(r) }, t, r);
             return (
               this.emit('responseUrl', e),
               e.intercepted ? e.returnValue : e.data.value
@@ -1316,7 +1300,7 @@
       }
       overrideSend() {
         this.ctx.override(this.xhrProto, 'send', (t, r, [e = null]) => {
-          let n = new a({ body: e }, t, r);
+          const n = new a({ body: e }, t, r);
           return (
             this.emit('send', n),
             n.intercepted ? n.returnValue : n.target.call(n.that, n.data.body)
@@ -1326,7 +1310,7 @@
       overrideSetReqHeader() {
         this.ctx.override(this.xhrProto, 'setRequestHeader', (t, r, e) => {
           if (2 > e.length) return t.apply(r, e);
-          let [n, o] = e,
+          const [n, o] = e,
             i = new a({ name: n, value: o }, t, r);
           return (
             this.emit('setReqHeader', i),
@@ -1338,7 +1322,7 @@
       }
       overrideGetResHeaders() {
         this.ctx.override(this.xhrProto, 'getAllResponseHeaders', (t, r) => {
-          let e = new a({ value: t.call(r) }, t, r);
+          const e = new a({ value: t.call(r) }, t, r);
           return (
             this.emit('getAllResponseHeaders', e),
             e.intercepted ? e.returnValue : e.data.value
@@ -1348,7 +1332,7 @@
       overrideGetResHeader() {
         this.ctx.override(this.xhrProto, 'getResponseHeader', (t, r, e) => {
           if (!e.length) return t.apply(r, e);
-          let [n] = e,
+          const [n] = e,
             o = new a({ name: n, value: t.call(r, n) }, t, r);
           return o.intercepted ? o.returnValue : o.data.value;
         });
@@ -1365,7 +1349,7 @@
           (this.esProto = this.EventSource.prototype || {}),
           (this.url = t.nativeMethods.getOwnPropertyDescriptor(
             this.esProto,
-            'url'
+            'url',
           )),
           (this.CONNECTING = 0),
           (this.OPEN = 1),
@@ -1377,7 +1361,7 @@
           'EventSource',
           (t, r, e) => {
             if (!e.length) return new t(...e);
-            let [n, o = {}] = e,
+            const [n, o = {}] = e,
               i = new a({ url: n, config: o }, t, r);
             return (
               this.emit('construct', i),
@@ -1386,7 +1370,7 @@
                 : new i.target(i.data.url, i.data.config)
             );
           },
-          !0
+          !0,
         ),
           'EventSource' in this.window &&
             ((this.window.EventSource.CONNECTING = this.CONNECTING),
@@ -1396,7 +1380,7 @@
       overrideUrl() {
         this.ctx.overrideDescriptor(this.esProto, 'url', {
           get: (t, r) => {
-            let e = new a({ value: t.call(r) }, t, r);
+            const e = new a({ value: t.call(r) }, t, r);
             return this.emit('url', e), e.data.value;
           },
         });
@@ -1428,7 +1412,7 @@
       overridePushState() {
         this.ctx.override(this.historyProto, 'pushState', (t, r, e) => {
           if (2 > e.length) return t.apply(r, e);
-          let [n, o, i = ''] = e,
+          const [n, o, i = ''] = e,
             c = new a({ state: n, title: o, url: i }, t, r);
           return (
             this.emit('pushState', c),
@@ -1441,7 +1425,7 @@
       overrideReplaceState() {
         this.ctx.override(this.historyProto, 'replaceState', (t, r, e) => {
           if (2 > e.length) return t.apply(r, e);
-          let [n, o, i = ''] = e,
+          const [n, o, i = ''] = e,
             c = new a({ state: n, title: o, url: i }, t, r);
           return (
             this.emit('replaceState', c),
@@ -1453,7 +1437,7 @@
       }
       overrideGo() {
         this.ctx.override(this.historyProto, 'go', (t, r, [e]) => {
-          let n = new a({ delta: e }, t, r);
+          const n = new a({ delta: e }, t, r);
           return (
             this.emit('go', n),
             n.intercepted ? n.returnValue : n.target.call(n.that, n.data.delta)
@@ -1462,7 +1446,7 @@
       }
       overrideForward() {
         this.ctx.override(this.historyProto, 'forward', (t, r) => {
-          let e = new a(null, t, r);
+          const e = new a(null, t, r);
           return (
             this.emit('forward', e),
             e.intercepted ? e.returnValue : e.target.call(e.that)
@@ -1471,7 +1455,7 @@
       }
       overrideBack() {
         this.ctx.override(this.historyProto, 'back', (t, r) => {
-          let e = new a(null, t, r);
+          const e = new a(null, t, r);
           return (
             this.emit('back', e),
             e.intercepted ? e.returnValue : e.target.call(e.that)
@@ -1508,30 +1492,29 @@
           (this.href = this.WorkerLocation
             ? t.nativeMethods.getOwnPropertyDescriptor(
                 this.workerLocProto,
-                'href'
+                'href',
               )
             : t.nativeMethods.getOwnPropertyDescriptor(this.location, 'href'));
       }
       overrideWorkerLocation(t) {
         if (!this.WorkerLocation) return !1;
-        let r = this;
-        for (let e of this.keys)
+        for (const e of this.keys)
           this.ctx.overrideDescriptor(this.workerLocProto, e, {
-            get: () => t(r.href.get.call(this.location))[e],
+            get: () => t(this.href.get.call(this.location))[e],
           });
         return !0;
       }
       emulate(t, r) {
-        let e = {},
+        const e = {},
           n = this;
-        for (let o of n.keys)
+        for (const o of n.keys)
           this.ctx.nativeMethods.defineProperty(e, o, {
             get() {
               return t(n.href.get.call(n.location))[o];
             },
             set:
               o !== 'origin'
-                ? function (i) {
+                ? (i) => {
                     switch (o) {
                       case 'href':
                         n.location.href = r(i);
@@ -1543,12 +1526,12 @@
                           i.trim().startsWith('#')
                             ? new URL(i.trim(), e.href).href
                             : new URL('#' + i.trim(), e.href).href,
-                          n
+                          n,
                         );
                         break;
                       default:
                         {
-                          let c = new URL(e.href);
+                          const c = new URL(e.href);
                           (c[o] = i), (n.location.href = r(c.href));
                         }
                         break;
@@ -1562,7 +1545,7 @@
           'reload' in this.location &&
             this.ctx.nativeMethods.defineProperty(e, 'reload', {
               value: this.ctx.wrap(this.location, 'reload', (o, i) =>
-                o.call(i === e ? this.location : i)
+                o.call(i === e ? this.location : i),
               ),
               writable: !1,
               enumerable: !0,
@@ -1571,7 +1554,7 @@
             this.ctx.nativeMethods.defineProperty(e, 'replace', {
               value: this.ctx.wrap(this.location, 'assign', (o, i, c) => {
                 (!c.length || i !== e) && o.call(i), (i = this.location);
-                let [l] = c,
+                const [l] = c,
                   u = new URL(l, e.href);
                 return o.call(i === e ? this.location : i, r(u.href));
               }),
@@ -1582,7 +1565,7 @@
             this.ctx.nativeMethods.defineProperty(e, 'assign', {
               value: this.ctx.wrap(this.location, 'assign', (o, i, c) => {
                 (!c.length || i !== e) && o.call(i), (i = this.location);
-                let [l] = c,
+                const [l] = c,
                   u = new URL(l, e.href);
                 return o.call(i === e ? this.location : i, r(u.href));
               }),
@@ -1592,12 +1575,12 @@
           'ancestorOrigins' in this.location &&
             this.ctx.nativeMethods.defineProperty(e, 'ancestorOrigins', {
               get() {
-                let o = [];
+                const o = [];
                 return (
                   n.window.DOMStringList &&
                     n.ctx.nativeMethods.setPrototypeOf(
                       o,
-                      n.window.DOMStringList.prototype
+                      n.window.DOMStringList.prototype,
                     ),
                   o
                 );
@@ -1618,7 +1601,7 @@
           this.ctx.window.Location &&
             this.ctx.nativeMethods.setPrototypeOf(
               e,
-              this.ctx.window.Location.prototype
+              this.ctx.window.Location.prototype,
             ),
           e
         );
@@ -1639,11 +1622,11 @@
           (this.messageProto = this.MessageEvent.prototype || {}),
           (this.messageData = t.nativeMethods.getOwnPropertyDescriptor(
             this.messageProto,
-            'data'
+            'data',
           )),
           (this.messageOrigin = t.nativeMethods.getOwnPropertyDescriptor(
             this.messageProto,
-            'origin'
+            'origin',
           ));
       }
       overridePostMessage() {
@@ -1651,10 +1634,10 @@
           if (!e.length) return t.apply(r, e);
           let n, o, i;
           this.ctx.worker ? ([n, i = []] = e) : ([n, o, i = []] = e);
-          let c = new a(
+          const c = new a(
             { message: n, origin: o, transfer: i, worker: this.ctx.worker },
             t,
-            r
+            r,
           );
           return (
             this.emit('postMessage', c),
@@ -1666,7 +1649,7 @@
                     c.that,
                     c.data.message,
                     c.data.origin,
-                    c.data.transfer
+                    c.data.transfer,
                   )
           );
         });
@@ -1676,10 +1659,10 @@
           if (this.ctx.worker ? !i.length : 2 > i) return n.apply(o, i);
           let c, l, u;
           e ? (([c, u = []] = i), (l = null)) : ([c, l, u = []] = i);
-          let h = new a(
+          const h = new a(
             { message: c, origin: l, transfer: u, worker: this.ctx.worker },
             n,
-            t
+            t,
           );
           return (
             this.emit('postMessage', h),
@@ -1691,7 +1674,7 @@
                     h.that,
                     h.data.message,
                     h.data.origin,
-                    h.data.transfer
+                    h.data.transfer,
                   )
           );
         });
@@ -1699,7 +1682,7 @@
       overrideMessageOrigin() {
         this.ctx.overrideDescriptor(this.messageProto, 'origin', {
           get: (t, r) => {
-            let e = new a({ value: t.call(r) }, t, r);
+            const e = new a({ value: t.call(r) }, t, r);
             return (
               this.emit('origin', e),
               e.intercepted ? e.returnValue : e.data.value
@@ -1710,7 +1693,7 @@
       overrideMessageData() {
         this.ctx.overrideDescriptor(this.messageProto, 'data', {
           get: (t, r) => {
-            let e = new a({ value: t.call(r) }, t, r);
+            const e = new a({ value: t.call(r) }, t, r);
             return (
               this.emit('data', e), e.intercepted ? e.returnValue : e.data.value
             );
@@ -1733,7 +1716,7 @@
       overrideSendBeacon() {
         this.ctx.override(this.navProto, 'sendBeacon', (t, r, e) => {
           if (!e.length) return t.apply(r, e);
-          let [n, o = ''] = e,
+          const [n, o = ''] = e,
             i = new a({ url: n, data: o }, t, r);
           return (
             this.emit('sendBeacon', i),
@@ -1759,11 +1742,11 @@
       OPEN: WebSocket.OPEN,
     };
   async function W() {
-    let s = (
+    const s = (
         await self.clients.matchAll({ type: 'window', includeUncontrolled: !0 })
       ).map(async (r) => {
-        let e = await (function (n) {
-          let o = new MessageChannel();
+        const e = await ((n) => {
+          const o = new MessageChannel();
           return new Promise((i) => {
             n.postMessage({ type: 'getPort', port: o.port2 }, [o.port2]),
               (o.port1.onmessage = (c) => {
@@ -1783,20 +1766,20 @@
       if (r instanceof AggregateError)
         throw (
           (console.error(
-            'bare-mux: failed to get a bare-mux SharedWorker MessagePort as all clients returned an invalid MessagePort.'
+            'bare-mux: failed to get a bare-mux SharedWorker MessagePort as all clients returned an invalid MessagePort.',
           ),
           new Error('All clients returned an invalid MessagePort.'))
         );
       return (
         console.warn(
-          'bare-mux: failed to get a bare-mux SharedWorker MessagePort within 1s, retrying'
+          'bare-mux: failed to get a bare-mux SharedWorker MessagePort within 1s, retrying',
         ),
         await W()
       );
     }
   }
   function Ie(s) {
-    let t = new MessageChannel(),
+    const t = new MessageChannel(),
       r = new Promise((e, n) => {
         (t.port1.onmessage = (o) => {
           o.data.type === 'pong' && e();
@@ -1808,13 +1791,13 @@
     );
   }
   function Ve(s, t) {
-    let r = new Ne(s, 'bare-mux-worker');
+    const r = new Ne(s, 'bare-mux-worker');
     return (
       t &&
         ct.addEventListener('message', (e) => {
           if (e.data.type === 'getPort' && e.data.port) {
             console.debug('bare-mux: recieved request for port from sw');
-            let n = new Ne(s, 'bare-mux-worker');
+            const n = new Ne(s, 'bare-mux-worker');
             v.call(e.data.port, n.port, [n.port]);
           }
         }),
@@ -1852,7 +1835,7 @@
       else if (t && SharedWorker) {
         if (!t.startsWith('/') && !t.includes('://'))
           throw new Error(
-            'Invalid URL. Must be absolute or start at the root.'
+            'Invalid URL. Must be absolute or start at the root.',
           );
         (this.port = Ve(t, r)),
           console.debug('bare-mux: setting localStorage bare-mux-path to', t),
@@ -1861,12 +1844,12 @@
         if (!SharedWorker)
           throw new Error('Unable to get a channel to the SharedWorker.');
         {
-          let e = Re['bare-mux-path'];
+          const e = Re['bare-mux-path'];
           if (
             (console.debug('bare-mux: got localStorage bare-mux-path:', e), !e)
           )
             throw new Error(
-              'Unable to get bare-mux workerPath from localStorage.'
+              'Unable to get bare-mux workerPath from localStorage.',
             );
           this.port = Ve(e, r);
         }
@@ -1879,17 +1862,17 @@
       } catch {
         return (
           console.warn(
-            'bare-mux: Failed to get a ping response from the worker within 1.5s. Assuming port is dead.'
+            'bare-mux: Failed to get a ping response from the worker within 1.5s. Assuming port is dead.',
           ),
           this.createChannel(),
           await this.sendMessage(t, r)
         );
       }
-      let e = new MessageChannel(),
+      const e = new MessageChannel(),
         n = [e.port2, ...(r || [])],
         o = new Promise((i, c) => {
           e.port1.onmessage = (l) => {
-            let u = l.data;
+            const u = l.data;
             u.type === 'error' ? c(u.error) : i(u);
           };
         });
@@ -1914,34 +1897,34 @@
 			return [BareTransport, "${t}"];
 		`,
         r,
-        e
+        e,
       );
     }
     async setManualTransport(t, r, e) {
       if (t === 'bare-mux-remote') throw new Error('Use setRemoteTransport.');
       await this.worker.sendMessage(
         { type: 'set', client: { function: t, args: r } },
-        e
+        e,
       );
     }
     async setRemoteTransport(t, r) {
-      let e = new MessageChannel();
+      const e = new MessageChannel();
       (e.port1.onmessage = async (n) => {
-        let o = n.data.port,
+        const o = n.data.port,
           i = n.data.message;
         if (i.type === 'fetch')
           try {
             t.ready || (await t.init()),
-              await (async function (c, l, u) {
-                let h = await u.request(
+              await (async (c, l, u) => {
+                const h = await u.request(
                   new URL(c.fetch.remote),
                   c.fetch.method,
                   c.fetch.body,
                   c.fetch.headers,
-                  null
+                  null,
                 );
                 if (!lt() && h.body instanceof ReadableStream) {
-                  let w = new Response(h.body);
+                  const w = new Response(h.body);
                   h.body = await w.arrayBuffer();
                 }
                 h.body instanceof ReadableStream ||
@@ -1955,8 +1938,8 @@
         else if (i.type === 'websocket')
           try {
             t.ready || (await t.init()),
-              await (async function (c, l, u) {
-                let [h, w] = u.connect(
+              await (async (c, l, u) => {
+                const [h, w] = u.connect(
                   new URL(c.websocket.url),
                   c.websocket.protocols,
                   c.websocket.requestHeaders,
@@ -1968,7 +1951,7 @@
                       ? v.call(
                           c.websocket.channel,
                           { type: 'message', args: [p] },
-                          [p]
+                          [p],
                         )
                       : v.call(c.websocket.channel, {
                           type: 'message',
@@ -1983,7 +1966,7 @@
                   },
                   (p) => {
                     v.call(c.websocket.channel, { type: 'error', args: [p] });
-                  }
+                  },
                 );
                 (c.websocket.channel.onmessage = (p) => {
                   p.data.type === 'data'
@@ -2002,7 +1985,7 @@
             type: 'set',
             client: { function: 'bare-mux-remote', args: [e.port2, r] },
           },
-          [e.port2]
+          [e.port2],
         );
     }
     getInnerPort() {
@@ -2029,26 +2012,26 @@
           'Worker',
           (t, r, e) => {
             if (!e.length) return new t(...e);
-            let [n, o = {}] = e,
+            const [n, o = {}] = e,
               i = new a({ url: n, options: o }, t, r);
             if ((this.emit('worker', i), i.intercepted)) return i.returnValue;
-            let c = new i.target(i.data.url, i.data.options),
+            const c = new i.target(i.data.url, i.data.options),
               l = new b();
             return (
               (async () => {
-                let u = await l.getInnerPort();
+                const u = await l.getInnerPort();
                 c.postMessage({ __uv$type: 'baremuxinit', port: u }, [u]);
               })(),
               c
             );
           },
-          !0
+          !0,
         );
       }
       overrideAddModule() {
         this.ctx.override(this.workletProto, 'addModule', (t, r, e) => {
           if (!e.length) return t.apply(r, e);
-          let [n, o = {}] = e,
+          const [n, o = {}] = e,
             i = new a({ url: n, options: o }, t, r);
           return (
             this.emit('addModule', i),
@@ -2061,7 +2044,7 @@
       overridePostMessage() {
         this.ctx.override(this.workerProto, 'postMessage', (t, r, e) => {
           if (!e.length) return t.apply(r, e);
-          let [n, o = []] = e,
+          const [n, o = []] = e,
             i = new a({ message: n, transfer: o }, t, r);
           return (
             this.emit('postMessage', i),
@@ -2074,7 +2057,7 @@
       overrideImportScripts() {
         this.ctx.override(this.window, 'importScripts', (t, r, e) => {
           if (!e.length) return t.apply(r, e);
-          let n = new a({ scripts: e }, t, r);
+          const n = new a({ scripts: e }, t, r);
           return (
             this.emit('importScripts', n),
             n.intercepted
@@ -2098,7 +2081,7 @@
       overrideObjectURL() {
         this.ctx.override(this.URL, 'createObjectURL', (t, r, e) => {
           if (!e.length) return t.apply(r, e);
-          let [n] = e,
+          const [n] = e,
             o = new a({ object: n }, t, r);
           return (
             this.emit('createObjectURL', o),
@@ -2107,7 +2090,7 @@
         }),
           this.ctx.override(this.URL, 'revokeObjectURL', (t, r, e) => {
             if (!e.length) return t.apply(r, e);
-            let [n] = e,
+            const [n] = e,
               o = new a({ url: n }, t, r);
             return (
               this.emit('revokeObjectURL', o),
@@ -2139,7 +2122,7 @@
       overrideMethods() {
         this.ctx.override(this.storeProto, 'getItem', (t, r, e) => {
           if (!e.length) return t.apply(this.wrappers.get(r) || r, e);
-          let [n] = e,
+          const [n] = e,
             o = new a({ name: n }, t, this.wrappers.get(r) || r);
           return (
             this.emit('getItem', o),
@@ -2148,7 +2131,7 @@
         }),
           this.ctx.override(this.storeProto, 'setItem', (t, r, e) => {
             if (2 > e.length) return t.apply(this.wrappers.get(r) || r, e);
-            let [n, o] = e,
+            const [n, o] = e,
               i = new a({ name: n, value: o }, t, this.wrappers.get(r) || r);
             return (
               this.emit('setItem', i),
@@ -2159,7 +2142,7 @@
           }),
           this.ctx.override(this.storeProto, 'removeItem', (t, r, e) => {
             if (!e.length) return t.apply(this.wrappers.get(r) || r, e);
-            let [n] = e,
+            const [n] = e,
               o = new a({ name: n }, t, this.wrappers.get(r) || r);
             return (
               this.emit('removeItem', o),
@@ -2167,7 +2150,7 @@
             );
           }),
           this.ctx.override(this.storeProto, 'clear', (t, r) => {
-            let e = new a(null, t, this.wrappers.get(r) || r);
+            const e = new a(null, t, this.wrappers.get(r) || r);
             return (
               this.emit('clear', e),
               e.intercepted ? e.returnValue : e.target.call(e.that)
@@ -2175,7 +2158,7 @@
           }),
           this.ctx.override(this.storeProto, 'key', (t, r, e) => {
             if (!e.length) return t.apply(this.wrappers.get(r) || r, e);
-            let [n] = e,
+            const [n] = e,
               o = new a({ index: n }, t, this.wrappers.get(r) || r);
             return (
               this.emit('key', o),
@@ -2188,10 +2171,10 @@
       overrideLength() {
         this.ctx.overrideDescriptor(this.storeProto, 'length', {
           get: (t, r) => {
-            let e = new a(
+            const e = new a(
               { length: t.call(this.wrappers.get(r) || r) },
               t,
-              this.wrappers.get(r) || r
+              this.wrappers.get(r) || r,
             );
             return (
               this.emit('length', e),
@@ -2202,10 +2185,10 @@
       }
       emulate(t, r = {}) {
         this.ctx.nativeMethods.setPrototypeOf(r, this.storeProto);
-        let e = new this.ctx.window.Proxy(r, {
+        const e = new this.ctx.window.Proxy(r, {
           get: (n, o) => {
             if (o in this.storeProto || typeof o == 'symbol') return t[o];
-            let i = new a({ name: o }, null, t);
+            const i = new a({ name: o }, null, t);
             return (
               this.emit('get', i),
               i.intercepted ? i.returnValue : t[i.data.name]
@@ -2213,7 +2196,7 @@
           },
           set: (n, o, i) => {
             if (o in this.storeProto || typeof o == 'symbol') return (t[o] = i);
-            let c = new a({ name: o, value: i }, null, t);
+            const c = new a({ name: o, value: i }, null, t);
             return (
               this.emit('set', c),
               c.intercepted ? c.returnValue : (t[c.data.name] = c.data.value)
@@ -2221,7 +2204,7 @@
           },
           deleteProperty: (n, o) => {
             if (typeof o == 'symbol') return delete t[o];
-            let i = new a({ name: o }, null, t);
+            const i = new a({ name: o }, null, t);
             return (
               this.emit('delete', i),
               i.intercepted ? i.returnValue : delete t[i.data.name]
@@ -2249,7 +2232,7 @@
           this.cssText -
             t.nativeMethods.getOwnPropertyDescriptors(
               this.cssStyleProto,
-              'cssText'
+              'cssText',
             ),
           (this.urlProps = [
             'background',
@@ -2282,7 +2265,7 @@
       overrideSetGetProperty() {
         this.ctx.override(this.cssStyleProto, 'getPropertyValue', (t, r, e) => {
           if (!e.length) return t.apply(r, e);
-          let [n] = e,
+          const [n] = e,
             o = new a({ property: n }, t, r);
           return (
             this.emit('getPropertyValue', o),
@@ -2293,7 +2276,7 @@
         }),
           this.ctx.override(this.cssStyleProto, 'setProperty', (t, r, e) => {
             if (2 > e.length) return t.apply(r, e);
-            let [n, o] = e,
+            const [n, o] = e,
               i = new a({ property: n, value: o }, t, r);
             return (
               this.emit('setProperty', i),
@@ -2306,14 +2289,14 @@
       overrideCssText() {
         this.ctx.overrideDescriptor(this.cssStyleProto, 'cssText', {
           get: (t, r) => {
-            let e = new a({ value: t.call(r) }, t, r);
+            const e = new a({ value: t.call(r) }, t, r);
             return (
               this.emit('getCssText', e),
               e.intercepted ? e.returnValue : e.data.value
             );
           },
           set: (t, r, [e]) => {
-            let n = new a({ value: e }, t, r);
+            const n = new a({ value: e }, t, r);
             return (
               this.emit('setCssText', n),
               n.intercepted
@@ -2340,7 +2323,7 @@
       overrideOpen() {
         this.ctx.override(this.IDBFactory.prototype, 'open', (t, r, e) => {
           if (!e.length || !e.length) return t.apply(r, e);
-          let [n, o] = e,
+          const [n, o] = e,
             i = new a({ name: n, version: o }, t, r);
           return (
             this.emit('idbFactoryOpen', i),
@@ -2353,7 +2336,7 @@
       overrideName() {
         this.ctx.overrideDescriptor(this.idbDatabaseProto, 'name', {
           get: (t, r) => {
-            let e = new a({ value: t.call(r) }, t, r);
+            const e = new a({ value: t.call(r) }, t, r);
             return (
               this.emit('idbFactoryName', e),
               e.intercepted ? e.returnValue : e.data.value
@@ -2382,10 +2365,10 @@
           this.window,
           'WebSocket',
           (r, e, n) => {
-            let o = new EventTarget();
+            const o = new EventTarget();
             Object.setPrototypeOf(o, this.WebSocket.prototype),
               (o.constructor = this.WebSocket);
-            let i = (h) =>
+            const i = (h) =>
                 new Proxy(h, {
                   get(w, p) {
                     return p === 'isTrusted' ? !0 : Reflect.get(w, p);
@@ -2423,7 +2406,7 @@
                       l.binaryType === 'arraybuffer' &&
                       ((w = await w.arrayBuffer()),
                       Object.setPrototypeOf(w, ArrayBuffer.prototype)));
-                let p = new MessageEvent('message', {
+                const p = new MessageEvent('message', {
                   data: w,
                   origin: h.origin,
                   lastEventId: h.lastEventId,
@@ -2439,12 +2422,12 @@
               o
             );
           },
-          !0
+          !0,
         ),
           this.ctx.overrideDescriptor(this.wsProto, 'binaryType', {
             get: (r, e) => this.socketmap.get(e).binaryType,
             set: (r, e, n) => {
-              let o = this.socketmap.get(e);
+              const o = this.socketmap.get(e);
               (n[0] === 'blob' || n[0] === 'arraybuffer') &&
                 (o.binaryType = n[0]);
             },
@@ -2458,28 +2441,28 @@
           this.ctx.overrideDescriptor(this.wsProto, 'onclose', {
             get: (r, e) => this.socketmap.get(e).onclose,
             set: (r, e, n) => {
-              let o = this.socketmap.get(e);
+              const o = this.socketmap.get(e);
               o.onclose = n[0];
             },
           }),
           this.ctx.overrideDescriptor(this.wsProto, 'onerror', {
             get: (r, e) => this.socketmap.get(e).onerror,
             set: (r, e, n) => {
-              let o = this.socketmap.get(e);
+              const o = this.socketmap.get(e);
               o.onerror = n[0];
             },
           }),
           this.ctx.overrideDescriptor(this.wsProto, 'onmessage', {
             get: (r, e) => this.socketmap.get(e).onmessage,
             set: (r, e, n) => {
-              let o = this.socketmap.get(e);
+              const o = this.socketmap.get(e);
               o.onmessage = n[0];
             },
           }),
           this.ctx.overrideDescriptor(this.wsProto, 'onopen', {
             get: (r, e) => this.socketmap.get(e).onopen,
             set: (r, e, n) => {
-              let o = this.socketmap.get(e);
+              const o = this.socketmap.get(e);
               o.onopen = n[0];
             },
           }),
@@ -2496,20 +2479,20 @@
             this.wsProto,
             'send',
             (r, e, n) => this.socketmap.get(e).barews.send(n[0]),
-            !1
+            !1,
           ),
           this.ctx.override(
             this.wsProto,
             'close',
             (r, e, n) => {
-              let o = this.socketmap.get(e);
+              const o = this.socketmap.get(e);
               return (
                 n[0] === void 0 && (n[0] = 1e3),
                 n[1] === void 0 && (n[1] = ''),
                 o.barews.close(n[0], n[1])
               );
             },
-            !1
+            !1,
           );
       }
     },
@@ -2557,17 +2540,17 @@
           (this.style = new _e(this));
       }
       override(t, r, e, n) {
-        let o = this.wrap(t, r, e, n);
+        const o = this.wrap(t, r, e, n);
         return (t[r] = o), o;
       }
       overrideDescriptor(t, r, e = {}) {
-        let n = this.wrapDescriptor(t, r, e);
+        const n = this.wrapDescriptor(t, r, e);
         return n ? (this.nativeMethods.defineProperty(t, r, n), n) : {};
       }
       wrap(t, r, e, n = !1) {
-        let o = t[r];
+        const o = t[r];
         if (!o) return o;
-        let i =
+        const i =
           'prototype' in o
             ? function () {
                 return e(o, this, [...arguments]);
@@ -2584,9 +2567,9 @@
         );
       }
       wrapDescriptor(t, r, e = {}) {
-        let n = this.nativeMethods.getOwnPropertyDescriptor(t, r);
+        const n = this.nativeMethods.getOwnPropertyDescriptor(t, r);
         if (!n) return !1;
-        for (let o in e)
+        for (const o in e)
           o in n &&
             (o === 'get' || o === 'set'
               ? (n[o] = this.wrap(n, o, e[o]))

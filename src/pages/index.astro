@@ -3,19 +3,19 @@ import '@src/main.css';
 import { Image } from 'astro:assets';
 import {
   ArrowLeft,
-  X,
   ArrowRight,
+  Ellipsis,
+  Grid2X2Plus,
+  Joystick,
+  Link2,
+  Maximize,
   MoonStar,
   RotateCw,
   Search,
-  Joystick,
-  Ellipsis,
-  Grid2X2Plus,
   Settings,
-  Maximize,
   SquareChevronRight,
   Star,
-  Link2,
+  X,
 } from 'lucide-astro';
 ---
 
@@ -27,10 +27,7 @@ import {
     <meta name="generator" content={Astro.generator} />
     <title>Home</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <script
-      is:inline
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-DQZPCVEF89"></script>
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-DQZPCVEF89"></script>
     <script is:inline>
       try {
         window.dataLayer = window.dataLayer || [];
@@ -39,11 +36,11 @@ import {
         }
         gtag('js', new Date());
         gtag('config', 'G-DQZPCVEF89');
-        console.log('Google Analytics loaded successfully');
+        console.log("Google Analytics loaded successfully");
       } catch (error) {
         console.error('Google Analytics failed to load:', error);
       }
-    </script>
+    </script>    
     <script src="@src/utils/home.ts"></script>
     <script is:inline src="/assets/packaged/v/config.js" defer></script>
     <script is:inline src="/assets/packaged/v/bundle.js" defer></script>
@@ -153,59 +150,59 @@ import {
             class="rounded-full absolute left-3 top-1/2 transform -translate-y-1/2"
           />
           <X
-            id="clear"
-            class="absolute right-[5px] text-[#a5adce] w-6 h-6 cursor-pointer hover:text-red-400 transition-opacity duration-200 hidden"
+          id="clear"
+          class="absolute right-[5px] text-[#a5adce] w-6 h-6 cursor-pointer hover:text-red-400 transition-opacity duration-200 hidden"
+        />
+        <button
+          type="button"
+          id="link"
+          class="absolute right-[5px] transition-all duration-200 group w-8 h-8 flex items-center justify-center"
+        >
+          <Link2
+            class="text-[#a5adce] group-hover:text-white w-6 h-6 z-10 transition-transform duration-200 ease-in-out"
           />
-          <button
-            type="button"
-            id="link"
-            class="absolute right-[5px] transition-all duration-200 group w-8 h-8 flex items-center justify-center"
-          >
-            <Link2
-              class="text-[#a5adce] group-hover:text-white w-6 h-6 z-10 transition-transform duration-200 ease-in-out"
-            />
+        </button>        
           </button>
         </div>
-      </form>
+      </form>      
+      <button
+        id="fav"
+        class="relative group w-8 h-8 flex items-center justify-center"
+      >
+        <Star
+          class="text-[#a5adce] group-hover:text-yellow-400 w-6 h-6 z-10 transition-transform duration-200 ease-in-out"
+        />
+        <div
+          class="absolute inset-0 rounded-full bg-transparent group-hover:bg-white/20 transition-colors duration-200"
+        >
+        </div>
+      </button>
+      <button
+        id="console"
+        class="relative group w-8 h-8 flex items-center justify-center"
+      >
+        <SquareChevronRight
+          class="text-[#a5adce] group-hover:text-white w-6 h-6 z-10 transition-transform duration-200 ease-in-out"
+        />
+        <div
+          class="absolute inset-0 rounded-full bg-transparent group-hover:bg-white/20 transition-colors duration-200"
+        >
+        </div>
+      </button>
+      <button
+        id="full-screen"
+        class="relative group w-8 h-8 flex items-center justify-center"
+      >
+        <Maximize
+          class="text-[#a5adce] group-hover:text-white w-6 h-6 z-10 transition-transform duration-200 ease-in-out"
+        />
+        <div
+          class="absolute inset-0 rounded-full bg-transparent group-hover:bg-white/20 transition-colors duration-200"
+        >
+        </div>
+      </button>
     </div>
-    <button
-      id="fav"
-      class="relative group w-8 h-8 flex items-center justify-center"
-    >
-      <Star
-        class="text-[#a5adce] group-hover:text-yellow-400 w-6 h-6 z-10 transition-transform duration-200 ease-in-out"
-      />
-      <div
-        class="absolute inset-0 rounded-full bg-transparent group-hover:bg-white/20 transition-colors duration-200"
-      >
-      </div>
-    </button>
-    <button
-      id="console"
-      class="relative group w-8 h-8 flex items-center justify-center"
-    >
-      <SquareChevronRight
-        class="text-[#a5adce] group-hover:text-white w-6 h-6 z-10 transition-transform duration-200 ease-in-out"
-      />
-      <div
-        class="absolute inset-0 rounded-full bg-transparent group-hover:bg-white/20 transition-colors duration-200"
-      >
-      </div>
-    </button>
-    <button
-      id="full-screen"
-      class="relative group w-8 h-8 flex items-center justify-center"
-    >
-      <Maximize
-        class="text-[#a5adce] group-hover:text-white w-6 h-6 z-10 transition-transform duration-200 ease-in-out"
-      />
-      <div
-        class="absolute inset-0 rounded-full bg-transparent group-hover:bg-white/20 transition-colors duration-200"
-      >
-      </div>
-    </button>
-  </body>
-  <div
+    <div
     id="starting"
     class="inset-x-0 mt-[14rem] flex flex-col items-center justify-start p-4 z-30"
   >
@@ -218,9 +215,7 @@ import {
             id="searchBtn"
             class="absolute left-4 top-[24%] text-text-SECONDARY w-5 h-5"
           >
-            <Search
-              class="text-[#a5adce] hover:text-white transition-transform duration-200 ease-in-out"
-            />
+            <Search class="text-[#a5adce] hover:text-white transition-transform duration-200 ease-in-out" />
           </button>
           <input
             type="text"
@@ -235,32 +230,32 @@ import {
           />
         </div>
       </div>
-    </form>
+    </form>   
     <p
       id="quote"
       class="font-semibold mt-8 text-base text-text-SECONDARY text-center"
     >
       Loading quote
-    </p>
-  </div>
-  <div
-    id="loading"
-    class="hidden mt-80 absolute inset-0 flex-col items-center justify-center p-4"
-  >
-    <div class="flex justify-center items-center space-x-4 mb-6">
-      <Ellipsis class="w-24 h-24 text-text-HEADER animate-bounce delay-150" />
+    </p>   
+  </div>  
+    <div
+      id="loading"
+      class="hidden mt-80 absolute inset-0 flex-col items-center justify-center p-4"
+    >
+      <div class="flex justify-center items-center space-x-4 mb-6">
+        <Ellipsis class="w-24 h-24 text-text-HEADER animate-bounce delay-150" />
+      </div>
+      <h1 class="text-center text-4xl font-bold mt-10 text-text-HEADER">
+        <strong>Please wait while Lunar loads your content...</strong>
+      </h1>
     </div>
-    <h1 class="text-center text-4xl font-bold mt-10 text-text-HEADER">
-      <strong>Please wait while Lunar loads your content...</strong>
-    </h1>
-  </div>
+    </div>
+    <iframe
+      id="frame"
+      loading="lazy"
+      title=""
+      class="fixed z-10 top-[68px] left-[52px] h-[calc(100vh-60px)] w-[calc(100%-52px)]"
+    ></iframe>
+    <script src="@src/utils/browse.ts"></script>
+  </body>
 </html>
-<iframe
-  id="frame"
-  loading="lazy"
-  title=""
-  class="fixed z-10 top-[68px] left-[52px] h-[calc(100vh-60px)] w-[calc(100%-52px)]"
-></iframe>
-<script src="@src/utils/browse.ts"></script>
-
-<script></script>

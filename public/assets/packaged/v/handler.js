@@ -1,4 +1,3 @@
-'use strict';
 (() => {
   var m = self.Ultraviolet,
     W = self.UVClient,
@@ -29,10 +28,10 @@
                 r.__uv$type === 'baremuxinit' &&
                 t(r.port);
             });
-          })
+          }),
         ))
       : (c = new m.BareClient());
-    let a = new W(o, c, h),
+    const a = new W(o, c, h),
       {
         HTMLMediaElement: g,
         HTMLScriptElement: y,
@@ -58,7 +57,7 @@
             ? new URL(t)
             : (t.startsWith('blob:') && (t = t.slice(5)),
               new URL(e.sourceUrl(t))),
-        (t) => e.rewriteUrl(t)
+        (t) => e.rewriteUrl(t),
       ));
     let u = k;
     if (
@@ -83,20 +82,20 @@
       }),
       o.localStorage)
     ) {
-      for (let t in o.localStorage)
+      for (const t in o.localStorage)
         t.startsWith(i + e.location.origin + '@') &&
           (e.localStorageObj[t.slice((i + e.location.origin + '@').length)] =
             o.localStorage.getItem(t));
       e.lsWrap = a.storage.emulate(a.storage.localStorage, e.localStorageObj);
     }
     if (o.sessionStorage) {
-      for (let t in o.sessionStorage)
+      for (const t in o.sessionStorage)
         t.startsWith(i + e.location.origin + '@') &&
           (e.sessionStorageObj[t.slice((i + e.location.origin + '@').length)] =
             o.sessionStorage.getItem(t));
       e.ssWrap = a.storage.emulate(
         a.storage.sessionStorage,
-        e.sessionStorageObj
+        e.sessionStorageObj,
       );
     }
     let d = o.document ? a.node.baseURI.get.call(o.document) : o.location.href,
@@ -143,12 +142,12 @@
         a.nativeMethods.defineProperty(
           r,
           'name',
-          a.nativeMethods.getOwnPropertyDescriptor(t, 'name')
+          a.nativeMethods.getOwnPropertyDescriptor(t, 'name'),
         ),
           a.nativeMethods.defineProperty(
             r,
             'length',
-            a.nativeMethods.getOwnPropertyDescriptor(t, 'length')
+            a.nativeMethods.getOwnPropertyDescriptor(t, 'length'),
           ),
           a.nativeMethods.defineProperty(r, e.methods.string, {
             enumerable: !1,
@@ -181,11 +180,11 @@
         t.data.url = e.rewriteUrl(t.data.url);
       }),
       a.workers.on('importScripts', (t) => {
-        for (let r in t.data.scripts)
+        for (const r in t.data.scripts)
           t.data.scripts[r] = e.rewriteUrl(t.data.scripts[r]);
       }),
       a.workers.on('postMessage', (t) => {
-        let r = t.data.origin;
+        const r = t.data.origin;
         (t.data.origin = '*'),
           (t.data.message = {
             __data: t.data.message,
@@ -206,7 +205,7 @@
               u = e.cookie.serialize(s, e.meta, !0);
             });
         });
-        let r = e.cookie.setCookie(t.data.value)[0];
+        const r = e.cookie.setCookie(t.data.value)[0];
         r.path || (r.path = '/'),
           r.domain || (r.domain = e.meta.url.hostname),
           e.cookie.validateCookie(r, e.meta, !0) &&
@@ -249,8 +248,8 @@
               .sourceHtml(
                 t.data.value.replace(
                   /<head(.*)>(.*)<\/head>/s,
-                  '<op-head$1>$2</op-head>'
-                )
+                  '<op-head$1>$2</op-head>',
+                ),
               )
               .replace(/<op-head(.*)>(.*)<\/op-head>/s, '<head$1>$2</head>');
             break;
@@ -259,8 +258,8 @@
               .sourceHtml(
                 t.data.value.replace(
                   /<body(.*)>(.*)<\/body>/s,
-                  '<op-body$1>$2</op-body>'
-                )
+                  '<op-body$1>$2</op-body>',
+                ),
               )
               .replace(/<op-body(.*)>(.*)<\/op-body>/s, '<body$1>$2</body>');
             break;
@@ -299,23 +298,23 @@
         t.data.url &&
           (t.data.url = e.rewriteUrl(
             t.data.url,
-            '__uv' in t.that ? t.that.__uv.meta : e.meta
+            '__uv' in t.that ? t.that.__uv.meta : e.meta,
           ));
       }),
       a.history.on('pushState', (t) => {
         t.data.url &&
           (t.data.url = e.rewriteUrl(
             t.data.url,
-            '__uv' in t.that ? t.that.__uv.meta : e.meta
+            '__uv' in t.that ? t.that.__uv.meta : e.meta,
           ));
       }),
       a.element.on('getAttribute', (t) => {
         a.element.hasAttribute.call(
           t.that,
-          e.attributePrefix + '-attr-' + t.data.name
+          e.attributePrefix + '-attr-' + t.data.name,
         ) &&
           t.respondWith(
-            t.target.call(t.that, e.attributePrefix + '-attr-' + t.data.name)
+            t.target.call(t.that, e.attributePrefix + '-attr-' + t.data.name),
           );
       }),
       a.message.on('postMessage', (t) => {
@@ -334,19 +333,19 @@
               : l(
                   t.target,
                   [t.data.message, t.data.origin, t.data.transfer],
-                  t.that
-                )
+                  t.that,
+                ),
           );
       }),
       a.message.on('data', (t) => {
-        let { value: r } = t.data;
+        const { value: r } = t.data;
         typeof r == 'object' &&
           '__data' in r &&
           '__origin' in r &&
           t.respondWith(r.__data);
       }),
       a.message.on('origin', (t) => {
-        let r = a.message.messageData.get.call(t.that);
+        const r = a.message.messageData.get.call(t.that);
         typeof r == 'object' &&
           r.__data &&
           r.__origin &&
@@ -366,7 +365,7 @@
           t.target.call(
             t.that,
             e.attributePrefix + '-attr-' + t.data.name,
-            t.data.value
+            t.data.value,
           ),
             (t.data.value = e.blobUrls.get(t.data.value));
           return;
@@ -375,14 +374,14 @@
           (t.target.call(
             t.that,
             e.attributePrefix + '-attr-' + t.data.name,
-            t.data.value
+            t.data.value,
           ),
           (t.data.value = e.rewriteUrl(t.data.value))),
           e.attrs.isStyle(t.data.name) &&
             (t.target.call(
               t.that,
               e.attributePrefix + '-attr-' + t.data.name,
-              t.data.value
+              t.data.value,
             ),
             (t.data.value = e.rewriteCSS(t.data.value, {
               context: 'declarationList',
@@ -391,7 +390,7 @@
             (t.target.call(
               t.that,
               e.attributePrefix + '-attr-' + t.data.name,
-              t.data.value
+              t.data.value,
             ),
             (t.data.value = e.rewriteHtml(t.data.value, {
               ...e.meta,
@@ -402,14 +401,14 @@
                 e.clientScript,
                 e.configScript,
                 u,
-                o.location.href
+                o.location.href,
               ),
             }))),
           e.attrs.isSrcset(t.data.name) &&
             (t.target.call(
               t.that,
               e.attributePrefix + '-attr-' + t.data.name,
-              t.data.value
+              t.data.value,
             ),
             (t.data.value = e.html.wrapSrcset(t.data.value.toString()))),
           e.attrs.isForbidden(t.data.name) &&
@@ -436,7 +435,7 @@
               a.element.setAttribute.call(
                 r,
                 e.attributePrefix + '-attr-src',
-                l
+                l,
               ),
               t.call(r, e.blobUrls.get(l) || l)
             );
@@ -467,7 +466,7 @@
           a.element.setAttribute.call(
             r,
             e.attributePrefix + '-attr-integrity',
-            l
+            l,
           );
         },
       }),
@@ -479,14 +478,14 @@
           a.element.setAttribute.call(
             r,
             e.attributePrefix + '-attr-sandbox',
-            l
+            l,
           );
         },
       });
-    let C =
+    const C =
       n && Object.getOwnPropertyDescriptor(n.prototype, 'contentWindow').get;
     function U(t) {
-      let r = C.call(t);
+      const r = C.call(t);
       if (!r.__uv)
         try {
           p(r);
@@ -516,9 +515,9 @@
                 e.clientScript,
                 e.configScript,
                 u,
-                o.location.href
+                o.location.href,
               ),
-            })
+            }),
           );
         },
       }),
@@ -577,11 +576,11 @@
       a.attribute.on('getValue', (t) => {
         a.element.hasAttribute.call(
           t.that.ownerElement,
-          e.attributePrefix + '-attr-' + t.data.name
+          e.attributePrefix + '-attr-' + t.data.name,
         ) &&
           (t.data.value = a.element.getAttribute.call(
             t.that.ownerElement,
-            e.attributePrefix + '-attr-' + t.data.name
+            e.attributePrefix + '-attr-' + t.data.name,
           ));
       }),
       a.attribute.on('setValue', (t) => {
@@ -589,14 +588,14 @@
           (a.element.setAttribute.call(
             t.that.ownerElement,
             e.attributePrefix + '-attr-' + t.data.name,
-            t.data.value
+            t.data.value,
           ),
           (t.data.value = e.rewriteUrl(t.data.value))),
           e.attrs.isStyle(t.data.name) &&
             (a.element.setAttribute.call(
               t.that.ownerElement,
               e.attributePrefix + '-attr-' + t.data.name,
-              t.data.value
+              t.data.value,
             ),
             (t.data.value = e.rewriteCSS(t.data.value, {
               context: 'declarationList',
@@ -605,7 +604,7 @@
             (a.element.setAttribute.call(
               t.that.ownerElement,
               e.attributePrefix + '-attr-' + t.data.name,
-              t.data.value
+              t.data.value,
             ),
             (t.data.value = e.rewriteHtml(t.data.value, {
               ...e.meta,
@@ -616,21 +615,21 @@
                 e.clientScript,
                 e.configScript,
                 u,
-                o.location.href
+                o.location.href,
               ),
             }))),
           e.attrs.isSrcset(t.data.name) &&
             (a.element.setAttribute.call(
               t.that.ownerElement,
               e.attributePrefix + '-attr-' + t.data.name,
-              t.data.value
+              t.data.value,
             ),
             (t.data.value = e.html.wrapSrcset(t.data.value.toString())));
       }),
       a.url.on('createObjectURL', (t) => {
-        let r = t.target.call(t.that, t.data.object);
+        const r = t.target.call(t.that, t.data.object);
         if (r.startsWith('blob:' + location.origin)) {
-          let l =
+          const l =
             'blob:' +
             (e.meta.url.href !== 'about:blank'
               ? e.meta.url.origin
@@ -641,7 +640,7 @@
       }),
       a.url.on('revokeObjectURL', (t) => {
         if (e.blobUrls.has(t.data.url)) {
-          let r = t.data.url;
+          const r = t.data.url;
           (t.data.url = e.blobUrls.get(t.data.url)), e.blobUrls.delete(r);
         }
       }),
@@ -671,18 +670,21 @@
       }),
       a.storage.on('clear', (t) => {
         if (t.that.__uv$storageObj)
-          for (let r of a.nativeMethods.keys.call(null, t.that.__uv$storageObj))
+          for (const r of a.nativeMethods.keys.call(
+            null,
+            t.that.__uv$storageObj,
+          ))
             delete t.that.__uv$storageObj[r],
               a.storage.removeItem.call(
                 t.that,
-                i + e.meta.url.origin + '@' + r
+                i + e.meta.url.origin + '@' + r,
               ),
               t.respondWith();
       }),
       a.storage.on('length', (t) => {
         t.that.__uv$storageObj &&
           t.respondWith(
-            a.nativeMethods.keys.call(null, t.that.__uv$storageObj).length
+            a.nativeMethods.keys.call(null, t.that.__uv$storageObj).length,
           );
       }),
       a.storage.on('key', (t) => {
@@ -690,7 +692,7 @@
           t.respondWith(
             a.nativeMethods.keys.call(null, t.that.__uv$storageObj)[
               t.data.index
-            ] || null
+            ] || null,
           );
       }),
       a.function.on('function', (t) => {
@@ -703,7 +705,7 @@
         t.data.names = t.data.names.filter((r) => !e.filterKeys.includes(r));
       }),
       a.object.on('getOwnPropertyDescriptors', (t) => {
-        for (let r of e.filterKeys) delete t.data.descriptors[r];
+        for (const r of e.filterKeys) delete t.data.descriptors[r];
       }),
       a.style.on('setProperty', (t) => {
         a.style.dashedUrlProps.includes(t.data.property) &&
@@ -718,12 +720,12 @@
             e.sourceCSS(t.target.call(t.that, t.data.property), {
               context: 'value',
               ...e.meta,
-            })
+            }),
           );
       }),
       'CSS2Properties' in o)
     )
-      for (let t of a.style.urlProps)
+      for (const t of a.style.urlProps)
         a.overrideDescriptor(o.CSS2Properties.prototype, t, {
           get: (r, l) =>
             e.sourceCSS(r.call(l), { context: 'value', ...e.meta }),
@@ -735,21 +737,21 @@
       'HTMLElement' in o &&
         a.overrideDescriptor(o.HTMLElement.prototype, 'style', {
           get: (t, r) => {
-            let l = t.call(r);
+            const l = t.call(r);
             if (!l[i + 'modifiedStyle'])
-              for (let s of a.style.urlProps)
+              for (const s of a.style.urlProps)
                 a.nativeMethods.defineProperty(l, s, {
                   enumerable: !0,
                   configurable: !0,
                   get() {
-                    let f = a.style.getPropertyValue.call(this, s) || '';
+                    const f = a.style.getPropertyValue.call(this, s) || '';
                     return e.sourceCSS(f, { context: 'value', ...e.meta });
                   },
                   set(f) {
                     a.style.setProperty.call(
                       this,
                       a.style.propToDashed[s] || s,
-                      e.rewriteCSS(f, { context: 'value', ...e.meta })
+                      e.rewriteCSS(f, { context: 'value', ...e.meta }),
                     );
                   },
                 }),
@@ -775,14 +777,17 @@
       e.addEventListener.call(o, 'hashchange', (t) => {
         if (t.__uv$dispatched) return !1;
         t.stopImmediatePropagation();
-        let r = o.location.hash;
+        const r = o.location.hash;
         a.history.replaceState.call(o.history, '', '', t.oldURL),
           (e.location.hash = r);
       }),
       a.location.on('hashchange', (t, r, l) => {
         if (l.HashChangeEvent && a.history.replaceState) {
           a.history.replaceState.call(o.history, '', '', e.rewriteUrl(r));
-          let s = new l.HashChangeEvent('hashchange', { newURL: r, oldURL: t });
+          const s = new l.HashChangeEvent('hashchange', {
+            newURL: r,
+            oldURL: t,
+          });
           a.nativeMethods.defineProperty(s, i + 'dispatched', {
             value: !0,
             enumerable: !1,
@@ -844,15 +849,14 @@
         let [s] = l;
         return (s = e.rewriteUrl(s)), t.call(r, s);
       }),
-      (e.$wrap = function (t) {
-        return t === 'location'
+      (e.$wrap = (t) =>
+        t === 'location'
           ? e.methods.location
           : t === 'eval'
             ? e.methods.eval
-            : t;
-      }),
-      (e.$get = function (t) {
-        return t === o.location
+            : t),
+      (e.$get = (t) =>
+        t === o.location
           ? e.location
           : t === o.eval
             ? e.eval
@@ -860,19 +864,14 @@
               ? o.__uv$parent
               : t === o.top
                 ? o.__uv$top
-                : t;
-      }),
+                : t),
       (e.eval = a.wrap(o, 'eval', (t, r, l) => {
         if (!l.length || typeof l[0] != 'string') return t.apply(r, l);
         let [s] = l;
         return (s = e.rewriteJS(s)), t.call(r, s);
       })),
-      (e.call = function (t, r, l) {
-        return l ? t.apply(l, r) : t(...r);
-      }),
-      (e.call$ = function (t, r, l = []) {
-        return t[r].apply(t, l);
-      }),
+      (e.call = (t, r, l) => (l ? t.apply(l, r) : t(...r))),
+      (e.call$ = (t, r, l = []) => t[r].apply(t, l)),
       a.nativeMethods.defineProperty(o.Object.prototype, b, {
         get: () => e,
         enumerable: !1,
@@ -909,7 +908,7 @@
       a.nativeMethods.defineProperty(o.Object.prototype, e.methods.parent, {
         configurable: !0,
         get() {
-          let t = this.parent;
+          const t = this.parent;
           if (this === o)
             try {
               return '__uv' in t ? t : this;
@@ -925,14 +924,14 @@
       a.nativeMethods.defineProperty(o.Object.prototype, e.methods.top, {
         configurable: !0,
         get() {
-          let t = this.top;
+          const t = this.top;
           if (this === o) {
             if (t === this.parent) return this[e.methods.parent];
             try {
               if ('__uv' in t) return t;
               {
                 let r = this;
-                for (; r.parent !== t; ) r = r.parent;
+                while (r.parent !== t) r = r.parent;
                 return '__uv' in r ? r : this;
               }
             } catch {

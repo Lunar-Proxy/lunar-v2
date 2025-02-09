@@ -44,11 +44,11 @@ buttons.forEach((button) => {
           const choice = prompt(
             `Please choose a link by entering a number:\n${asset.link
               .map((item, index) => `${index + 1}. ${item.name}`)
-              .join('\n')}`
+              .join('\n')}`,
           );
 
           if (choice) {
-            const index = parseInt(choice) - 1;
+            const index = Number.parseInt(choice) - 1;
             if (index >= 0 && index < asset.link.length) {
               launch2(asset.link[index].url);
             } else {

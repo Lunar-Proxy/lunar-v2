@@ -1,15 +1,15 @@
-import { defineConfig } from 'astro/config';
+import { execSync } from 'child_process';
 import node from '@astrojs/node';
 import tailwind from '@astrojs/tailwind';
-import { viteStaticCopy } from 'vite-plugin-static-copy';
-import { server as wisp } from '@mercuryworkshop/wisp-js/server';
 import { baremuxPath } from '@mercuryworkshop/bare-mux/node';
 import { epoxyPath } from '@mercuryworkshop/epoxy-transport';
-import { version } from './package.json';
-import { execSync } from 'child_process';
-import playformCompress from '@playform/compress';
-import { normalizePath } from 'vite';
 import { scramjetPath } from '@mercuryworkshop/scramjet';
+import { server as wisp } from '@mercuryworkshop/wisp-js/server';
+import playformCompress from '@playform/compress';
+import { defineConfig } from 'astro/config';
+import { normalizePath } from 'vite';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
+import { version } from './package.json';
 
 function check() {
   try {

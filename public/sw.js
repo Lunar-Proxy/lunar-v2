@@ -10,7 +10,7 @@ importScripts(
   '/assets/packaged/v/sw.js',
   '/assets/packaged/scram/wasm.js',
   '/assets/packaged/scram/shared.js',
-  '/assets/packaged/scram/worker.js'
+  '/assets/packaged/scram/worker.js',
 );
 
 const uv = new UVServiceWorker();

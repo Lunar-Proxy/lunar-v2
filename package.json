@@ -8,7 +8,7 @@
     "start": "tsx index.ts",
     "build": "npx astro check && npx astro build",
     "astro": "npx astro",
-    "format": "prettier . --write",
+    "format": "npx biome format --write && npx biome format .",
     "revert": "git reset HEAD --hard && git clean -fd",
     "precommit": "npx astro check && npm run format"
   },
@@ -41,7 +41,6 @@
     "node": ">=18.x"
   },
   "devDependencies": {
-    "prettier": "^3.4.2",
-    "prettier-plugin-astro": "^0.14.1"
+    "@biomejs/biome": "1.9.4"
   }
 }

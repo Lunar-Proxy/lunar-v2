@@ -27,7 +27,7 @@ if (engine === 'https://duckduckgo.com/?q=') {
 let cloak: CloakDetails[] = [];
 
 if (await Settings.get('PreventClosing')) {
-  window.addEventListener('beforeunload', function (event) {
+  window.addEventListener('beforeunload', (event) => {
     event.preventDefault();
     // @ts-ignore
     return (event.returnValue = '');

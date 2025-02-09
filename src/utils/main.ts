@@ -1,5 +1,5 @@
-import { Settings } from '@src/utils/config';
 import { BareMuxConnection } from '@mercuryworkshop/bare-mux';
+import { Settings } from '@src/utils/config';
 import { Search } from './search';
 
 const copy = document.getElementById('link') as HTMLButtonElement;
@@ -50,7 +50,7 @@ async function launch(link: string) {
     ]);
   }
   console.log('Transport set to Epoxy');
-  let url = (await Search(link)) || 'd';
+  const url = (await Search(link)) || 'd';
   if (backend == 'uv') {
     frame.src = `/p/${UltraConfig.encodeUrl(url) ?? 'ERROR'}`;
   } else {
@@ -60,9 +60,9 @@ async function launch(link: string) {
     if (backend === 'uv') {
       InterceptLinks();
       input.value = '';
-      let url = UltraConfig.decodeUrl(
+      const url = UltraConfig.decodeUrl(
         frame.contentWindow?.location.href.split('/p/')[1] ||
-          frame.contentWindow?.location.href!
+          frame.contentWindow?.location.href!,
       );
       favicon.src = `https://s2.googleusercontent.com/s2/favicons?sz=64&domain_url=${url}`;
       input.value = url || '';
@@ -70,9 +70,9 @@ async function launch(link: string) {
       clear.style.right = '10px';
       clear.classList.remove('hidden');
     } else {
-      let url = scram.decodeUrl(
+      const url = scram.decodeUrl(
         frame.contentWindow?.location.href.split('/scram/')[1] ||
-          frame.contentWindow?.location.href
+          frame.contentWindow?.location.href,
       );
       input.value = url || '';
       favicon.src = `https://s2.googleusercontent.com/s2/favicons?sz=64&domain_url=${url}`;
@@ -90,7 +90,7 @@ fm.addEventListener('submit', async (event) => {
     LunarPaths(input.value.trim());
     return;
   }
-  let value = input.value.trim();
+  const value = input.value.trim();
   launch(value);
 });
 
@@ -109,7 +109,7 @@ async function InterceptLinks() {
   console.log('Intercepting links is running...');
   const clickableElements =
     frame.contentWindow?.document.querySelectorAll<HTMLElement>(
-      'a, button, [role="button"], [onclick], [data-href], span'
+      'a, button, [role="button"], [onclick], [data-href], span',
     );
 
   if (clickableElements) {
@@ -124,7 +124,7 @@ async function InterceptLinks() {
         } else if (target.hasAttribute('onclick')) {
           const onclickContent = target.getAttribute('onclick');
           const match = onclickContent?.match(
-            /(?:location\.href\s*=\s*['"])([^'"]+)(['"])/
+            /(?:location\.href\s*=\s*['"])([^'"]+)(['"])/,
           );
           href = match?.[1] || null;
         } else if (target.closest('a')) {
@@ -147,7 +147,7 @@ sf.addEventListener('submit', async (event) => {
   fm.dispatchEvent(new Event('submit'));
 });
 
-startclear?.addEventListener('click', function () {
+startclear?.addEventListener('click', () => {
   si.value = '';
   startclear.classList.add('hidden');
   si.focus();

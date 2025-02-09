@@ -1,4 +1,3 @@
-'use strict';
 (() => {
   var h = self.Ultraviolet,
     O = [
@@ -35,36 +34,36 @@
         try {
           if (!e.url.startsWith(location.origin + this.config.prefix))
             return await fetch(e);
-          let t = new h(this.config);
+          const t = new h(this.config);
           typeof this.config.construct == 'function' &&
             this.config.construct(t, 'service');
-          let w = await t.cookie.db();
+          const w = await t.cookie.db();
           (t.meta.origin = location.origin),
             (t.meta.base = t.meta.url = new URL(t.sourceUrl(e.url)));
-          let o = new v(
+          const o = new v(
             e,
             t,
-            C.includes(e.method.toUpperCase()) ? null : await e.blob()
+            C.includes(e.method.toUpperCase()) ? null : await e.blob(),
           );
           if (
             (t.meta.url.protocol === 'blob:' &&
               ((o.blob = !0), (o.base = o.url = new URL(o.url.pathname))),
             e.referrer && e.referrer.startsWith(location.origin))
           ) {
-            let i = new URL(t.sourceUrl(e.referrer));
+            const i = new URL(t.sourceUrl(e.referrer));
             (o.headers.origin ||
               (t.meta.url.origin !== i.origin && e.mode === 'cors')) &&
               (o.headers.origin = i.origin),
               (o.headers.referer = i.href);
           }
-          let f = (await t.cookie.getCookies(w)) || [],
+          const f = (await t.cookie.getCookies(w)) || [],
             x = t.cookie.serialize(f, t.meta, !1);
           (o.headers['user-agent'] = navigator.userAgent),
             x && (o.headers.cookie = x);
-          let p = new u(o, null, null);
+          const p = new u(o, null, null);
           if ((this.emit('request', p), p.intercepted)) return p.returnValue;
           s = o.blob ? 'blob:' + location.origin + o.url.pathname : o.url;
-          let c = await this.bareClient.fetch(s, {
+          const c = await this.bareClient.fetch(s, {
               headers: o.headers,
               method: o.method,
               body: o.body,
@@ -76,15 +75,15 @@
             r = new y(o, c),
             l = new u(r, null, null);
           if ((this.emit('beforemod', l), l.intercepted)) return l.returnValue;
-          for (let i of O) r.headers[i] && delete r.headers[i];
+          for (const i of O) r.headers[i] && delete r.headers[i];
           if (
             (r.headers.location &&
               (r.headers.location = t.rewriteUrl(r.headers.location)),
             ['document', 'iframe'].includes(e.destination))
           ) {
-            let i = r.getHeader('content-disposition');
+            const i = r.getHeader('content-disposition');
             if (!/\s*?((inline|attachment);\s*?)filename=/i.test(i)) {
-              let n = /^\s*?attachment/i.test(i) ? 'attachment' : 'inline',
+              const n = /^\s*?attachment/i.test(i) ? 'attachment' : 'inline',
                 [m] = new URL(c.finalURL).pathname.split('/').slice(-1);
               r.headers['content-disposition'] =
                 `${n}; filename=${JSON.stringify(m)}`;
@@ -93,10 +92,10 @@
           if (
             (r.headers['set-cookie'] &&
               (Promise.resolve(
-                t.cookie.setCookies(r.headers['set-cookie'], w, t.meta)
+                t.cookie.setCookies(r.headers['set-cookie'], w, t.meta),
               ).then(() => {
-                self.clients.matchAll().then(function (i) {
-                  i.forEach(function (n) {
+                self.clients.matchAll().then((i) => {
+                  i.forEach((n) => {
                     n.postMessage({
                       msg: 'updateCookies',
                       url: t.meta.url.href,
@@ -113,7 +112,7 @@
                 break;
               case 'worker':
                 {
-                  let i = [
+                  const i = [
                     t.bundleScript,
                     t.clientScript,
                     t.configScript,
@@ -140,13 +139,13 @@
                 ) {
                   let i = await c.text();
                   if (Array.isArray(this.config.inject)) {
-                    let n = i.indexOf('<head>'),
+                    const n = i.indexOf('<head>'),
                       m = i.indexOf('<HEAD>'),
                       b = i.indexOf('<body>'),
                       k = i.indexOf('<BODY>'),
                       S = new URL(s),
                       U = this.config.inject;
-                    for (let d of U)
+                    for (const d of U)
                       new RegExp(d.host).test(S.host) &&
                         (d.injectTo === 'head'
                           ? (n !== -1 || m !== -1) &&
@@ -163,7 +162,7 @@
                       t.clientScript,
                       t.configScript,
                       t.cookie.serialize(f, t.meta, !0),
-                      e.referrer
+                      e.referrer,
                     ),
                   });
                 }
@@ -200,7 +199,7 @@
           (this.raw = s),
           (this.ultraviolet = e.ultraviolet),
           (this.headers = {});
-        for (let t in s.rawHeaders)
+        for (const t in s.rawHeaders)
           this.headers[t.toLowerCase()] = s.rawHeaders[t];
         (this.status = s.status),
           (this.statusText = s.statusText),
@@ -268,7 +267,7 @@
       }
     };
   function E(a, e) {
-    let s = `
+    const s = `
         errorTrace.value = ${JSON.stringify(a)};
         fetchedURL.textContent = ${JSON.stringify(e)};
         for (const node of document.querySelectorAll("#uvHostname")) node.textContent = ${JSON.stringify(location.hostname)};
@@ -314,7 +313,7 @@
         `;
   }
   function T(a, e) {
-    let s = { 'content-type': 'text/html' };
+    const s = { 'content-type': 'text/html' };
     return (
       crossOriginIsolated &&
         (s['Cross-Origin-Embedder-Policy'] = 'require-corp'),

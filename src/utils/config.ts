@@ -8,11 +8,11 @@ interface Setting {
   [key: string]: any;
 }
 
-const Settings = (function () {
+const Settings = (() => {
   dbReady = new Promise((resolve, reject) => {
     const request: IDBOpenDBRequest = window.indexedDB.open(DBNAME, 1);
 
-    request.onupgradeneeded = function () {
+    request.onupgradeneeded = () => {
       const dbInstance = request.result;
       if (!dbInstance.objectStoreNames.contains(LunarSettings)) {
         dbInstance.createObjectStore(LunarSettings, {
@@ -22,12 +22,12 @@ const Settings = (function () {
       }
     };
 
-    request.onsuccess = function () {
+    request.onsuccess = () => {
       db = request.result;
       resolve();
     };
 
-    request.onerror = function () {
+    request.onerror = () => {
       reject(request.error);
     };
   });
@@ -117,7 +117,7 @@ const Settings = (function () {
       const store = transaction.objectStore(LunarSettings);
       const cursorRequest: IDBRequest = store.openCursor();
 
-      cursorRequest.onsuccess = function () {
+      cursorRequest.onsuccess = () => {
         const cursor: IDBCursorWithValue = cursorRequest.result;
         if (cursor) {
           if (cursor.value[settingName] !== undefined) {
@@ -130,7 +130,7 @@ const Settings = (function () {
         }
       };
 
-      cursorRequest.onerror = function () {
+      cursorRequest.onerror = () => {
         reject(new Error('Error retrieving setting by name.'));
       };
     });

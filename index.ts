@@ -23,7 +23,7 @@ async function build() {
       console.log(chalk.green.bold('✅ Lunar was successfully built!'));
     } catch (error) {
       throw new Error(
-        `Build Error: ${error instanceof Error ? error.message : String(error)}`
+        `Build Error: ${error instanceof Error ? error.message : String(error)}`,
       );
     }
   } else {
@@ -46,7 +46,7 @@ if (config.auth.protect) {
   config.auth.users.forEach((user) => {
     Object.entries(user).forEach(([username, password]) => {
       console.log(
-        chalk.yellow('🔑 Listing usernames and passwords for authentication')
+        chalk.yellow('🔑 Listing usernames and passwords for authentication'),
       );
       console.log(chalk.cyan(`Username: ${username}, Password: ${password}`));
     });
@@ -70,7 +70,10 @@ if (config.auth.protect) {
 
 app.setErrorHandler((error, _request, reply) => {
   if (error.statusCode === 401) {
-    reply.status(401).header('Content-Type', 'text/html').send(`
+    reply
+      .status(401)
+      .header('Content-Type', 'text/html')
+      .send(`
          <!doctype html>
 <html>
   <head>

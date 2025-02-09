@@ -81,12 +81,12 @@ if (copy) {
       if (backend === 'uv') {
         url = UltraConfig.decodeUrl(
           frame.contentWindow!.location.href.split('/p/')[1] ||
-            frame.contentWindow!.location.href
+            frame.contentWindow!.location.href,
         );
       } else {
         url = scram.decodeUrl(
           frame.contentWindow!.location.href.split('/scram/')[1] ||
-            frame.contentWindow!.location.href
+            frame.contentWindow!.location.href,
         );
       }
 
@@ -127,7 +127,7 @@ if (cnsl) {
       if (frame.contentDocument) {
         var script = frame.contentDocument.createElement('script');
         script.src = 'https://cdn.jsdelivr.net/npm/eruda';
-        script.onload = function () {
+        script.onload = () => {
           frame.contentWindow?.eruda.init();
           frame.contentWindow?.eruda.show();
           console.debug('Eruda console initialized.');
@@ -175,7 +175,7 @@ if (star) {
       const nickname = prompt('Enter a nickname for this favorite:');
       if (nickname) {
         const favorites = JSON.parse(
-          localStorage.getItem('@lunar/favorites') || '[]'
+          localStorage.getItem('@lunar/favorites') || '[]',
         );
         try {
           if ((await Settings.get('backend')) == 'sj') {
@@ -210,7 +210,7 @@ input?.addEventListener('input', function () {
   }
 });
 
-clear?.addEventListener('click', function () {
+clear?.addEventListener('click', () => {
   input.value = '';
   clear.classList.add('hidden');
   copy.style.right = '10px';
