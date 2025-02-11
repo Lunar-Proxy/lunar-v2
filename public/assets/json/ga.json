@@ -214,5 +214,24 @@
     "image": "/assets/images/icons/slow.jpg",
     "link": "https://coderguytedd.github.io/Slope-Game-Test/",
     "error": false
+  },
+  {
+    "name": "Ai Minecraft",
+    "image": "/assets/images/icons/mc.png",
+    "link": "https://oasis.decart.ai/welcome",
+    "error": false
+  },
+  {
+    "name": "Football Bros",
+    "image": "/assets/images/icons/fbb.png",
+    "link": "https://footballbros.io/",
+    "error": false
+  },
+  {
+    "name": "OvO 2",
+    "image": "/assets/images/icons/ovo2.png",
+    "link": "https://dedragames.com/games/ovo2/0.2alpha/",
+    "error": false
   }
+
 ]
