@@ -1,7 +1,7 @@
 ---
 import '@src/main.css';
 import Dropdown from '@src/components/DropDown.astro';
-import { Globe, Info, Palette, ShieldEllipsis } from 'lucide-astro';
+import { ShieldEllipsis, Palette, Info, Globe } from 'lucide-astro';
 ---
 
 <!doctype html>
@@ -94,17 +94,17 @@ import { Globe, Info, Palette, ShieldEllipsis } from 'lucide-astro';
         <p class="text-text-SECONDARY text-center">
           Choose a proxy that is used to search.
           <br /><br />
-          <strong>Ultraviolet (Default)</strong> - Fast, site supportive, and reliable.
+          <strong>Ultraviolet</strong> - Fast, but some sites may not work.
           <br />
-          <strong>Scramjet (BETA)</strong> - Much faster and somewhat more site supportive
-          than UV.
+          <strong>Scramjet (BETA)</strong> - Alot faster then UV, also more sites
+          work then UV.
         </p>
         <br />
         <Dropdown
           id="ptype"
           options={[
-            { value: 'sj', label: 'Scramjet' },
-            { value: 'uv', label: 'Ultraviolet (Default)' },
+            { value: 'sj', label: 'Scramjet (Default)' },
+            { value: 'uv', label: 'Ultraviolet' },
           ]}
         />
       </div>
@@ -124,10 +124,7 @@ import { Globe, Info, Palette, ShieldEllipsis } from 'lucide-astro';
               value: 'https://www.google.com/search?q=',
               label: 'Google',
             },
-            {
-              value: 'https://duckduckgo.com/?q=',
-              label: 'DuckDuckGo (Default)',
-            },
+            { value: 'https://duckduckgo.com/?q=', label: 'DuckDuckGo (Default)' },
           ]}
         />
       </div>
