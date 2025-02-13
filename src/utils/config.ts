@@ -37,6 +37,12 @@ const Settings = (() => {
     { engine: 'https://duckduckgo.com/?q=' },
     { transport: 'ep' },
     { PreventClosing: false },
+    {
+      plugins: {
+        adblock:
+          "<script>(function(){const s=['#sidebar-wrap','#advert','#xrail','#middle-article-advert-container','#sponsored-recommendations','#taboola-content','#inarticle_wrapper_div','#rc-row-container','#ads','.ad','.advertisement','.ad-banner','.ad-slot','script','iframe','video','aside','amp-ad','ins.adsbygoogle'],r=()=>s.forEach(e=>document.querySelectorAll(e).forEach(n=>n.remove())),k=()=>document.querySelectorAll('body *').forEach(n=>['fixed','sticky'].includes(getComputedStyle(n).position)&&n.remove()),o=()=>{if(document.body)new MutationObserver(()=>{r(),k()}).observe(document.body,{subtree:true,childList:true})};document.readyState==='loading'?document.addEventListener('DOMContentLoaded',()=>{r(),k(),o()}):(r(),k(),o());})();</script>",
+      },
+    },
   ];
 
   async function ensureDefaultSettings(): Promise<void> {

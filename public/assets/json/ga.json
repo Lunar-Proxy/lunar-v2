@@ -216,14 +216,14 @@
     "error": false
   },
   {
-    "name": "Ai Minecraft",
+    "name": "AI Minecraft",
     "image": "/assets/images/icons/mc.png",
     "link": "https://oasis.decart.ai/welcome",
     "error": false
   },
   {
     "name": "Football Bros",
-    "image": "/assets/images/icons/fbb.png",
+    "image": "/assets/images/icons/fbb.jpeg",
     "link": "https://footballbros.io/",
     "error": false
   },
@@ -233,5 +233,4 @@
     "link": "https://dedragames.com/games/ovo2/0.2alpha/",
     "error": false
   }
-
 ]

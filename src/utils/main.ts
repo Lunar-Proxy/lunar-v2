@@ -14,6 +14,12 @@ const sf = document.getElementById('startForm') as HTMLFormElement;
 const loading = document.getElementById('loading') as HTMLDivElement;
 const welcome = document.getElementById('starting') as HTMLDivElement;
 const startclear = document.getElementById('sclear') as HTMLButtonElement;
+const connection = new BareMuxConnection('/assets/packaged/bm/worker.js');
+const wispurl =
+  (location.protocol === 'https:' ? 'wss' : 'ws') +
+  '://' +
+  location.host +
+  '/wsp/';
 const scram = new ScramjetController({
   prefix: '/scram/',
   files: {
@@ -36,13 +42,16 @@ try {
   throw new Error('Service Worker registration failed with error:' + error);
 }
 
+document.addEventListener('DOMContentLoaded', async () => {
+  // todo - make it switchable epoxy & libcurl 
+  if ((await connection.getTransport()) !== '/assets/packaged/ep/index.mjs') {
+    await connection.setTransport('/assets/packaged/ep/index.mjs', [
+      { wisp: wispurl },
+    ]);
+  }
+});
+
 async function launch(link: string) {
-  const connection = new BareMuxConnection('/assets/packaged/bm/worker.js');
-  const wispurl =
-    (location.protocol === 'https:' ? 'wss' : 'ws') +
-    '://' +
-    location.host +
-    '/wsp/';
   const backend = await Settings.get('backend');
   if ((await connection.getTransport()) !== '/assets/packaged/ep/index.mjs') {
     await connection.setTransport('/assets/packaged/ep/index.mjs', [
