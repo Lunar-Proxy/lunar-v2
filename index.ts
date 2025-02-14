@@ -10,24 +10,31 @@ import { createServer } from 'node:http';
 import { Socket } from 'node:net';
 import { server as wisp } from '@mercuryworkshop/wisp-js/server';
 import path from 'node:path';
+import { version } from './package.json';
 import config from './config';
 
 const port: number = config.port;
 const host: string = '0.0.0.0';
 
+function getCommitDate(): string {
+  try {
+    return execSync('git log -1 --format=%cd', { stdio: 'pipe' }).toString().trim();
+  } catch {
+    return new Date().toISOString();
+  }
+}
+
 async function build() {
   if (!fs.existsSync('dist')) {
-    console.log(chalk.yellow.bold('Lunar is not built, building...'));
+    console.log(chalk.yellow.bold('🚀 Building Lunar...'));
     try {
       execSync('pnpm build', { stdio: 'inherit' });
-      console.log(chalk.green.bold('✅ Lunar was successfully built!'));
+      console.log(chalk.green.bold('✅ Build successful!'));
     } catch (error) {
-      throw new Error(
-        `Build Error: ${error instanceof Error ? error.message : String(error)}`,
-      );
+      throw new Error(`Build Error: ${error instanceof Error ? error.message : String(error)}`);
     }
   } else {
-    console.log(chalk.blue.bold('📂 Lunar is already built. Skipping build.'));
+    console.log(chalk.blue.bold('📂 Lunar is already built. Skipping...'));
   }
 }
 
@@ -42,13 +49,11 @@ const app = Fastify({
 await app.register(fastifyCompress, { encodings: ['deflate', 'gzip', 'br'] });
 
 if (config.auth.protect) {
-  console.log(chalk.magenta.bold('🔒 Password Protection is enabled.'));
+  console.log(chalk.magenta.bold('🔒 Password Protection Enabled.'));
   config.auth.users.forEach((user) => {
     Object.entries(user).forEach(([username, password]) => {
-      console.log(
-        chalk.yellow('🔑 Listing usernames and passwords for authentication'),
-      );
-      console.log(chalk.cyan(`Username: ${username}, Password: ${password}`));
+      console.log(chalk.yellow('🔑 User Credentials:'));
+      console.log(chalk.cyan(`➡ Username: ${username}, Password: ${password}`));
     });
   });
 
@@ -58,7 +63,7 @@ if (config.auth.protect) {
       const user = config.auth.users.find((user) => user[username]);
       if (user && user[username] === password) {
         if (config.auth.log) {
-          console.log(chalk.green(`✅ User "${username}" authenticated.`));
+          console.log(chalk.green(`✅ Authenticated: ${username}`));
         }
         return done();
       }
@@ -113,22 +118,31 @@ app.setErrorHandler((error, _request, reply) => {
     reply.send(error);
   }
 });
+
 await build();
+
+const commitDate = getCommitDate();
 
 // @ts-ignore dir may not exist
 const { handler } = await import('./dist/server/entry.mjs');
+
 app.register(fastifyStatic, {
   root: path.join(import.meta.dirname, 'dist', 'client'),
 });
+
 await app.register(fastifyMiddie);
 app.use(handler);
 
 app.listen({ host, port }, (err, address) => {
   if (err) {
-    throw new Error(`❌ Failed to start Lunar: ${err.message}`);
-  } else {
-    console.log(chalk.green.bold(`\n🌙 Lunar is running at:`));
-    console.log(chalk.blue.bold(`🌐 Local: http://localhost:${port}`));
-    console.log(chalk.blue.bold(`🌍 Network: ${address}`));
+    throw new Error(`❌ Failed to start Lunar V1: ${err.message}`);
   }
-});
+  console.log(chalk.green.bold(`\n🚀 Lunar V1`));
+
+  console.log(chalk.whiteBright(`📅 Last Updated: ${chalk.cyanBright(new Date(commitDate).toLocaleString())}`));
+  console.log(chalk.whiteBright(`🛠  Version: ${chalk.cyanBright(version)}`));
+  
+  console.log(chalk.green.bold(`\n🌍 Lunar is running at:`));
+  console.log(chalk.blueBright(`   ➡ Local:    ${chalk.underline(address)}`));
+  console.log(chalk.blueBright(`   ➡ Network:  http://127.0.0.1:${port}`));
+});  

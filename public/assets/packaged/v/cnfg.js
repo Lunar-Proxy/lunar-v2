@@ -21,11 +21,11 @@ let UltraConfig = {
     return result.join('') + (search.length ? '?' + search.join('?') : '');
   },
 
-  handler: '/assets/packaged/v/handler.js',
-  client: '/assets/packaged/v/client.js',
-  bundle: '/assets/packaged/v/bundle.js',
-  config: '/assets/packaged/v/config.js',
-  sw: '/assets/packaged/v/sw.js',
+  handler: '/assets/packaged/v/h.js',
+  client: '/assets/packaged/v/c.js',
+  bundle: '/assets/packaged/v/b.js',
+  config: '/assets/packaged/v/cnfg.js',
+  sw: '/assets/packaged/v/s.js',
   inject: [
     {
       host: /nowgg.lol*/g,

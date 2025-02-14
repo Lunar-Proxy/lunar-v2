@@ -42,8 +42,8 @@ import {
       }
     </script>    
     <script src="@src/utils/home.ts"></script>
-    <script is:inline src="/assets/packaged/v/config.js" defer></script>
-    <script is:inline src="/assets/packaged/v/bundle.js" defer></script>
+    <script is:inline src="/assets/packaged/v/cnfg.js" defer></script>
+    <script is:inline src="/assets/packaged/v/b.js" defer></script>
     <script is:inline src="/assets/packaged/scram/controller.js"></script>
     <link rel="prefetch" href="/assets/packaged/scram/worker.js" />
     <link rel="prefetch" href="/assets/packaged/scram/shared.js" />
@@ -53,34 +53,35 @@ import {
 
   <body class="relative h-screen">
     <div
-      class="absolute border-r-[3px] border-black border-solid bg-background-overlay left-0 h-screen w-[52px] z-50 flex flex-col items-center"
+    class="absolute border-r-[3px] border-black border-solid bg-background-overlay left-0 h-screen w-[52px] z-50 flex flex-col items-center"
+  >
+    <a href="./" aria-label="Go Home" id="moonStar" class="mt-4">
+      <MoonStar
+        class="text-[#a5adce] hover:text-blue-400 w-8 h-8 transition duration-150 transform hover:scale-110"
+      />
+    </a>
+    <hr class="w-8 border-t-[2px] border-[#a5adce] my-4" />
+    <div
+      class="flex-grow flex flex-col items-center justify-center space-y-4 -mt-8"
     >
-      <a href="./" aria-label="Go Home" id="moonStar" class="mt-4">
-        <MoonStar
-          class="text-[#a5adce] hover:text-blue-400 w-8 h-8 transition duration-150 transform hover:scale-110"
+      <div id="gam">
+        <Joystick
+          class="text-[#a5adce] hover:text-white w-[32px] h-[32px] transition duration-150 transform hover:scale-110"
         />
-      </a>
-      <hr class="w-8 border-t-[2px] border-[#a5adce] my-4" />
-      <div
-        class="flex-grow flex flex-col items-center justify-center space-y-4 -mt-8"
-      >
-        <div id="gam">
-          <Joystick
-            class="text-[#a5adce] hover:text-white w-8 h-8 transition duration-150 transform hover:scale-110"
-          />
-        </div>
-        <div id="ap">
-          <Grid2X2Plus
-            class="text-[#a5adce] hover:text-white w-8 h-8 transition duration-150 transform hover:scale-110"
-          />
-        </div>
-        <div id="gear">
-          <Settings
-            class="text-[#a5adce] hover:text-white w-8 h-8 transition duration-150 transform hover:scale-110"
-          />
-        </div>
+      </div>
+      <div id="ap">
+        <Grid2X2Plus
+          class="text-[#a5adce] hover:text-white w-[28px] h-[28px] transition duration-150 transform hover:scale-110"
+        />
+      </div>
+      <div id="gear">
+        <Settings
+          class="text-[#a5adce] hover:text-white w-[28px] h-[28px] transition duration-150 transform hover:scale-110"
+        />
       </div>
     </div>
+  </div>
+  
     <div
       class="border-b-[3px] pt-4 border-black border-solid flex justify-between items-center bg-background-overlay p-2 space-x-4 ml-[52px]"
     >
@@ -206,7 +207,7 @@ import {
     id="starting"
     class="inset-x-0 mt-[14rem] flex flex-col items-center justify-start p-4 z-30"
   >
-    <strong class="text-8xl font-joe mb-6 text-text-HEADER font-bold">Lunar</strong>
+    <strong class="text-8xl mb-6 text-text-HEADER font-bold">Lunar</strong>
     <form method="post" id="startForm" class="w-full flex justify-center">
       <div class="mt-12 relative w-full max-w-[25rem] z-40">
         <div class="relative">

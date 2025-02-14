@@ -21,7 +21,7 @@ function check() {
   }
 }
 export default defineConfig({
-  output: 'static',
+  output: 'server',
   adapter: node({ mode: 'middleware' }),
   integrations: [
     tailwind(),
@@ -34,7 +34,7 @@ export default defineConfig({
     }),
   ],
   prefetch: {
-    prefetchAll: false,
+    prefetchAll: true,
     defaultStrategy: 'viewport',
   },
   vite: {

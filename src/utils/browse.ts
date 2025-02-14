@@ -69,10 +69,25 @@ if (copy) {
     }
 
     if (!pathname.startsWith('/p/') && !pathname.startsWith('/scram/')) {
-      await navigator.clipboard.writeText(frame.contentWindow!.location.href);
-      alert('URL copied to clipboard!');
-      return;
-    }
+      let copyText = "";
+    
+      switch (true) {
+        case pathname.endsWith("/gm"):
+          copyText = "lunar://games";
+          break;
+        case pathname.endsWith("/ap"):
+          copyText = "lunar://apps";
+          break;
+        case pathname.endsWith("/s"):
+          copyText = "lunar://settings";
+          break;
+      }
+    
+      if (copyText) {
+        await navigator.clipboard.writeText(copyText);
+        alert('URL copied to clipboard!');
+      }
+    }    
 
     try {
       const backend = await Settings.get('backend');
@@ -142,11 +157,7 @@ if (cnsl) {
 
 if (ff) {
   ff.addEventListener('click', () => {
-    if (frame && frame.src) {
       frame.requestFullscreen();
-    } else {
-      console.log('Cannot go fullscreen without a valid source.');
-    }
   });
 }
 
