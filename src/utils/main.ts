@@ -43,7 +43,7 @@ try {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // todo - make it switchable epoxy & libcurl 
+  // todo - make it switchable epoxy & libcurl
   if ((await connection.getTransport()) !== '/assets/packaged/ep/index.mjs') {
     await connection.setTransport('/assets/packaged/ep/index.mjs', [
       { wisp: wispurl },
@@ -66,31 +66,32 @@ async function launch(link: string) {
     frame.src = scram.encodeUrl(url);
   }
   frame.addEventListener('load', () => {
-    if (backend === 'uv') {
-      InterceptLinks();
-      input.value = '';
-      const url = UltraConfig.decodeUrl(
-        frame.contentWindow?.location.href.split('/p/')[1] ||
-          frame.contentWindow?.location.href!,
-      );
-      favicon.src = `https://s2.googleusercontent.com/s2/favicons?sz=64&domain_url=${url}`;
-      input.value = url || '';
-      copy.style.right = '40px';
-      clear.style.right = '10px';
-      clear.classList.remove('hidden');
-    } else {
-      const url = scram.decodeUrl(
-        frame.contentWindow?.location.href.split('/scram/')[1] ||
-          frame.contentWindow?.location.href,
-      );
-      input.value = url || '';
-      favicon.src = `https://s2.googleusercontent.com/s2/favicons?sz=64&domain_url=${url}`;
-      copy.style.right = '40px';
-      clear.style.right = '10px';
-      clear.classList.remove('hidden');
+    const frameWindow = frame.contentWindow;
+
+    let path = new URL(frameWindow!.location.href).pathname;
+    if (!path.startsWith('/p/') && !path.startsWith('/scram/')) {
+      console.log("Search paths, it wasn't!!!!");
+      return;
     }
+    const isUV = backend === 'uv';
+    const decodedUrl = isUV
+      ? UltraConfig.decodeUrl(
+          new URL(frameWindow!.location.href).pathname.replace(/^\/p\//, '')
+        )
+      : scram.decodeUrl(
+          new URL(frameWindow!.location.href).pathname.replace(/^\/scram\//, '')
+        );
+
+    if (isUV) InterceptLinks();
+
+    input.value = decodedUrl || '';
+    favicon.src = `https://s2.googleusercontent.com/s2/favicons?sz=64&domain_url=${decodedUrl}`;
+    copy.style.right = '40px';
+    clear.style.right = '10px';
+    clear.classList.remove('hidden');
   });
 }
+
 fm.addEventListener('submit', async (event) => {
   event.preventDefault();
   welcome.classList.add('hidden');
@@ -118,7 +119,7 @@ async function InterceptLinks() {
   console.log('Intercepting links is running...');
   const clickableElements =
     frame.contentWindow?.document.querySelectorAll<HTMLElement>(
-      'a, button, [role="button"], [onclick], [data-href], span',
+      'a, button, [role="button"], [onclick], [data-href], span'
     );
 
   if (clickableElements) {
@@ -133,7 +134,7 @@ async function InterceptLinks() {
         } else if (target.hasAttribute('onclick')) {
           const onclickContent = target.getAttribute('onclick');
           const match = onclickContent?.match(
-            /(?:location\.href\s*=\s*['"])([^'"]+)(['"])/,
+            /(?:location\.href\s*=\s*['"])([^'"]+)(['"])/
           );
           href = match?.[1] || null;
         } else if (target.closest('a')) {

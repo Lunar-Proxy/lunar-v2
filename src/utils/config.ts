@@ -48,7 +48,7 @@ const Settings = (() => {
   async function ensureDefaultSettings(): Promise<void> {
     await dbReady;
     if (!db) {
-      throw new Error('Database is not initialized.');
+      throw new Error('[Settings] Database is not initialized.');
     }
 
     const transaction = db.transaction([LunarSettings], 'readwrite');
@@ -70,7 +70,7 @@ const Settings = (() => {
 
   async function add(settingName: string, value: any): Promise<void> {
     await dbReady;
-    if (!db) throw new Error('Database not ready.');
+    if (!db) throw new Error('[Settings] Database not ready.');
 
     const transaction = db.transaction([LunarSettings], 'readwrite');
     const store = transaction.objectStore(LunarSettings);
@@ -93,7 +93,7 @@ const Settings = (() => {
 
   async function edit(settingName: string, value: any): Promise<void> {
     await dbReady;
-    if (!db) throw new Error('Database not ready.');
+    if (!db) throw new Error('[Settings] Database not ready.');
 
     const transaction = db.transaction([LunarSettings], 'readwrite');
     const store = transaction.objectStore(LunarSettings);
@@ -109,16 +109,16 @@ const Settings = (() => {
       existingSetting[settingName] = value;
       store.put(existingSetting);
     } else {
-      console.warn(`Setting "${settingName}" does not exist.`);
+      console.warn(`[Settings] Setting "${settingName}" does not exist.`);
     }
   }
 
   async function get(settingName: string): Promise<any> {
     await dbReady;
-    if (!db) throw new Error('Database not ready.');
+    if (!db) throw new Error('[Settings] Database not ready.');
 
     return new Promise((resolve, reject) => {
-      if (!db) throw new Error('Database not ready.');
+      if (!db) throw new Error('[Settings] Database not ready.');
       const transaction = db.transaction([LunarSettings], 'readonly');
       const store = transaction.objectStore(LunarSettings);
       const cursorRequest: IDBRequest = store.openCursor();
@@ -137,7 +137,7 @@ const Settings = (() => {
       };
 
       cursorRequest.onerror = () => {
-        reject(new Error('Error retrieving setting by name.'));
+        reject(new Error('[Settings] Error retrieving setting by name.'));
       };
     });
   }

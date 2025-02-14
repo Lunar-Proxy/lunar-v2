@@ -18,7 +18,9 @@ const host: string = '0.0.0.0';
 
 function getCommitDate(): string {
   try {
-    return execSync('git log -1 --format=%cd', { stdio: 'pipe' }).toString().trim();
+    return execSync('git log -1 --format=%cd', { stdio: 'pipe' })
+      .toString()
+      .trim();
   } catch {
     return new Date().toISOString();
   }
@@ -31,7 +33,9 @@ async function build() {
       execSync('pnpm build', { stdio: 'inherit' });
       console.log(chalk.green.bold('✅ Build successful!'));
     } catch (error) {
-      throw new Error(`Build Error: ${error instanceof Error ? error.message : String(error)}`);
+      throw new Error(
+        `Build Error: ${error instanceof Error ? error.message : String(error)}`
+      );
     }
   } else {
     console.log(chalk.blue.bold('📂 Lunar is already built. Skipping...'));
@@ -53,7 +57,9 @@ if (config.auth.protect) {
   config.auth.users.forEach((user) => {
     Object.entries(user).forEach(([username, password]) => {
       console.log(chalk.yellow('🔑 User Credentials:'));
-      console.log(chalk.cyan(`➡ Username: ${username}, Password: ${password}`));
+      console.log(
+        chalk.cyan(`➡ Username: ${username}, Password: ${password}`)
+      );
     });
   });
 
@@ -75,10 +81,7 @@ if (config.auth.protect) {
 
 app.setErrorHandler((error, _request, reply) => {
   if (error.statusCode === 401) {
-    reply
-      .status(401)
-      .header('Content-Type', 'text/html')
-      .send(`
+    reply.status(401).header('Content-Type', 'text/html').send(`
          <!doctype html>
 <html>
   <head>
@@ -139,10 +142,14 @@ app.listen({ host, port }, (err, address) => {
   }
   console.log(chalk.green.bold(`\n🚀 Lunar V1`));
 
-  console.log(chalk.whiteBright(`📅 Last Updated: ${chalk.cyanBright(new Date(commitDate).toLocaleString())}`));
+  console.log(
+    chalk.whiteBright(
+      `📅 Last Updated: ${chalk.cyanBright(new Date(commitDate).toLocaleString())}`
+    )
+  );
   console.log(chalk.whiteBright(`🛠  Version: ${chalk.cyanBright(version)}`));
-  
+
   console.log(chalk.green.bold(`\n🌍 Lunar is running at:`));
   console.log(chalk.blueBright(`   ➡ Local:    ${chalk.underline(address)}`));
   console.log(chalk.blueBright(`   ➡ Network:  http://127.0.0.1:${port}`));
-});  
+});

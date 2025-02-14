@@ -56,61 +56,45 @@ Object.entries(elements).forEach(([key, path]) => {
 
 if (copy) {
   copy.addEventListener('click', async () => {
-    const FrameUrl = new URL(frame.contentWindow!.location.href);
-    const pathname = FrameUrl.pathname;
+    const frameWindow = frame.contentWindow;
+    let FrameUrl = new URL(frameWindow!.location.href);
+    let path = FrameUrl.pathname as '/gm' | '/ap' | '/s' | string;
 
-    try {
-      if (!frame || !frame.src || frame.src === 'about:blank') {
-        console.log('Cannot copy URL without a valid source.');
-        return;
-      }
-    } catch (e) {
-      console.error('Error copying URL:', e);
-    }
+    if (!path.startsWith('/p/') && !path.startsWith('/scram/')) {
+      try {
+        const clipboardMap: Record<'/gm' | '/ap' | '/s', string> = {
+          '/gm': 'lunar://games',
+          '/ap': 'lunar://apps',
+          '/s': 'lunar://settings',
+        };
 
-    if (!pathname.startsWith('/p/') && !pathname.startsWith('/scram/')) {
-      let copyText = "";
-    
-      switch (true) {
-        case pathname.endsWith("/gm"):
-          copyText = "lunar://games";
-          break;
-        case pathname.endsWith("/ap"):
-          copyText = "lunar://apps";
-          break;
-        case pathname.endsWith("/s"):
-          copyText = "lunar://settings";
-          break;
+        if (clipboardMap[path as '/gm' | '/ap' | '/s']) {
+          await navigator.clipboard.writeText(
+            clipboardMap[path as '/gm' | '/ap' | '/s']
+          );
+          console.log(`Copied: ${clipboardMap[path as '/gm' | '/ap' | '/s']}`);
+        } else {
+          console.warn('No matching path.');
+        }
+      } catch (err) {
+        console.error('Failed to copy to clipboard:', err);
       }
-    
-      if (copyText) {
-        await navigator.clipboard.writeText(copyText);
-        alert('URL copied to clipboard!');
-      }
-    }    
-
-    try {
+    } else {
+      let href = frameWindow?.location.href;
       const backend = await Settings.get('backend');
-      let url;
-
-      if (backend === 'uv') {
-        url = UltraConfig.decodeUrl(
-          frame.contentWindow!.location.href.split('/p/')[1] ||
-            frame.contentWindow!.location.href,
+      if (backend == 'uv') {
+        const decodedUrl = UltraConfig.decodeUrl(
+          href ? new URL(href).pathname.replace(/^\/p\//, '') : '/'
         );
+        await navigator.clipboard.writeText(decodedUrl!);
+        console.log(decodedUrl);
       } else {
-        url = scram.decodeUrl(
-          frame.contentWindow!.location.href.split('/scram/')[1] ||
-            frame.contentWindow!.location.href,
+        const decodedUrl = scram.decodeUrl(
+          href ? new URL(href).pathname.replace(/^\/scram\//, '') : '/'
         );
+        await navigator.clipboard.writeText(decodedUrl);
+        console.log(decodedUrl);
       }
-
-      url = url || frame.src;
-
-      await navigator.clipboard.writeText(url);
-      alert('URL copied to clipboard!');
-    } catch (error) {
-      console.error('Error fetching backend from settings:', error);
     }
   });
 }
@@ -157,7 +141,7 @@ if (cnsl) {
 
 if (ff) {
   ff.addEventListener('click', () => {
-      frame.requestFullscreen();
+    frame.requestFullscreen();
   });
 }
 
@@ -186,7 +170,7 @@ if (star) {
       const nickname = prompt('Enter a nickname for this favorite:');
       if (nickname) {
         const favorites = JSON.parse(
-          localStorage.getItem('@lunar/favorites') || '[]',
+          localStorage.getItem('@lunar/favorites') || '[]'
         );
         try {
           if ((await Settings.get('backend')) == 'sj') {

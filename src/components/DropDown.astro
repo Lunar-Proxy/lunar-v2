@@ -14,7 +14,9 @@ const { id, options } = Astro.props;
       type="button"
       class="inline-flex items-center justify-between w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-background text-sm font-medium text-text-HEADER focus:outline-none focus:ring-2 focus:ring-offset-2"
     >
-      <span id="text-${id}" class="whitespace-nowrap text-center w-full">select an option</span>
+      <span id="text-${id}" class="whitespace-nowrap text-center w-full"
+        >select an option</span
+      >
       <svg
         class="h-5 w-5"
         xmlns="http://www.w3.org/2000/svg"
@@ -25,8 +27,7 @@ const { id, options } = Astro.props;
         <path
           fill-rule="evenodd"
           d="M5.23 7.21a.75.75 0 011.06 0L10 10.293l3.71-3.08a.75.75 0 111.04 1.08l-4.25 3.5a.75.75 0 01-1.04 0l-4.25-3.5a.75.75 0 010-1.08z"
-          clip-rule="evenodd"
-        ></path>
+          clip-rule="evenodd"></path>
       </svg>
     </button>
   </div>
@@ -35,7 +36,12 @@ const { id, options } = Astro.props;
     id={id}
     class="hidden absolute left-1/2 transform -translate-x-1/2 top-full z-10 border-2 focus:outline-none border-solid border-black mt-1 min-w-max rounded-md bg-background-overlay shadow-lg dropdown"
   >
-    <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby={id}>
+    <div
+      class="py-1"
+      role="menu"
+      aria-orientation="vertical"
+      aria-labelledby={id}
+    >
       {
         options.map((option) => (
           <button

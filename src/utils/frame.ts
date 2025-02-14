@@ -72,7 +72,7 @@ async function InterceptLinks() {
   console.debug('Intercepting links....');
   const clickableElements =
     frame.contentWindow?.document.querySelectorAll<HTMLElement>(
-      'a, button, [role="button"], [onclick], [data-href], span',
+      'a, button, [role="button"], [onclick], [data-href], span'
     );
 
   if (clickableElements) {
@@ -89,7 +89,7 @@ async function InterceptLinks() {
         } else if (target.hasAttribute('onclick')) {
           const onclickContent = target.getAttribute('onclick');
           const match = onclickContent?.match(
-            /(?:location\.href\s*=\s*['"])([^'"]+)(['"])/,
+            /(?:location\.href\s*=\s*['"])([^'"]+)(['"])/
           );
           href = match?.[1] || null;
         } else if (target.closest('a')) {

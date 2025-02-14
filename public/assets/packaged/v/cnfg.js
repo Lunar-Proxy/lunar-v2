@@ -30,13 +30,12 @@ let UltraConfig = {
     {
       host: /nowgg.lol*/g,
       injectTo: 'head',
-      html: `<script>window.alert = function() {};</script>`
-    }
-  ]
+      html: `<script>window.alert = function() {};</script>`,
+    },
+  ],
 };
 
 self.__uv$config = UltraConfig;
-
 
 async function GetPluginValue() {
   return new Promise((resolve, reject) => {
@@ -66,22 +65,24 @@ async function GetPluginValue() {
   });
 }
 
-GetPluginValue().then((values) => {
-  if (!values.length) {
-    console.log("[PLUGIN MANAGER] No plugins found");
-    return;
-  }
+GetPluginValue()
+  .then((values) => {
+    if (!values.length) {
+      console.log('[PLUGIN MANAGER] No plugins found');
+      return;
+    }
 
-  console.log("[PLUGIN MANAGER] Enabling plugins");
+    console.log('[PLUGIN MANAGER] Enabling plugins');
 
-  UltraConfig.inject = [
-    ...UltraConfig.inject.filter(entry => entry.host.toString() !== "/.*/"), 
-    ...values.map(value => ({
-      host: /.*/, 
-      injectTo: 'head',
-      html: value,
-    }))
-  ];
-}).catch((error) => {
-  console.error(error);
-});
+    UltraConfig.inject = [
+      ...UltraConfig.inject.filter((entry) => entry.host.toString() !== '/.*/'),
+      ...values.map((value) => ({
+        host: /.*/,
+        injectTo: 'head',
+        html: value,
+      })),
+    ];
+  })
+  .catch((error) => {
+    console.error(error);
+  });
