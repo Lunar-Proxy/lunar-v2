@@ -2,23 +2,33 @@ let UltraConfig = {
   prefix: '/p/',
   encodeUrl: (str) => {
     if (!str) return str;
-    const result = new Array(str.length);
-    for (let i = 0; i < str.length; i++) {
-      result[i] = i % 2 ? String.fromCharCode(str.charCodeAt(i) ^ 2) : str[i];
+    let transformed = str.split('');
+    for (let i = 1; i < transformed.length; i += 2) {
+      transformed[i] = String.fromCharCode(transformed[i].charCodeAt(0) ^ 3);
     }
-    return encodeURIComponent(result.join(''));
+    
+    while (transformed.join('').includes("hvtrs8")) {
+      for (let i = 1; i < transformed.length; i += 2) {
+        transformed[i] = String.fromCharCode(transformed[i].charCodeAt(0) ^ 5);
+      }
+    }
+  
+    return encodeURIComponent(transformed.join(''));
   },
 
   decodeUrl: (str) => {
     if (!str) return str;
-    const [input, ...search] = str.split('?');
-    const decoded = decodeURIComponent(input);
-    const result = new Array(decoded.length);
-    for (let i = 0; i < decoded.length; i++) {
-      result[i] =
-        i % 2 ? String.fromCharCode(decoded.charCodeAt(i) ^ 2) : decoded[i];
+  let transformed = decodeURIComponent(str).split('');
+  while (transformed.join('').includes("hvtrs8")) {
+    for (let i = 1; i < transformed.length; i += 2) {
+      transformed[i] = String.fromCharCode(transformed[i].charCodeAt(0) ^ 5);
     }
-    return result.join('') + (search.length ? '?' + search.join('?') : '');
+  }
+
+  for (let i = 1; i < transformed.length; i += 2) {
+    transformed[i] = String.fromCharCode(transformed[i].charCodeAt(0) ^ 3);
+  }
+  return transformed.join('');
   },
 
   handler: '/assets/packaged/v/h.js',

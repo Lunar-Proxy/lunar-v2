@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function launch(link: string) {
-  const backend = await Settings.get('backend');
+  const backend: string = await Settings.get('backend');
   if ((await connection.getTransport()) !== '/assets/packaged/ep/index.mjs') {
     await connection.setTransport('/assets/packaged/ep/index.mjs', [
       { wisp: wispurl },
@@ -65,12 +65,12 @@ async function launch(link: string) {
   } else {
     frame.src = scram.encodeUrl(url);
   }
+  console.log(`URL set to ${frame.src}`)
   frame.addEventListener('load', () => {
     const frameWindow = frame.contentWindow;
 
     let path = new URL(frameWindow!.location.href).pathname;
     if (!path.startsWith('/p/') && !path.startsWith('/scram/')) {
-      console.log("Search paths, it wasn't!!!!");
       return;
     }
     const isUV = backend === 'uv';
