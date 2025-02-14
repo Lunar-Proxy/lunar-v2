@@ -3,18 +3,15 @@
 [![Join our Discord](https://skillicons.dev/icons?i=discord)](https://discord.gg/fuPtWjYuf8) [![View on GitHub](https://skillicons.dev/icons?i=github)](https://github.com/Lunar-proxy/Lunar-v1)
 
 ## What is Lunar?
-
-> [!NOTE]
-> Lunar is currently in beta.
-> Lunar is a web proxy designed to bypass censorship and provide an exceptional user experience.
+Lunar is a web proxy designed to bypass censorship and provide an exceptional user experience.
 
 ## Features
 
 - 🚫 **No Ads**
 - 🚀 **High-Speed Performance**
-- 🪞 **Automatic Tab Cloaking**
-- 🎨 **Many Customization Options**
-- ➕ **And More!**
+- 🪞 **Advanced Tab Cloaking**
+- 🎮 **Alot of games & apps**
+- ℹ️ **URL Paths**
 
 ## Deployment Options
 
@@ -57,7 +54,8 @@ If you’re making changes to Lunar, use the development setup to avoid rebuildi
 pnpm install && pnpm dev
 ```
 
-If you are doing a change to lunar, please read [this guide](CONTRIBUTING.md)
+# Contribuating
+If you are doing a change to Lunar, please read [this guide](CONTRIBUTING.md) before commiting.
 
 # Support
 
