@@ -38,14 +38,14 @@ async function fetchData(): Promise<void> {
   try {
     const response = await fetch('/assets/json/tab.json');
     if (!response.ok) {
-      throw new Error(`HTTP error, status: ${response.status}`);
+      throw new Error(`[ERROR] HTTP error, status: ${response.status}`);
     }
     cloak = await response.json();
     if (!Array.isArray(cloak)) {
-      throw new Error('Invalid JSON structure: Expected an array');
+      throw new Error('[ERROR] Invalid JSON structure: Expected an array');
     }
   } catch (error) {
-    throw new Error(`Error reading JSON file: ${error}`);
+    throw new Error(`[ERROR] Error reading JSON file: ${error}`);
   }
 }
 
@@ -104,24 +104,24 @@ async function Cloak(): Promise<void> {
     if (status === 'on') {
       await Cloak();
     } else {
-      console.debug('Cloaking is off. Enable cloaking in settings.');
+      console.debug('[DEBUG] Cloaking is off. Enable cloaking in settings.');
     }
   } catch (error) {
-    throw new Error(`Initialization failed: ${error}`);
+    throw new Error(`[ERROR] Initialization failed: ${error}`);
   }
 })();
 
 fetch('/assets/json/quotes.json')
   .then((response) => {
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(`[DEBUG] HTTP error! status: ${response.status}`);
     }
     return response.json();
   })
   .then((data: Data) => {
     const messages = data.messages;
     if (!messages || messages.length === 0) {
-      throw new Error('No messages found in JSON.');
+      throw new Error('[ERROR] No messages found in JSON.');
     }
     const random = Math.floor(Math.random() * messages.length);
     const message = messages[random];
@@ -131,5 +131,5 @@ fetch('/assets/json/quotes.json')
     }
   })
   .catch((error) => {
-    throw new Error(`error: ${error}`);
+    throw new Error(`[ERROR] error: ${error}`);
   });

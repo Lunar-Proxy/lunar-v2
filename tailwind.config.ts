@@ -4,7 +4,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        joe: ['Josefin Sans', 'serif'],
+        linux: ['outfit', 'sans-serif'],
+        fit: ['Prompt', 'sans-serif'],
       },
       colors: {
         background: {

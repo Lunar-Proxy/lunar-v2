@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const dropdown = document.getElementById(dropdownId) as HTMLElement;
 
     if (!dropdown) {
-      console.error(`Dropdown not found for button: ${button.id}`);
+      console.error(`[ERROR] Dropdown not found for button: ${button.id}`);
       return;
     }
 
@@ -38,8 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
         default: 'Scramjet',
       },
       engine: {
-        'https://www.google.com/search?q=': 'Google',
-        'https://duckduckgo.com/?q=': 'DuckDuckGo (Default)',
+        'https://www.google.com/search?q=': 'Google (Default)',
+        'https://duckduckgo.com/?q=': 'DuckDuckGo',
       },
     };
 
@@ -63,14 +63,14 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       dropdown.classList.toggle('hidden');
-      console.log('Dropdown toggled');
+      console.log('[DEBUG] Dropdown toggled');
     });
     const options = dropdown.querySelectorAll('button');
     options.forEach((option) => {
       option.addEventListener('click', async (event) => {
         const selectedOption =
           (event.currentTarget as HTMLElement)?.textContent || '';
-        console.log('Selected option:', selectedOption);
+        console.log('[DEBUG] Selected option:', selectedOption);
 
         if (dropdown.id === 'ptype') {
           await Settings.edit('backend', option.id);
@@ -103,5 +103,5 @@ document.addEventListener('DOMContentLoaded', () => {
 Confirm.addEventListener('click', async () => {
   const currentSetting = await Settings.get('PreventClosing');
   await Settings.edit('PreventClosing', !currentSetting);
-  console.log('toggled to', !currentSetting);
+  console.log('[DEBUG] toggled to', !currentSetting);
 });

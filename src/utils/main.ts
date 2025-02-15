@@ -36,10 +36,10 @@ scram.init();
 
 try {
   await navigator.serviceWorker.register('/sw.js').then(() => {
-    console.log('Service Workers are registered.');
+    console.log('[DEBUG] Service Workers are registered.');
   });
 } catch (error) {
-  throw new Error('Service Worker registration failed with error:' + error);
+  throw new Error('[DEBUG] Service Worker registration failed with error:' + error);
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -58,14 +58,14 @@ async function launch(link: string) {
       { wisp: wispurl },
     ]);
   }
-  console.log('Transport set to Epoxy');
+  console.log('[DEBUG] Transport set to Epoxy');
   const url = (await Search(link)) || 'd';
   if (backend == 'uv') {
     frame.src = `/p/${UltraConfig.encodeUrl(url) ?? 'ERROR'}`;
   } else {
     frame.src = scram.encodeUrl(url);
   }
-  console.log(`URL set to ${frame.src}`)
+  console.log(`[DEBUG] URL set to ${frame.src}`)
   frame.addEventListener('load', () => {
     const frameWindow = frame.contentWindow;
 
@@ -116,7 +116,7 @@ sf.addEventListener('submit', async (event) => {
 });
 
 async function InterceptLinks() {
-  console.log('Intercepting links is running...');
+  console.log('[DEBUG] Intercepting links is running...');
   const clickableElements =
     frame.contentWindow?.document.querySelectorAll<HTMLElement>(
       'a, button, [role="button"], [onclick], [data-href], span'
@@ -143,7 +143,7 @@ async function InterceptLinks() {
 
         if (href) {
           event.preventDefault();
-          console.debug('Redirected URL:', href);
+          console.debug('[DEBUG] Redirected URL:', href);
           launch(href);
         }
       });
@@ -182,7 +182,7 @@ function LunarPaths(path: string) {
     input.value = 'lunar://settings';
     frame.src = './s';
   } else {
-    throw new Error('Invalid Path');
+    throw new Error('[ERROR] Invalid Path');
   }
 }
 

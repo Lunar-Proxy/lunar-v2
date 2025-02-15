@@ -22,10 +22,10 @@ scram.init();
 
 try {
   await navigator.serviceWorker.register('/sw.js').then(() => {
-    console.log('Service Workers are registered.');
+    console.log('[DEBUG] Service Workers are registered.');
   });
 } catch (error) {
-  throw new Error('Service Worker registration failed with error:' + error);
+  throw new Error('[DEBUG] Service Worker registration failed with error:' + error);
 }
 
 export async function launch2(link: string) {
@@ -41,7 +41,7 @@ export async function launch2(link: string) {
       { wisp: wispurl },
     ]);
   }
-  console.log('Transport set to Epoxy');
+  console.log('[DEBUG] Transport set to Epoxy');
   launch.classList.remove('hidden');
   let url;
   if (backend === 'uv') url = `/p/${UltraConfig.encodeUrl(link)}`;
@@ -69,7 +69,7 @@ full.addEventListener('click', () => {
 });
 
 async function InterceptLinks() {
-  console.debug('Intercepting links....');
+  console.debug('[DEBUG] Intercepting links....');
   const clickableElements =
     frame.contentWindow?.document.querySelectorAll<HTMLElement>(
       'a, button, [role="button"], [onclick], [data-href], span'
@@ -98,7 +98,7 @@ async function InterceptLinks() {
 
         if (href) {
           event.preventDefault();
-          console.debug('Redirected URL:', href);
+          console.debug('[DEBUG] Redirected URL:', href);
           launch2(href);
         }
       });
