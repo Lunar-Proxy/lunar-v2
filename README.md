@@ -12,7 +12,7 @@ Lunar is a web proxy designed to bypass censorship and provide an exceptional us
 - 🚀 **High-Speed Performance**
 - 🪞 **Advanced Tab Cloaking**
 - 🎮 **Alot of games & apps**
-- ℹ️ **URL Paths**
+- ℹ️ **URL Paths (lunar://home, lunar://games, ect.**
 
 ## Deployment Options
 
