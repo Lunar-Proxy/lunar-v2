@@ -43,9 +43,15 @@
     "error": false
   },
   {
-    "name": "ESPN",
+    "name": "espn",
     "image": "/assets/images/icons/espn.webp",
     "link": "https://www.espn.com",
+    "error": false
+  },
+  {
+    "name": "github",
+    "image": "/assets/images/icons/gh.png",
+    "link": "https://www.github.com",
     "error": false
   }
 ]

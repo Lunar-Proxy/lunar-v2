@@ -25,7 +25,9 @@ try {
     console.log('[DEBUG] Service Workers are registered.');
   });
 } catch (error) {
-  throw new Error('[DEBUG] Service Worker registration failed with error:' + error);
+  throw new Error(
+    '[DEBUG] Service Worker registration failed with error:' + error
+  );
 }
 
 export async function launch2(link: string) {

@@ -1,5 +1,5 @@
 const DBNAME = 'SettingsDB';
-const LunarSettings = 'Lunar-Settings';
+const LunarSettings = 'Settings';
 let db: IDBDatabase | undefined;
 let dbReady: Promise<void>;
 
@@ -32,7 +32,7 @@ const Settings = (() => {
     };
   });
   const defaultSettings: Setting[] = [
-    { cloak: 'off' },
+    { cloak: false },
     { backend: 'uv' },
     { engine: 'https://www.google.com/search?q=' },
     { transport: 'ep' },

@@ -1,8 +1,13 @@
 import { Settings } from '@src/utils/config';
+import { Cloak } from './cloak';
 
 const menuItems = document.querySelectorAll<HTMLLIElement>('#menu li');
 const sections = document.querySelectorAll<HTMLDivElement>('.content-section');
 const Confirm = document.getElementById('confirm') as HTMLButtonElement;
+const conStatus = document.getElementById('lcstatus') as HTMLSpanElement;
+const abStatus = document.getElementById('abstatus') as HTMLSpanElement;
+const Ab = document.getElementById('ab') as HTMLButtonElement;
+const openCloak = document.getElementById('openCloak') as HTMLButtonElement;
 
 function switchSection(event: MouseEvent) {
   const target = event.currentTarget as HTMLLIElement;
@@ -101,7 +106,32 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 Confirm.addEventListener('click', async () => {
-  const currentSetting = await Settings.get('PreventClosing');
+  let currentSetting = await Settings.get('PreventClosing');
   await Settings.edit('PreventClosing', !currentSetting);
   console.log('[DEBUG] toggled to', !currentSetting);
+  conStatus.textContent = `Currently: ${currentSetting ? 'Off' : 'On'}`;
+  top?.location.reload();
+});
+
+Ab.addEventListener('click', async () => {
+  let currentSetting = await Settings.get('cloak');
+  await Settings.edit('cloak', !currentSetting);
+  console.log('[DEBUG] toggled to', !currentSetting);
+  abStatus.textContent = `Currently: ${currentSetting ? 'Off' : 'On'}`;
+  if (top) {
+    return;
+  } else {
+    location.reload();
+  }
+});
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const currentConfirm = await Settings.get('PreventClosing');
+  const currentAb = await Settings.get('cloak');
+  conStatus.textContent = `Currently: ${currentConfirm ? 'On' : 'Off'}`;
+  abStatus.textContent = `Currently:  ${currentAb ? 'Off' : 'On'}`;
+});
+
+openCloak.addEventListener('click', () => {
+  Cloak();
 });

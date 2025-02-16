@@ -39,7 +39,9 @@ try {
     console.log('[DEBUG] Service Workers are registered.');
   });
 } catch (error) {
-  throw new Error('[DEBUG] Service Worker registration failed with error:' + error);
+  throw new Error(
+    '[DEBUG] Service Worker registration failed with error:' + error
+  );
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -65,7 +67,7 @@ async function launch(link: string) {
   } else {
     frame.src = scram.encodeUrl(url);
   }
-  console.log(`[DEBUG] URL set to ${frame.src}`)
+  console.log(`[DEBUG] URL set to ${frame.src}`);
   frame.addEventListener('load', () => {
     const frameWindow = frame.contentWindow;
 
@@ -83,7 +85,6 @@ async function launch(link: string) {
         );
 
     if (isUV) InterceptLinks();
-
     input.value = decodedUrl || '';
     favicon.src = `https://s2.googleusercontent.com/s2/favicons?sz=64&domain_url=${decodedUrl}`;
     copy.style.right = '40px';
@@ -175,12 +176,21 @@ function LunarPaths(path: string) {
   if (path == 'lunar://apps') {
     input.value = 'lunar://apps';
     frame.src = './ap';
+    copy.style.right = '40px';
+    clear.style.right = '10px';
+    clear.classList.remove('hidden');
   } else if (path == 'lunar://games') {
-    input.value = 'lunar://games';
     frame.src = './gm';
+    input.value = 'lunar://games';
+    copy.style.right = '40px';
+    clear.style.right = '10px';
+    clear.classList.remove('hidden');
   } else if (path == 'lunar://settings') {
-    input.value = 'lunar://settings';
     frame.src = './s';
+    input.value = 'lunar://settings';
+    copy.style.right = '40px';
+    clear.style.right = '10px';
+    clear.classList.remove('hidden');
   } else {
     throw new Error('[ERROR] Invalid Path');
   }

@@ -43,9 +43,6 @@ importers:
       '@playform/compress':
         specifier: ^0.1.7
         version: 0.1.7(@types/node@22.13.1)(jiti@2.4.2)(rollup@4.34.6)(tsx@4.19.2)(typescript@5.7.3)(yaml@2.6.1)
-      '@types/ga-gtag':
-        specifier: ^1.2.0
-        version: 1.2.0
       '@types/node':
         specifier: ^22.13.1
         version: 22.13.1
@@ -1292,18 +1289,6 @@ packages:
     resolution:
       {
         integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==,
-      }
-
-  '@types/ga-gtag@1.2.0':
-    resolution:
-      {
-        integrity: sha512-F3qYBMo/I62NRhFgL/VCFy48WVUgCC9bKkiyyUi7eVAghLRDouKFQUh3jswCGu7QzyRYujjUlJ0KPa78po1g9g==,
-      }
-
-  '@types/gtag.js@0.0.20':
-    resolution:
-      {
-        integrity: sha512-wwAbk3SA2QeU67unN7zPxjEHmPmlXwZXZvQEpbEUQuMCRGgKyE1m6XDuTUA9b6pCGb/GqJmdfMOY5LuDjJSbbg==,
       }
 
   '@types/hast@3.0.4':
@@ -5826,12 +5811,6 @@ snapshots:
       '@types/ms': 0.7.34
 
   '@types/estree@1.0.6': {}
-
-  '@types/ga-gtag@1.2.0':
-    dependencies:
-      '@types/gtag.js': 0.0.20
-
-  '@types/gtag.js@0.0.20': {}
 
   '@types/hast@3.0.4':
     dependencies:

@@ -2,33 +2,12 @@ let UltraConfig = {
   prefix: '/p/',
   encodeUrl: (str) => {
     if (!str) return str;
-    let transformed = str.split('');
-    for (let i = 1; i < transformed.length; i += 2) {
-      transformed[i] = String.fromCharCode(transformed[i].charCodeAt(0) ^ 3);
-    }
-    
-    while (transformed.join('').includes("hvtrs8")) {
-      for (let i = 1; i < transformed.length; i += 2) {
-        transformed[i] = String.fromCharCode(transformed[i].charCodeAt(0) ^ 5);
-      }
-    }
-  
-    return encodeURIComponent(transformed.join(''));
+    return encodeURIComponent(str)
   },
 
   decodeUrl: (str) => {
     if (!str) return str;
-  let transformed = decodeURIComponent(str).split('');
-  while (transformed.join('').includes("hvtrs8")) {
-    for (let i = 1; i < transformed.length; i += 2) {
-      transformed[i] = String.fromCharCode(transformed[i].charCodeAt(0) ^ 5);
-    }
-  }
-
-  for (let i = 1; i < transformed.length; i += 2) {
-    transformed[i] = String.fromCharCode(transformed[i].charCodeAt(0) ^ 3);
-  }
-  return transformed.join('');
+    return decodeURIComponent(str);
   },
 
   handler: '/assets/packaged/v/h.js',
@@ -53,8 +32,8 @@ async function GetPluginValue() {
 
     dbRequest.onsuccess = (e) => {
       const db = e.target.result;
-      const transaction = db.transaction('Lunar-Settings', 'readonly');
-      const store = transaction.objectStore('Lunar-Settings');
+      const transaction = db.transaction('Settings', 'readonly');
+      const store = transaction.objectStore('Settings');
       const getRequest = store.getAll();
 
       getRequest.onsuccess = (event) => {

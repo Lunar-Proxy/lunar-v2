@@ -35,7 +35,7 @@ export default defineConfig({
   ],
   prefetch: {
     prefetchAll: true,
-    defaultStrategy: 'viewport',
+    defaultStrategy: 'load',
   },
   vite: {
     define: {

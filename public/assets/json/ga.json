@@ -232,5 +232,11 @@
     "image": "/assets/images/icons/ovo2.png",
     "link": "https://dedragames.com/games/ovo2/0.2alpha/",
     "error": false
+  },
+  {
+    "name": "Paper.io",
+    "image": "/assets/images/icons/ppio.jpeg",
+    "link": "https://paper-io.com/",
+    "error": false
   }
 ]

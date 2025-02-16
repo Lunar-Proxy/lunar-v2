@@ -36,11 +36,12 @@ import {
         }
         gtag('js', new Date());
         gtag('config', 'G-DQZPCVEF89');
-        console.log("Google Analytics loaded successfully");
+        console.log("[DEBUG] Google Analytics loaded successfully");
       } catch (error) {
-        console.error('Google Analytics failed to load:', error);
+        console.error('[DEBUG] Google Analytics failed to load:', error);
       }
-    </script>    
+      </script>     
+    <script src="@src/utils/cloak.ts"></script>
     <script src="@src/utils/home.ts"></script>
     <script is:inline src="/assets/packaged/v/cnfg.js" defer></script>
     <script is:inline src="/assets/packaged/v/b.js" defer></script>

@@ -45,10 +45,21 @@ Object.entries(elements).forEach(([key, path]) => {
       if (frame) frame.src = path as string;
       if (path === './ap') {
         input.value = 'lunar://apps';
+        copy.style.right = '40px';
+        clear.style.right = '10px';
+        clear.classList.remove('hidden');
       } else if (path === './gm') {
         input.value = 'lunar://games';
+
+        copy.style.right = '40px';
+        clear.style.right = '10px';
+        clear.classList.remove('hidden');
       } else if (path) {
         input.value = 'lunar://settings';
+
+        copy.style.right = '40px';
+        clear.style.right = '10px';
+        clear.classList.remove('hidden');
       }
     });
   }
@@ -72,7 +83,9 @@ if (copy) {
           await navigator.clipboard.writeText(
             clipboardMap[path as '/gm' | '/ap' | '/s']
           );
-          console.log(`[DEBUG] Copied: ${clipboardMap[path as '/gm' | '/ap' | '/s']}`);
+          console.log(
+            `[DEBUG] Copied: ${clipboardMap[path as '/gm' | '/ap' | '/s']}`
+          );
         } else {
           console.warn('[DEBUG] No matching path.');
         }
@@ -167,9 +180,9 @@ if (star) {
   star.addEventListener('click', async () => {
     let originalUrl;
     if (frame && frame.src) {
-     let nickname = "123"
-    alert("Coming soon!")
-     // const nickname = prompt('Enter a nickname for this favorite:');
+      let nickname = '123';
+      alert('Coming soon!');
+      // const nickname = prompt('Enter a nickname for this favorite:');
       if (nickname) {
         const favorites = JSON.parse(
           localStorage.getItem('@lunar/favorites') || '[]'
