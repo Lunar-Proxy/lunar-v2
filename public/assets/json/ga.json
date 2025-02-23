@@ -228,15 +228,9 @@
     "error": false
   },
   {
-    "name": "OvO 2",
-    "image": "/assets/images/icons/ovo2.png",
-    "link": "https://dedragames.com/games/ovo2/0.2alpha/",
-    "error": false
-  },
-  {
     "name": "Paper.io",
     "image": "/assets/images/icons/ppio.jpeg",
-    "link": "https://paper-io.com/",
+    "link": "https://games.voodoo.io/paperio2/",
     "error": false
   }
 ]

@@ -7,10 +7,15 @@ interface Data {
   messages: Message[];
 }
 
-import { Settings } from '@src/utils/config';
+import Settings from '@src/utils/config';
+import { Cloak } from './cloak';
 
 const engine = await Settings.get('engine');
 const favicon = document.getElementById('favicon') as HTMLImageElement;
+const status = await Settings.get('cloak');
+if (status == "on") {
+  Cloak();
+} 
 
 if (engine === 'https://duckduckgo.com/?q=') {
   favicon.src = 'assets/images/engines/ddg.png';

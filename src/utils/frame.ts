@@ -1,5 +1,5 @@
 import { BareMuxConnection } from '@mercuryworkshop/bare-mux';
-import { Settings } from '@src/utils/config';
+import Settings from '@src/utils/config';
 
 const exit = document.getElementById('return') as HTMLButtonElement;
 const refresh = document.getElementById('rotate') as HTMLButtonElement;

@@ -1,4 +1,4 @@
-import { Settings } from '@src/utils/config';
+import Settings from '@src/utils/config';
 import { Cloak } from './cloak';
 
 const menuItems = document.querySelectorAll<HTMLLIElement>('#menu li');
@@ -40,20 +40,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const settingMapping: Record<string, Record<string, string>> = {
       ptype: {
         uv: 'Ultraviolet (Default)',
-        default: 'Scramjet',
+        sj: 'Scramjet',
       },
       engine: {
-        'https://www.google.com/search?q=': 'Google (Default)',
-        'https://duckduckgo.com/?q=': 'DuckDuckGo',
+        'https://www.google.com/search?q=': 'Google',
+        'https://duckduckgo.com/?q=': 'DuckDuckGo (Default)',
       },
     };
 
     if (dropdown.id === 'ptype') {
-      currentSetting = await Settings.get('backend');
+      currentSetting = await Settings.get('backend') as string;
       currentSetting =
         settingMapping.ptype[currentSetting] || settingMapping.ptype.default;
     } else if (dropdown.id === 'engine') {
-      currentSetting = await Settings.get('engine');
+      currentSetting = await Settings.get('engine') as string;
       currentSetting =
         settingMapping.engine[currentSetting] || 'Unknown Engine';
     }

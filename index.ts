@@ -8,13 +8,17 @@ import { execSync } from 'child_process';
 import chalk from 'chalk';
 import { createServer } from 'node:http';
 import { Socket } from 'node:net';
-import { server as wisp } from '@mercuryworkshop/wisp-js/server';
 import path from 'node:path';
 import { version } from './package.json';
 import config from './config';
+import { server as wisp, logging } from "@mercuryworkshop/wisp-js/server";
 
 const port: number = config.port;
 const host: string = '0.0.0.0';
+
+
+logging.set_level(logging.ERROR);
+wisp.options.wisp_version = 2;
 
 function getCommitDate(): string {
   try {
@@ -136,7 +140,7 @@ app.register(fastifyStatic, {
 await app.register(fastifyMiddie);
 app.use(handler);
 
-app.listen({ host, port }, (err, address) => {
+app.listen({ host, port }, (err) => {
   if (err) {
     throw new Error(`❌ Failed to start Lunar V1: ${err.message}`);
   }
@@ -150,6 +154,6 @@ app.listen({ host, port }, (err, address) => {
   console.log(chalk.whiteBright(`🛠  Version: ${chalk.cyanBright(version)}`));
 
   console.log(chalk.green.bold(`\n🌍 Lunar is running at:`));
-  console.log(chalk.blueBright(`   ➡ Local:    ${chalk.underline(address)}`));
+  console.log(chalk.blueBright(`   ➡ Local:    ${chalk.underline(`http://localhost:${port}`)}`));
   console.log(chalk.blueBright(`   ➡ Network:  http://127.0.0.1:${port}`));
 });

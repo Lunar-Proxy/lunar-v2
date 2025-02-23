@@ -1,21 +1,23 @@
-import { Settings } from '@src/utils/config';
+import Settings from '@src/utils/config';
 
 export async function Search(query: string) {
   const engine = await Settings.get('engine');
 
-  if (validateUrl(query) || isDomain(query)) {
-    return query.startsWith('http://') || query.startsWith('https://')
-      ? query
-      : `https://${query}`;
-  }
+  if (isValidURL(query)) return query;
+  if (isDomain(query)) return `https://${query}`;
 
   return `${engine}${encodeURIComponent(query)}`;
 }
 
-function validateUrl(url: string): boolean {
-  return /^https?:\/\/[^\s/$.?#].[^\s]*$/.test(url);
+function isValidURL(query: string): boolean {
+  try {
+    new URL(query);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function isDomain(query: string): boolean {
-  return /^(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/.test(query);
+  return /^[a-zA-Z0-9-]+(\.[a-zA-Z]{2,})+$/.test(query);
 }

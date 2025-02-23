@@ -1,4 +1,4 @@
-import { Settings } from '@src/utils/config';
+import Settings from '@src/utils/config';
 
 const bak = document.getElementById('back') as HTMLButtonElement;
 const fwd = document.getElementById('forward') as HTMLButtonElement;

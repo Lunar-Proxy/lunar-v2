@@ -1,5 +1,5 @@
 import { BareMuxConnection } from '@mercuryworkshop/bare-mux';
-import { Settings } from '@src/utils/config';
+import  Settings from '@src/utils/config';
 import { Search } from './search';
 
 const copy = document.getElementById('link') as HTMLButtonElement;
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function launch(link: string) {
-  const backend: string = await Settings.get('backend');
+  const backend: string = await Settings.get('backend')  as string | "/p/";
   if ((await connection.getTransport()) !== '/assets/packaged/ep/index.mjs') {
     await connection.setTransport('/assets/packaged/ep/index.mjs', [
       { wisp: wispurl },
