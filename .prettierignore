@@ -2,4 +2,3 @@ public/assets/packaged
 dist
 .astro
 node_modules
-src/pages/index.astro

@@ -1,4 +1,4 @@
-import { launch2 } from '@src/utils/frame.ts';
+import { launch2 } from '@/utils/frame.ts';
 
 export type Asset = {
   name: string;
@@ -44,7 +44,7 @@ buttons.forEach((button) => {
           const choice = prompt(
             `Please choose a link by entering a number:\n${asset.link
               .map((item, index) => `${index + 1}. ${item.name}`)
-              .join('\n')}`
+              .join('\n')}`,
           );
 
           if (choice) {

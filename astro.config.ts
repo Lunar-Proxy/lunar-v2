@@ -3,19 +3,19 @@ import node from '@astrojs/node';
 import tailwind from '@astrojs/tailwind';
 import { baremuxPath } from '@mercuryworkshop/bare-mux/node';
 import { epoxyPath } from '@mercuryworkshop/epoxy-transport';
-import { scramjetPath } from '@mercuryworkshop/scramjet';
-import { server as wisp } from '@mercuryworkshop/wisp-js/server';
+import { server as wisp, logging } from '@mercuryworkshop/wisp-js/server';
 import playformCompress from '@playform/compress';
 import { defineConfig } from 'astro/config';
 import { normalizePath } from 'vite';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { version } from './package.json';
 
-function check() {
+logging.set_level(logging.ERROR);
+wisp.options.wisp_version = 2;
+
+function LastUpdated() {
   try {
-    return execSync('git log -1 --format=%cd', { stdio: 'pipe' })
-      .toString()
-      .trim();
+    return execSync('git log -1 --format=%cd', { stdio: 'pipe' }).toString().trim();
   } catch {
     return new Date().toISOString();
   }
@@ -40,7 +40,7 @@ export default defineConfig({
   vite: {
     define: {
       VERSION: JSON.stringify(version),
-      LAST_UPDATED: JSON.stringify(check()),
+      LAST_UPDATED: JSON.stringify(LastUpdated()),
     },
     plugins: [
       {
@@ -64,12 +64,6 @@ export default defineConfig({
             src: normalizePath(baremuxPath + '/**/*.js'),
             dest: 'assets/packaged/bm',
             overwrite: false,
-          },
-          {
-            src: `${scramjetPath}/**/*.js`.replace(/\\/g, '/'),
-            dest: 'assets/packaged/scram',
-            overwrite: false,
-            rename: (name) => `${name.replace('scramjet.', '')}.js`,
           },
         ],
       }),

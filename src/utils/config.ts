@@ -1,9 +1,9 @@
-import localForage from "localforage";
+import localForage from 'localforage';
 
 const Settings = {
   config: localForage.createInstance({
-    name: "SettingsDB",
-    storeName: "Settings"
+    name: 'SettingsDB',
+    storeName: 'Settings',
   }),
 
   async get(key: string) {
@@ -26,10 +26,10 @@ const Settings = {
 
   async initializeDefaults() {
     const defaults = {
-      backend: "uv",
-      engine: "https://duckduckgo.com/?q=",
-      cloak: "on",
-      PreventClosing: false
+      backend: 'uv',
+      engine: 'https://duckduckgo.com/?q=',
+      cloak: 'on',
+      PreventClosing: false,
     };
 
     for (const [key, value] of Object.entries(defaults)) {
@@ -39,7 +39,7 @@ const Settings = {
         console.log(`Default value set for ${key}: ${value}`);
       }
     }
-  }
+  },
 };
 Settings.initializeDefaults();
 

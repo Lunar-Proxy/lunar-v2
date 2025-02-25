@@ -1,4 +1,4 @@
-import Settings from '@src/utils/config';
+import Settings from '@/utils/config';
 
 const bak = document.getElementById('back') as HTMLButtonElement;
 const fwd = document.getElementById('forward') as HTMLButtonElement;
@@ -80,12 +80,8 @@ if (copy) {
         };
 
         if (clipboardMap[path as '/gm' | '/ap' | '/s']) {
-          await navigator.clipboard.writeText(
-            clipboardMap[path as '/gm' | '/ap' | '/s']
-          );
-          console.log(
-            `[DEBUG] Copied: ${clipboardMap[path as '/gm' | '/ap' | '/s']}`
-          );
+          await navigator.clipboard.writeText(clipboardMap[path as '/gm' | '/ap' | '/s']);
+          console.log(`[DEBUG] Copied: ${clipboardMap[path as '/gm' | '/ap' | '/s']}`);
         } else {
           console.warn('[DEBUG] No matching path.');
         }
@@ -97,13 +93,13 @@ if (copy) {
       const backend = await Settings.get('backend');
       if (backend == 'uv') {
         const decodedUrl = UltraConfig.decodeUrl(
-          href ? new URL(href).pathname.replace(/^\/p\//, '') : '/'
+          href ? new URL(href).pathname.replace(/^\/p\//, '') : '/',
         );
         await navigator.clipboard.writeText(decodedUrl!);
         console.log(decodedUrl);
       } else {
         const decodedUrl = scram.decodeUrl(
-          href ? new URL(href).pathname.replace(/^\/scram\//, '') : '/'
+          href ? new URL(href).pathname.replace(/^\/scram\//, '') : '/',
         );
         await navigator.clipboard.writeText(decodedUrl);
         console.log(decodedUrl);
@@ -184,9 +180,7 @@ if (star) {
       alert('Coming soon!');
       // const nickname = prompt('Enter a nickname for this favorite:');
       if (nickname) {
-        const favorites = JSON.parse(
-          localStorage.getItem('@lunar/favorites') || '[]'
-        );
+        const favorites = JSON.parse(localStorage.getItem('@lunar/favorites') || '[]');
         try {
           if ((await Settings.get('backend')) == 'sj') {
             originalUrl = `${scram.decodeUrl(frame.contentWindow!.location.href.split('/scram/')[1] || frame.contentWindow!.location.href)}`;

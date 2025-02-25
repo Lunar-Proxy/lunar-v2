@@ -1,4 +1,4 @@
-import Settings from '@src/utils/config';
+import Settings from '@/utils/config';
 
 export async function Search(query: string) {
   const engine = await Settings.get('engine');

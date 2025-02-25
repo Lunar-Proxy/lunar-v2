@@ -1,98 +1,47 @@
 /** @type {import("prettier").Config} */
 export default {
   plugins: ['prettier-plugin-astro'],
-  printWidth: 80,
+  printWidth: 100, // Increased for better readability
   tabWidth: 2,
   useTabs: false,
   semi: true,
   singleQuote: true,
-  trailingComma: 'es5',
+  trailingComma: 'all', // More consistent trailing commas
   bracketSpacing: true,
   arrowParens: 'always',
+
   overrides: [
     {
       files: '*.astro',
-      options: {
-        parser: 'astro',
-      },
+      options: { parser: 'astro' },
     },
     {
-      files: '*.ts',
-      options: {
-        parser: 'typescript',
-      },
+      files: ['*.ts', '*.tsx'],
+      options: { parser: 'typescript' },
     },
     {
-      files: '*.tsx',
-      options: {
-        parser: 'typescript',
-      },
+      files: ['*.js', '*.jsx'],
+      options: { parser: 'babel' },
     },
     {
-      files: '*.js',
-      options: {
-        parser: 'babel',
-      },
+      files: ['*.md', '*.mdx'],
+      options: { parser: 'markdown', proseWrap: 'always' },
     },
     {
-      files: '*.jsx',
-      options: {
-        parser: 'babel',
-      },
+      files: ['*.json', '.prettierrc'],
+      options: { parser: 'json', printWidth: 80 },
     },
     {
-      files: '*.md',
-      options: {
-        parser: 'markdown',
-      },
+      files: ['*.yaml', '*.yml'],
+      options: { parser: 'yaml', singleQuote: false },
     },
     {
-      files: '*.json',
-      options: {
-        parser: 'json',
-      },
+      files: ['*.css', '*.scss', '*.less'],
+      options: { parser: 'css' },
     },
     {
-      files: '*.yaml',
-      options: {
-        parser: 'yaml',
-      },
-    },
-    {
-      files: '*.css',
-      options: {
-        parser: 'css',
-      },
-    },
-    {
-      files: '*.scss',
-      options: {
-        parser: 'scss',
-      },
-    },
-    {
-      files: '*.less',
-      options: {
-        parser: 'less',
-      },
-    },
-    {
-      files: '*.html',
-      options: {
-        parser: 'html',
-      },
-    },
-    {
-      files: '*.svg',
-      options: {
-        parser: 'html',
-      },
-    },
-    {
-      files: 'README.md',
-      options: {
-        parser: 'markdown',
-      },
+      files: ['*.html', '*.svg'],
+      options: { parser: 'html' },
     },
   ],
 };

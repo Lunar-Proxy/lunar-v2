@@ -2,9 +2,7 @@
     "schedule": "daily",
     "aggressiveCompression": "true",
     "compressWiki": "true",
-    "minKBReduced": 500
-    "prTitle" : "Chore: Optimize images",
-    "prBody" : " Text before optimization ratio {optimization_ratio} Text after optimization ratio 
-                Text before optimization details {optimization_details} Text after optimization details",
-    
+    "minKBReduced": 500,
+    "prTitle": "Chore: Optimize images",
+    "prBody": "Text before optimization ratio {optimization_ratio}\nText after optimization ratio\n\nText before optimization details {optimization_details}\nText after optimization details"
 }

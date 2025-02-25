@@ -1,5 +1,5 @@
 import { BareMuxConnection } from '@mercuryworkshop/bare-mux';
-import Settings from '@src/utils/config';
+import Settings from '@/utils/config';
 
 const exit = document.getElementById('return') as HTMLButtonElement;
 const refresh = document.getElementById('rotate') as HTMLButtonElement;
@@ -25,23 +25,15 @@ try {
     console.log('[DEBUG] Service Workers are registered.');
   });
 } catch (error) {
-  throw new Error(
-    '[DEBUG] Service Worker registration failed with error:' + error
-  );
+  throw new Error('[DEBUG] Service Worker registration failed with error:' + error);
 }
 
 export async function launch2(link: string) {
   const connection = new BareMuxConnection('/assets/packaged/bm/worker.js');
-  const wispurl =
-    (location.protocol === 'https:' ? 'wss' : 'ws') +
-    '://' +
-    location.host +
-    '/wsp/';
+  const wispurl = (location.protocol === 'https:' ? 'wss' : 'ws') + '://' + location.host + '/wsp/';
   const backend = await Settings.get('backend');
   if ((await connection.getTransport()) !== '/assets/packaged/ep/index.mjs') {
-    await connection.setTransport('/assets/packaged/ep/index.mjs', [
-      { wisp: wispurl },
-    ]);
+    await connection.setTransport('/assets/packaged/ep/index.mjs', [{ wisp: wispurl }]);
   }
   console.log('[DEBUG] Transport set to Epoxy');
   launch.classList.remove('hidden');
@@ -72,10 +64,9 @@ full.addEventListener('click', () => {
 
 async function InterceptLinks() {
   console.debug('[DEBUG] Intercepting links....');
-  const clickableElements =
-    frame.contentWindow?.document.querySelectorAll<HTMLElement>(
-      'a, button, [role="button"], [onclick], [data-href], span'
-    );
+  const clickableElements = frame.contentWindow?.document.querySelectorAll<HTMLElement>(
+    'a, button, [role="button"], [onclick], [data-href], span',
+  );
 
   if (clickableElements) {
     clickableElements.forEach((element) => {
@@ -90,9 +81,7 @@ async function InterceptLinks() {
           href = target.dataset.href;
         } else if (target.hasAttribute('onclick')) {
           const onclickContent = target.getAttribute('onclick');
-          const match = onclickContent?.match(
-            /(?:location\.href\s*=\s*['"])([^'"]+)(['"])/
-          );
+          const match = onclickContent?.match(/(?:location\.href\s*=\s*['"])([^'"]+)(['"])/);
           href = match?.[1] || null;
         } else if (target.closest('a')) {
           href = target.closest('a')?.href || null;

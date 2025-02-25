@@ -1,6 +1,6 @@
 ---
-import '@src/main.css';
-import Card from '@src/components/asset.astro';
+import '@/main.css';
+import Card from '@/components/asset.astro';
 import { LogOut, Maximize, RotateCw } from 'lucide-astro';
 import data from '../../public/assets/json/ga.json';
 const games = data;
@@ -27,11 +27,7 @@ const games = data;
   </head>
 
   <body>
-    <p
-      class="text-text-HEADER font-linux uppercase text-center mt-6 text-5xl font-bold"
-    >
-      Games
-    </p>
+    <p class="text-text-HEADER font-linux uppercase text-center mt-6 text-5xl font-bold">Games</p>
 
     <div class="flex justify-center items-center mt-4">
       <input
@@ -46,10 +42,7 @@ const games = data;
       <Card AssetList={games} />
     </div>
 
-    <div
-      class="hidden fixed inset-0 bg-background-overlay shadow-lg p-5 z-50"
-      id="game-frame"
-    >
+    <div class="hidden fixed inset-0 bg-background-overlay shadow-lg p-5 z-50" id="game-frame">
       <div class="flex justify-end items-center gap-4 mb-4">
         <button
           class="text-[#a5adce] hover:text-white px-4 py-2 rounded transition duration-150 transform hover:scale-110"

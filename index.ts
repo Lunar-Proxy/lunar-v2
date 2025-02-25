@@ -11,20 +11,17 @@ import { Socket } from 'node:net';
 import path from 'node:path';
 import { version } from './package.json';
 import config from './config';
-import { server as wisp, logging } from "@mercuryworkshop/wisp-js/server";
+import { server as wisp, logging } from '@mercuryworkshop/wisp-js/server';
 
 const port: number = config.port;
 const host: string = '0.0.0.0';
 
-
-logging.set_level(logging.ERROR);
+logging.set_level(logging.config.LogType);
 wisp.options.wisp_version = 2;
 
 function getCommitDate(): string {
   try {
-    return execSync('git log -1 --format=%cd', { stdio: 'pipe' })
-      .toString()
-      .trim();
+    return execSync('git log -1 --format=%cd', { stdio: 'pipe' }).toString().trim();
   } catch {
     return new Date().toISOString();
   }
@@ -35,11 +32,9 @@ async function build() {
     console.log(chalk.yellow.bold('🚀 Building Lunar...'));
     try {
       execSync('pnpm build', { stdio: 'inherit' });
-      console.log(chalk.green.bold('✅ Build successful!'));
+      console.log(chalk.green.bold('✅ Succesfully built Lunar V1!'));
     } catch (error) {
-      throw new Error(
-        `Build Error: ${error instanceof Error ? error.message : String(error)}`
-      );
+      throw new Error(`A error encurred while building: ${error instanceof Error ? error.message : String(error)}`);
     }
   } else {
     console.log(chalk.blue.bold('📂 Lunar is already built. Skipping...'));
@@ -58,19 +53,17 @@ await app.register(fastifyCompress, { encodings: ['deflate', 'gzip', 'br'] });
 
 if (config.auth.protect) {
   console.log(chalk.magenta.bold('🔒 Password Protection Enabled.'));
-  config.auth.users.forEach((user) => {
+  config.auth.users.forEach((user: { [key: string]: string }) => {
     Object.entries(user).forEach(([username, password]) => {
-      console.log(chalk.yellow('🔑 User Credentials:'));
-      console.log(
-        chalk.cyan(`➡ Username: ${username}, Password: ${password}`)
-      );
+      console.log(chalk.yellow('🔑 Users:'));
+      console.log(chalk.cyan(`➡ Username: ${username}, Password: ${password}`));
     });
   });
 
   await app.register(basicAuth, {
     authenticate: true,
     validate(username, password, _req, _reply, done) {
-      const user = config.auth.users.find((user) => user[username]);
+      const user = config.auth.users.find((user: { [key: string]: string }) => user[username]);
       if (user && user[username] === password) {
         if (config.auth.log) {
           console.log(chalk.green(`✅ Authenticated: ${username}`));
@@ -144,12 +137,12 @@ app.listen({ host, port }, (err) => {
   if (err) {
     throw new Error(`❌ Failed to start Lunar V1: ${err.message}`);
   }
-  console.log(chalk.green.bold(`\n🚀 Lunar V1`));
+  console.log(chalk.green.bold(`\n Lunar V1`));
 
   console.log(
     chalk.whiteBright(
-      `📅 Last Updated: ${chalk.cyanBright(new Date(commitDate).toLocaleString())}`
-    )
+      `📅 Last Updated: ${chalk.cyanBright(new Date(commitDate).toLocaleString())}`,
+    ),
   );
   console.log(chalk.whiteBright(`🛠  Version: ${chalk.cyanBright(version)}`));
 

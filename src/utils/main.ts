@@ -1,5 +1,5 @@
 import { BareMuxConnection } from '@mercuryworkshop/bare-mux';
-import  Settings from '@src/utils/config';
+import Settings from '@/utils/config';
 import { Search } from './search';
 
 const copy = document.getElementById('link') as HTMLButtonElement;
@@ -15,11 +15,7 @@ const loading = document.getElementById('loading') as HTMLDivElement;
 const welcome = document.getElementById('starting') as HTMLDivElement;
 const startclear = document.getElementById('sclear') as HTMLButtonElement;
 const connection = new BareMuxConnection('/assets/packaged/bm/worker.js');
-const wispurl =
-  (location.protocol === 'https:' ? 'wss' : 'ws') +
-  '://' +
-  location.host +
-  '/wsp/';
+const wispurl = (location.protocol === 'https:' ? 'wss' : 'ws') + '://' + location.host + '/wsp/';
 const scram = new ScramjetController({
   prefix: '/scram/',
   files: {
@@ -39,26 +35,20 @@ try {
     console.log('[DEBUG] Service Workers are registered.');
   });
 } catch (error) {
-  throw new Error(
-    '[DEBUG] Service Worker registration failed with error:' + error
-  );
+  throw new Error('[DEBUG] Service Worker registration failed with error:' + error);
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
   // todo - make it switchable epoxy & libcurl
   if ((await connection.getTransport()) !== '/assets/packaged/ep/index.mjs') {
-    await connection.setTransport('/assets/packaged/ep/index.mjs', [
-      { wisp: wispurl },
-    ]);
+    await connection.setTransport('/assets/packaged/ep/index.mjs', [{ wisp: wispurl }]);
   }
 });
 
 async function launch(link: string) {
-  const backend: string = await Settings.get('backend')  as string | "/p/";
+  const backend: string = (await Settings.get('backend')) as string | '/p/';
   if ((await connection.getTransport()) !== '/assets/packaged/ep/index.mjs') {
-    await connection.setTransport('/assets/packaged/ep/index.mjs', [
-      { wisp: wispurl },
-    ]);
+    await connection.setTransport('/assets/packaged/ep/index.mjs', [{ wisp: wispurl }]);
   }
   console.log('[DEBUG] Transport set to Epoxy');
   const url = (await Search(link)) || 'd';
@@ -77,12 +67,8 @@ async function launch(link: string) {
     }
     const isUV = backend === 'uv';
     const decodedUrl = isUV
-      ? UltraConfig.decodeUrl(
-          new URL(frameWindow!.location.href).pathname.replace(/^\/p\//, '')
-        )
-      : scram.decodeUrl(
-          new URL(frameWindow!.location.href).pathname.replace(/^\/scram\//, '')
-        );
+      ? UltraConfig.decodeUrl(new URL(frameWindow!.location.href).pathname.replace(/^\/p\//, ''))
+      : scram.decodeUrl(new URL(frameWindow!.location.href).pathname.replace(/^\/scram\//, ''));
 
     if (isUV) InterceptLinks();
     input.value = decodedUrl || '';
@@ -118,10 +104,9 @@ sf.addEventListener('submit', async (event) => {
 
 async function InterceptLinks() {
   console.log('[DEBUG] Intercepting links is running...');
-  const clickableElements =
-    frame.contentWindow?.document.querySelectorAll<HTMLElement>(
-      'a, button, [role="button"], [onclick], [data-href], span'
-    );
+  const clickableElements = frame.contentWindow?.document.querySelectorAll<HTMLElement>(
+    'a, button, [role="button"], [onclick], [data-href], span',
+  );
 
   if (clickableElements) {
     clickableElements.forEach((element) => {
@@ -134,9 +119,7 @@ async function InterceptLinks() {
           href = target.dataset.href;
         } else if (target.hasAttribute('onclick')) {
           const onclickContent = target.getAttribute('onclick');
-          const match = onclickContent?.match(
-            /(?:location\.href\s*=\s*['"])([^'"]+)(['"])/
-          );
+          const match = onclickContent?.match(/(?:location\.href\s*=\s*['"])([^'"]+)(['"])/);
           href = match?.[1] || null;
         } else if (target.closest('a')) {
           href = target.closest('a')?.href || null;

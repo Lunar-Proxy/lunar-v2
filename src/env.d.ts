@@ -2,15 +2,14 @@
 
 const LAST_UPDATED: string;
 const VERSION: string;
+const UltraConfig: UltraConfig;
+const ScramjetController: any;
 
 interface UltraConfig {
   prefix: string;
   encodeUrl: (str: string) => string | null;
   decodeUrl: (str: string) => string | null;
 }
-
-const UltraConfig: UltraConfig;
-const ScramjetController: any;
 
 interface Window {
   sj: any;
