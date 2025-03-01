@@ -159,9 +159,15 @@ app.listen({ host, port }, (err) => {
   } else if (process.env.FLY_APP_NAME) {
     deploymentURL = `https://${process.env.FLY_APP_NAME}.fly.dev`;
   } else if (process.env.CODESPACES) {
-    deploymentURL = `https://${process.env.CODESPACE_NAME}${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`
-  } 
-
+    deploymentURL = `https://${process.env.CODESPACE_NAME}-${port}.${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`;
+  } else if (process.env.GITPOD_WORKSPACE_URL) {
+    deploymentURL = process.env.GITPOD_WORKSPACE_URL.replace("https://", `https://${port}-`);
+  } else if (process.env.REPL_ID) {
+    deploymentURL = `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`;
+  } else if (process.env.KOYEB_APP_NAME) {
+    deploymentURL = `https://${process.env.KOYEB_APP_NAME}.koyeb.app`;
+  }
+  
   if (deploymentURL) {
     console.log(chalk.blueBright(`   ➡ Hosted:   ${chalk.underline(deploymentURL)}`));
   } else {
@@ -169,4 +175,3 @@ app.listen({ host, port }, (err) => {
     console.log(chalk.blueBright(`   ➡ Network:  http://127.0.0.1:${port}`));
   }
 });
-
