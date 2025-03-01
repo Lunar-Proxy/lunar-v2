@@ -2,15 +2,14 @@ import { execSync } from 'child_process';
 import node from '@astrojs/node';
 import tailwind from '@astrojs/tailwind';
 import { baremuxPath } from '@mercuryworkshop/bare-mux/node';
-import { epoxyPath } from '@mercuryworkshop/epoxy-transport';
-import { server as wisp, logging } from '@mercuryworkshop/wisp-js/server';
+import { libcurlPath } from '@mercuryworkshop/libcurl-transport';
+import { server as wisp } from '@mercuryworkshop/wisp-js/server';
 import playformCompress from '@playform/compress';
 import { defineConfig } from 'astro/config';
 import { normalizePath } from 'vite';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { version } from './package.json';
 
-logging.set_level(logging.ERROR);
 wisp.options.wisp_version = 2;
 
 function LastUpdated() {
@@ -56,8 +55,8 @@ export default defineConfig({
       viteStaticCopy({
         targets: [
           {
-            src: normalizePath(epoxyPath + '/**/*.mjs'),
-            dest: 'assets/packaged/ep',
+            src: normalizePath(libcurlPath + '/**/*.mjs'),
+            dest: 'assets/packaged/lc',
             overwrite: false,
           },
           {

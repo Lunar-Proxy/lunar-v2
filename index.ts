@@ -15,8 +15,8 @@ import { server as wisp, logging } from '@mercuryworkshop/wisp-js/server';
 
 const port: number = config.port;
 const host: string = '0.0.0.0';
-
-logging.set_level(logging.config.LogType);
+logging.set_level(logging.config );
+logging.set_level(config);
 wisp.options.wisp_version = 2;
 
 function getCommitDate(): string {
@@ -34,7 +34,9 @@ async function build() {
       execSync('pnpm build', { stdio: 'inherit' });
       console.log(chalk.green.bold('✅ Succesfully built Lunar V1!'));
     } catch (error) {
-      throw new Error(`A error encurred while building: ${error instanceof Error ? error.message : String(error)}`);
+      throw new Error(
+        `A error encurred while building: ${error instanceof Error ? error.message : String(error)}`,
+      );
     }
   } else {
     console.log(chalk.blue.bold('📂 Lunar is already built. Skipping...'));
@@ -146,7 +148,25 @@ app.listen({ host, port }, (err) => {
   );
   console.log(chalk.whiteBright(`🛠  Version: ${chalk.cyanBright(version)}`));
 
-  console.log(chalk.green.bold(`\n🌍 Lunar is running at:`));
-  console.log(chalk.blueBright(`   ➡ Local:    ${chalk.underline(`http://localhost:${port}`)}`));
-  console.log(chalk.blueBright(`   ➡ Network:  http://127.0.0.1:${port}`));
+  let deploymentURL: string | null = null;
+
+  if (process.env.RENDER) {
+    deploymentURL = `https://${process.env.RENDER_EXTERNAL_URL}`;
+  } else if (process.env.VERCEL) {
+    deploymentURL = `https://${process.env.VERCEL_URL}`;
+  } else if (process.env.RAILWAY_STATIC_URL) {
+    deploymentURL = `https://${process.env.RAILWAY_STATIC_URL}`;
+  } else if (process.env.FLY_APP_NAME) {
+    deploymentURL = `https://${process.env.FLY_APP_NAME}.fly.dev`;
+  } else if (process.env.CODESPACES) {
+    deploymentURL = `https://${process.env.CODESPACE_NAME}${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`
+  } 
+
+  if (deploymentURL) {
+    console.log(chalk.blueBright(`   ➡ Hosted:   ${chalk.underline(deploymentURL)}`));
+  } else {
+    console.log(chalk.blueBright(`   ➡ Local:    ${chalk.underline(`http://localhost:${port}`)}`));
+    console.log(chalk.blueBright(`   ➡ Network:  http://127.0.0.1:${port}`));
+  }
 });
+

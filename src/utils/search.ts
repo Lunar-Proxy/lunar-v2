@@ -5,7 +5,6 @@ export async function Search(query: string) {
 
   if (isValidURL(query)) return query;
   if (isDomain(query)) return `https://${query}`;
-
   return `${engine}${encodeURIComponent(query)}`;
 }
 

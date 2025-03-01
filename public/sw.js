@@ -13,7 +13,7 @@ importScripts(
   '/assets/packaged/scram/worker.js',
 );
 
-const uv = new UVServiceWorker();
+const u = new UVServiceWorker();
 const scramjet = new ScramjetServiceWorker();
 
 let playgroundData;
@@ -25,8 +25,8 @@ self.addEventListener('message', ({ data }) => {
 });
 
 async function handleRequest(event) {
-  if (uv.route(event)) {
-    return await uv.fetch(event);
+  if (u.route(event)) {
+    return await u.fetch(event);
   }
 
   await scramjet.loadConfig();

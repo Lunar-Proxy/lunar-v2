@@ -12,6 +12,9 @@ module.exports = {
           DEFAULT: 'var(--background)',
           overlay: 'var(--background-overlay)',
         },
+        border: {
+          default: 'var(--border)',
+        },
         text: {
           HEADER: 'var(--text-header)',
           SECONDARY: 'var(--text-secondary)',

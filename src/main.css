@@ -6,9 +6,10 @@
 
 @layer base {
   :root {
-    --background: #24273a;
-    --background-overlay: #1e1e2e;
-    --text-header: #a5adce;
+    --background: #11111b;
+    --border: #000000;
+    --background-overlay: #0d0d15;
+    --text-header: #cdd6f4;
     --text-secondary: #a5adcb;
   }
 

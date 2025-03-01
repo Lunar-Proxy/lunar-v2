@@ -1,16 +1,98 @@
 ---
-import "@/main.css"
+import '@/main.css';
+import { Gamepad, Grip, Settings, MoonStar, Minus, Search } from 'lucide-astro';
 ---
+
 <!doctype html>
-<html lang="en" class="h-screen">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     <title>Home</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-  </head>
-<body>
+   </head>
+  <body class="h-screen text-white">
+    <aside id="side" class="border-r-4 border-border-default fixed top-0 left-0 h-screen w-[82px] bg-[#09090f] flex flex-col items-center pt-4 overflow-visible z-50">
+      <div class="relative group">
+        <button class="w-12 h-12 flex items-center justify-center bg-gray-800 rounded-xl hover:bg-gray-700 hover:scale-105 transition-all duration-200">
+          <MoonStar class="w-6 h-6 text-gray-400" />
+        </button>
+        <span class="absolute left-full ml-2 top-1/2 -translate-y-1/2 bg-gray-900 text-white text-sm px-4 py-2 rounded-lg opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 ease-out whitespace-nowrap z-[9999] shadow-lg">
+          Home
+        </span>
+      </div>
+      <Minus class="w-5 h-5 text-gray-500 opacity-60 mt-4 mb-4" />
 
-</body>
+      <div class="relative group">
+        <button class="w-12 h-12 flex items-center justify-center bg-gray-800 rounded-xl hover:bg-gray-700 hover:scale-105 transition-all duration-200">
+          <Gamepad class="w-6 h-6 text-gray-400" />
+        </button>
+        <span class="absolute left-full ml-2 top-1/2 -translate-y-1/2 bg-gray-900 text-white text-sm px-4 py-2 rounded-lg opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 ease-out whitespace-nowrap z-[9999] shadow-lg">
+          Games
+        </span>
+      </div>
+      <div class="relative group mt-4">
+        <button class="w-12 h-12 flex items-center justify-center bg-gray-800 rounded-xl hover:bg-gray-700 hover:scale-105 transition-all duration-200">
+          <Grip class="w-6 h-6 text-gray-400" />
+        </button>
+        <span class="absolute left-full ml-2 top-1/2 -translate-y-1/2 bg-gray-900 text-white text-sm px-4 py-2 rounded-lg opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 ease-out whitespace-nowrap z-[9999] shadow-lg">
+          Apps
+        </span>
+      </div>
+
+      <div class="relative group mt-4">
+        <button class="w-12 h-12 flex items-center justify-center bg-gray-800 rounded-xl hover:bg-gray-700 hover:scale-105 transition-all duration-200">
+          <Settings class="w-6 h-6 text-gray-400" />
+        </button>
+        <span class="absolute left-full ml-2 top-1/2 -translate-y-1/2 bg-gray-900 text-white text-sm px-4 py-2 rounded-lg opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 ease-out whitespace-nowrap z-[9999] shadow-lg">
+          Settings
+        </span>
+      </div>
+    </aside>
+
+    <div class="ml-[82px] grid grid-rows-[56px_auto] h-screen w-[calc(100%-82px)]">
+      <nav id="nav" class="h-14 bg-[#09090f] border-b-4 border-border-default flex items-center px-6 relative z-40">
+        <div class="mx-auto relative w-[420px] transition-all duration-300 ease-in-out">
+          <div class="relative">
+            <input
+              type="text"
+              placeholder="Search..."
+              class="font-semibold w-[420px] pr-10 pl-3 py-1 font-fit bg-transparent text-gray-400 border border-gray-600 rounded-lg transition-all duration-300 ease-in-out
+              focus:w-[450px] focus:border-blue-400 focus:ring-2 focus:ring-blue-400/60 focus:text-white peer"
+            />
+            <Search class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 transition-all duration-300 ease-in-out peer-focus:right-5 peer-focus:scale-110" />
+          </div>
+        </div>
+
+        <span id="time" class="absolute right-6 text-gray-400 text-md font-fit px-4 py-1 rounded-md bg-gray-800">
+          --
+        </span>
+      </nav>
+
+      <main class="flex flex-col items-center pt-24">
+        <h1 class="font-linux text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-white to-gray-400 drop-shadow-[0_0_15px_rgba(173,216,230,0.8)]">
+          Lunar v2
+        </h1>
+      </main>
+    </div>
+
+    <script>
+      function updateTime() {
+        const time = document.getElementById("time");
+        if (!time) return;
+
+        const now = new Date();
+        let hours = now.getHours();
+        const minutes = now.getMinutes().toString().padStart(2, "0");
+        const ampm = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12 || 12;
+
+        time.textContent = `${hours}:${minutes} ${ampm}`;
+      }
+
+      setInterval(updateTime, 1000);
+      updateTime();
+    </script>
+  </body>
 </html>
