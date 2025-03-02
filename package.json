@@ -40,7 +40,7 @@
     "node": ">=18.x"
   },
   "devDependencies": {
-    "@types/node": "^22.13.4",
+    "@types/node": "^22.13.8",
     "prettier": "3.5.1"
   }
 }
