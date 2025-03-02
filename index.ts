@@ -147,7 +147,8 @@ app.listen({ host, port }, (err) => {
     ),
   );
   console.log(chalk.whiteBright(`🛠  Version: ${chalk.cyanBright(version)}`));
-
+  
+  // credits to night proxy for the idea :D
   let deploymentURL: string | null = null;
 
   if (process.env.RENDER) {

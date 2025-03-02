@@ -12,13 +12,14 @@ import { version } from './package.json';
 
 wisp.options.wisp_version = 2;
 
-function LastUpdated() {
+function Check() {
   try {
     return execSync('git log -1 --format=%cd', { stdio: 'pipe' }).toString().trim();
   } catch {
     return new Date().toISOString();
   }
 }
+
 export default defineConfig({
   output: 'server',
   adapter: node({ mode: 'middleware' }),
@@ -39,7 +40,7 @@ export default defineConfig({
   vite: {
     define: {
       VERSION: JSON.stringify(version),
-      LAST_UPDATED: JSON.stringify(LastUpdated()),
+      LAST_UPDATED: JSON.stringify(Check()),
     },
     plugins: [
       {

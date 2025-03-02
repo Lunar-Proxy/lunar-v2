@@ -1,6 +1,5 @@
 ---
 import '@/main.css';
-import { Gamepad, Grip, Settings, MoonStar, Minus, Search } from 'lucide-astro';
 ---
 
 <!doctype html>
@@ -11,22 +10,22 @@ import { Gamepad, Grip, Settings, MoonStar, Minus, Search } from 'lucide-astro';
     <meta name="generator" content={Astro.generator} />
     <title>Home</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-   </head>
+  </head>
   <body class="h-screen text-white">
     <aside id="side" class="border-r-4 border-border-default fixed top-0 left-0 h-screen w-[82px] bg-[#09090f] flex flex-col items-center pt-4 overflow-visible z-50">
       <div class="relative group">
         <button class="w-12 h-12 flex items-center justify-center bg-gray-800 rounded-xl hover:bg-gray-700 hover:scale-105 transition-all duration-200">
-          <MoonStar class="w-6 h-6 text-gray-400" />
+          <img src="/assets/images/logo/moon.svg" alt="Home" class="w-6 h-6 text-gray-400" />
         </button>
         <span class="absolute left-full ml-2 top-1/2 -translate-y-1/2 bg-gray-900 text-white text-sm px-4 py-2 rounded-lg opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 ease-out whitespace-nowrap z-[9999] shadow-lg">
           Home
         </span>
       </div>
-      <Minus class="w-5 h-5 text-gray-500 opacity-60 mt-4 mb-4" />
+      <img src="/assets/images/logo/spacer.svg" alt="Separator" class="w-5 h-5 text-gray-500 opacity-60 mt-4 mb-4" />
 
       <div class="relative group">
         <button class="w-12 h-12 flex items-center justify-center bg-gray-800 rounded-xl hover:bg-gray-700 hover:scale-105 transition-all duration-200">
-          <Gamepad class="w-6 h-6 text-gray-400" />
+          <img src="/assets/images/logo/pad.svg" alt="Games" class="w-6 h-6 text-gray-400" />
         </button>
         <span class="absolute left-full ml-2 top-1/2 -translate-y-1/2 bg-gray-900 text-white text-sm px-4 py-2 rounded-lg opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 ease-out whitespace-nowrap z-[9999] shadow-lg">
           Games
@@ -34,7 +33,7 @@ import { Gamepad, Grip, Settings, MoonStar, Minus, Search } from 'lucide-astro';
       </div>
       <div class="relative group mt-4">
         <button class="w-12 h-12 flex items-center justify-center bg-gray-800 rounded-xl hover:bg-gray-700 hover:scale-105 transition-all duration-200">
-          <Grip class="w-6 h-6 text-gray-400" />
+          <img src="/assets/images/logo/grip.svg" alt="Apps" class="w-6 h-6 text-gray-400" />
         </button>
         <span class="absolute left-full ml-2 top-1/2 -translate-y-1/2 bg-gray-900 text-white text-sm px-4 py-2 rounded-lg opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 ease-out whitespace-nowrap z-[9999] shadow-lg">
           Apps
@@ -43,7 +42,7 @@ import { Gamepad, Grip, Settings, MoonStar, Minus, Search } from 'lucide-astro';
 
       <div class="relative group mt-4">
         <button class="w-12 h-12 flex items-center justify-center bg-gray-800 rounded-xl hover:bg-gray-700 hover:scale-105 transition-all duration-200">
-          <Settings class="w-6 h-6 text-gray-400" />
+          <img src="/assets/images/logo/gear.svg" alt="Settings" class="w-6 h-6 text-gray-400" />
         </button>
         <span class="absolute left-full ml-2 top-1/2 -translate-y-1/2 bg-gray-900 text-white text-sm px-4 py-2 rounded-lg opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 ease-out whitespace-nowrap z-[9999] shadow-lg">
           Settings
@@ -53,16 +52,13 @@ import { Gamepad, Grip, Settings, MoonStar, Minus, Search } from 'lucide-astro';
 
     <div class="ml-[82px] grid grid-rows-[56px_auto] h-screen w-[calc(100%-82px)]">
       <nav id="nav" class="h-14 bg-[#09090f] border-b-4 border-border-default flex items-center px-6 relative z-40">
-        <div class="mx-auto relative w-[420px] transition-all duration-300 ease-in-out">
-          <div class="relative">
-            <input
-              type="text"
-              placeholder="Search..."
-              class="font-semibold w-[420px] pr-10 pl-3 py-1 font-fit bg-transparent text-gray-400 border border-gray-600 rounded-lg transition-all duration-300 ease-in-out
-              focus:w-[450px] focus:border-blue-400 focus:ring-2 focus:ring-blue-400/60 focus:text-white peer"
-            />
-            <Search class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 transition-all duration-300 ease-in-out peer-focus:right-5 peer-focus:scale-110" />
-          </div>
+        <div class="mx-auto relative flex items-center bg-transparent border border-gray-600 rounded-lg w-[420px] px-3 transition-all duration-300 ease-in-out focus-within:w-[450px] focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-400/60">
+          <input
+            type="text"
+            placeholder="Search..."
+            class=" font-light w-full bg-transparent text-gray-400 py-1 outline-none peer"
+          />
+          <img src="/assets/images/logo/mag.svg" alt="Search" class="w-5 h-5 text-gray-500 transition-all duration-300 ease-in-out peer-focus:scale-110 peer-focus:translate-x-1" />
         </div>
 
         <span id="time" class="absolute right-6 text-gray-400 text-md font-fit px-4 py-1 rounded-md bg-gray-800">
