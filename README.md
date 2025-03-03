@@ -1,7 +1,16 @@
 # Lunar
 
-[![Join our Discord](https://skillicons.dev/icons?i=discord)](https://discord.gg/fuPtWjYuf8)  
-[![View on GitHub](https://skillicons.dev/icons?i=github)](https://github.com/Lunar-proxy/Lunar-v1)  
+<p align="left">
+    <a href="https://discord.gg/fuPtWjYuf8">
+        <img src="https://skillicons.dev/icons?i=discord" alt="Join our Discord">
+    </a>
+</p>
+<p align="right">
+    <a href="https://github.com/Lunar-proxy/Lunar-v1">
+        <img src="https://skillicons.dev/icons?i=github" alt="View on GitHub">
+    </a>
+</p>
+
 
 ## What is Lunar?
 
