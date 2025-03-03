@@ -1,4 +1,4 @@
-# Lunar
+# Lunar V1
 
 <p align="left">
     <a href="https://discord.gg/fuPtWjYuf8">
