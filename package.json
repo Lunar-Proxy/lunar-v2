@@ -24,7 +24,7 @@
     "@mercuryworkshop/libcurl-transport": "^1.4.0",
     "@mercuryworkshop/wisp-js": "^0.3.3",
     "@playform/compress": "^0.1.7",
-    "astro": "5.4.0",
+    "astro": "5.4.1",
     "chalk": "^5.4.1",
     "fastify": "^5.2.1",
     "localforage": "^1.10.0",
