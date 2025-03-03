@@ -5,15 +5,15 @@
 
 ## What is Lunar?
 
-Lunar is a web proxy designed to bypass censorship while providing an exceptional user experience.
+Lunar is a powerful web proxy designed to bypass censorship while providing an exceptional browsing experience.
 
 ## Features
 
-- 🚫 **No Ads**  
-- 🚀 **High Speeds**  
-- 🪞 **Advanced Tab Cloaking**  
-- 🎮 **Lots of Games & Apps**  
-- ⚡️ **More Features Coming Soon**  
+- 🚫 **No Ads** – Enjoy an ad-free experience.  
+- 🚀 **High Speeds** – Optimized for fast browsing.  
+- 🪞 **Advanced Tab Cloaking** – Makes the URL harder to block.
+- 🎮 **Games & Apps** – Play and use a large category of games.  
+- ⚡ **More Features Coming Soon** –  improvements & more features coming soon.
 
 ## Deployment Options
 
@@ -32,12 +32,10 @@ Lunar is a web proxy designed to bypass censorship while providing an exceptiona
 ## Deployment via Terminal  
 
 > **Note**  
-> Before deploying, install [Git](https://git-scm.com/downloads),  
-> [Node.js](https://nodejs.org/en/download/prebuilt-installer), and pnpm.  
-> Install pnpm by running:  
-> ```bash
-> npm install -g pnpm
-> ```  
+> Before deploying, install the following dependencies:  
+> - [Git](https://git-scm.com/downloads)  
+> - [Node.js](https://nodejs.org/en/download/prebuilt-installer)  
+> - [pnpm](https://pnpm.io/) (install with `npm install -g pnpm`)  
 
 ### Production  
 
@@ -46,7 +44,6 @@ Lunar is a web proxy designed to bypass censorship while providing an exceptiona
    ```bash
    git clone https://github.com/Lunar-Proxy/Lunar-v1.git
    cd Lunar-v1
-   ```
 
 2. Install dependencies and start Lunar:
    ```bash
