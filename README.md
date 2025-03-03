@@ -1,15 +1,14 @@
 # Lunar
 
-<p align="left">
+<p align="center">
     <a href="https://discord.gg/fuPtWjYuf8">
         <img src="https://skillicons.dev/icons?i=discord" alt="Join our Discord">
     </a>
-</p>
-<p align="right">
     <a href="https://github.com/Lunar-proxy/Lunar-v1">
         <img src="https://skillicons.dev/icons?i=github" alt="View on GitHub">
     </a>
 </p>
+
 
 
 ## What is Lunar?
