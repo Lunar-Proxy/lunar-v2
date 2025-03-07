@@ -44,7 +44,8 @@ Lunar is a web proxy designed to bypass censorship while providing an exceptiona
 > 
 > Before deploying, install the following dependencies:
 > - [Git](https://git-scm.com/downloads)  
-> - [Node.js](https://nodejs.org/en/download/prebuilt-installer)  
+> - [Node.js](https://nodejs.org/en/download/prebuilt-installer)
+
 ### Production  
 1. Clone the Lunar repository:  
 
@@ -67,7 +68,7 @@ pnpm install && pnpm dev
 
 # Contribuating
 
-Before doing a pull request, please read [this guide](CONTRIBUTING.md).
+Before changing anything, please read [this guide](CONTRIBUTING.md). It provides instructions on making changes properly.
 
 # Support
 
