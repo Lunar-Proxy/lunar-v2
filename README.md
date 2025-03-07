@@ -16,9 +16,8 @@
 Lunar is a web proxy designed to bypass censorship while providing an exceptional browsing experience.
 
 ## Features
-
 - 🚫 **No Ads** – Enjoy an ad-free experience.  
-- 🚀 **High Speeds** – Optimized for fast browsing.  
+- 🚀 **Fast Speeds** – Optimized for fast browsing.  
 - 🪞 **Advanced Tab Cloaking** – Makes the URL harder to block.
 - 🎮 **Games & Apps** – Play and use a large category of games.  
 - ⚡ **More Features Coming Soon** –  improvements & more features coming soon.
@@ -34,12 +33,12 @@ Lunar is a web proxy designed to bypass censorship while providing an exceptiona
     </a>  
 </div>  
 
-> Note
+> [!NOTE]
 > Lunar cannot be deployed on static hosting platforms like Netlify, Vercel, or GitHub Pages.  
 
 ## Deployment via Terminal  
 
-> ![NOTE]
+> [!IMPORTANT]
 > Before deploying, install the following dependencies:  
 > - [Git](https://git-scm.com/downloads)  
 > - [Node.js](https://nodejs.org/en/download/prebuilt-installer)  
