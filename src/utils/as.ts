@@ -1,4 +1,3 @@
-
 export type Asset = {
   name: string;
   link: { name: string; url: string }[] | string;
@@ -49,7 +48,6 @@ buttons.forEach((button) => {
           if (choice) {
             const index = Number.parseInt(choice) - 1;
             if (index >= 0 && index < asset.link.length) {
-              
             } else {
               alert('[ERROR] Invalid choice.');
             }

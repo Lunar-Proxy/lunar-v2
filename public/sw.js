@@ -5,16 +5,15 @@ if (navigator.userAgent.includes('Firefox')) {
   });
 }
 importScripts(
-  '/assets/packaged/v/b.js',
-  '/assets/packaged/v/cnfg.js',
-  '/assets/packaged/v/s.js',
-  '/assets/packaged/scram/wasm.js',
-  '/assets/packaged/scram/shared.js',
-  '/assets/packaged/scram/worker.js',
+  '/assets/bundled/v/b.js',
+  '/assets/bundled/v/cnfg.js',
+  '/assets/bundled/v/s.js',
+  '/assets/bundled/scram/shared.js',
+  '/assets/bundled/scram/worker.js',
 );
 
 const u = new UVServiceWorker();
-const scramjet = new ScramjetServiceWorker();
+const sj = new ScramjetServiceWorker();
 
 let playgroundData;
 
@@ -29,9 +28,9 @@ async function handleRequest(event) {
     return await u.fetch(event);
   }
 
-  await scramjet.loadConfig();
-  if (scramjet.route(event)) {
-    return scramjet.fetch(event);
+  await sj.loadConfig();
+  if (sj.route(event)) {
+    return sj.fetch(event);
   }
   return await fetch(event.request);
 }

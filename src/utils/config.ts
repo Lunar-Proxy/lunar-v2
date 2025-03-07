@@ -1,6 +1,6 @@
 import localForage from 'localforage';
 
-const Settings = {
+const ConfigAPI = {
   config: localForage.createInstance({
     name: 'SettingsDB',
     storeName: 'Settings',
@@ -29,6 +29,7 @@ const Settings = {
       backend: 'uv',
       engine: 'https://duckduckgo.com/?q=',
       cloak: 'off',
+      wispUrl: (location.protocol === 'https:' ? 'wss' : 'ws') + '://' + location.host + '/wisp/',
     };
 
     for (const [key, value] of Object.entries(defaults)) {
@@ -40,6 +41,7 @@ const Settings = {
     }
   },
 };
-Settings.initializeDefaults();
 
-export default Settings;
+ConfigAPI.initializeDefaults();
+
+export default ConfigAPI;

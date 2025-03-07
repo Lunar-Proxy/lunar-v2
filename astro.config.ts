@@ -47,7 +47,7 @@ export default defineConfig({
         name: 'viteserver',
         configureServer(server) {
           server.httpServer?.on('upgrade', (req, socket, head) => {
-            if (req.url?.startsWith('/wsp/')) {
+            if (req.url?.startsWith('/wisp/')) {
               wisp.routeRequest(req, socket, head);
             }
           });
@@ -57,12 +57,12 @@ export default defineConfig({
         targets: [
           {
             src: normalizePath(libcurlPath + '/**/*.mjs'),
-            dest: 'assets/packaged/lc',
+            dest: 'lc',
             overwrite: false,
           },
           {
             src: normalizePath(baremuxPath + '/**/*.js'),
-            dest: 'assets/packaged/bm',
+            dest: 'bm',
             overwrite: false,
           },
         ],

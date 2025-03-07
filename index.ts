@@ -15,7 +15,8 @@ import { server as wisp, logging } from '@mercuryworkshop/wisp-js/server';
 
 const port: number = config.port;
 const host: string = '0.0.0.0';
-logging.set_level(logging.config );
+
+logging.set_level(logging.config);
 logging.set_level(config);
 wisp.options.wisp_version = 2;
 
@@ -147,7 +148,7 @@ app.listen({ host, port }, (err) => {
     ),
   );
   console.log(chalk.whiteBright(`🛠  Version: ${chalk.cyanBright(version)}`));
-  
+
   // credits to night proxy for the idea :D
   let deploymentURL: string | null = null;
 
@@ -162,13 +163,13 @@ app.listen({ host, port }, (err) => {
   } else if (process.env.CODESPACES) {
     deploymentURL = `https://${process.env.CODESPACE_NAME}-${port}.${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`;
   } else if (process.env.GITPOD_WORKSPACE_URL) {
-    deploymentURL = process.env.GITPOD_WORKSPACE_URL.replace("https://", `https://${port}-`);
+    deploymentURL = process.env.GITPOD_WORKSPACE_URL.replace('https://', `https://${port}-`);
   } else if (process.env.REPL_ID) {
     deploymentURL = `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`;
   } else if (process.env.KOYEB_APP_NAME) {
     deploymentURL = `https://${process.env.KOYEB_APP_NAME}.koyeb.app`;
   }
-  
+
   if (deploymentURL) {
     console.log(chalk.blueBright(`   ➡ Hosted:   ${chalk.underline(deploymentURL)}`));
   } else {

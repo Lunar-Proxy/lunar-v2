@@ -5,7 +5,7 @@ const config: ConfigTypes = {
   auth: {
     protect: false, // Enable or disable authentication (Default: false)
     // You do not need to edit below if protect is set to false.
-    log: true, // Logs when a user authenticates (Default: true)
+    log: true, // Logs when someone authicates (Default: true)
     users: [
       // To add more users, follow this format:
       {

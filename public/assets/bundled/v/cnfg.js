@@ -1,8 +1,8 @@
 UltraConfig = {
-  prefix: '/p/',
+  prefix: '/up/',
   encodeUrl: (str) => {
     if (!str) return str;
-    return encodeURIComponent(str)
+    return encodeURIComponent(str);
   },
 
   decodeUrl: (str) => {
@@ -10,11 +10,11 @@ UltraConfig = {
     return decodeURIComponent(str);
   },
 
-  handler: '/assets/packaged/v/h.js',
-  client: '/assets/packaged/v/c.js',
-  bundle: '/assets/packaged/v/b.js',
-  config: '/assets/packaged/v/cnfg.js',
-  sw: '/assets/packaged/v/s.js',
+  handler: '/assets/bundled/v/h.js',
+  client: '/assets/bundled/v/c.js',
+  bundle: '/assets/bundled/v/b.js',
+  config: '/assets/bundled/v/cnfg.js',
+  sw: '/assets/bundled/v/s.js',
   inject: [
     {
       host: /nowgg.lol*/g,
@@ -25,4 +25,3 @@ UltraConfig = {
 };
 
 self.__uv$config = UltraConfig;
-
