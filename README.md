@@ -13,7 +13,7 @@
 
 ## What is Lunar?
 
-Lunar is a powerful web proxy designed to bypass censorship while providing an exceptional browsing experience.
+Lunar is a web proxy designed to bypass censorship while providing an exceptional browsing experience.
 
 ## Features
 
@@ -34,12 +34,12 @@ Lunar is a powerful web proxy designed to bypass censorship while providing an e
     </a>  
 </div>  
 
-> **Note**  
+> Note
 > Lunar cannot be deployed on static hosting platforms like Netlify, Vercel, or GitHub Pages.  
 
 ## Deployment via Terminal  
 
-> **Note**  
+> ![NOTE]
 > Before deploying, install the following dependencies:  
 > - [Git](https://git-scm.com/downloads)  
 > - [Node.js](https://nodejs.org/en/download/prebuilt-installer)  
