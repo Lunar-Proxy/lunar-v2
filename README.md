@@ -41,7 +41,8 @@ Lunar is a web proxy designed to bypass censorship while providing an exceptiona
 
 > [!IMPORTANT]
 > By default to deploy lunar, we use pnpm. You can use any package manager (npm, pnpm, bun, ect. to deploy)
-> Before deploying, install the following dependencies:  
+> 
+> Before deploying, install the following dependencies:
 > - [Git](https://git-scm.com/downloads)  
 > - [Node.js](https://nodejs.org/en/download/prebuilt-installer)  
 ### Production  
