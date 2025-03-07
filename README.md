@@ -33,6 +33,7 @@ Lunar is a web proxy designed to bypass censorship while providing an exceptiona
     </a>  
 </div>  
 
+
 > [!NOTE]
 > Lunar cannot be deployed on static hosting platforms like Netlify, Vercel, or GitHub Pages.  
 
