@@ -28,7 +28,7 @@
     "chalk": "^5.4.1",
     "fastify": "^5.2.1",
     "localforage": "^1.10.0",
-    "lucide-astro": "^0.477.0",
+    "lucide-astro": "^0.478.0",
     "motion": "^12.4.7",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.19.3",
