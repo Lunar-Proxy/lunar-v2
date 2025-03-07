@@ -18,9 +18,9 @@ Lunar is a web proxy designed to bypass censorship while providing an exceptiona
 ## Features
 - 🚫 **No Ads** – Enjoy an ad-free experience.  
 - 🚀 **Fast Speeds** – Optimized for fast browsing.  
-- 🪞 **Advanced Tab Cloaking** – Makes the URL harder to block.
+- 🪞 **Advanced Tab Cloaking** – Disguise the tab name and favicon as an educational site.
 - 🎮 **Games & Apps** – Play and use a large category of games.  
-- ⚡ **More Features Coming Soon** –  improvements & more features coming soon.
+- ⚡️ **Website Support** - Lunar suppports many popular sites like gforce now, nowgg, spotify & more
 
 ## Deployment Options
 
