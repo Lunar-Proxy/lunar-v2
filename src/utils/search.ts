@@ -1,7 +1,7 @@
-import Settings from '@/utils/config';
+import ConfigAPI from './config';
 
 export async function Search(query: string) {
-  const engine = await Settings.get('engine');
+  const engine = await ConfigAPI.get('engine');
 
   if (isValidURL(query)) return query;
   if (isDomain(query)) return `https://${query}`;

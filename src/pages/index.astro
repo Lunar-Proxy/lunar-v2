@@ -18,40 +18,50 @@ import Bookmark from '../layouts/bm.astro';
   </head>
   <body class="h-screen text-white bg-gradient-to-b from-[#09090f] to-[#1a1a2e] overflow-hidden">
     <SideBar />
-    <div class="grid grid-rows-[56px_auto] h-screen w-screen">
-      <nav
-        class="h-14 bg-black/70 backdrop-blur-md border-b-2 border-border-default flex items-center px-6 relative z-40 shadow-lg"
-      >
-        <div
-          class="mx-auto relative flex items-center bg-transparent border border-gray-600 rounded-lg w-[420px] px-3 transition-all duration-300 ease-in-out focus-within:w-[450px] focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-400/60"
+    <div class="grid grid-rows-[56px_auto] h-screen w-screen p-6">
+      <div class="h-full border-4 border-gray-800 rounded-lg shadow-xl overflow-hidden">
+        <nav
+          class="h-14 bg-black/70 backdrop-blur-md border-b-2 border-border-default flex items-center px-6 relative z-40 shadow-lg"
         >
-          <input
-            type="text"
-            placeholder="Search..."
-            class="font-light text-linux w-full bg-transparent text-gray-400 py-1 outline-none peer"
-          />
-          <img
-            src="/assets/images/logo/mag.svg"
-            class="w-5 h-5 text-gray-500 transition-all duration-300 ease-in-out peer-focus:scale-110 peer-focus:translate-x-1"
-          />
-        </div>
+          <div
+            class="mx-auto relative flex items-center bg-transparent border border-gray-600 rounded-lg w-[420px] px-3 transition-all duration-300 ease-in-out focus-within:w-[450px] focus-within:border-blue-400 focus-within:ring-2 focus-within:ring-blue-400/60"
+          >
+            <input
+              type="text"
+              placeholder="Search..."
+              class="font-light text-linux w-full bg-transparent text-gray-400 py-1 outline-none peer"
+            />
+            <img
+              src="/assets/images/logo/mag.svg"
+              class="w-5 h-5 text-gray-500 transition-all duration-300 ease-in-out peer-focus:scale-110 peer-focus:translate-x-1"
+            />
+          </div>
 
-        <span
-          id="time"
-          class="absolute right-6 text-gray-400 text-md font-fit px-4 py-1 rounded-md bg-gray-800"
-        >
-          --
-        </span>
-      </nav>
+          <span
+            id="time"
+            class="absolute right-6 text-gray-400 text-md font-fit px-4 py-1 rounded-md bg-gray-800"
+          >
+            --
+          </span>
+        </nav>
 
-      <main class="flex flex-col items-center justify-center h-full">
-        <h1
-          class="font-linux text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-white to-gray-400 drop-shadow-[0_0_15px_rgba(173,216,230,0.8)]"
-        >
-          Lunar v1
-        </h1>
-        <Bookmark />
-      </main>
+        <main class="flex flex-col items-center justify-center h-full p-6 bg-gray-900 rounded-lg">
+          <h1
+            class="font-linux text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-white to-gray-400 drop-shadow-[0_0_15px_rgba(173,216,230,0.8)]"
+          >
+            Lunar v1
+          </h1>
+          <br />
+          <div class="w-full h-[600px] border-4  overflow-hidden shadow-lg">
+            <iframe
+              class="w-full h-full"
+              frameborder="0"
+              title=""
+            ></iframe>
+          </div>
+          
+        </main>
+      </div>
     </div>
     <script src="/assets/bundled/scram/controller.js" is:inline></script>
     <script src="/bm/index.js" defer is:inline></script>

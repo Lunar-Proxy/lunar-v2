@@ -1,5 +1,5 @@
 import ConfigAPI from './config';
-
+import { BareMuxConnection } from '@mercuryworkshop/bare-mux';
 const wispUrl = await ConfigAPI.get('wispUrl');
 const scramjet = new ScramjetController({
   prefix: '/sj/',
@@ -18,3 +18,9 @@ const scramjet = new ScramjetController({
 
 scramjet.init();
 navigator.serviceWorker.register('./sw.js');
+const connection = new BareMuxConnection("/bm/worker.js") 
+connection.setTransport("/lc/index.mjs", [{ wisp: wispUrl }]);
+
+async function launch() {
+
+}
