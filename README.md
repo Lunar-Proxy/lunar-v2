@@ -9,18 +9,16 @@
     </a>
 </p>
 
-
-
 ## What is Lunar?
 
-Lunar is a web proxy designed to bypass censorship while providing an exceptional browsing experience.
+Lunar is a web proxy created to circumvent censorship while delivering an outstanding browsing experience.
 
 ## Features
-- 🚫 **No Ads** – Enjoy an ad-free experience.  
-- 🚀 **Fast Speeds** – Optimized for fast browsing.  
-- 🪞 **Advanced Tab Cloaking** – Disguise the tab name and favicon as an educational site.
-- 🎮 **Games & Apps** – Play and use a large category of games.  
-- ⚡️ **Website Support** - Lunar suppports many popular sites like gforce now, nowgg, spotify & more
+- 🚫 **Ad-Free** – Experience browsing without interruptions from ads.  
+- 🚀 **High Speed** – Designed for quick and efficient browsing.  
+- 🪞 **Enhanced Tab Cloaking** – Mask the tab title and favicon to be educational.
+- 🎮 **Games** – Pkay a wide virities of games
+- ⚡️ **Website Compatibility** - Lunar supports numerous popular platforms such as G-Force Now, NowGG, Spotify, and more.
 
 ## Deployment Options
 
@@ -33,16 +31,15 @@ Lunar is a web proxy designed to bypass censorship while providing an exceptiona
     </a>  
 </div>  
 
-
 > [!NOTE]
-> Lunar cannot be deployed on static hosting platforms like Netlify, Vercel, or GitHub Pages.  
+> Lunar cannot be deployed on static hosting services like Netlify, Vercel, or GitHub Pages.  
 
 ## Deployment via Terminal  
 
 > [!IMPORTANT]
-> By default to deploy lunar, we use pnpm. You can use any package manager (npm, pnpm, bun, ect. to deploy)
+> By default, we use pnpm for deploying Lunar. However, you can utilize any package manager (npm, pnpm, bun, etc.) for deployment.
 > 
-> Before deploying, install the following dependencies:
+> Before you begin, ensure you have the following dependencies installed:
 > - [Git](https://git-scm.com/downloads)  
 > - [Node.js](https://nodejs.org/en/download/prebuilt-installer)
 
@@ -52,32 +49,33 @@ Lunar is a web proxy designed to bypass censorship while providing an exceptiona
    ```bash
    git clone https://github.com/Lunar-Proxy/Lunar-v1.git
    cd Lunar-v1
+   ```
 
-2. Install dependencies and start Lunar:
+2. Install dependencies and launch Lunar:
    ```bash
    pnpm install && pnpm start
    ```
 
 ### Development
 
-If you’re making changes to Lunar, use the development setup to avoid rebuilding repeatedly:
+If you are modifying Lunar, use the development setup to prevent the need for repeated builds:
 
 ```bash
 pnpm install && pnpm dev
 ```
 
-# Contribuating
+# Contributing
 
-Before changing anything, please read [this guide](CONTRIBUTING.md). It provides instructions on making changes properly.
+Before making any changes, please review [this guide](CONTRIBUTING.md) for proper instructions on how to contribute.
 
 # Support
 
-For help, Make a [Github Issue](https://github.com/Lunar-Proxy/lunar-v1/issues) or
-[join our discord community](https://discord.gg/fuPtWjYuf8).
+For assistance, please create a [GitHub Issue](https://github.com/Lunar-Proxy/lunar-v1/issues) or
+[join our Discord community](https://discord.gg/fuPtWjYuf8).
 
 # Credits
 
-Thanks to everyone below who contribuated to Lunar ❤️
+ Thank you to everyone who has contributed to Lunar ❤️
 
 <a href="https://github.com/lunar-proxy/lunar-v1/graphs/contributors">
 <img src="https://contrib.rocks/image?repo=lunar-proxy/lunar-v1"/>
