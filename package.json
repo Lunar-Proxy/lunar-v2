@@ -1,13 +1,12 @@
 {
   "name": "lunar",
   "type": "module",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "scripts": {
     "install": "npm run build",
     "dev": "npx astro dev",
     "start": "tsx index.ts",
     "build": "npx astro check && npx astro build",
-    "astro": "npx astro",
     "format": "npx prettier . --write",
     "revert": "git reset HEAD --hard && git clean -fd",
     "precommit": "npx astro check && npm run format"
@@ -28,7 +27,6 @@
     "chalk": "^5.4.1",
     "fastify": "^5.2.1",
     "localforage": "^1.10.0",
-    "lucide-astro": "^0.477.0",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2",

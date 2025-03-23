@@ -3,18 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="@/utils/tb"></script>
+  <script src="@/utils/tb.js"></script>
 </head>
 <body class="text-white font-sans p-6 bg-gray-900">
   <div class="w-full">
-    <div id="tab-wrapper" class="flex items-center bg-gray-800 rounded-t-lg p-2 relative">
+    <div id="tab-wrapper" class="h-12 flex items-center bg-gray-800 rounded-t-lg p-2 relative">
       <button id="add" 
-        class="flex items-center justify-center w-10 h-10 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 transition"
+        class="flex items-center justify-center w-8 h-8 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 transition"
       >
         +
       </button>
-      <div id="tab-container" class="flex flex-wrap overflow-x-auto space-x-2 ml-2 max-w-full"></div>
+      <div id="tab-container" class="flex flex-nowrap overflow-x-auto space-x-2 ml-2 max-w-full"></div>
     </div>
   </div>
+
+  <div id="iframe-container" class="w-full h-[calc(100vh-4rem)] rounded-b-lg overflow-hidden"></div>
+
 </body>
 </html>
