@@ -153,7 +153,7 @@ app.listen({ host, port }, (err) => {
   let deploymentURL: string | null = null;
 
   if (process.env.RENDER) {
-    deploymentURL = `https://${process.env.RENDER_EXTERNAL_URL}`;
+    deploymentURL = `${process.env.RENDER_EXTERNAL_URL}`;
   } else if (process.env.VERCEL) {
     deploymentURL = `https://${process.env.VERCEL_URL}`;
   } else if (process.env.RAILWAY_STATIC_URL) {
