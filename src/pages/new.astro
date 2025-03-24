@@ -1,14 +1,48 @@
 ---
 import "@/main.css";
 ---
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     <title>New Tab</title>
-    </head>
-    <body>
-     <h1 class="text-7xl">New Tab</h1>
-    </body>
+  </head>
+  <body>
+    <h1 class="text-7xl text-text-HEADER"></h1>
+
+    <script>
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const lon = position.coords.longitude;
+            const lat = position.coords.latitude;
+
+            fetch(
+              `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=6d055e39ee237af35ca066f35474e9df`
+            )
+              .then((response) => response.json())
+              .then((data) => {
+                console.log(data);
+                const kelvin = Number(data.main.temp);
+                const temp = ((kelvin - 273.15) * 9) / 5 + 32;
+                const tempElement = document.querySelector(".text-7xl");
+                if (tempElement) {
+                  tempElement.textContent = `${Math.round(temp)}°F`;
+                }
+                console.log(temp);
+              })
+              .catch((error) => console.error("Error fetching weather data:", error));
+          },
+          (error) => {
+            console.error("Geolocation error:", error);
+          }
+        );
+      } else {
+        console.error("Geolocation is not supported by this browser.");
+      }
+    </script>
+  </body>
+</html>
