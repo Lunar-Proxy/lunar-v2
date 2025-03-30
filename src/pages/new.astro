@@ -1,8 +1,8 @@
 ---
-import "@/main.css";
+import '@/main.css';
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -21,27 +21,27 @@ import "@/main.css";
             const lat = position.coords.latitude;
 
             fetch(
-              `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=6d055e39ee237af35ca066f35474e9df`
+              `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=6d055e39ee237af35ca066f35474e9df`,
             )
               .then((response) => response.json())
               .then((data) => {
                 console.log(data);
                 const kelvin = Number(data.main.temp);
                 const temp = ((kelvin - 273.15) * 9) / 5 + 32;
-                const tempElement = document.querySelector(".text-7xl");
+                const tempElement = document.querySelector('.text-7xl');
                 if (tempElement) {
                   tempElement.textContent = `${Math.round(temp)}°F`;
                 }
                 console.log(temp);
               })
-              .catch((error) => console.error("Error fetching weather data:", error));
+              .catch((error) => console.error('Error fetching weather data:', error));
           },
           (error) => {
-            console.error("Geolocation error:", error);
-          }
+            console.error('location error:', error);
+          },
         );
       } else {
-        console.error("Geolocation is not supported by this browser.");
+        console.error('location is not supported by this browser.');
       }
     </script>
   </body>

@@ -1,5 +1,5 @@
 UltraConfig = {
-  prefix: '/up/',
+  prefix: '/pre/',
   encodeUrl: (str) => {
     if (!str) return str;
     return encodeURIComponent(str);
@@ -10,11 +10,11 @@ UltraConfig = {
     return decodeURIComponent(str);
   },
 
-  handler: '/assets/bundled/v/h.js',
-  client: '/assets/bundled/v/c.js',
-  bundle: '/assets/bundled/v/b.js',
-  config: '/assets/bundled/v/cnfg.js',
-  sw: '/assets/bundled/v/s.js',
+  handler: '/a/bundled/v/h.js',
+  client: '/a/bundled/v/c.js',
+  bundle: '/a/bundled/v/b.js',
+  config: '/a/bundled/v/cnfg.js',
+  sw: '/a/bundled/v/s.js',
   inject: [
     {
       host: /nowgg.lol*/g,

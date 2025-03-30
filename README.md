@@ -13,11 +13,13 @@
 
 Lunar is a web proxy created to bypass censorship.
 
-## Features 
-- 🚀 **High Speed** – Designed for quick and efficient browsing.  
+## Features
+
+- 🚀 **High Speed** – Designed for quick and efficient browsing.
 - 🪞 **Enhanced Tab Cloaking** – Mask the tab title and favicon to be educational.
 - 🎮 **Games** – Play a wide page of games
-- ⚡️ **Site Support** - Lunar supports popular websites such as Gforce Now, NowGG, Spotify, and more.
+- ⚡️ **Site Support** - Lunar supports popular websites such as Gforce Now, NowGG, Spotify, and
+  more.
 
 ## Deployment Options
 
@@ -28,22 +30,23 @@ Lunar is a web proxy created to bypass censorship.
     <a href="https://app.koyeb.com/services/deploy?type=git&repository=github.com/lunar-proxy/lunar-v1&builder=dockerfile&instance_type=free&regions=was&ports=8080%3Bhttp%3B%2F&hc_protocol%5B808">  
         <img src="https://binbashbanana.github.io/deploy-buttons/buttons/remade/koyeb.svg" alt="Deploy to Koyeb" style="float: left; margin-right: 10px;">  
     </a>  
-</div>  
+</div>
 
-> [!NOTE]
-> Lunar cannot be deployed on static hosting services like Netlify, Vercel, or GitHub Pages.  
+> [!NOTE] Lunar cannot be deployed on static hosting services like Netlify, Vercel, or GitHub Pages.
 
-## Deployment via Terminal  
+## Deployment via Terminal
 
-> [!IMPORTANT]
-> By default, we use pnpm for deploying Lunar. However, you can utilize any package manager (npm, pnpm, bun, etc.) for deployment.
-> 
+> [!IMPORTANT] By default, we use pnpm for deploying Lunar. However, you can utilize any package
+> manager (npm, pnpm, bun, etc.) for deployment.
+>
 > Before you begin, ensure you have the following dependencies installed:
-> - [Git](https://git-scm.com/downloads)  
+>
+> - [Git](https://git-scm.com/downloads)
 > - [Node.js](https://nodejs.org/en/download/prebuilt-installer)
 
-### Production  
-1. Clone the Lunar repository:  
+### Production
+
+1. Clone the Lunar repository:
 
    ```bash
    git clone https://github.com/Lunar-Proxy/Lunar-v1.git
@@ -65,7 +68,8 @@ pnpm install && pnpm dev
 
 # Contributing
 
-If you are making any changes, please review [this guide](CONTRIBUTING.md) for proper instructions on how to contribute.
+If you are making any changes, please review [this guide](CONTRIBUTING.md) for proper instructions
+on how to contribute.
 
 # Support
 
@@ -74,7 +78,7 @@ For assistance, please create a [GitHub Issue](https://github.com/Lunar-Proxy/lu
 
 # Credits
 
- Thank you to everyone who has contributed to Lunar ❤️
+Thank you to everyone who has contributed to Lunar ❤️
 
 <a href="https://github.com/lunar-proxy/lunar-v1/graphs/contributors">
 <img src="https://contrib.rocks/image?repo=lunar-proxy/lunar-v1"/>

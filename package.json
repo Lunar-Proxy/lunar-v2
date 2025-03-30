@@ -3,7 +3,6 @@
   "type": "module",
   "version": "2.0.0",
   "scripts": {
-    "install": "npm run build",
     "dev": "npx astro dev",
     "start": "tsx index.ts",
     "build": "npx astro check && npx astro build",
