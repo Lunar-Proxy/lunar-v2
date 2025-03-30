@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "npx astro dev",
     "start": "tsx index.ts",
-    "build": "npx astro check && npx astro build",
+    "build": "npx astro telemetry disable && npx astro check && npx astro build",
     "format": "npx prettier . --write",
     "revert": "git reset HEAD --hard && git clean -fd",
     "precommit": "npx astro check && npm run format"
