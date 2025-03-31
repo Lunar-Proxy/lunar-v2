@@ -1,1 +1,3 @@
-[] - Finish CONTRIBUATING.md [] - Fix tab dragging
+[] - Finish CONTRIBUATING.md 
+
+[] - Fix tab dragging
