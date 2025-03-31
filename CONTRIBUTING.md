@@ -11,7 +11,7 @@ Before you think about doing a PR (Pull Request), go into your terminal and run
 
 To add games or apps, follow this format:
 
-In this, asset is refering to games & apps
+In this, asset is refering to games or apps
 
 ```json
 {
@@ -21,7 +21,7 @@ In this, asset is refering to games & apps
 }
 ```
 
-The asset list can be found in public/assets/json/. Inside that folder,
+The asset list can be found in public/a/json/. Inside that folder,
 
 `al.json` is the list of apps
 
