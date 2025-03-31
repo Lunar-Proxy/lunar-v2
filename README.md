@@ -18,7 +18,7 @@ Lunar is a web proxy created to bypass censorship.
 - 🚀 **High Speed** – Designed for quick and efficient browsing.
 - 🪞 **Enhanced Tab Cloaking** – Mask the tab title and favicon to be educational.
 - 🎮 **Games** – Play a wide page of games
-- ⚡️ **Site Support** - Lunar supports popular websites such as Gforce Now, NowGG, Spotify, and
+- ⚡️ **Site Support** - Lunar supports popular websites such as Gforce Now, Nowgg, Spotify, and
   more.
 
 ## Deployment Options
@@ -32,7 +32,8 @@ Lunar is a web proxy created to bypass censorship.
     </a>  
 </div>
 
-> [!NOTE] Lunar cannot be deployed on static hosting services like Netlify, Vercel, or GitHub Pages.
+> [!NOTE]
+> Lunar cannot be deployed on static hosting services like Netlify, Vercel (Due to websockets), or GitHub Pages.
 
 ## Deployment via Terminal
 
