@@ -30,6 +30,7 @@ function addTab() {
   tabs.push(newTab);
 
   setActiveTab(newTabId);
+  renderTabs();
 }
 
 function ActiveTabId(): number | null {
@@ -42,27 +43,34 @@ function removeTab(tabId: number) {
   activeTabId = tabs.length ? tabs[tabs.length - 1].id : null;
   renderTabs();
   if (activeTabId !== null) setActiveTab(activeTabId);
-  if (tabs.length === 0) {
-    addTab();
-  }
+  if (tabs.length === 0) addTab();
 }
 
 function setActiveTab(tabId: number) {
   activeTabId = tabId;
   document.querySelectorAll('iframe').forEach((iframe) => iframe.classList.add('hidden'));
   document.getElementById(`frame-${tabId}`)?.classList.remove('hidden');
-  renderTabs();
+
+  document.querySelectorAll('.tab').forEach((tabElement) => {
+    const tabIdAttr = tabElement.getAttribute('data-id');
+    if (tabIdAttr) {
+      const isActive = parseInt(tabIdAttr) === tabId;
+      tabElement.classList.toggle('bg-gray-700', isActive);
+      tabElement.classList.toggle('bg-gray-600', !isActive);
+    }
+  });
 }
 
 function renderTabs() {
   if (!tabContainer) return;
   tabContainer.innerHTML = '';
 
-  tabs.forEach((tab) => {
+  tabs.forEach((tab,index) => {
+    console.log("index is", index);
     const tabElement = document.createElement('div');
     tabElement.className = `h-9 tab mb-4 px-4 py-2 min-w-[210px] rounded-md transition-all cursor-pointer
-    ${activeTabId === tab.id ? 'bg-gray-700 text-white' : 'bg-gray-600 text-white'} flex justify-between items-center`;
-
+    ${activeTabId === tab.id ? 'bg-gray-700 text-white' : 'bg-gray-600 text-white'} flex items-center
+    ${index === 0 ? 'ml-[4rem]' : ''}`;
     tabElement.draggable = true;
     tabElement.dataset.id = tab.id.toString();
 
@@ -78,20 +86,18 @@ function renderTabs() {
     title.textContent = tab.title;
     title.className = 'text-left text-sm font-semibold truncate flex-grow';
 
-    tbContent.appendChild(favicon);
-    tbContent.appendChild(title);
-    tabElement.appendChild(tbContent);
-
     const closeButton = document.createElement('button');
-    closeButton.className =
-      'text-gray-400 hover:bg-gray-500 hover:text-white rounded-full w-6 h-6 flex items-center justify-center text-sm transition-all ml-auto'; // This will push the button to the far right
+    closeButton.className = 'text-gray-400 hover:bg-gray-500 hover:text-white rounded-full w-6 h-6 flex items-center justify-center transition-all text-sm aspect-square ml-auto';
     closeButton.innerHTML = '✕';
     closeButton.onclick = (e) => {
       e.stopPropagation();
       removeTab(tab.id);
     };
 
-    tabElement.appendChild(closeButton);
+    tbContent.appendChild(favicon);
+    tbContent.appendChild(title);
+    tbContent.appendChild(closeButton);
+    tabElement.appendChild(tbContent);
 
     tabElement.onclick = () => setActiveTab(tab.id);
     tabElement.ondragstart = (e) => {
@@ -124,9 +130,6 @@ addbtn.addEventListener('click', addTab);
 
 const TabManager = {
   addTab,
-  removeTab,
-  setActiveTab,
-  renderTabs,
   ActiveTabId,
 };
 

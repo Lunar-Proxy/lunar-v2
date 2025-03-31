@@ -1,6 +1,7 @@
 ---
 import '@/main.css';
 import SideBar from '../layouts/side.astro';
+import Tabs from '../layouts/tb.astro';
 ---
 
 <!doctype html>
@@ -15,11 +16,13 @@ import SideBar from '../layouts/side.astro';
     <script src="/a/bundled/v/cnfg.js" is:inline></script>
     <link rel="prefetch" href="/a/bundled/scram/worker.js" />
     <link rel="prefetch" href="/a/bundled/scram/shared.js" />
+    <script src="../utils/script.ts"></script>
   </head>
   <body class="h-screen text-white overflow-hidden">
+    <Tabs />
     <SideBar />
-    <iframe id="frame" src="welcome" class="ml-[72px] w-[calc(100%-72px)] h-full" />
   </body>
   <script src="/a/bundled/scram/controller.js" is:inline></script>
   <script src="/bm/index.js" defer is:inline></script>
+  <script src="../utils/navigation.ts"></script>
 </html>
