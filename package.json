@@ -36,7 +36,7 @@
     "node": ">=18.x"
   },
   "devDependencies": {
-    "@types/node": "^22.13.11",
+    "@types/node": "^22.13.17",
     "prettier": "3.5.3"
   }
 }
