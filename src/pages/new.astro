@@ -17,7 +17,7 @@ import '@/main.css';
     <script>
       function displayInfo() {
         const now = new Date();
-        document.querySelector('h1').innerText = now.toLocaleTimeString([], { hour12: false });
+        document.querySelector('h1')!.innerText = now.toLocaleTimeString([], { hour12: false });
         const date = document.querySelector('#date');
         if (date instanceof HTMLElement) {
           date.innerText = now.toLocaleDateString([], {

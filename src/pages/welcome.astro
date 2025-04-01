@@ -24,7 +24,7 @@ import '@/main.css';
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
           const index = Math.floor(Math.random() * data.length);
-          document.querySelector('p').innerText = data[index].message;
+          document.querySelector('p')!.innerText = data[index].message;
         }
       } catch (error) {
         console.error('Failed to fetch quote:', error);
