@@ -2,7 +2,7 @@ import type { ConfigTypes } from '@/types/config';
 // go to wiki for help.
 const config: ConfigTypes = {
   port: 8080, // The port lunar runs on (Default: 8080)
-  logType: 'ERROR', // The type of logging to use (Default: Error)
+  logType: 'ERROR', // The type of logging to use (Default: ERROR)
   auth: {
     protect: false, // Enable or disable authentication (Default: false)
     // You do not need to edit below if protect is set to false.

@@ -1,13 +1,23 @@
-function updateTime() {
-  const time = document.getElementById('time');
-  if (!time) return;
-  const now = new Date();
-  let hours = now.getHours();
-  const minutes = now.getMinutes().toString().padStart(2, '0');
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-  hours = hours % 12 || 12;
-  time.textContent = `${hours}:${minutes} ${ampm}`;
-}
+const frameNavigator = document.getElementById('frame') as HTMLIFrameElement;
+const Navigation = [
+  { btn: 'Home', url: './welcome' },
+  { btn: 'Search', url: './browse' },
+  { btn: 'Games', url: './gm' },
+  { btn: 'Apps', url: './ap' },
+  { btn: 'Settings', url: './st' },
+];
 
-setInterval(updateTime, 1000);
-updateTime();
+Navigation.forEach(({ btn, url }) => {
+  const button =
+    [...document.querySelectorAll('span')]
+      .find((el) => el.textContent?.trim() === btn)
+      ?.previousElementSibling?.querySelector('button') || null;
+
+  if (button) {
+    button!.addEventListener('click', () => {
+      if (frameNavigator) {
+        frameNavigator.src = url;
+      }
+    });
+  }
+});

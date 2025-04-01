@@ -1,16 +1,27 @@
+---
+import '@/main.css';
+---
+
+<!doctype html>
 <html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>404 - ERROR</title>
   </head>
-  <body> </body><script>
-    if (
-      top?.window.location.pathname.startsWith('/scram/') ||
-      top?.window.location.pathname.startsWith('/sj/') ||
-      top?.window.location.pathname.startsWith('/pre/')
-    ) {
-      alert('UV / SJ error');
-    } else {
-      alert('404 - ERROR');
-    }
-  </script>
+  <body class="h-screen flex justify-center items-center">
+    <div class="text-center font-linux">
+      <h1 class="text-[10rem] font-bold text-red-600 tracking-widest shadow-xl animate-pulse">
+        404
+      </h1>
+      <p class="text-2xl mt-4 text-text-SECONDARY">
+        Oops! The page you're looking for does not exist.
+        <br />
+        If this is your first time searching, try refreshing the page and retrying.
+        <br />
+        If you typed it manually, there might be a mistake, or the page may have been moved or removed.
+        <br />
+      </p>
+    </div>
+  </body>
 </html>

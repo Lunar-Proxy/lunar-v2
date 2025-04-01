@@ -1,3 +1,6 @@
+---
+import '@/main.css';
+---
 
 <!doctype html>
 <html lang="en">
@@ -8,3 +11,24 @@
     <title>Google Docs</title>
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   </head>
+  <body class="h-screen flex items-center justify-center">
+    <div class="flex flex-col items-center space-y-4">
+      <h1 class="text-text-HEADER text-8xl font-linux font-semibold">Lunar</h1>
+      <p class="text-text-SECONDARY text-1xl font-mono font-semibold"></p>
+    </div>
+  </body>
+  <script>
+    (async () => {
+      try {
+        const res = await fetch('/a/json/msg.json');
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          const index = Math.floor(Math.random() * data.length);
+          document.querySelector('p').innerText = data[index].message;
+        }
+      } catch (error) {
+        console.error('Failed to fetch quote:', error);
+      }
+    })();
+  </script>
+</html>

@@ -16,8 +16,8 @@ import { server as wisp, logging } from '@mercuryworkshop/wisp-js/server';
 const port: number = config.port;
 const host: string = '0.0.0.0';
 
-logging.set_level(logging.config);
-logging.set_level(config);
+logging.set_level('logging.', config.logType);
+
 wisp.options.wisp_version = 2;
 
 function getCommitDate(): string {
@@ -33,14 +33,14 @@ async function build() {
     console.log(chalk.yellow.bold('🚀 Building Lunar...'));
     try {
       execSync('pnpm build', { stdio: 'inherit' });
-      console.log(chalk.green.bold('✅ Succesfully built Lunar V1!'));
+      console.log(chalk.green.bold('✅ Succesfully built Lunar V2!'));
     } catch (error) {
       throw new Error(
         `A error encurred while building: ${error instanceof Error ? error.message : String(error)}`,
       );
     }
   } else {
-    console.log(chalk.blue.bold('📂 Lunar is already built. Skipping...'));
+    console.log(chalk.blue.bold('📂 Lunar is already built! Skipping the build process...'));
   }
 }
 
@@ -125,12 +125,25 @@ app.setErrorHandler((error, _request, reply) => {
 await build();
 
 const commitDate = getCommitDate();
+const staticOptions = {
+  maxAge: 86400, // 1d
+  etag: true,
+  lastModified: true,
+  setHeaders: (res: any, filePath: string) => {
+    if (filePath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'public, max-age=0');
+    } else if (/\.(js|css|jpg|jpeg|png|gif|ico|svg|webp|avif)$/.test(filePath)) {
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable'); // 1 year
+    }
+  },
+};
 
 // @ts-ignore dir may not exist
 const { handler } = await import('./dist/server/entry.mjs');
 
 app.register(fastifyStatic, {
   root: path.join(import.meta.dirname, 'dist', 'client'),
+  ...staticOptions,
 });
 
 await app.register(fastifyMiddie);
@@ -138,9 +151,9 @@ app.use(handler);
 
 app.listen({ host, port }, (err) => {
   if (err) {
-    throw new Error(`❌ Failed to start Lunar V1: ${err.message}`);
+    throw new Error(`❌ Failed to start Lunar V2: ${err.message}`);
   }
-  console.log(chalk.green.bold(`\n Lunar V1`));
+  console.log(chalk.green.bold(`\n Lunar V2`));
 
   console.log(
     chalk.whiteBright(

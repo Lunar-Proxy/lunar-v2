@@ -22,7 +22,7 @@ function addTab() {
   const newTabId = getNextTabId();
   const iframe = document.createElement('iframe');
   iframe.id = `frame-${newTabId}`;
-  iframe.src = 'about:blank';
+  iframe.src = 'new';
   iframe.classList.add('w-full', 'h-full', 'hidden');
   frameContainer.appendChild(iframe);
 
@@ -65,12 +65,11 @@ function renderTabs() {
   if (!tabContainer) return;
   tabContainer.innerHTML = '';
 
-  tabs.forEach((tab,index) => {
-    console.log("index is", index);
+  tabs.forEach((tab, index) => {
+    console.log('index is', index);
     const tabElement = document.createElement('div');
     tabElement.className = `h-9 tab mb-4 px-4 py-2 min-w-[210px] rounded-md transition-all cursor-pointer
-    ${activeTabId === tab.id ? 'bg-gray-700 text-white' : 'bg-gray-600 text-white'} flex items-center
-    ${index === 0 ? 'ml-[4rem]' : ''}`;
+    ${activeTabId === tab.id ? 'bg-gray-700 text-white' : 'bg-gray-600 text-white'} flex items-center`;
     tabElement.draggable = true;
     tabElement.dataset.id = tab.id.toString();
 
@@ -84,10 +83,11 @@ function renderTabs() {
 
     const title = document.createElement('span');
     title.textContent = tab.title;
-    title.className = 'text-left text-sm font-semibold truncate flex-grow';
+    title.className = 'text-left font-linux text-sm font-semibold truncate flex-grow';
 
     const closeButton = document.createElement('button');
-    closeButton.className = 'text-gray-400 hover:bg-gray-500 hover:text-white rounded-full w-6 h-6 flex items-center justify-center transition-all text-sm aspect-square ml-auto';
+    closeButton.className =
+      'text-gray-400 hover:bg-gray-500 hover:text-white rounded-full w-6 h-6 flex items-center justify-center transition-all text-sm aspect-square ml-auto';
     closeButton.innerHTML = '✕';
     closeButton.onclick = (e) => {
       e.stopPropagation();

@@ -32,13 +32,12 @@ Lunar is a web proxy created to bypass censorship.
     </a>  
 </div>
 
-> [!NOTE]
-> Lunar cannot be deployed on static hosting services like Netlify, Vercel (Due to websockets), or GitHub Pages.
+> [!NOTE] Lunar cannot be deployed on static hosting services like Netlify, Vercel (Due to
+> websockets), or GitHub Pages.
 
 ## Deployment via Terminal
 
-> [!IMPORTANT]
-> By default, we use pnpm for deploying Lunar. However, you can utilize any package
+> [!IMPORTANT] By default, we use pnpm for deploying Lunar. However, you can utilize any package
 > manager (npm, pnpm, bun, etc.) for deployment.
 >
 > Before you begin, ensure you have the following dependencies installed:
