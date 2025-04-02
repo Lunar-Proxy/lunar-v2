@@ -52,7 +52,7 @@ function addTab() {
   iframe.classList.add('w-full', 'h-full', 'hidden');
   frameContainer.appendChild(iframe);
 
-  const newTab = { id: newTabId, title: "loading..", favicon: '/a/images/logo/moon.svg' };
+  const newTab = { id: newTabId, title: "New Tab", favicon: '/a/images/logo/moon.svg' };
   tabs.push(newTab);
 
   setActiveTab(newTabId);
@@ -71,7 +71,7 @@ function addTab() {
         extracted = scramjet.decodeUrl(extracted) ?? '';  
       }
       console.log('[DEBUG] extracted URL:', extracted);
-      newTab.title = iframe.contentWindow?.document.title || 'Unknown';
+      newTab.title = doc.title || 'Unknown';
       // ts pmo todo: make it get website favicon
       newTab.favicon = '/a/images/logo/moon.svg';
       if (input) {
