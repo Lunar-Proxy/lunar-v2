@@ -4,14 +4,40 @@ interface Tab {
   favicon: string;
 }
 
+declare global {
+  interface Window {
+    __uv$location?: Location;
+  }
+
+  interface Location {
+    __uv$location?: Location;
+  }
+
+  var __uv$location: Location | undefined;
+}
+
 let tabs: Tab[] = [];
 let activeTabId: number | null = null;
 let draggedTabId: number | null = null;
 
+const scramjet = new ScramjetController({
+  prefix: '/sj/',
+  files: {
+    wasm: '/a/bundled/scram/wasm.wasm',
+    worker: '/a/bundled/scram/worker.js',
+    client: '/a/bundled/scram/client.js',
+    shared: '/a/bundled/scram/shared.js',
+    sync: '/a/bundled/scram/sync.js',
+  },
+  flags: {
+    serviceworkers: true,
+    syncxhr: true,
+  },
+});
 const tabContainer = document.getElementById('tcontainer')!;
 const addbtn = document.getElementById('add')!;
 const frameContainer = document.getElementById('fcontainer')!;
-
+const input = document.querySelector('input[type="text"]') as HTMLInputElement | null;
 tabContainer.classList.add('flex', 'justify-center', 'items-center', 'mt-4', 'overflow-x-auto');
 
 function getNextTabId() {
@@ -26,11 +52,35 @@ function addTab() {
   iframe.classList.add('w-full', 'h-full', 'hidden');
   frameContainer.appendChild(iframe);
 
-  const newTab = { id: newTabId, title: 'New Tab', favicon: '/a/images/logo/moon.svg' };
+  const newTab = { id: newTabId, title: "loading..", favicon: '/a/images/logo/moon.svg' };
   tabs.push(newTab);
 
   setActiveTab(newTabId);
   renderTabs();
+
+  iframe.onload = () => {
+    const doc = iframe.contentDocument || iframe.contentWindow?.document;
+    if (doc) {
+      const href = iframe.contentWindow?.location.href || ''; 
+      let extracted = '';
+      if (href.includes('/pre/')) {
+        extracted = href.split('/pre/')[1];  
+        extracted = UltraConfig.decodeUrl(extracted) ?? '';  
+      } else if (href.includes('/sj/')) {
+        extracted = href.split('/sj/')[1];    
+        extracted = scramjet.decodeUrl(extracted) ?? '';  
+      }
+      console.log('[DEBUG] extracted URL:', extracted);
+      newTab.title = iframe.contentWindow?.document.title || 'Unknown';
+      // ts pmo todo: make it get website favicon
+      newTab.favicon = '/a/images/logo/moon.svg';
+      if (input) {
+      input.value = extracted
+      }
+  
+      renderTabs();
+    }
+  };  
 }
 
 function ActiveTabId(): number | null {
@@ -66,7 +116,7 @@ function renderTabs() {
   tabContainer.innerHTML = '';
 
   tabs.forEach((tab, index) => {
-    console.log('index is', index);
+    console.log('[DEBUG] index is', index);
     const tabElement = document.createElement('div');
     tabElement.className = `h-9 tab mb-4 px-4 py-2 min-w-[210px] rounded-md transition-all cursor-pointer
     ${activeTabId === tab.id ? 'bg-gray-700 text-white' : 'bg-gray-600 text-white'} flex items-center`;

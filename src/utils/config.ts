@@ -26,7 +26,7 @@ const ConfigAPI = {
 
   async initializeDefaults() {
     const defaults = {
-      backend: 'uv',
+      backend: 'sj',
       engine: 'https://duckduckgo.com/?q=',
       cloak: 'off',
       wispUrl: (location.protocol === 'https:' ? 'wss' : 'ws') + '://' + location.host + '/wisp/',

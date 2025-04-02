@@ -45,6 +45,6 @@ async function launch(value: string) {
   if ((await ConfigAPI.get('backend')) === 'uv') {
     frame.src = `/pre/${UltraConfig.encodeUrl(url)}`;
   } else if ((await ConfigAPI.get('backend')) === 'sj') {
-    frame.src = `/sj/${scramjet.encodeUrl(url)}`;
+    frame.src = `${scramjet.encodeUrl(url)}`;
   }
 }
