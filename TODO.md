@@ -6,7 +6,7 @@
 - [ ] Make games, apps & settings page  
   - [ ] Implement UI  
   - [ ] Add functionality  
-  - [ ] Ensure 0 vugs  
+  - [ ] Ensure 0 bugs
 - [ ] Create another page (other than games, apps, or settings)  
   - [ ] Brainstorm ideas  
   - [ ] Make the page
