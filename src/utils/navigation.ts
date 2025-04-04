@@ -50,7 +50,7 @@ async function launch(value: string) {
   } else if ((await ConfigAPI.get('backend')) === 'sj') {
     frame.src = `${scramjet.encodeUrl(url)}`;
   }
-
+  // fix reload btn reloading all tbs
   reload?.addEventListener('click', () => {
     frame?.contentWindow?.location.reload();
   });

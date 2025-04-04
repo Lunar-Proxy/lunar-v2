@@ -9,7 +9,7 @@ let tabs: Tab[] = [];
 let activeTabId: number | null = null;
 let draggedTabId: number | null = null;
 let tabCounter: number = 1;
-
+// @ts-ignore scramjet is needed ig
 const scramjet = new ScramjetController({
   prefix: '/sj/',
   files: {
@@ -28,7 +28,13 @@ const scramjet = new ScramjetController({
 const tabContainer = document.getElementById('tcontainer') as HTMLDivElement;
 const addbtn = document.getElementById('add') as HTMLButtonElement;
 const frameContainer = document.getElementById('fcontainer') as HTMLDivElement;
-tabContainer.classList.add('flex', 'justify-center', 'items-center', 'mt-4', 'overflow-x-auto');
+tabContainer.classList.add(
+  'flex',
+  'justify-center',
+  'items-center',
+  'mt-4',
+  'overflow-x-auto',
+);
 
 function getNextTabId() {
   return tabCounter++;
@@ -50,7 +56,13 @@ function addTab() {
   };
   tabs.push(newTab);
 
-  setActiveTab(newTabId);
+  if (newTabId !== null) {
+    if (newTabId !== null) {
+      if (newTabId !== null) {
+        setActiveTab(newTabId);
+      }
+    }
+  }
   renderTabs();
 
   iframe.onload = () => {
@@ -58,12 +70,17 @@ function addTab() {
     if (doc) {
       const length = 18;
       newTab.title =
-        doc.title?.length > length ? `${doc.title.slice(0, length)}...` : doc.title || 'New Tab';
+        doc.title?.length > length
+          ? `${doc.title.slice(0, length)}...`
+          : doc.title || 'New Tab';
       const url = new URL(doc.URL);
       const favicon = doc.querySelector(
         'link[rel="icon"], link[rel="shortcut icon"]',
       ) as HTMLLinkElement | null;
-      newTab.favicon = favicon?.href ?? `${url.origin}/favicon.ico` ?? '/a/images/logo/moon.svg';
+      newTab.favicon =
+        favicon?.href ??
+        `${url.origin}/favicon.ico` ??
+        '/a/images/logo/moon.svg';
       if (url.origin === window.location.origin) {
         newTab.favicon = '/a/images/logo/moon.svg';
       }
@@ -103,7 +120,11 @@ function renderTabs() {
   tabs.forEach((tab) => {
     const tabElement = document.createElement('div');
     tabElement.className = `h-9 tab mb-4 px-4 py-2 min-w-[210px] rounded-md transition-all cursor-pointer
-    ${TabManager.activeTabId === tab.id ? 'bg-gray-700 text-white' : 'bg-gray-600 text-white'} flex items-center`;
+    ${
+      TabManager.activeTabId === tab.id
+        ? 'bg-gray-700 text-white'
+        : 'bg-gray-600 text-white'
+    } flex items-center`;
     tabElement.draggable = true;
     tabElement.dataset.id = tab.id.toString();
 
@@ -174,7 +195,9 @@ const TabManager = {
   },
   set activeTabId(newTabId: number | null) {
     activeTabId = newTabId;
-    setActiveTab(newTabId);
+    if (newTabId !== null) {
+      setActiveTab(newTabId);
+    }
   },
   addTab,
 };

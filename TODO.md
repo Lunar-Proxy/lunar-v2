@@ -9,3 +9,5 @@
 [] - add bookmarks to tab page (bm.astro if you import it)
 
 [x] - Fix tab dragging
+
+[] - fix reload btn reloading all tabs
