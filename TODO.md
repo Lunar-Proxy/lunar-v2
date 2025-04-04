@@ -1,13 +1,25 @@
-- [] Finish CONTRIBUATING.md
+# ✅ Completed
+- [x] Fix tab dragging  
 
-- [] Make games, apps & settings page
+# 🔨 To Do
+- [ ] Finish `CONTRIBUTING.md`  
+- [ ] Make games, apps & settings page  
+  - [ ] Implement UI  
+  - [ ] Add functionality  
+  - [ ] Ensure 0 vugs  
+- [ ] Create another page (other than games, apps, or settings)  
+  - [ ] Brainstorm ideas  
+  - [ ] Make the page
+- [ ] Clean up code  
+  - [ ] Remove unused files  
+  - [ ] Optimize functions  
+  - [ ] Improve readability  
+- [ ] Add bookmarks to the tab page  
+  - [ ] Ensure `bm.astro` is properly imported  
+  - [ ] Design bookmark UI  
+  - [ ] Implement bookmark management  
+- [ ] Fix reload button reloading all tabs  
+  - [ ] Limit reload to active tab  
+  - [ ] Improve UX feedback  
 
-- [] Make another page than games, apps or settings page
-
-- [] cleanup code
-
-- [] add bookmarks to tab page (bm.astro if you import it)
-
-- [x] Fix tab dragging
-
-- [] fix reload btn reloading all tabs
+  - [ ] Fix any bugs in general
