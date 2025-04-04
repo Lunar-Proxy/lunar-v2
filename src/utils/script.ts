@@ -9,7 +9,7 @@ const Navigation = [
 
 Navigation.forEach(({ btn, url }) => {
   const button =
-    [...document.querySelectorAll('span')]
+    Array.from(document.querySelectorAll('span'))
       .find((el) => el.textContent?.trim() === btn)
       ?.previousElementSibling?.querySelector('button') || null;
 

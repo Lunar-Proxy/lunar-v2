@@ -3,7 +3,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@scripts/*": ["src/utils/*"]
     }
   },
   "exclude": ["node_modules", "dist", "public/a/bundled/**"]

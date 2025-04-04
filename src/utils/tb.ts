@@ -2,23 +2,13 @@ interface Tab {
   id: number;
   title: string;
   favicon: string;
-}
-
-declare global {
-  interface Window {
-    __uv$location?: Location;
-  }
-
-  interface Location {
-    __uv$location?: Location;
-  }
-
-  var __uv$location: Location | undefined;
+  iframe: HTMLIFrameElement;
 }
 
 let tabs: Tab[] = [];
 let activeTabId: number | null = null;
 let draggedTabId: number | null = null;
+let tabCounter: number = 1;
 
 const scramjet = new ScramjetController({
   prefix: '/sj/',
@@ -34,14 +24,14 @@ const scramjet = new ScramjetController({
     syncxhr: true,
   },
 });
-const tabContainer = document.getElementById('tcontainer')!;
-const addbtn = document.getElementById('add')!;
-const frameContainer = document.getElementById('fcontainer')!;
-const input = document.querySelector('input[type="text"]') as HTMLInputElement | null;
+
+const tabContainer = document.getElementById('tcontainer') as HTMLDivElement;
+const addbtn = document.getElementById('add') as HTMLButtonElement;
+const frameContainer = document.getElementById('fcontainer') as HTMLDivElement;
 tabContainer.classList.add('flex', 'justify-center', 'items-center', 'mt-4', 'overflow-x-auto');
 
 function getNextTabId() {
-  return tabs.length ? Math.max(...tabs.map((t) => t.id)) + 1 : 1;
+  return tabCounter++;
 }
 
 function addTab() {
@@ -52,7 +42,12 @@ function addTab() {
   iframe.classList.add('w-full', 'h-full', 'hidden');
   frameContainer.appendChild(iframe);
 
-  const newTab = { id: newTabId, title: "New Tab", favicon: '/a/images/logo/moon.svg' };
+  const newTab: Tab = {
+    id: newTabId,
+    title: 'New Tab',
+    favicon: '/a/images/logo/moon.svg',
+    iframe,
+  };
   tabs.push(newTab);
 
   setActiveTab(newTabId);
@@ -61,39 +56,21 @@ function addTab() {
   iframe.onload = () => {
     const doc = iframe.contentDocument || iframe.contentWindow?.document;
     if (doc) {
-      const href = iframe.contentWindow?.location.href || ''; 
-      let extracted = '';
-      if (href.includes('/pre/')) {
-        extracted = href.split('/pre/')[1];  
-        extracted = UltraConfig.decodeUrl(extracted) ?? '';  
-      } else if (href.includes('/sj/')) {
-        extracted = href.split('/sj/')[1];    
-        extracted = scramjet.decodeUrl(extracted) ?? '';  
+      const length = 18;
+      newTab.title =
+        doc.title?.length > length ? `${doc.title.slice(0, length)}...` : doc.title || 'New Tab';
+      const url = new URL(doc.URL);
+      const favicon = doc.querySelector(
+        'link[rel="icon"], link[rel="shortcut icon"]',
+      ) as HTMLLinkElement | null;
+      newTab.favicon = favicon?.href ?? `${url.origin}/favicon.ico` ?? '/a/images/logo/moon.svg';
+      if (url.origin === window.location.origin) {
+        newTab.favicon = '/a/images/logo/moon.svg';
       }
-      console.log('[DEBUG] extracted URL:', extracted);
-      newTab.title = doc.title || 'Unknown';
-      // ts pmo todo: make it get website favicon
-      newTab.favicon = '/a/images/logo/moon.svg';
-      if (input) {
-      input.value = extracted
-      }
-  
+
       renderTabs();
     }
-  };  
-}
-
-function ActiveTabId(): number | null {
-  return activeTabId;
-}
-
-function removeTab(tabId: number) {
-  document.getElementById(`frame-${tabId}`)?.remove();
-  tabs = tabs.filter((tab) => tab.id !== tabId);
-  activeTabId = tabs.length ? tabs[tabs.length - 1].id : null;
-  renderTabs();
-  if (activeTabId !== null) setActiveTab(activeTabId);
-  if (tabs.length === 0) addTab();
+  };
 }
 
 function setActiveTab(tabId: number) {
@@ -102,24 +79,31 @@ function setActiveTab(tabId: number) {
   document.getElementById(`frame-${tabId}`)?.classList.remove('hidden');
 
   document.querySelectorAll('.tab').forEach((tabElement) => {
-    const tabIdAttr = tabElement.getAttribute('data-id');
-    if (tabIdAttr) {
-      const isActive = parseInt(tabIdAttr) === tabId;
-      tabElement.classList.toggle('bg-gray-700', isActive);
-      tabElement.classList.toggle('bg-gray-600', !isActive);
-    }
+    const isActive = parseInt(tabElement.getAttribute('data-id') || '') === tabId;
+    tabElement.classList.toggle('bg-gray-700', isActive);
+    tabElement.classList.toggle('bg-gray-600', !isActive);
   });
 }
 
+function removeTab(tabId: number) {
+  const tabIndex = tabs.findIndex((tab) => tab.id === tabId);
+  if (tabIndex > -1) {
+    document.getElementById(`frame-${tabId}`)?.remove();
+    tabs.splice(tabIndex, 1);
+    activeTabId = tabs.length ? tabs[tabs.length - 1].id : null;
+    renderTabs();
+    if (activeTabId !== null) setActiveTab(activeTabId);
+    if (tabs.length === 0) addTab();
+  }
+}
+
 function renderTabs() {
-  if (!tabContainer) return;
   tabContainer.innerHTML = '';
 
-  tabs.forEach((tab, index) => {
-    console.log('[DEBUG] index is', index);
+  tabs.forEach((tab) => {
     const tabElement = document.createElement('div');
     tabElement.className = `h-9 tab mb-4 px-4 py-2 min-w-[210px] rounded-md transition-all cursor-pointer
-    ${activeTabId === tab.id ? 'bg-gray-700 text-white' : 'bg-gray-600 text-white'} flex items-center`;
+    ${TabManager.activeTabId === tab.id ? 'bg-gray-700 text-white' : 'bg-gray-600 text-white'} flex items-center`;
     tabElement.draggable = true;
     tabElement.dataset.id = tab.id.toString();
 
@@ -149,13 +133,18 @@ function renderTabs() {
     tbContent.appendChild(closeButton);
     tabElement.appendChild(tbContent);
 
-    tabElement.onclick = () => setActiveTab(tab.id);
+    tabElement.onclick = () => {
+      TabManager.activeTabId = tab.id;
+    };
+
     tabElement.ondragstart = (e) => {
       draggedTabId = tab.id;
       tabElement.classList.add('opacity-50');
       e.dataTransfer?.setData('text/plain', tab.id.toString());
     };
+
     tabElement.ondragover = (e) => e.preventDefault();
+
     tabElement.ondrop = (e) => {
       e.preventDefault();
       if (draggedTabId === null || draggedTabId === tab.id) return;
@@ -167,6 +156,7 @@ function renderTabs() {
         renderTabs();
       }
     };
+
     tabElement.ondragend = () => {
       draggedTabId = null;
       renderTabs();
@@ -179,8 +169,14 @@ function renderTabs() {
 addbtn.addEventListener('click', addTab);
 
 const TabManager = {
+  get activeTabId() {
+    return activeTabId;
+  },
+  set activeTabId(newTabId: number | null) {
+    activeTabId = newTabId;
+    setActiveTab(newTabId);
+  },
   addTab,
-  ActiveTabId,
 };
 
 export default TabManager;
