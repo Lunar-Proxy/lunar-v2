@@ -1,13 +1,13 @@
-[] - Finish CONTRIBUATING.md
+- [] Finish CONTRIBUATING.md
 
-[] - Make games, apps & settings page
+- [] Make games, apps & settings page
 
-[] - Make another page than games, apps or settings page
+- [] Make another page than games, apps or settings page
 
-[] - cleanup code
+- [] cleanup code
 
-[] - add bookmarks to tab page (bm.astro if you import it)
+- [] add bookmarks to tab page (bm.astro if you import it)
 
-[x] - Fix tab dragging
+- [x] Fix tab dragging
 
-[] - fix reload btn reloading all tabs
+- [] fix reload btn reloading all tabs
