@@ -201,5 +201,4 @@ const TabManager = {
   },
   addTab,
 };
-
 export default TabManager;

@@ -16,8 +16,7 @@ import { server as wisp, logging } from '@mercuryworkshop/wisp-js/server';
 const port: number = config.port;
 const host: string = '0.0.0.0';
 
-logging.set_level('logging.', config.logType);
-
+logging.set_level(`logging.${config.logType}`);
 wisp.options.wisp_version = 2;
 
 function getCommitDate(): string {
@@ -51,7 +50,6 @@ const app = Fastify({
       wisp.routeRequest(req, socket, head);
     }),
 });
-
 await app.register(fastifyCompress, { encodings: ['deflate', 'gzip', 'br'] });
 
 if (config.auth.protect) {
@@ -145,7 +143,6 @@ app.register(fastifyStatic, {
   root: path.join(import.meta.dirname, 'dist', 'client'),
   ...staticOptions,
 });
-
 await app.register(fastifyMiddie);
 app.use(handler);
 
