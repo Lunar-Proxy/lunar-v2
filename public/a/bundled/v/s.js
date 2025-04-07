@@ -280,11 +280,7 @@
         `;
   }
   function T(a, e) {
-    let s = { 'content-type': 'text/html' };
-    return (
-      crossOriginIsolated && (s['Cross-Origin-Embedder-Policy'] = 'require-corp'),
-      new Response(E(String(a), e), { status: 500, headers: s })
-    );
+    return fetch('/404', { headers: { 'content-type': 'text/html' } });
   }
 })();
 //# sourceMappingURL=uv.sw.js.map

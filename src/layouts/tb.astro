@@ -11,8 +11,10 @@
         id="tab-wrapper"
         class="h-14 flex items-center bg-background-overlay rounded-t-lg p-2 relative transition-all"
       >
-        <div id="tcontainer" class="flex flex-nowrap overflow-x-auto space-x-2 ml-2 max-w-full">
-        </div>
+        <div
+          id="tcontainer"
+          class="flex flex-nowrap overflow-x-auto space-x-2 ml-2 max-w-full"
+        ></div>
         <button
           id="add"
           class="ml-2 flex items-center justify-center w-8 h-8 text-lg rounded-md text-gray-400 hover:text-white hover:bg-gray-700 transition-colors"
@@ -21,7 +23,9 @@
         </button>
       </div>
 
-      <div class="flex items-center bg-background-overlay h-12 transition-all px-6">
+      <div
+        class="flex items-center bg-background-overlay h-12 transition-all px-6"
+      >
         <div class="flex items-center space-x-4">
           <button
             id="back"
@@ -37,9 +41,12 @@
           </button>
           <button
             id="refresh"
-            class="flex items-center justify-center w-8 h-8 text-lg rounded-md text-gray-400 hover:text-white hover:bg-gray-700 transition-colors"
+            class="group flex items-center justify-center w-8 h-8 text-lg rounded-md text-gray-400 hover:text-white hover:bg-gray-700 transition-colors"
           >
-            <img src="/a/images/logo/refresh.svg" class="w-4 h-4" />
+            <img
+              src="/a/images/logo/refresh.svg"
+              class="w-4 h-4 transition-transform duration-500 group-hover:animate-spin"
+            />
           </button>
         </div>
         <div class="flex flex-grow items-center justify-between ml-8">
@@ -52,6 +59,9 @@
       </div>
     </div>
 
-    <div id="fcontainer" class="w-full h-[calc(100vh-4rem)] rounded-b-lg overflow-hidden"></div>
+    <div
+      id="fcontainer"
+      class="w-full h-[calc(100vh-4rem)] rounded-b-lg overflow-hidden"
+    ></div>
   </body>
 </html>

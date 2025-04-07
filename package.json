@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "npx astro dev",
     "start": "tsx index.ts",
-    "build": "npx astro telemetry disable && npx astro check && npx astro build",
+    "build": "npx astro check && npx astro build",
     "format": "npx prettier . --write",
     "revert": "git reset HEAD --hard && git clean -fd",
     "precommit": "npx astro check && npm run format"
@@ -26,6 +26,7 @@
     "chalk": "^5.4.1",
     "fastify": "^5.2.2",
     "localforage": "^1.10.0",
+    "node-fetch": "^3.3.2",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2",
