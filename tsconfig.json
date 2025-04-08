@@ -4,7 +4,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@scripts/*": ["src/utils/*"]
+      "@scripts/*": ["src/utils/*"],
+      "/@lb/*": ["/public/lib/*"]
     }
   },
   "exclude": ["node_modules", "dist", "public/a/bundled/**"]

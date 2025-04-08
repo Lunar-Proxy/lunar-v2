@@ -51,7 +51,11 @@ const app = Fastify({
       wisp.routeRequest(req, socket, head);
     }),
 });
-await app.register(fastifyCompress, { encodings: ['deflate', 'gzip', 'br'] });
+
+await app.register(fastifyCompress, {
+  global: true,
+  encodings: ['gzip', 'deflate', 'br'],
+});
 
 if (config.auth.protect) {
   console.log(chalk.magenta.bold('🔒 Password Protection Enabled.'));
@@ -125,17 +129,28 @@ await build();
 
 const commitDate = getCommitDate();
 const staticOptions = {
-  maxAge: 86400, // 1d
+  maxAge: '1d', // Accepts string or number (1 day)
   etag: true,
   lastModified: true,
-  setHeaders: (res: any, filePath: string) => {
-    if (filePath.endsWith('.html')) {
-      res.setHeader('Cache-Control', 'public, max-age=0');
-    } else if (/\.(js|css|jpg|jpeg|png|gif|ico|svg|webp|avif)$/.test(filePath)) {
-      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable'); // 1 year
-    }
+  redirect: false,
+  setHeaders(res: any, filePath: string) {
+    const cacheControl = () => {
+      if (filePath.endsWith('.html')) {
+        return 'public, max-age=0, must-revalidate';
+      }
+      if (/\.(js|mjs|css|jpg|jpeg|png|gif|ico|svg|webp|avif|woff2|woff|ttf|otf)$/.test(filePath)) {
+        return 'public, max-age=31536000, immutable';
+      }
+      return 'public, max-age=86400'; // 1d
+    };
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    res.setHeader('Cache-Control', cacheControl());
   },
 };
+
 
 // @ts-ignore dir may not exist
 const { handler } = await import('./dist/server/entry.mjs');
@@ -175,6 +190,7 @@ app.get('/api/icon/', async (req, reply) => {
     reply.status(500).send('Internal server error.');
   }
 });
+
 
 app.listen({ host, port }, (err) => {
   if (err) {
