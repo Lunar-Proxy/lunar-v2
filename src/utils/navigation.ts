@@ -44,14 +44,14 @@ sch?.addEventListener('keydown', (e) => {
 function ActiveFrame(): HTMLIFrameElement | null {
   const activeTabId = TabManager.activeTabId;
   const frame = document.getElementById(`frame-${activeTabId}`) as HTMLIFrameElement | null;
-  console.log("[DEBUG] Active Frame ID:", `frame-${activeTabId}`);
+  console.log('[DEBUG] Active Frame ID:', `frame-${activeTabId}`);
   return frame;
 }
 
 async function launch(value: string) {
   const frame = ActiveFrame();
   if (!frame) {
-    console.warn("[WARN] No active frame found for launch");
+    console.warn('[WARN] No active frame found for launch');
     return;
   }
 
@@ -70,34 +70,38 @@ async function launch(value: string) {
   } else {
     console.warn('[WARN] Unknown backend:', backend);
   }
+
+  frame.addEventListener('load', () => {
+    // todo: (idk if i want to do this)  interceptLinks();
+  });
 }
 
 reload?.addEventListener('click', () => {
   const frame = ActiveFrame();
   if (frame?.contentWindow) {
-    console.log("[DEBUG] Reloading frame:", frame.id);
+    console.log('[DEBUG] Reloading frame:', frame.id);
     frame.src = frame.contentWindow.location.href;
   } else {
-    console.warn("[WARN] Cannot reload: No active frame");
+    console.warn('[WARN] Cannot reload: No active frame');
   }
 });
 
 back?.addEventListener('click', () => {
   const frame = ActiveFrame();
   if (frame?.contentWindow) {
-    console.log("[DEBUG] Going back in frame:", frame.id);
-    frame.contentWindow.history.back()
+    console.log('[DEBUG] Going back in frame:', frame.id);
+    frame.contentWindow.history.back();
   } else {
-    console.warn("[WARN] Cannot go back: No active frame");
+    console.warn('[WARN] Cannot go back: No active frame');
   }
 });
 
 foward?.addEventListener('click', () => {
   const frame = ActiveFrame();
   if (frame?.contentWindow) {
-    console.log("[DEBUG] Going forward in frame:", frame.id);
-    frame.contentWindow.history.forward()
+    console.log('[DEBUG] Going forward in frame:', frame.id);
+    frame.contentWindow.history.forward();
   } else {
-    console.warn("[WARN] Cannot go forward: No active frame");
+    console.warn('[WARN] Cannot go forward: No active frame');
   }
 });

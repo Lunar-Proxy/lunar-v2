@@ -7,6 +7,20 @@ const Navigation = [
   { btn: 'Settings', url: './st' },
 ];
 
+document.addEventListener('keydown', (event) => {
+  if (event.ctrlKey && event.key === 'x') {
+    console.log('[DEBUG] exit keybinds clicked');
+    top?.window.location.replace('https://www.docs.google.com');
+  }
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.ctrlKey && event.key === 'z') {
+    console.log('[DEBUG] AB Cloak keybinds clicked');
+    // todo: make AB cloaking func
+  }
+});
+
 Navigation.forEach(({ btn, url }) => {
   const button =
     Array.from(document.querySelectorAll('span'))

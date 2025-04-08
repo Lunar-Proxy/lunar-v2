@@ -191,7 +191,12 @@ self.WASM = '${n}';`),
         return new Response(void 0, { status: 500 });
       return (function (e, t) {
         return fetch('/404', { headers: { 'content-type': 'text/html' } });
-      })(Object.entries(t).map(([e, t]) => `${e.charAt(0).toUpperCase() + e.slice(1)}: ${t}`).join('\n\n'), c(e.url));
+      })(
+        Object.entries(t)
+          .map(([e, t]) => `${e.charAt(0).toUpperCase() + e.slice(1)}: ${t}`)
+          .join('\n\n'),
+        c(e.url),
+      );
     }
   }
   async function k(e, t, n, r, i, o, s) {

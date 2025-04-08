@@ -33,23 +33,17 @@ const tabContainer = document.getElementById('tcontainer') as HTMLDivElement;
 const addbtn = document.getElementById('add') as HTMLButtonElement;
 const frameContainer = document.getElementById('fcontainer') as HTMLDivElement;
 
-tabContainer.classList.add(
-  'flex',
-  'justify-center',
-  'items-center',
-  'mt-4',
-  'overflow-x-auto'
-);
+tabContainer.classList.add('flex', 'justify-center', 'items-center', 'mt-4', 'overflow-x-auto');
 
 function getNextTabId() {
   return tabCounter++;
 }
 
-function addTab() {
+function addTab(url?: string) {
   const newTabId = getNextTabId();
   const iframe = document.createElement('iframe');
   iframe.id = `frame-${newTabId}`;
-  iframe.src = 'new';
+  iframe.src = url ?? 'new';
   iframe.classList.add('w-full', 'h-full', 'hidden');
   frameContainer.appendChild(iframe);
 
@@ -69,9 +63,10 @@ function addTab() {
     if (!doc) return;
 
     const maxLength = 18;
-    newTab.title = doc.title?.length > maxLength
-      ? `${doc.title.slice(0, maxLength)}...`
-      : doc.title || 'New Tab';
+    newTab.title =
+      doc.title?.length > maxLength
+        ? `${doc.title.slice(0, maxLength)}...`
+        : doc.title || 'New Tab';
 
     try {
       const url = new URL(doc.URL);
@@ -81,8 +76,8 @@ function addTab() {
       }
 
       fetch(IconURL + encodeURIComponent(url.origin))
-        .then(res => res.blob())
-        .then(blob => {
+        .then((res) => res.blob())
+        .then((blob) => {
           const reader = new FileReader();
           reader.onloadend = () => {
             newTab.favicon = (reader.result as string) || defaultURL;
@@ -94,9 +89,7 @@ function addTab() {
           newTab.favicon = defaultURL;
           renderTabs();
         });
-
-    } catch {
-    }
+    } catch {}
 
     renderTabs();
   };
@@ -104,12 +97,10 @@ function addTab() {
 
 function setActiveTab(tabId: number) {
   activeTabId = tabId;
-  document.querySelectorAll('iframe').forEach(iframe =>
-    iframe.classList.add('hidden')
-  );
+  document.querySelectorAll('iframe').forEach((iframe) => iframe.classList.add('hidden'));
   document.getElementById(`frame-${tabId}`)?.classList.remove('hidden');
 
-  document.querySelectorAll('.tab').forEach(tabElement => {
+  document.querySelectorAll('.tab').forEach((tabElement) => {
     const isActive = parseInt(tabElement.getAttribute('data-id') || '') === tabId;
     tabElement.classList.toggle('bg-gray-700', isActive);
     tabElement.classList.toggle('bg-gray-600', !isActive);
@@ -117,7 +108,7 @@ function setActiveTab(tabId: number) {
 }
 
 function removeTab(tabId: number) {
-  const tabIndex = tabs.findIndex(tab => tab.id === tabId);
+  const tabIndex = tabs.findIndex((tab) => tab.id === tabId);
   if (tabIndex === -1) return;
 
   document.getElementById(`frame-${tabId}`)?.remove();
@@ -132,7 +123,7 @@ function removeTab(tabId: number) {
 function renderTabs() {
   tabContainer.innerHTML = '';
 
-  tabs.forEach(tab => {
+  tabs.forEach((tab) => {
     const tabElement = document.createElement('div');
     tabElement.className = `h-9 tab mb-4 px-4 py-2 min-w-[210px] rounded-md transition-all cursor-pointer
       ${TabManager.activeTabId === tab.id ? 'bg-gray-700' : 'bg-gray-600'} text-white flex items-center`;
@@ -181,8 +172,8 @@ function renderTabs() {
       e.preventDefault();
       if (draggedTabId === null || draggedTabId === tab.id) return;
 
-      const draggedIndex = tabs.findIndex(t => t.id === draggedTabId);
-      const targetIndex = tabs.findIndex(t => t.id === tab.id);
+      const draggedIndex = tabs.findIndex((t) => t.id === draggedTabId);
+      const targetIndex = tabs.findIndex((t) => t.id === tab.id);
 
       if (draggedIndex > -1 && targetIndex > -1) {
         const [movedTab] = tabs.splice(draggedIndex, 1);
@@ -200,7 +191,7 @@ function renderTabs() {
   });
 }
 
-addbtn.addEventListener('click', addTab);
+addbtn.addEventListener('click', () => addTab());
 
 const TabManager = {
   get activeTabId() {

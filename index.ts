@@ -12,7 +12,7 @@ import path from 'node:path';
 import { version } from './package.json';
 import config from './config';
 import { server as wisp, logging } from '@mercuryworkshop/wisp-js/server';
-import fetch from "node-fetch";
+import fetch from 'node-fetch';
 
 const port: number = config.port;
 const host: string = '0.0.0.0';
@@ -36,7 +36,7 @@ async function build() {
       console.log(chalk.green.bold('✅ Successfully built Lunar V2!'));
     } catch (error) {
       throw new Error(
-        `An error occurred while building: ${error instanceof Error ? error.message : String(error)}`
+        `An error occurred while building: ${error instanceof Error ? error.message : String(error)}`,
       );
     }
   } else {
@@ -151,14 +151,16 @@ app.setNotFoundHandler((request, reply) => {
   reply.redirect('/404');
 });
 
-app.get("/api/icon/", async (req, reply) => {
+app.get('/api/icon/', async (req, reply) => {
   try {
     const url = (req.query as { url?: string }).url;
     if (!url) {
       return reply.status(400).send('URL parameter is required.');
     }
 
-    const response = await fetch(`https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${url}&size=64`);
+    const response = await fetch(
+      `https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${url}&size=64`,
+    );
 
     if (!response.ok) {
       return reply.status(500).send('Failed to fetch the favicon.');
@@ -218,13 +220,18 @@ app.listen({ host, port }, (err) => {
     console.log(
       chalk.blueBright(`
    ➡ Deployment URL:`),
-      chalk.underline(chalk.green(deploymentURL))
+      chalk.underline(chalk.green(deploymentURL)),
     );
   } else {
-    console.log(chalk.blueBright(`
-   ➡ Local:`), chalk.underline(chalk.yellow(`http://localhost:${port}`)));
-    console.log(chalk.blueBright(`
-   ➡ Network:`), chalk.underline(chalk.cyan(`http://127.0.0.1:${port}`)));
+    console.log(
+      chalk.blueBright(`
+   ➡ Local:`),
+      chalk.underline(chalk.yellow(`http://localhost:${port}`)),
+    );
+    console.log(
+      chalk.blueBright(`
+   ➡ Network:`),
+      chalk.underline(chalk.cyan(`http://127.0.0.1:${port}`)),
+    );
   }
-  
 });

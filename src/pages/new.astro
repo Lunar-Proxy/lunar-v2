@@ -19,43 +19,42 @@ import '@/main.css';
     >
     </p>
   </body>
-    <script>
-      async function displayWeather() {
-        try {
-          const response = await fetch('https://ipapi.co/json/');
-          const data = await response.json();
-          const city = data.city;
+  <script>
+    async function displayWeather() {
+      try {
+        const response = await fetch('https://ipapi.co/json/');
+        const data = await response.json();
+        const city = data.city;
 
-          const weatherRes = await fetch(
-            `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=735b6d179fce1fdfad4f7d5044c81121`,
-          );
-          const weatherData = await weatherRes.json();
+        const weatherRes = await fetch(
+          `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=735b6d179fce1fdfad4f7d5044c81121`,
+        );
+        const weatherData = await weatherRes.json();
 
-          if (weatherData.main) {
-            document.getElementById('weather')!.innerText =
-              `${Math.round(weatherData.main.temp)}°F`;
-          }
-        } catch (error) {
-          console.error('[ERROR] Failed to fetch weather:', error);
+        if (weatherData.main) {
+          document.getElementById('weather')!.innerText = `${Math.round(weatherData.main.temp)}°F`;
         }
+      } catch (error) {
+        console.error('[ERROR] Failed to fetch weather:', error);
       }
+    }
 
-      function displayInfo() {
-        const now = new Date();
-        document.querySelector('h1')!.innerText = now.toLocaleTimeString([], { hour12: false });
-        const date = document.querySelector('#date');
-        if (date instanceof HTMLElement) {
-          date.innerText = now.toLocaleDateString([], {
-            weekday: 'long',
-            month: 'long',
-            day: 'numeric',
-            year: 'numeric',
-          });
-        }
+    function displayInfo() {
+      const now = new Date();
+      document.querySelector('h1')!.innerText = now.toLocaleTimeString([], { hour12: false });
+      const date = document.querySelector('#date');
+      if (date instanceof HTMLElement) {
+        date.innerText = now.toLocaleDateString([], {
+          weekday: 'long',
+          month: 'long',
+          day: 'numeric',
+          year: 'numeric',
+        });
       }
+    }
 
-      setInterval(displayInfo, 1000);
-      displayInfo();
-      displayWeather();
-    </script>
+    setInterval(displayInfo, 1000);
+    displayInfo();
+    displayWeather();
+  </script>
 </html>

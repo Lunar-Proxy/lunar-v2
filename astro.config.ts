@@ -13,7 +13,8 @@ import type { IncomingMessage, ServerResponse } from 'http';
 
 wisp.options.wisp_version = 2;
 
-const iconURL = 'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64';
+const iconURL =
+  'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64';
 
 function getDate(): string {
   try {
