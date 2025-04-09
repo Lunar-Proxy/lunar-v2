@@ -129,7 +129,7 @@ await build();
 
 const commitDate = getCommitDate();
 const staticOptions = {
-  maxAge: '1d', // Accepts string or number (1 day)
+  maxAge: '1d', // 1d
   etag: true,
   lastModified: true,
   redirect: false,
@@ -194,7 +194,7 @@ app.get('/api/icon/', async (req, reply) => {
 
 app.listen({ host, port }, (err) => {
   if (err) {
-    throw new Error(`❌ Failed to start Lunar V2: ${err.message}`);
+    throw new Error(`Failed to start Lunar V2: ${err.message}`);
   }
   console.log(chalk.green.bold(`\n Lunar V2`));
 
