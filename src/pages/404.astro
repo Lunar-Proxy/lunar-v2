@@ -7,20 +7,20 @@ import '@/main.css';
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>404 - ERROR</title>
+    <title>404 - Page Not Found</title>
   </head>
-  <body class="h-screen flex justify-center items-center">
-    <div class="text-center font-linux">
-      <h1 class="text-[10rem] font-bold text-red-600 tracking-widest shadow-xl animate-pulse">
+  <body class="h-screen w-screen bg-background-overlay text-white flex flex-col items-center justify-center font-linux px-4">
+    <div class="text-center max-w-2xl">
+      <h1 class="text-[8rem] sm:text-[10rem] font-extrabold text-red-500 drop-shadow-xl animate-bounce select-none">
         404
       </h1>
-      <p class="text-2xl mt-4 text-text-SECONDARY">
-        Oops! The page you're looking for does not exist.
+      <p class="text-3xl sm:text-4xl font-semibold mb-4 text-text-SECONDARY animate-fade-in">
+        Page Not Found
+      </p>
+      <p class="text-base sm:text-lg text-text-SECONDARY mb-8 leading-relaxed">
+        The page you’re looking for doesn’t exist or has been moved.
         <br />
-        If this is your first time searching, try refreshing the page and retrying.
-        <br />
-        If you typed it manually, there might be a mistake, or the page may have been moved or removed.
-        <br />
+        If you searched on the proxy, make sure you hard refresh and try again.
       </p>
     </div>
   </body>

@@ -2,7 +2,7 @@ import localForage from 'localforage';
 
 const ConfigAPI = {
   config: localForage.createInstance({
-    name: 'SettingsDB',
+    name: 'LunarDB',
     storeName: 'Settings',
   }),
 
@@ -30,13 +30,40 @@ const ConfigAPI = {
       engine: 'https://duckduckgo.com/?q=',
       cloak: 'off',
       wispUrl: (location.protocol === 'https:' ? 'wss' : 'ws') + '://' + location.host + '/wisp/',
+      bm: [
+        {
+          name: 'Youtube',
+          logo: '/api/icon/?url=https://www.youtube.com/',
+          redir: 'https://www.youtube.com'
+        },
+        {
+          name: 'Google',
+          logo: '/api/icon/?url=https://www.google.com/',
+          redir: 'https://www.google.com'
+        },
+        {
+          name: 'X',
+          logo: '/api/icon/?url=https://www.x.com/',
+          redir: 'https://www.x.com'
+        },
+        {
+          name: 'Spotify',
+          logo: '/api/icon/?url=https://www.spotify.com/',
+          redir: 'https://www.spotify.com'
+        },
+        {
+          name: 'Discord',
+          logo: '/api/icon/?url=https://www.discord.com/',
+          redir: 'https://www.discord.com'
+        },
+      ],
     };
 
     for (const [key, value] of Object.entries(defaults)) {
       const existingValue = await this.get(key);
       if (existingValue === null) {
         await this.set(key, value);
-        console.log(`[DEBUG] - Default value set for ${key}: ${value}`);
+        console.log(`[DEBUG] - Default value set for ${key}: ${JSON.stringify(value)}`);
       }
     }
   },

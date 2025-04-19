@@ -1,4 +1,4 @@
-# Lunar V1
+# Lunar V2
 
 <p align="left">
     <a href="https://discord.gg/fuPtWjYuf8">
@@ -11,15 +11,16 @@
 
 ## What is Lunar?
 
-Lunar is a web proxy created to bypass censorship.
+Lunar is a powerful web proxy created to bypass censorship.
 
 ## Features
 
-- 🚀 **High Speed** – Designed for quick and efficient browsing.
+- 🚀 **High Speed** – Designed to be fast
 - 🪞 **Enhanced Tab Cloaking** – Mask the tab title and favicon to be educational.
 - 🎮 **Games** – Play a wide page of games
 - ⚡️ **Site Support** - Lunar supports popular websites such as Gforce Now, Nowgg, Spotify, and
   more.
+  
 
 ## Deployment Options
 

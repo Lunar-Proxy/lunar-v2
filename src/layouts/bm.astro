@@ -1,14 +1,44 @@
----
-import '@/main.css';
----
+<div id="logo-container" class="flex flex-row justify-start items-start mt-6 space-x-6"></div>
 
-<div class="bg-gray-900 h-22 w-20 mt-6 flex flex-col items-center space-y-2">
-  <div
-    class="shadow-lg transition-transform transform hover:scale-105 rounded-md border border-black flex flex-col items-center p-0"
-  >
-    <img src="/assets/images/logo/yt.webp" class="object-cover rounded-md w-full h-full" />
-  </div>
-  <div class="mt-2 font-medium text-sm text-center text-white px-3 py-1 rounded-md shadow-md">
-    Youtube
-  </div>
-</div>
+<script>
+  import ConfigAPI from "../utils/config";
+
+  const container = document.getElementById('logo-container');
+
+  await ConfigAPI.get("bm")
+    .then(data => {
+      if (!data || !Array.isArray(data)) return;
+
+      data.forEach((item) => {
+        const logoDiv = document.createElement('div');
+        logoDiv.classList.add(
+          'flex', 'flex-col', 'justify-center', 'items-center',
+          'rounded-md', 'overflow-hidden', 'p-4', 'bg-background-overlay',
+          'border', 'border-border-default', 'transition-all', 'duration-300',
+          'hover:border-blue-500', 'hover:shadow-xl', 'cursor-pointer'
+        );
+
+        logoDiv.innerHTML = `
+          <img
+            src="${item.logo}"
+            alt="${item.name} Logo"
+            class="w-16 h-16 rounded-full"
+          />
+          <p class="mt-2 text-sm font-mono text-text-SECONDARY font-semibold transition-colors duration-300 hover:text-blue-500 transform hover:scale-105">
+            ${item.name}
+          </p>
+        `;
+
+        logoDiv.addEventListener('click', () => {
+          if (item.redir)  {
+          const frame = top?.document.getElementById('frame') as HTMLIFrameElement;
+          if (frame) {
+            // idk how i should impletment this, frame.src = item.redir;
+          }
+          }
+        });
+
+        container?.appendChild(logoDiv);
+      });
+    });
+</script>

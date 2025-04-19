@@ -7,11 +7,11 @@
 
 @layer base {
   :root {
-    --background: #11111b;
-    --border: #1a1a2b;
-    --background-overlay: #111827;
-    --text-header: #cdd6f4;
-    --text-secondary: #a5adcb;
+    --background: #11121c;
+    --background-overlay: #12131f;
+    --border: #1f1f30;              
+    --text-header: #d0d6f9;       
+    --text-secondary: #aab0d0;
   }
 
   body {

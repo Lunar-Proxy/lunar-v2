@@ -1,5 +1,6 @@
 ---
 import '@/main.css';
+import Bookmark from "../layouts/bm.astro";
 ---
 
 <!doctype html>
@@ -17,15 +18,15 @@ import '@/main.css';
       id="weather"
       class="absolute top-4 right-4 text-text-SECONDARY font-linux px-6 py-3 rounded-xl text-[16px] font-bold"
     ></p>
+    <Bookmark />
   </body>
 
   <script>
     async function displayWeather() {
       try {
-        const locationRes = await fetch('https://ipapi.co/json/');
+        const locationRes = await fetch('https://ipinfo.io/json?token=9fbf0880ffebda');
         const locationData = await locationRes.json();
-        const lat = locationData.latitude;
-        const lon = locationData.longitude;
+        const [lat, lon] = locationData.loc.split(',');
 
         const weatherRes = await fetch(
           `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&appid=735b6d179fce1fdfad4f7d5044c81121`
