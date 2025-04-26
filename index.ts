@@ -13,6 +13,7 @@ import { version } from './package.json';
 import config from './config';
 import { server as wisp, logging } from '@mercuryworkshop/wisp-js/server';
 import fetch from 'node-fetch';
+import { updateChecker } from 'serverlib/check';
 
 const port: number = config.port;
 const host: string = '0.0.0.0';
@@ -20,23 +21,15 @@ const host: string = '0.0.0.0';
 logging.set_level(`logging.${config.logType}`);
 wisp.options.wisp_version = 2;
 
-function getCommitDate(): string {
-  try {
-    return execSync('git log -1 --format=%cd', { stdio: 'pipe' }).toString().trim();
-  } catch {
-    return new Date().toISOString();
-  }
-}
-
 async function build() {
   if (!fs.existsSync('dist')) {
     console.log(chalk.yellow.bold('🚀 Building Lunar...'));
     try {
-      execSync('npm build', { stdio: 'inherit' });
+      execSync('npm run build', { stdio: 'inherit' });
       console.log(chalk.green.bold('✅ Successfully built Lunar V2!'));
     } catch (error) {
       throw new Error(
-        `An error occurred while building: ${error instanceof Error ? error.message : String(error)}`,
+        `An error occurred while building: ${error instanceof Error ? error.message : String(error)}`
       );
     }
   } else {
@@ -59,7 +52,7 @@ await app.register(fastifyCompress, {
 
 if (config.auth.protect) {
   console.log(chalk.magenta.bold('🔒 Password Protection Enabled.'));
-  config.auth.users.forEach((user: { [key: string]: string }) => {
+  config.auth.users.forEach((user) => {
     Object.entries(user).forEach(([username, password]) => {
       console.log(chalk.yellow('🔑 Users:'));
       console.log(chalk.cyan(`➡ Username: ${username}, Password: ${password}`));
@@ -69,8 +62,8 @@ if (config.auth.protect) {
   await app.register(basicAuth, {
     authenticate: true,
     validate(username, password, _req, _reply, done) {
-      const user = config.auth.users.find((user: { [key: string]: string }) => user[username]);
-      if (user && user[username] === password) {
+      const user = config.auth.users.find((u) => u[username] === password);
+      if (user) {
         if (config.auth.log) {
           console.log(chalk.green(`✅ Authenticated: ${username}`));
         }
@@ -81,6 +74,7 @@ if (config.auth.protect) {
   });
   app.addHook('onRequest', app.basicAuth);
 }
+
 
 app.setErrorHandler((error, _request, reply) => {
   if (error.statusCode === 401) {
@@ -127,21 +121,17 @@ app.setErrorHandler((error, _request, reply) => {
 
 await build();
 
-const commitDate = getCommitDate();
 const staticOptions = {
-  maxAge: '1d', // 1d
+  maxAge: '1d',
   etag: true,
   lastModified: true,
   redirect: false,
   setHeaders(res: any, filePath: string) {
     const cacheControl = () => {
-      if (filePath.endsWith('.html')) {
-        return 'public, max-age=0, must-revalidate';
-      }
-      if (/\.(js|mjs|css|jpg|jpeg|png|gif|ico|svg|webp|avif|woff2|woff|ttf|otf)$/.test(filePath)) {
+      if (filePath.endsWith('.html')) return 'public, max-age=0, must-revalidate';
+      if (/\.(js|mjs|css|jpg|jpeg|png|gif|ico|svg|webp|avif|woff2|woff|ttf|otf)$/.test(filePath))
         return 'public, max-age=31536000, immutable';
-      }
-      return 'public, max-age=86400'; // 1d
+      return 'public, max-age=86400';
     };
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'SAMEORIGIN');
@@ -151,20 +141,6 @@ const staticOptions = {
   },
 };
 
-
-// @ts-ignore dir may not exist
-const { handler } = await import('./dist/server/entry.mjs');
-
-app.register(fastifyStatic, {
-  root: path.join(import.meta.dirname, 'dist', 'client'),
-  ...staticOptions,
-});
-await app.register(fastifyMiddie);
-app.use(handler);
-
-app.setNotFoundHandler((request, reply) => {
-  reply.redirect('/404');
-});
 
 app.get('/api/icon/', async (req, reply) => {
   try {
@@ -191,63 +167,68 @@ app.get('/api/icon/', async (req, reply) => {
   }
 });
 
+// @ts-ignore 
+const { handler } = await import('./dist/server/entry.mjs');
+
+await app.register(fastifyStatic, {
+  root: path.join(import.meta.dirname, 'dist', 'client'),
+  ...staticOptions,
+});
+
+await app.register(fastifyMiddie);
+app.use(handler);
+
+// @ts-ignore later astro
+app.setNotFoundHandler((request, reply) => {
+  reply.type('text/plain').send(fs.readFileSync("/404"));
+});
+
+
 
 app.listen({ host, port }, (err) => {
-  if (err) {
-    throw new Error(`Failed to start Lunar V2: ${err.message}`);
-  }
-  console.log(chalk.green.bold(`\n Lunar V2`));
+  if (err) throw new Error(`Failed to start Lunar V2: ${err.message}`);
+  const updateStatus = updateChecker();
+  const statusMsg =
+    updateStatus.status === 'u'
+      ? '✅'
+      : updateStatus.status === 'n'
+        ? `❌, please update to ${updateStatus.commitId}:\n  https://github.com/lunar-proxy/lunar-v1/wiki`
+        : '❌ Error checking for updates';
 
-  console.log(
-    chalk.whiteBright(
-      `📅 Last Updated: ${chalk.cyanBright(new Date(commitDate).toLocaleString())}`,
-    ),
-  );
-  console.log(chalk.whiteBright(`🛠  Version: ${chalk.cyanBright(version)}`));
+  console.log(chalk.green.bold(`🚀 Lunar is running\n`));
+  console.log(chalk.gray('───────────────────────────────────────────────'));
+  console.log(chalk.whiteBright(`Up to date:`), chalk.cyanBright(statusMsg));
+  console.log(chalk.whiteBright(`🛠  Version:`), chalk.cyanBright(version));
+  console.log(chalk.gray('───────────────────────────────────────────────'));
 
-  // credits to night proxy for the idea :D
-  let deploymentURL: string | null = null;
-
-  if (process.env.RENDER) {
-    deploymentURL = `${process.env.RENDER_EXTERNAL_URL}`;
-  } else if (process.env.VERCEL) {
-    deploymentURL = `https://${process.env.VERCEL_URL}`;
-  } else if (process.env.RAILWAY_STATIC_URL) {
-    deploymentURL = `https://${process.env.RAILWAY_STATIC_URL}`;
-  } else if (process.env.FLY_APP_NAME) {
-    deploymentURL = `https://${process.env.FLY_APP_NAME}.fly.dev`;
-  } else if (process.env.CODESPACES) {
-    deploymentURL = `https://${process.env.CODESPACE_NAME}-${port}.${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`;
-  } else if (process.env.GITPOD_WORKSPACE_URL) {
-    deploymentURL = process.env.GITPOD_WORKSPACE_URL.replace('https://', `https://${port}-`);
-  } else if (process.env.REPL_ID) {
-    deploymentURL = `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`;
-  } else if (process.env.KOYEB_APP_NAME) {
-    deploymentURL = `https://${process.env.KOYEB_APP_NAME}.koyeb.app`;
-  } else if (process.env.GLITCH_PROJECT_ID && process.env.PROJECT_DOMAIN) {
-    deploymentURL = `https://${process.env.PROJECT_DOMAIN}.glitch.me`;
-  } else if (process.env.HEROKU_APP_NAME) {
-    deploymentURL = `https://${process.env.HEROKU_APP_NAME}.herokuapp.com`;
-  } else if (process.env.NETLIFY_DEV === 'true' && process.env.SITE_URL) {
-    deploymentURL = `${process.env.SITE_URL}`;
-  }
+  const deploymentURL =
+    process.env.RENDER_EXTERNAL_URL ||
+    (process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`) ||
+    (process.env.RAILWAY_STATIC_URL && `https://${process.env.RAILWAY_STATIC_URL}`) ||
+    (process.env.FLY_APP_NAME && `https://${process.env.FLY_APP_NAME}.fly.dev`) ||
+    (process.env.CODESPACES &&
+      `https://${process.env.CODESPACE_NAME}-${port}.${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`) ||
+    (process.env.GITPOD_WORKSPACE_URL &&
+      process.env.GITPOD_WORKSPACE_URL.replace('https://', `https://${port}-`)) ||
+    (process.env.REPL_ID &&
+      `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`) ||
+    (process.env.KOYEB_APP_NAME && `https://${process.env.KOYEB_APP_NAME}.koyeb.app`) ||
+    (process.env.GLITCH_PROJECT_ID &&
+      `https://${process.env.PROJECT_DOMAIN}.glitch.me`) ||
+    (process.env.HEROKU_APP_NAME &&
+      `https://${process.env.HEROKU_APP_NAME}.herokuapp.com`) ||
+    (process.env.NETLIFY_DEV === 'true' && process.env.SITE_URL);
 
   if (deploymentURL) {
-    console.log(
-      chalk.blueBright(`
-   ➡ Deployment URL:`),
-      chalk.underline(chalk.green(deploymentURL)),
-    );
+    console.log(chalk.blueBright(`\n🌐 Deployment URL:`));
+    console.log(chalk.underline(chalk.green(deploymentURL)));
   } else {
-    console.log(
-      chalk.blueBright(`
-   ➡ Local:`),
-      chalk.underline(chalk.yellow(`http://localhost:${port}`)),
-    );
-    console.log(
-      chalk.blueBright(`
-   ➡ Network:`),
-      chalk.underline(chalk.cyan(`http://127.0.0.1:${port}`)),
-    );
+    console.log(chalk.blueBright(`\n💻 Local:`));
+    console.log(chalk.underline(chalk.yellow(`http://localhost:${port}`)));
+    console.log(chalk.blueBright(`\n🌐 Network:`));
+    console.log(chalk.underline(chalk.cyan(`http://127.0.0.1:${port}`)));
   }
+
+  console.log(chalk.gray('───────────────────────────────────────────────'));
+  console.log(chalk.magentaBright.bold(`\n✨ Thanks for using Lunar V2 :)\n`));
 });

@@ -5,8 +5,8 @@
     "paths": {
       "@/*": ["src/*"],
       "@scripts/*": ["src/utils/*"],
-      "/@lb/*": ["/public/lib/*"]
+      "/@lb/*": ["public/lib/*"]
     }
   },
-  "exclude": ["node_modules", "dist", "public/a/bundled/**"]
+  "exclude": ["node_modules", "dist", "public/a/bundled/**", "public/lib/**"]
 }

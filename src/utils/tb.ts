@@ -13,24 +13,7 @@ let activeTabId: number | null = null;
 let draggedTabId: number | null = null;
 let tabCounter = 1;
 
-// @ts-ignore scramjet is needed ig
-const scramjet = new ScramjetController({
-  prefix: '/sj/',
-  files: {
-    wasm: '/a/bundled/scram/wasm.wasm',
-    worker: '/a/bundled/scram/worker.js',
-    client: '/a/bundled/scram/client.js',
-    shared: '/a/bundled/scram/shared.js',
-    sync: '/a/bundled/scram/sync.js',
-  },
-  flags: {
-    serviceworkers: true,
-    syncxhr: true,
-  },
-});
-
 const tabContainer = document.getElementById('tcontainer') as HTMLDivElement;
-const addbtn = document.getElementById('add') as HTMLButtonElement;
 const frameContainer = document.getElementById('fcontainer') as HTMLDivElement;
 
 tabContainer.classList.add('flex', 'justify-center', 'items-center', 'mt-4', 'overflow-x-auto');
@@ -63,10 +46,9 @@ function addTab(url?: string) {
     if (!doc) return;
 
     const maxLength = 18;
-    newTab.title =
-      doc.title?.length > maxLength
-        ? `${doc.title.slice(0, maxLength)}...`
-        : doc.title || 'New Tab';
+    newTab.title = doc.title?.length > maxLength
+      ? `${doc.title.slice(0, maxLength)}...`
+      : doc.title || 'New Tab';
 
     try {
       const url = new URL(doc.URL);
@@ -126,7 +108,7 @@ function renderTabs() {
   tabs.forEach((tab) => {
     const tabElement = document.createElement('div');
     tabElement.className = `h-9 tab mb-4 px-4 py-2 min-w-[210px] rounded-md transition-all cursor-pointer
-      ${TabManager.activeTabId === tab.id ? 'bg-gray-700' : 'bg-gray-600'} text-white flex items-center`;
+      ${activeTabId === tab.id ? 'bg-gray-700' : 'bg-gray-600'} text-white flex items-center`;
     tabElement.draggable = true;
     tabElement.dataset.id = tab.id.toString();
 
@@ -157,7 +139,7 @@ function renderTabs() {
     tabElement.appendChild(tbContent);
 
     tabElement.onclick = () => {
-      TabManager.activeTabId = tab.id;
+      setActiveTab(tab.id);
     };
 
     tabElement.ondragstart = (e) => {
@@ -191,7 +173,12 @@ function renderTabs() {
   });
 }
 
-addbtn.addEventListener('click', () => addTab());
+document.addEventListener('DOMContentLoaded', () => {
+  const addbtn = document.getElementById('add') as HTMLButtonElement;
+  if (addbtn) {
+    addbtn.addEventListener('click', () => addTab());
+  } 
+});
 
 const TabManager = {
   get activeTabId() {

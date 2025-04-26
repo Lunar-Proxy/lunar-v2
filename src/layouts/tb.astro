@@ -1,27 +1,34 @@
+---
+import "@/main.css";
+---
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="@scripts/tb"></script>
+    <script src="/scripts/tb.js"></script>
   </head>
   <body class="text-white font-sans p-4 bg-gray-900">
     <div class="w-full">
       <div
         id="tab-wrapper"
-        class="h-14 flex items-center bg-background-overlay rounded-t-lg p-2 relative transition-all"
+        class="h-14 bg-background-overlay rounded-t-lg p-2 flex items-center justify-between transition-all"
       >
-        <div id="tcontainer" class="flex flex-nowrap overflow-x-auto space-x-2 ml-2 max-w-full">
+        <div class="overflow-hidden w-full">
+          <div
+            id="tcontainer"
+            class="flex flex-nowrap overflow-x-auto space-x-2 px-2 scrollbar-hide"
+          ></div>
         </div>
         <button
           id="add"
-          class="ml-2 flex items-center justify-center w-8 h-8 text-lg rounded-md text-gray-400 hover:text-white hover:bg-gray-700 transition-colors"
+          class="ml-2 flex items-center justify-center w-8 h-8 text-lg rounded-md text-gray-400 hover:text-white hover:bg-gray-700 transition-colors shrink-0"
         >
           +
         </button>
       </div>
 
-      <div class=" border-b-2 border-border-default flex items-center bg-background-overlay h-12 transition-all px-6">
+      <div class="border-b-2 border-border-default flex items-center bg-background-overlay h-12 transition-all px-6">
         <div class="flex items-center space-x-4">
           <button
             id="back"
@@ -54,7 +61,6 @@
         </div>
       </div>
     </div>
-
     <div id="fcontainer" class="w-full h-[calc(100vh-4rem)] rounded-b-lg overflow-hidden"></div>
   </body>
 </html>

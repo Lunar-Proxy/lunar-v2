@@ -21,8 +21,8 @@ const scramjet = new ScramjetController({
   },
 });
 
+scramjet.init()
 TabManager.addTab();
-scramjet.init();
 
 const connection = new BareMuxConnection('/bm/worker.js');
 const sch = document.querySelector('input[type="text"]') as HTMLInputElement | null;
@@ -40,6 +40,16 @@ sch?.addEventListener('keydown', (e) => {
     }
   }
 });
+
+
+
+const frame = top?.document.getElementById("frame") as HTMLIFrameElement;
+const frurl = frame?.contentWindow?.location.href;
+const realur = frurl ? new URL(frurl).searchParams.get("url") : null;
+
+if (realur) {
+  launch(realur);
+}
 
 function ActiveFrame(): HTMLIFrameElement | null {
   const activeTabId = TabManager.activeTabId;

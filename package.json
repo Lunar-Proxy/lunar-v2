@@ -22,6 +22,7 @@
     "@mercuryworkshop/libcurl-transport": "^1.4.0",
     "@mercuryworkshop/wisp-js": "^0.3.3",
     "@playform/compress": "^0.1.9",
+    "@types/html-minifier": "^4.0.5",
     "astro": "5.6.1",
     "chalk": "^5.4.1",
     "fastify": "^5.2.2",
@@ -31,10 +32,11 @@
     "tsx": "^4.19.3",
     "typescript": "^5.8.3",
     "vite": "6.2.5",
+    "vite-plugin-minify": "^2.1.0",
     "vite-plugin-static-copy": "^2.3.0"
   },
   "engines": {
-    "node": ">=18.x"
+    "node": ">=20.x"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

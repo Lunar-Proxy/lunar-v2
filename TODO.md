@@ -5,6 +5,7 @@
 
 # 🔨 To Do
 
+- [ ] Find a better way to implement 404 (index.ts)
 - [ ] Finish `CONTRIBUTING.md`
 - [ ] Make games, apps & settings page
 - [ ] Create another page (other than games, apps, or settings)
