@@ -29,7 +29,7 @@ async function build() {
       console.log(chalk.green.bold('✅ Successfully built Lunar V2!'));
     } catch (error) {
       throw new Error(
-        `An error occurred while building: ${error instanceof Error ? error.message : String(error)}`
+        `An error occurred while building: ${error instanceof Error ? error.message : String(error)}`,
       );
     }
   } else {
@@ -74,7 +74,6 @@ if (config.auth.protect) {
   });
   app.addHook('onRequest', app.basicAuth);
 }
-
 
 app.setErrorHandler((error, _request, reply) => {
   if (error.statusCode === 401) {
@@ -141,7 +140,6 @@ const staticOptions = {
   },
 };
 
-
 app.get('/api/icon/', async (req, reply) => {
   try {
     const url = (req.query as { url?: string }).url;
@@ -167,7 +165,7 @@ app.get('/api/icon/', async (req, reply) => {
   }
 });
 
-// @ts-ignore 
+// @ts-ignore
 const { handler } = await import('./dist/server/entry.mjs');
 
 await app.register(fastifyStatic, {
@@ -180,10 +178,8 @@ app.use(handler);
 
 // @ts-ignore later astro
 app.setNotFoundHandler((request, reply) => {
-  reply.type('text/plain').send(fs.readFileSync("/404"));
+  reply.type('text/plain').send(fs.readFileSync('/404'));
 });
-
-
 
 app.listen({ host, port }, (err) => {
   if (err) throw new Error(`Failed to start Lunar V2: ${err.message}`);
@@ -210,13 +206,10 @@ app.listen({ host, port }, (err) => {
       `https://${process.env.CODESPACE_NAME}-${port}.${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`) ||
     (process.env.GITPOD_WORKSPACE_URL &&
       process.env.GITPOD_WORKSPACE_URL.replace('https://', `https://${port}-`)) ||
-    (process.env.REPL_ID &&
-      `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`) ||
+    (process.env.REPL_ID && `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`) ||
     (process.env.KOYEB_APP_NAME && `https://${process.env.KOYEB_APP_NAME}.koyeb.app`) ||
-    (process.env.GLITCH_PROJECT_ID &&
-      `https://${process.env.PROJECT_DOMAIN}.glitch.me`) ||
-    (process.env.HEROKU_APP_NAME &&
-      `https://${process.env.HEROKU_APP_NAME}.herokuapp.com`) ||
+    (process.env.GLITCH_PROJECT_ID && `https://${process.env.PROJECT_DOMAIN}.glitch.me`) ||
+    (process.env.HEROKU_APP_NAME && `https://${process.env.HEROKU_APP_NAME}.herokuapp.com`) ||
     (process.env.NETLIFY_DEV === 'true' && process.env.SITE_URL);
 
   if (deploymentURL) {

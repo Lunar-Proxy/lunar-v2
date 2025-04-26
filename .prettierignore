@@ -1,4 +1,5 @@
-public/assets/packaged
+public/a/bundled
+public/lib/
 dist
 .astro
 node_modules

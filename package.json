@@ -28,6 +28,7 @@
     "fastify": "^5.2.2",
     "localforage": "^1.10.0",
     "node-fetch": "^3.3.2",
+    "prettier-plugin-astro": "^0.14.1",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3",

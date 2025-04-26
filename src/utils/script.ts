@@ -7,8 +7,7 @@ const Navigation = [
   { btn: 'Settings', url: './st' },
 ];
 
-
-import { AbCloak } from "../utils/ab"
+import { AbCloak } from '../utils/ab';
 
 document.addEventListener('keydown', (event) => {
   if (event.ctrlKey && event.key === 'x') {
@@ -20,7 +19,7 @@ document.addEventListener('keydown', (event) => {
 document.addEventListener('keydown', (event) => {
   if (event.ctrlKey && event.key === 'z') {
     console.log('[DEBUG] AB Cloak keybinds clicked');
-    AbCloak()
+    AbCloak();
   }
 });
 

@@ -1,6 +1,7 @@
 ---
 import '@/main.css';
 ---
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -11,13 +12,25 @@ import '@/main.css';
     <style>
       @keyframes glow {
         0% {
-          text-shadow: 0 0 5px #3b82f6, 0 0 10px #3b82f6, 0 0 15px #3b82f6, 0 0 20px #3b82f6;
+          text-shadow:
+            0 0 5px #3b82f6,
+            0 0 10px #3b82f6,
+            0 0 15px #3b82f6,
+            0 0 20px #3b82f6;
         }
         50% {
-          text-shadow: 0 0 10px #3b82f6, 0 0 15px #3b82f6, 0 0 20px #3b82f6, 0 0 25px #3b82f6;
+          text-shadow:
+            0 0 10px #3b82f6,
+            0 0 15px #3b82f6,
+            0 0 20px #3b82f6,
+            0 0 25px #3b82f6;
         }
         100% {
-          text-shadow: 0 0 5px #3b82f6, 0 0 10px #3b82f6, 0 0 15px #3b82f6, 0 0 20px #3b82f6;
+          text-shadow:
+            0 0 5px #3b82f6,
+            0 0 10px #3b82f6,
+            0 0 15px #3b82f6,
+            0 0 20px #3b82f6;
         }
       }
 
@@ -26,13 +39,19 @@ import '@/main.css';
       }
     </style>
   </head>
-  <body class="min-h-screen bg-[#0B0F19] flex items-center justify-center px-6 py-16 text-white font-sans">
+  <body
+    class="min-h-screen bg-[#0B0F19] flex items-center justify-center px-6 py-16 text-white font-sans"
+  >
     <div class="flex flex-col items-center gap-10 w-full max-w-6xl">
-      <h1 class="text-6xl sm:text-7xl md:text-8xl font-linux font-extrabold tracking-tight text-center glowing-text text-text-HEADER">
+      <h1
+        class="text-6xl sm:text-7xl md:text-8xl font-linux font-extrabold tracking-tight text-center glowing-text text-text-HEADER"
+      >
         Lunar
       </h1>
 
-      <p class="text-text-SECONDARY text-base sm:text-lg md:text-xl font-mono font-medium text-center min-h-[2.5rem] opacity-80 transition-opacity duration-500 ease-in-out">
+      <p
+        class="text-text-SECONDARY text-base sm:text-lg md:text-xl font-mono font-medium text-center min-h-[2.5rem] opacity-80 transition-opacity duration-500 ease-in-out"
+      >
         -
       </p>
 
@@ -53,17 +72,28 @@ import '@/main.css';
       </div>
 
       <div id="updates" class="w-full flex justify-center animate-fade-in pt-10">
-        <div class="flex items-start gap-4 p-6 rounded-2xl bg-[#111827] shadow-xl border border-blue-900 w-full max-w-2xl transform transition-transform hover:scale-[1.02] hover:shadow-blue-700/50 backdrop-blur-md">
+        <div
+          class="flex items-start gap-4 p-6 rounded-2xl bg-[#111827] shadow-xl border border-blue-900 w-full max-w-2xl transform transition-transform hover:scale-[1.02] hover:shadow-blue-700/50 backdrop-blur-md"
+        >
           <div class="text-blue-400 mt-1 shrink-0">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 h-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"></path>
             </svg>
           </div>
           <div>
             <h3 class="font-linux font-semibold text-white text-xl">Latest Update: V1 Release</h3>
             <p class="mt-2 text-gray-300 text-md leading-relaxed whitespace-pre-wrap">
-              Added:
-              - PlaceHolder text
+              Added: - PlaceHolder text
             </p>
           </div>
         </div>

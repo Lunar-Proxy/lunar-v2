@@ -9,7 +9,7 @@ import { baremuxPath } from '@mercuryworkshop/bare-mux/node';
 import { libcurlPath } from '@mercuryworkshop/libcurl-transport';
 import { server as wisp } from '@mercuryworkshop/wisp-js/server';
 import type { IncomingMessage, ServerResponse } from 'http';
-import { ViteMinifyPlugin } from 'vite-plugin-minify'
+import { ViteMinifyPlugin } from 'vite-plugin-minify';
 
 wisp.options.wisp_version = 2;
 
@@ -27,9 +27,7 @@ function getDate(): string {
 export default defineConfig({
   output: 'server',
   adapter: node({ mode: 'middleware' }),
-  integrations: [
-    tailwind(),
-  ],
+  integrations: [tailwind()],
   prefetch: {
     prefetchAll: true,
     defaultStrategy: 'load',

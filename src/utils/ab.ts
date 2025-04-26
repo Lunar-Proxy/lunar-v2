@@ -30,7 +30,7 @@ function AbCloak() {
       </body>
     </html>
   `;
-  window.location.replace("https://www.docs.google.com");
+  window.location.replace('https://www.docs.google.com');
 }
 
 export { AbCloak };

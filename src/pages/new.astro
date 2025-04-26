@@ -1,6 +1,6 @@
 ---
 import '@/main.css';
-import Bookmark from "../layouts/bm.astro";
+import Bookmark from '../layouts/bm.astro';
 ---
 
 <!doctype html>
@@ -17,52 +17,52 @@ import Bookmark from "../layouts/bm.astro";
     <p
       id="weather"
       class="absolute top-4 right-4 text-text-SECONDARY font-linux px-6 py-3 rounded-xl text-[16px] font-bold"
-    ></p>
+    >
+    </p>
     <Bookmark />
   </body>
 
   <script>
-    async function displayWeather() {
-      try {
-        const locationRes = await fetch('https://ipinfo.io/json?token=9fbf0880ffebda');
-        const locationData = await locationRes.json();
-        const [lat, lon] = locationData.loc.split(',');
-
-        const weatherRes = await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&appid=735b6d179fce1fdfad4f7d5044c81121`
-        );
-        const weatherData = await weatherRes.json();
-
-        const rawDescription = weatherData.weather[0].description;
-        const description = rawDescription
-          .split(' ')
-          .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(' ');
-
-        if (weatherData.main) {
-          document.getElementById('weather')!.innerText = `${description}, ${Math.round(weatherData.main.temp)}°F`;
-        }
-      } catch (error) {
-        console.error('[ERROR] Failed to fetch weather:', error);
+    function Clock() {
+      const now = new Date();
+      const clockElement = document.getElementById('clock');
+      if (clockElement) {
+        clockElement.innerText = now.toLocaleTimeString([], { hour12: false });
       }
     }
 
-    function displayInfo() {
-      const now = new Date();
-      document.getElementById('clock')!.innerText = now.toLocaleTimeString([], { hour12: false });
-      const date = document.getElementById('date');
-      if (date) {
-        date.innerText = now.toLocaleDateString([], {
+    async function DisplayInfo() {
+      const todayDate = new Date();
+      const dateElement = document.getElementById('date') as HTMLParagraphElement;
+      if (dateElement) {
+        dateElement.innerText = todayDate.toLocaleDateString([], {
           weekday: 'long',
           month: 'long',
           day: 'numeric',
           year: 'numeric',
         });
       }
+      const weatherResponse = await fetch('https://api.weather.gov/points/40.7590322,-74.0516312');
+      const pointData = await weatherResponse.json();
+
+      const forecastUrl = pointData.properties.forecast;
+      if (!forecastUrl) throw new Error('No forecast URL found for location.');
+
+      const forecastResponse = await fetch(forecastUrl);
+      const forecastData = await forecastResponse.json();
+
+      const currentForecast = forecastData.properties.periods[0];
+      if (currentForecast) {
+        document.getElementById('weather')!.innerText =
+          `${currentForecast.shortForecast}, ${currentForecast.temperature}°${currentForecast.temperatureUnit}`;
+      } else {
+        throw new Error('No current weather forecast available.');
+      }
     }
 
-    setInterval(displayInfo, 1000);
-    displayInfo();
-    displayWeather();
+    DisplayInfo();
+    Clock();
+
+    setInterval(Clock, 1000);
   </script>
 </html>

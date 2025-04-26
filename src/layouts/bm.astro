@@ -1,73 +1,123 @@
-<script src="@scripts/navigation"></script>
-<div id="logo-container-wrapper" class="flex flex-row justify-start items-center mt-6 space-x-6 flex-wrap relative min-h-[200px]">
-  <button id="addbm" class="bg-blue-500 hover:bg-blue-600 text-white rounded-full p-4 transition-colors duration-200 shadow-lg transform hover:scale-105 z-10 mr-2 self-center">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14M5 12h14" />
+<div
+  id="logo-container-wrapper"
+  class="flex flex-row justify-start items-center mt-6 space-x-6 flex-wrap relative min-h-[200px]"
+>
+  <button
+    id="addbm"
+    class="bg-blue-500 hover:bg-blue-600 text-white rounded-full p-4 transition-colors duration-200 shadow-lg transform hover:scale-105 z-10 mr-2 self-center"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-6 w-6"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14M5 12h14"
+      ></path>
     </svg>
   </button>
 
-  <div id="logo-container" class="flex flex-row flex-wrap space-x-6 items-start">
-   
-  </div>
+  <div id="logo-container" class="flex flex-row flex-wrap space-x-6 items-start"></div>
 </div>
 
-<div id="bminput" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-  <div class="bg-background-overlay rounded-lg p-6 w-96 shadow-lg transform transition-all duration-300 scale-95 hover:scale-100">
+<div
+  id="bminput"
+  class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+>
+  <div
+    class="bg-background-overlay rounded-lg p-6 w-96 shadow-lg transform transition-all duration-300 scale-95 hover:scale-100"
+  >
     <h2 class="text-lg font-semibold mb-4 text-white">Add Bookmark</h2>
     <div>
       <label for="bookmark-name" class="block text-sm font-semibold mb-2 text-white">Name</label>
-      <input type="text" id="bookmark-name" class="w-full p-3 border border-gray-300 rounded-md mb-4 bg-background-overlay text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter bookmark name" />
+      <input
+        type="text"
+        id="bookmark-name"
+        class="w-full p-3 border border-gray-300 rounded-md mb-4 bg-background-overlay text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="Enter bookmark name"
+      />
     </div>
     <div>
-      <label for="bookmark-logo" class="block text-sm font-semibold mb-2 text-white">Logo URL</label>
-      <input type="url" id="bookmark-logo" class="w-full p-3 border border-gray-300 rounded-md mb-4 bg-background-overlay text-white focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter image URL for logo" />
+      <label for="bookmark-logo" class="block text-sm font-semibold mb-2 text-white">Logo URL</label
+      >
+      <input
+        type="url"
+        id="bookmark-logo"
+        class="w-full p-3 border border-gray-300 rounded-md mb-4 bg-background-overlay text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="Enter image URL for logo"
+      />
     </div>
     <div class="flex justify-end">
-      <button id="cancel-btn" class="mr-4 py-2 px-6 text-sm text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors">Cancel</button>
-      <button id="save-btn" class="py-2 px-6 text-sm text-white bg-blue-500 rounded-md hover:bg-blue-600 transition-colors">Save</button>
+      <button
+        id="cancel-btn"
+        class="mr-4 py-2 px-6 text-sm text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
+        >Cancel</button
+      >
+      <button
+        id="save-btn"
+        class="py-2 px-6 text-sm text-white bg-blue-500 rounded-md hover:bg-blue-600 transition-colors"
+        >Save</button
+      >
     </div>
   </div>
 </div>
 
 <script>
-  import ConfigAPI from "../utils/config";
+  import ConfigAPI from '../utils/config';
   interface Bookmark {
     name: string;
     logo: string;
     redir?: string;
   }
 
-  window.addEventListener("DOMContentLoaded", async () => {
-    const container = document.getElementById("logo-container");
-    const addButton = document.getElementById("addbm")!;
-    const modal = document.getElementById("bminput")!;
-    const cancelBtn = document.getElementById("cancel-btn")!;
-    const saveBtn = document.getElementById("save-btn")!;
-    const nameInput = document.getElementById("bookmark-name") as HTMLInputElement;
-    const logoInput = document.getElementById("bookmark-logo") as HTMLInputElement;
+  window.addEventListener('DOMContentLoaded', async () => {
+    const container = document.getElementById('logo-container') as HTMLDivElement;
+    const addButton = document.getElementById('addbm') as HTMLButtonElement;
+    const modal = document.getElementById('bminput') as HTMLInputElement;
+    const cancelBtn = document.getElementById('cancel-btn') as HTMLButtonElement;
+    const saveBtn = document.getElementById('save-btn') as HTMLButtonElement;
+    const nameInput = document.getElementById('bookmark-name') as HTMLInputElement;
+    const logoInput = document.getElementById('bookmark-logo') as HTMLInputElement;
 
-    const data = await ConfigAPI.get("bm") as Bookmark[];
-    if (!Array.isArray(data) || !data.every(item => typeof item.name === "string" && typeof item.logo === "string")) {
-      console.warn("Invalid bookmark data.");
+    const data = (await ConfigAPI.get('bm')) as Bookmark[];
+    if (
+      !Array.isArray(data) ||
+      !data.every((item) => typeof item.name === 'string' && typeof item.logo === 'string')
+    ) {
+      console.warn('Invalid bookmark data.');
       return;
     }
 
     function closeModal() {
-      modal.classList.add("hidden");
-      nameInput.value = "";
-      logoInput.value = "";
+      modal.classList.add('hidden');
+      nameInput.value = '';
+      logoInput.value = '';
     }
 
     function displayBookmarks() {
       container!.innerHTML = '';
       data.forEach((item) => {
-        const logoDiv = document.createElement("div");
+        const logoDiv = document.createElement('div');
         logoDiv.classList.add(
-          "relative",
-          "flex", "flex-col", "justify-center", "items-center",
-          "rounded-xl", "overflow-hidden", "p-4", "bg-background-overlay",
-          "border", "border-border-default", "transition-all", "duration-300",
-          "hover:border-blue-500", "hover:shadow-xl", "cursor-pointer", "transform", "hover:scale-105"
+          'relative',
+          'flex',
+          'flex-col',
+          'justify-center',
+          'items-center',
+          'rounded-xl',
+          'overflow-hidden',
+          'p-4',
+          'bg-background-overlay',
+          'border',
+          'border-border-default',
+          'transition-all',
+          'duration-300',
+          'hover:border-blue-500',
+          'hover:shadow-xl',
+          'cursor-pointer',
+          'transform',
+          'hover:scale-105',
         );
 
         logoDiv.innerHTML = `
@@ -82,22 +132,22 @@
           </p>
         `;
 
-        logoDiv.addEventListener("click", (e) => {
-         if ((e.target as HTMLElement).closest("button")) return;
-          
-         const frame = top?.document.getElementById("frame") as HTMLIFrameElement;
-        if (item.redir && frame) {
-          //TabManager.addTab(item.redir)
-        }
-      });
+        logoDiv.addEventListener('click', (e) => {
+          if ((e.target as HTMLElement).closest('button')) return;
 
-        const closeBtn = logoDiv.querySelector("button");
-        closeBtn?.addEventListener("click", async (e) => {
+          const frame = top?.document.getElementById('frame') as HTMLIFrameElement;
+          if (item.redir && frame) {
+            //TabManager.addTab(item.redir)
+          }
+        });
+
+        const closeBtn = logoDiv.querySelector('button');
+        closeBtn?.addEventListener('click', async (e) => {
           e.stopPropagation();
           logoDiv.remove();
-          const allBookmarks = await ConfigAPI.get("bm") as Bookmark[];
+          const allBookmarks = (await ConfigAPI.get('bm')) as Bookmark[];
           const updated = allBookmarks.filter((x: Bookmark) => x.name !== item.name);
-          await ConfigAPI.set("bm", updated);
+          await ConfigAPI.set('bm', updated);
         });
 
         container!.appendChild(logoDiv);
@@ -106,26 +156,26 @@
 
     displayBookmarks();
 
-    addButton.addEventListener("click", () => {
-      modal.classList.remove("hidden");
+    addButton.addEventListener('click', () => {
+      modal.classList.remove('hidden');
     });
 
-    cancelBtn.addEventListener("click", closeModal);
+    cancelBtn.addEventListener('click', closeModal);
 
-    saveBtn.addEventListener("click", async () => {
+    saveBtn.addEventListener('click', async () => {
       const name = nameInput.value.trim();
       const logoUrlInput = logoInput.value.trim();
-      const logo = logoUrlInput ? `/api/icon/?url=${logoUrlInput}` : "";
-   
+      const logo = logoUrlInput ? `/api/icon/?url=${logoUrlInput}` : '';
+
       if (!name || !logoUrlInput) {
-        alert("Please provide both name and logo URL.");
+        alert('Please provide both name and logo URL.');
         return;
       }
 
       const newBookmark: Bookmark = { name, logo };
       data.push(newBookmark);
-      await ConfigAPI.set("bm", data);
-      
+      await ConfigAPI.set('bm', data);
+
       closeModal();
       displayBookmarks();
     });

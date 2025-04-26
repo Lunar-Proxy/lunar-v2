@@ -20,7 +20,6 @@ Lunar is a powerful web proxy created to bypass censorship.
 - 🎮 **Games** – Play a wide page of games
 - ⚡️ **Site Support** - Lunar supports popular websites such as Gforce Now, Nowgg, Spotify, and
   more.
-  
 
 ## Deployment Options
 
