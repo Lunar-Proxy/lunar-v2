@@ -23,7 +23,7 @@
     "@mercuryworkshop/wisp-js": "^0.3.3",
     "@playform/compress": "^0.1.9",
     "@types/html-minifier": "^4.0.5",
-    "astro": "5.6.1",
+    "astro": "5.7.5",
     "chalk": "^5.4.1",
     "fastify": "^5.2.2",
     "localforage": "^1.10.0",
