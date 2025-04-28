@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Prompt:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Prompt:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -8,13 +7,27 @@
 @layer base {
   :root {
     --background: #11121c;
-    --background-overlay: #12131f;
+    --background-overlay: #1a1b26;
     --border: #1f1f30;
     --text-header: #d0d6f9;
     --text-secondary: #aab0d0;
+
+    --font-sans: 'Outfit', 'Prompt', system-ui, sans-serif;
+    --font-accent: 'Prompt', 'Outfit', system-ui, sans-serif;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    background-color: var(--background);
+    color: var(--text-secondary);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-accent);
+    color: var(--text-header);
   }
 
   body {
-    @apply bg-background;
+    @apply bg-background
   }
 }

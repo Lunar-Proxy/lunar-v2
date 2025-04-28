@@ -140,6 +140,8 @@ const staticOptions = {
   },
 };
 
+
+
 app.get('/api/icon/', async (req, reply) => {
   try {
     const url = (req.query as { url?: string }).url;

@@ -4,6 +4,7 @@ const Navigation = [
   { btn: 'Search', url: './browse' },
   { btn: 'Games', url: './gm' },
   { btn: 'Apps', url: './ap' },
+  { btn: 'Ai', url: './a' },
   { btn: 'Settings', url: './st' },
 ];
 

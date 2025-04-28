@@ -46,10 +46,11 @@ function addTab(url?: string) {
     if (!doc) return;
 
     const maxLength = 18;
-    newTab.title =
-      doc.title?.length > maxLength
-        ? `${doc.title.slice(0, maxLength)}...`
-        : doc.title || 'New Tab';
+    // has weird bug sometimes where it moves the tabs where cant be seen
+   // newTab.title =
+    //  doc.title?.length > maxLength
+     //   ? `${doc.title.slice(0, maxLength)}...`
+      //  : doc.title || 'New Tab';
 
     try {
       const url = new URL(doc.URL);
