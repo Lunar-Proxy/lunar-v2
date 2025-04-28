@@ -124,7 +124,7 @@ function renderTabs() {
 
     const title = document.createElement('span');
     title.textContent = tab.title;
-    title.className = 'text-left font-linux text-sm font-semibold truncate flex-grow';
+    title.className = 'text-left font-linux text-sm font-semibold truncate grow';
 
     const closeButton = document.createElement('button');
     closeButton.className =

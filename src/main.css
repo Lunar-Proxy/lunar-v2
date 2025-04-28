@@ -1,8 +1,41 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Prompt:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Prompt:wght@400;500;600;700;800&display=swap')
+layer(base);
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@theme {
+  --font-linux: outfit, sans-serif;
+  --font-fit: Prompt, sans-serif;
+
+  --color-background: var(--background);
+  --color-background-overlay: var(--background-overlay);
+
+  --color-border-default: var(--border);
+
+  --color-text-HEADER: var(--text-header);
+  --color-text-SECONDARY: var(--text-secondary);
+
+  --animate-spin: spin 1s linear 1;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
 
 @layer base {
   :root {
