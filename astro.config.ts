@@ -1,7 +1,7 @@
 import { execSync } from 'child_process';
 import { defineConfig } from 'astro/config';
 import node from '@astrojs/node';
-import tailwind from '@astrojs/tailwind';
+import tailwindcss from '@tailwindcss/vite'
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { normalizePath } from 'vite';
 import { version } from './package.json';
@@ -27,7 +27,6 @@ function getDate(): string {
 export default defineConfig({
   output: 'server',
   adapter: node({ mode: 'middleware' }),
-  integrations: [tailwind()],
   prefetch: {
     prefetchAll: true,
     defaultStrategy: 'load',
@@ -39,6 +38,7 @@ export default defineConfig({
     },
     plugins: [
       ViteMinifyPlugin({}),
+      tailwindcss(),
       {
         name: 'viteserver',
         configureServer({ middlewares, httpServer }) {
