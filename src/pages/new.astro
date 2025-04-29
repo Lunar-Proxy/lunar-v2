@@ -21,7 +21,6 @@ import Bookmark from '../layouts/bm.astro';
     </p>
     <Bookmark />
   </body>
-
   <script>
     function Clock() {
       const now = new Date();
@@ -30,10 +29,10 @@ import Bookmark from '../layouts/bm.astro';
         clockElement.innerText = now.toLocaleTimeString([], { hour12: false });
       }
     }
-
+  
     async function DisplayInfo() {
       const todayDate = new Date();
-      const dateElement = document.getElementById('date') as HTMLParagraphElement;
+      const dateElement = document.getElementById('date');
       if (dateElement) {
         dateElement.innerText = todayDate.toLocaleDateString([], {
           weekday: 'long',
@@ -42,27 +41,44 @@ import Bookmark from '../layouts/bm.astro';
           year: 'numeric',
         });
       }
-      const weatherResponse = await fetch('https://api.weather.gov/points/40.7590322,-74.0516312');
-      const pointData = await weatherResponse.json();
-
-      const forecastUrl = pointData.properties.forecast;
-      if (!forecastUrl) throw new Error('No forecast URL found for location.');
-
-      const forecastResponse = await fetch(forecastUrl);
-      const forecastData = await forecastResponse.json();
-
-      const currentForecast = forecastData.properties.periods[0];
-      if (currentForecast) {
-        document.getElementById('weather')!.innerText =
-          `${currentForecast.shortForecast}, ${currentForecast.temperature}°${currentForecast.temperatureUnit}`;
-      } else {
-        throw new Error('No current weather forecast available.');
+      try {
+        const ipRes = await fetch('https://ipapi.co/json/');
+        const ipData = await ipRes.json();
+        const { latitude, longitude } = ipData;
+    
+        if (!latitude || !longitude) {
+          throw new Error('Could not determine location');
+        }
+  
+        const weatherRes = await fetch(`https://api.weather.gov/points/${latitude},${longitude}`);
+        const pointData = await weatherRes.json();
+  
+        const forecastUrl = pointData.properties.forecast;
+        // realistically should NEVER happen
+        if (!forecastUrl) throw new Error('No forecast URL found for location.');
+  
+        const forecastRes = await fetch(forecastUrl);
+        const forecastData = await forecastRes.json();
+  
+        const currentForecast = forecastData.properties.periods[0];
+        const weatherElement = document.getElementById('weather');
+        if (currentForecast && weatherElement) {
+          weatherElement.innerText =
+            `${currentForecast.shortForecast}, ${currentForecast.temperature}°${currentForecast.temperatureUnit}`;
+        } else if (weatherElement) {
+          weatherElement.innerText = 'Weather unavailable';
+        }
+      } catch (error) {
+        console.error('error fetching weather:', error);
+        const weatherElement = document.getElementById('weather');
+        if (weatherElement) {
+          weatherElement.innerText = 'Weather unavailable';
+        }
       }
     }
-
+  
     DisplayInfo();
     Clock();
-
     setInterval(Clock, 1000);
-  </script>
+  </script>  
 </html>

@@ -4,7 +4,7 @@ function AbCloak() {
 
   const doc = win.document;
   doc.open();
-  doc.documentElement.innerHTML = `
+  doc.write(`
     <!doctype html>
     <html>
       <head>
@@ -26,10 +26,12 @@ function AbCloak() {
         </style>
       </head>
       <body>
-        <iframe src="/" allowfullscreen></iframe>
+        <iframe src=${window.location.href} allowfullscreen></iframe>
       </body>
     </html>
-  `;
+  `);
+  doc.close();
+
   window.location.replace('https://www.docs.google.com');
 }
 

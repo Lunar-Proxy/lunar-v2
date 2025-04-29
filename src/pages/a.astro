@@ -14,11 +14,11 @@ import "@/main.css";
     <h1 class="text-5xl font-extrabold tracking-tight mb-8">How can I assist you today?</h1>
     <div class="flex flex-wrap justify-center gap-6">
       <button data-text="Can you help me create something new?" class="categoryBtn flex items-center gap-2 px-4 py-2 bg-background-overlay text-text-header rounded-md border border-[#FFD580] shadow-[0_0_8px_#FFD580] hover:shadow-[0_0_16px_#FFD580,0_0_32px_#FFD580] transition-all duration-300 ease-in-out transform hover:scale-105">
-        <img src="/a/images/logo/brush.svg"  alt="Create" class="h-5 w-5" />
+        <img src="/a/images/logo/brush.svg" alt="Create" class="h-5 w-5" />
         Create
       </button>
 
-      <button data-text="Show me something interesting to explore."  class="categoryBtn flex items-center gap-2 px-4 py-2 bg-background-overlay text-text-header rounded-md border border-[#90EE90] shadow-[0_0_8px_#90EE90] hover:shadow-[0_0_16px_#90EE90,0_0_32px_#90EE90] transition-all duration-300 ease-in-out transform hover:scale-105">
+      <button data-text="Show me something interesting to explore." class="categoryBtn flex items-center gap-2 px-4 py-2 bg-background-overlay text-text-header rounded-md border border-[#90EE90] shadow-[0_0_8px_#90EE90] hover:shadow-[0_0_16px_#90EE90,0_0_32px_#90EE90] transition-all duration-300 ease-in-out transform hover:scale-105">
         <img src="/a/images/logo/bio.svg" alt="Explore" class="h-5 w-5" />
         Explore
       </button>
@@ -28,7 +28,7 @@ import "@/main.css";
         Code
       </button>
 
-      <button data-text="Teach me something new."  class="categoryBtn flex items-center gap-2 px-4 py-2 bg-background-overlay text-text-header rounded-md border border-[#FFFFC5] shadow-[0_0_8px_#FFFFC5] hover:shadow-[0_0_16px_#FFFFC5,0_0_32px_#FFFFC5] transition-all duration-300 ease-in-out transform hover:scale-105">
+      <button data-text="Teach me something new." class="categoryBtn flex items-center gap-2 px-4 py-2 bg-background-overlay text-text-header rounded-md border border-[#FFFFC5] shadow-[0_0_8px_#FFFFC5] hover:shadow-[0_0_16px_#FFFFC5,0_0_32px_#FFFFC5] transition-all duration-300 ease-in-out transform hover:scale-105">
         <img src="/a/images/logo/learn.svg" alt="Learn" class="h-5 w-5" />
         Learn
       </button>
@@ -39,37 +39,37 @@ import "@/main.css";
 
   <div class="fixed bottom-6 w-full max-w-3xl px-6">
     <div class="flex items-center gap-3">
-      <div class="flex flex-1 items-center bg-background-overlay backdrop-blur-md rounded-full px-4 py-2 shadow-md border border-border">
-        <input id="responseinp" type="text" placeholder="Ask Gemini anything..." class="bg-background flex-1 outline-hidden text-base px-4 py-2 text-text-header placeholder-text-secondary rounded-full transition-all ease-in-out duration-300 border-none" />
+      <div class="flex flex-1 items-center bg-background-overlay backdrop-blur-md rounded-full px-4 py-1.5 shadow-md border border-border">
+        <input 
+          id="responseinp"
+          type="text"
+          placeholder="Ask Gemini anything..."
+          class="bg-transparent flex-1 outline-none text-sm px-4 py-2 text-text-header placeholder-text-secondary rounded-full transition-all ease-in-out duration-300 border-none"
+        />
 
-        <button id="attach" class="ml-10 w-10 h-14 bg-background-overlay text-text-header shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110 focus:outline-hidden rounded-md flex items-center justify-center">
+        <button 
+          id="attach" 
+          class="ml-2 w-10 h-10 bg-background-overlay text-text-header hover:shadow-md transition-all duration-300 ease-in-out transform hover:scale-110 rounded-full flex items-center justify-center"
+        >
           <img id="attachimg" src="/a/images/logo/up.svg" alt="Attach" class="h-5 w-5 opacity-80" />
         </button>
 
         <input type="file" id="imageInput" style="display:none;" accept="image/*">
       </div>
-      <button id="del" class="ml-2 w-12 h-12 bg-background-overlay text-text-header shadow-md hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-110 focus:outline-hidden rounded-md flex items-center justify-center">
-        <img src="/a/images/logo/trash.svg" alt="Delete Chat" class="h-5 w-5 opacity-80" />
+
+      <button 
+        id="del" 
+        class="w-10 h-10 bg-background-overlay text-text-header hover:shadow-md transition-all duration-300 ease-in-out transform hover:scale-110 rounded-full flex items-center justify-center border border-border"
+      >
+        <img src="/a/images/logo/trash.svg" alt="Delete Chat" class="h-4.5 w-4.5 opacity-80" />
       </button>
     </div>
 
-    
     <div class="text-center text-xs text-text-secondary mt-4">
       Gemini 1.5 Pro
     </div>
   </div>
 
   <script src="@scripts/aHelper"></script>
-
-  <style>
-    @keyframes fade-in {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fade-in {
-      animation: fade-in 0.3s ease-out;
-    }
-  </style>
-
 </body>
 </html>

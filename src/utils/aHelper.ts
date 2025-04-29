@@ -115,8 +115,8 @@ function addMessage(sender: 'user' | 'bot', text: string, image: string | null =
   }
   if (sender === 'bot') {
     const regenBtn = document.createElement('button');
-    regenBtn.textContent = "↻";
-    regenBtn.className = "absolute top-2 right-2 text-xs bg-background-overlay p-1 rounded-full hover:scale-110 transition";
+  // interfears with stuf  regenBtn.textContent = "↻";
+ //   regenBtn.className = "absolute top-2 right-2 text-xs bg-background-overlay p-1 rounded-full hover:scale-110 transition";
     regenBtn.onclick = async () => {
       bubble.innerHTML = "";
       const regenTyping = document.createElement('p');
@@ -124,7 +124,7 @@ function addMessage(sender: 'user' | 'bot', text: string, image: string | null =
       bubble.appendChild(regenTyping);
       await fetchAI(bubble);
     };
-    bubble.appendChild(regenBtn);
+  //  bubble.appendChild(regenBtn);
   }
   wrapper.appendChild(bubble);
   conversation?.appendChild(wrapper);

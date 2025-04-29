@@ -4,7 +4,7 @@
 >
   <button
     id="addbm"
-    class="bg-blue-500 hover:bg-blue-600 text-white rounded-full p-4 transition-colors duration-200 shadow-lg transform hover:scale-105 z-10 mr-2 self-center"
+    class="bg-blue-500 hover:bg-blue-600 text-white rounded-full p-4 transition-colors duration-200 shadow-lg transform hover:scale-105 z-10 mr-6 self-center"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -20,48 +20,49 @@
 
   <div id="logo-container" class="flex flex-row flex-wrap space-x-6 items-start"></div>
 </div>
-
 <div
   id="bminput"
   class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
 >
   <div
-    class="bg-background-overlay rounded-lg p-6 w-96 shadow-lg transform transition-all duration-300 scale-95 hover:scale-100"
+    class="bg-[color:var(--background-overlay)] rounded-lg p-6 w-96 shadow-lg transform transition-all duration-300 scale-95 hover:scale-100"
   >
-    <h2 class="text-lg font-semibold mb-4 text-white">Add Bookmark</h2>
+    <h2 class="text-lg font-semibold mb-4 text-[color:var(--text-header)]">Add Bookmark</h2>
+
     <div>
-      <label for="bookmark-name" class="block text-sm font-semibold mb-2 text-white">Name</label>
+      <label for="bookmark-name" class="block text-sm font-semibold mb-2 text-[color:var(--text-secondary)]">Name</label>
       <input
         type="text"
         id="bookmark-name"
-        class="w-full p-3 border border-gray-300 rounded-md mb-4 bg-background-overlay text-white focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+        class="w-full p-3 border border-[color:var(--border)] rounded-md mb-4 bg-[color:var(--background-overlay)] text-[color:var(--text-header)] focus:outline-none focus:ring-2 focus:ring-blue-500"
         placeholder="Enter bookmark name"
       />
     </div>
+
     <div>
-      <label for="bookmark-logo" class="block text-sm font-semibold mb-2 text-white">Logo URL</label
-      >
+      <label for="bookmark-logo" class="block text-sm font-semibold mb-2 text-[color:var(--text-secondary)]">Logo URL</label>
       <input
         type="url"
         id="bookmark-logo"
-        class="w-full p-3 border border-gray-300 rounded-md mb-4 bg-background-overlay text-white focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+        class="w-full p-3 border border-[color:var(--border)] rounded-md mb-4 bg-[color:var(--background-overlay)] text-[color:var(--text-header)] focus:outline-none focus:ring-2 focus:ring-blue-500"
         placeholder="Enter image URL for logo"
       />
     </div>
+
     <div class="flex justify-end">
       <button
         id="cancel-btn"
-        class="mr-4 py-2 px-6 text-sm text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
-        >Cancel</button
-      >
+        class="mr-4 py-2 px-6 text-sm text-[color:var(--text-secondary)] bg-[color:var(--background-overlay)] border border-[color:var(--border)] rounded-md hover:bg-[color:var(--border)] transition-colors"
+      >Cancel</button>
+
       <button
         id="save-btn"
         class="py-2 px-6 text-sm text-white bg-blue-500 rounded-md hover:bg-blue-600 transition-colors"
-        >Save</button
-      >
+      >Save</button>
     </div>
   </div>
 </div>
+
 
 <script>
   import ConfigAPI from '../utils/config';
@@ -89,7 +90,7 @@
       return;
     }
 
-    function closeModal() {
+    function closeInput() {
       modal.classList.add('hidden');
       nameInput.value = '';
       logoInput.value = '';
@@ -122,7 +123,7 @@
 
         logoDiv.innerHTML = `
           <button class="absolute top-1 right-1 bg-white/10 backdrop-blur-md border border-white/20 rounded-full p-1 hover:bg-red-500/90 transition-colors duration-200 group z-10">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-white group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
             </svg>
           </button>
@@ -137,7 +138,8 @@
 
           const frame = top?.document.getElementById('frame') as HTMLIFrameElement;
           if (item.redir && frame) {
-            //TabManager.addTab(item.redir)
+            // todo: PLEASE find a better way to do this
+            frame.src = `browse?url=${item.redir}`;
           }
         });
 
@@ -160,7 +162,7 @@
       modal.classList.remove('hidden');
     });
 
-    cancelBtn.addEventListener('click', closeModal);
+    cancelBtn.addEventListener('click', closeInput);
 
     saveBtn.addEventListener('click', async () => {
       const name = nameInput.value.trim();
@@ -176,7 +178,7 @@
       data.push(newBookmark);
       await ConfigAPI.set('bm', data);
 
-      closeModal();
+      closeInput();
       displayBookmarks();
     });
   });
