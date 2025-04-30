@@ -2,17 +2,15 @@
 
 Thank you for your interest in contributing to Lunar.
 
-# Before doing a PR (Pull Request)
+### Before doing a pull request
 
-Before you think about doing a PR (Pull Request), go into your terminal and run
-`pnpm run precommit`. This will check for errors in the code.
+Run this command in the terminal before making a pull request to check for errors: ```pnpm run precommit```
 
-# Adding games / apps
+### Adding games / apps
 
-To add games or apps, follow this format:
+The asset is refering to games or apps.
 
-In this, asset is refering to games or apps
-
+**To add games or apps, follow this format**:
 ```json
 {
   "name": "Google", // Name of asset
@@ -21,8 +19,6 @@ In this, asset is refering to games or apps
 }
 ```
 
-The asset list can be found in public/a/json/. Inside that folder,
-
-`al.json` is the list of apps
-
-`gl.json` is the list of games.
+**Files:**
+- Apps → ```public/a/json/al.json```
+- Games → ```public/a/json/gl.json```
