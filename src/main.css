@@ -9,9 +9,8 @@ layer(base);
 
   --color-background: var(--background);
   --color-background-overlay: var(--background-overlay);
-
+  --color-background-disabled: var(--background-disabled);
   --color-border-default: var(--border);
-
   --color-text-HEADER: var(--text-header);
   --color-text-SECONDARY: var(--text-secondary);
 
@@ -44,7 +43,7 @@ layer(base);
     --border: #1f1f30;
     --text-header: #d0d6f9;
     --text-secondary: #aab0d0;
-
+    ---background-disabled: #2a2b3c;
     --font-sans: 'Outfit', 'Prompt', system-ui, sans-serif;
     --font-accent: 'Prompt', 'Outfit', system-ui, sans-serif;
   }

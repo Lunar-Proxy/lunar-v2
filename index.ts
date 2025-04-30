@@ -126,17 +126,17 @@ const staticOptions = {
   lastModified: true,
   redirect: false,
   setHeaders(res: any, filePath: string) {
-    const cacheControl = () => {
-      if (filePath.endsWith('.html')) return 'public, max-age=0, must-revalidate';
-      if (/\.(js|mjs|css|jpg|jpeg|png|gif|ico|svg|webp|avif|woff2|woff|ttf|otf)$/.test(filePath))
-        return 'public, max-age=31536000, immutable';
-      return 'public, max-age=86400';
-    };
+    if (filePath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'public, max-age=0');
+    } else if (/\.(js|css|jpg|jpeg|png|gif|ico|svg|webp|avif)$/.test(filePath)) {
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable'); // 1 year
+    } else {
+      res.setHeader('Cache-Control', 'public, max-age=3600'); // 1 hour
+    }
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'SAMEORIGIN');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
     res.setHeader('X-XSS-Protection', '1; mode=block');
-    res.setHeader('Cache-Control', cacheControl());
   },
 };
 
@@ -190,7 +190,7 @@ app.listen({ host, port }, (err) => {
     updateStatus.status === 'u'
       ? '✅'
       : updateStatus.status === 'n'
-        ? `❌, please update to ${updateStatus.commitId}:\n  https://github.com/lunar-proxy/lunar-v1/wiki`
+        ? `❌, Please update to ${updateStatus.commitId}:\n  https://github.com/lunar-proxy/lunar-v1/wiki`
         : '❌ Error checking for updates';
 
   console.log(chalk.green.bold(`🚀 Lunar is running\n`));

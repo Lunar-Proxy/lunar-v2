@@ -113,19 +113,6 @@ function addMessage(sender: 'user' | 'bot', text: string, image: string | null =
     imgPreview.className = "mt-2 rounded-lg max-h-40 object-cover";
     bubble.appendChild(imgPreview);
   }
-  if (sender === 'bot') {
-    const regenBtn = document.createElement('button');
-  // interfears with stuf  regenBtn.textContent = "↻";
- //   regenBtn.className = "absolute top-2 right-2 text-xs bg-background-overlay p-1 rounded-full hover:scale-110 transition";
-    regenBtn.onclick = async () => {
-      bubble.innerHTML = "";
-      const regenTyping = document.createElement('p');
-      regenTyping.textContent = "...";
-      bubble.appendChild(regenTyping);
-      await fetchAI(bubble);
-    };
-  //  bubble.appendChild(regenBtn);
-  }
   wrapper.appendChild(bubble);
   conversation?.appendChild(wrapper);
   conversation?.scrollTo(0, conversation.scrollHeight);
