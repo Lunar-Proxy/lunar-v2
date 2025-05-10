@@ -23,7 +23,7 @@
     "@playform/compress": "^0.1.9",
     "@tailwindcss/vite": "^4.1.4",
     "@types/html-minifier": "^4.0.5",
-    "astro": "5.7.7",
+    "astro": "5.7.12",
     "chalk": "^5.4.1",
     "fastify": "^5.2.2",
     "localforage": "^1.10.0",
