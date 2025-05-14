@@ -25,7 +25,7 @@
     "@types/html-minifier": "^4.0.5",
     "astro": "5.7.12",
     "chalk": "^5.4.1",
-    "fastify": "^5.2.2",
+    "fastify": "^5.3.3",
     "localforage": "^1.10.0",
     "node-fetch": "^3.3.2",
     "prettier-plugin-astro": "^0.14.1",
