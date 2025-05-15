@@ -2,7 +2,7 @@
 
 Thank you for your interest in contributing to Lunar.
 
-### Before doing a pull request
+### Before creating a pull request
 
 Before creating a pull request, please run `pnpm run precommit` in your terminal.
 
