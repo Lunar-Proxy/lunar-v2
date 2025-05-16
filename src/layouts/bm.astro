@@ -2,10 +2,10 @@
   id="logo-container-wrapper"
   class="flex flex-row justify-start items-center mt-6 space-x-6 flex-wrap relative min-h-[200px]"
 >
-  <button
-    id="addbm"
-    class="bg-blue-500 hover:bg-blue-600 text-white rounded-full p-4 transition-colors duration-200 shadow-lg transform hover:scale-105 z-10 mr-6 self-center"
-  >
+ <button
+  id="addbm"
+  class="flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white rounded-lg h-14 w-14 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 z-10 mr-4"
+>
     <svg
       xmlns="http://www.w3.org/2000/svg"
       class="h-6 w-6"
@@ -22,19 +22,19 @@
 </div>
 <div
   id="bminput"
-  class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+  class="hidden fixed inset-0 bg-transparent bg-opacity-90 backdrop-blur-sm flex justify-center items-center z-50"
 >
   <div
     class="bg-[color:var(--background-overlay)] rounded-lg p-6 w-96 shadow-lg transform transition-all duration-300 scale-95 hover:scale-100"
   >
-    <h2 class="text-lg font-semibold mb-4 text-[color:var(--text-header)]">Add Bookmark</h2>
+    <h2 class="text-lg font-semibold mb-4">Add Bookmark</h2>
 
     <div>
-      <label for="bookmark-name" class="block text-sm font-semibold mb-2 text-[color:var(--text-secondary)]">Name</label>
+      <label for="bookmark-name" class="block text-sm font-semibold mb-2">Name</label>
       <input
         type="text"
         id="bookmark-name"
-        class="w-full p-3 border border-[color:var(--border)] rounded-md mb-4 bg-[color:var(--background-overlay)] text-[color:var(--text-header)] focus:outline-none focus:ring-2 focus:ring-blue-500"
+        class="w-full p-3 border border-[color:var(--border)] rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
         placeholder="Enter bookmark name"
       />
     </div>
@@ -52,7 +52,7 @@
     <div class="flex justify-end">
       <button
         id="cancel-btn"
-        class="mr-4 py-2 px-6 text-sm text-[color:var(--text-secondary)] bg-[color:var(--background-overlay)] border border-[color:var(--border)] rounded-md hover:bg-[color:var(--border)] transition-colors"
+        class="mr-4 py-2 px-6 text-sm text-[color:var(--text-secondary)] bg-[color:var(--background-overlay)] border-2 border-[color:var(--border)] rounded-md hover:bg-[color:var(--border)] transition-colors"
       >Cancel</button>
 
       <button

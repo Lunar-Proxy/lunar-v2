@@ -2,7 +2,6 @@ import Fastify from 'fastify';
 import fastifyMiddie from '@fastify/middie';
 import fastifyStatic from '@fastify/static';
 import fastifyCompress from '@fastify/compress';
-import basicAuth from '@fastify/basic-auth';
 import fs from 'node:fs';
 import { execSync } from 'child_process';
 import chalk from 'chalk';
@@ -10,16 +9,18 @@ import { createServer } from 'node:http';
 import { Socket } from 'node:net';
 import path from 'node:path';
 import { version } from './package.json';
-import config from './config';
 import { server as wisp, logging } from '@mercuryworkshop/wisp-js/server';
 import fetch from 'node-fetch';
 import { updateChecker } from 'serverlib/check';
+import { error } from 'node:console';
 
-const port: number = config.port;
-const host: string = '0.0.0.0';
+const port: number = parseInt((process.env.PORT as string)) || parseInt('8080');
 
-logging.set_level(`logging.${config.logType}`);
+logging.set_level(`logging.INFO`);
 wisp.options.wisp_version = 2;
+wisp.options.dns_method = "resolve";
+wisp.options.dns_servers = ["94.140.14.14", "94.140.15.15", "1.1.1.3", "1.0.0.3"];
+wisp.options.dns_result_order = "ipv4first";
 
 async function build() {
   if (!fs.existsSync('dist')) {
@@ -48,74 +49,6 @@ const app = Fastify({
 await app.register(fastifyCompress, {
   global: true,
   encodings: ['gzip', 'deflate', 'br'],
-});
-
-if (config.auth.protect) {
-  console.log(chalk.magenta.bold('🔒 Password Protection Enabled.'));
-  config.auth.users.forEach((user) => {
-    Object.entries(user).forEach(([username, password]) => {
-      console.log(chalk.yellow('🔑 Users:'));
-      console.log(chalk.cyan(`➡ Username: ${username}, Password: ${password}`));
-    });
-  });
-
-  await app.register(basicAuth, {
-    authenticate: true,
-    validate(username, password, _req, _reply, done) {
-      const user = config.auth.users.find((u) => u[username] === password);
-      if (user) {
-        if (config.auth.log) {
-          console.log(chalk.green(`✅ Authenticated: ${username}`));
-        }
-        return done();
-      }
-      return done(new Error('Invalid credentials'));
-    },
-  });
-  app.addHook('onRequest', app.basicAuth);
-}
-
-app.setErrorHandler((error, _request, reply) => {
-  if (error.statusCode === 401) {
-    reply.status(401).header('Content-Type', 'text/html').send(`
-         <!doctype html>
-<html>
-  <head>
-    <title>Welcome to nginx!</title>
-    <style>
-      html {
-        color-scheme: light dark;
-      }
-      body {
-        width: 35em;
-        margin: 0 auto;
-        font-family: Tahoma, Verdana, Arial, sans-serif;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Welcome to nginx!</h1>
-    <p>
-      If you see this page, the nginx web server is successfully installed and
-      working. Further configuration is required. If you are expecting another
-      page, please check your network or
-      <a id="rcheck" onclick="location.reload();"><b>Refresh this page</b></a>
-    </p>
-
-    <p>
-      For online documentation and support please refer to
-      <a href="http://nginx.org/">nginx.org</a>.<br />
-      Commercial support is available at
-      <a href="http://nginx.com/">nginx.com</a>.
-    </p>
-
-    <p><em>Thank you for using nginx.</em></p>
-  </body>
-</html>
-      `);
-  } else {
-    reply.send(error);
-  }
 });
 
 await build();
@@ -167,14 +100,14 @@ app.get('/api/icon/', async (req, reply) => {
   }
 });
 
-// @ts-ignore
-const { handler } = await import('./dist/server/entry.mjs');
-
 await app.register(fastifyStatic, {
   root: path.join(import.meta.dirname, 'dist', 'client'),
   ...staticOptions,
 });
 
+
+// @ts-ignore
+const { handler } = await import('./dist/server/entry.mjs');
 await app.register(fastifyMiddie);
 app.use(handler);
 
@@ -183,8 +116,7 @@ app.setNotFoundHandler((request, reply) => {
   reply.type('text/plain').send(fs.readFileSync('/404'));
 });
 
-app.listen({ host, port }, (err) => {
-  if (err) throw new Error(`Failed to start Lunar V2: ${err.message}`);
+app.listen({ port: port, host: "0.0.0.0"  }).then(async () => {
   const updateStatus = updateChecker();
   const statusMsg =
     updateStatus.status === 'u'

@@ -12,7 +12,7 @@ export function updateChecker() {
       return { status: '-', commitId };
     }
   } catch (e) {
-    console.error('[ERROR] To see if lunar is updated,  please install git.');
+    console.error('[ERROR] To see if lunar is updated, please install git.');
     return { status: '-', commitId: 'Unknown' };
   }
 }
