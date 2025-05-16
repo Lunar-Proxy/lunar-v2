@@ -2,13 +2,13 @@
 
 Thank you for your interest in contributing to Lunar.
 
-### Before doing a pull request
+### Before creating a pull request
 
-Run this command in the terminal before making a pull request to check for errors: ```pnpm run precommit```
+Before creating a pull request, please run `pnpm run precommit` in your terminal.
 
 ### Adding games / apps
 
-The asset is refering to games or apps.
+An asset is a game or an app.
 
 **To add games or apps, follow this format**:
 ```json
