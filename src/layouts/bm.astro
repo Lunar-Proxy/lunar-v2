@@ -2,10 +2,10 @@
   id="logo-container-wrapper"
   class="flex flex-row justify-start items-center mt-6 space-x-6 flex-wrap relative min-h-[200px]"
 >
- <button
-  id="addbm"
-  class="flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white rounded-lg h-14 w-14 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 z-10 mr-4"
->
+  <button
+    id="addbm"
+    class="flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white rounded-lg h-14 w-14 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 z-10 mr-4"
+  >
     <svg
       xmlns="http://www.w3.org/2000/svg"
       class="h-6 w-6"
@@ -40,7 +40,10 @@
     </div>
 
     <div>
-      <label for="bookmark-logo" class="block text-sm font-semibold mb-2 text-[color:var(--text-secondary)]">Logo URL</label>
+      <label
+        for="bookmark-logo"
+        class="block text-sm font-semibold mb-2 text-[color:var(--text-secondary)]">Logo URL</label
+      >
       <input
         type="url"
         id="bookmark-logo"
@@ -53,16 +56,17 @@
       <button
         id="cancel-btn"
         class="mr-4 py-2 px-6 text-sm text-[color:var(--text-secondary)] bg-[color:var(--background-overlay)] border-2 border-[color:var(--border)] rounded-md hover:bg-[color:var(--border)] transition-colors"
-      >Cancel</button>
+        >Cancel</button
+      >
 
       <button
         id="save-btn"
         class="py-2 px-6 text-sm text-white bg-blue-500 rounded-md hover:bg-blue-600 transition-colors"
-      >Save</button>
+        >Save</button
+      >
     </div>
   </div>
 </div>
-
 
 <script>
   import ConfigAPI from '../utils/config';

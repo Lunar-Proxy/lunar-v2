@@ -1,7 +1,7 @@
 import { execSync } from 'child_process';
 import { defineConfig } from 'astro/config';
 import node from '@astrojs/node';
-import tailwindcss from '@tailwindcss/vite'
+import tailwindcss from '@tailwindcss/vite';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { normalizePath } from 'vite';
 import { version } from './package.json';
