@@ -12,15 +12,14 @@ import { version } from './package.json';
 import { server as wisp, logging } from '@mercuryworkshop/wisp-js/server';
 import fetch from 'node-fetch';
 import { updateChecker } from 'serverlib/check';
-import { error } from 'node:console';
 
-const port: number = parseInt((process.env.PORT as string)) || parseInt('8080');
+const port: number = parseInt(process.env.PORT as string) || parseInt('8080');
 
 logging.set_level(`logging.INFO`);
 wisp.options.wisp_version = 2;
-wisp.options.dns_method = "resolve";
-wisp.options.dns_servers = ["94.140.14.14", "94.140.15.15", "1.1.1.3", "1.0.0.3"];
-wisp.options.dns_result_order = "ipv4first";
+wisp.options.dns_method = 'resolve';
+wisp.options.dns_servers = ['94.140.14.14', '94.140.15.15', '1.1.1.3', '1.0.0.3'];
+wisp.options.dns_result_order = 'ipv4first';
 
 async function build() {
   if (!fs.existsSync('dist')) {
@@ -73,8 +72,6 @@ const staticOptions = {
   },
 };
 
-
-
 app.get('/api/icon/', async (req, reply) => {
   try {
     const url = (req.query as { url?: string }).url;
@@ -105,7 +102,6 @@ await app.register(fastifyStatic, {
   ...staticOptions,
 });
 
-
 // @ts-ignore
 const { handler } = await import('./dist/server/entry.mjs');
 await app.register(fastifyMiddie);
@@ -116,7 +112,7 @@ app.setNotFoundHandler((request, reply) => {
   reply.type('text/plain').send(fs.readFileSync('/404'));
 });
 
-app.listen({ port: port, host: "0.0.0.0"  }).then(async () => {
+app.listen({ port: port, host: '0.0.0.0' }).then(async () => {
   const updateStatus = updateChecker();
   const statusMsg =
     updateStatus.status === 'u'

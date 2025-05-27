@@ -25,6 +25,7 @@
     "astro": "5.7.12",
     "chalk": "^5.4.1",
     "fastify": "^5.3.3",
+    "is-url-superb": "^6.1.0",
     "localforage": "^1.10.0",
     "node-fetch": "^3.3.2",
     "prettier-plugin-astro": "^0.14.1",

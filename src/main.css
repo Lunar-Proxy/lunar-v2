@@ -6,14 +6,12 @@ layer(base);
 @theme {
   --font-linux: outfit, sans-serif;
   --font-fit: Prompt, sans-serif;
-
   --color-background: var(--background);
   --color-background-overlay: var(--background-overlay);
   --color-background-disabled: var(--background-disabled);
   --color-border-default: var(--border);
-  --color-text-HEADER: var(--text-header);
-  --color-text-SECONDARY: var(--text-secondary);
-
+  --color-text-header: var(--text-header);
+  --color-text-secondary: var(--text-secondary);
   --animate-spin: spin 1s linear 1;
 
   @keyframes spin {
@@ -27,22 +25,12 @@ layer(base);
 }
 
 @layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
-  }
-}
-
-@layer base {
   :root {
-    --background: #11121c;
-    --background-overlay: #1a1b26;
+    --background: #191724;
+    --background-overlay: #232136;
     --border: #1f1f30;
-    --text-header: #d0d6f9;
-    --text-secondary: #aab0d0;
+    --text-header: #e0def4;
+    --text-secondary: #908caa;
     ---background-disabled: #2a2b3c;
     --font-sans: 'Outfit', 'Prompt', system-ui, sans-serif;
     --font-accent: 'Prompt', 'Outfit', system-ui, sans-serif;
@@ -54,12 +42,17 @@ layer(base);
     color: var(--text-secondary);
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-accent);
     color: var(--text-header);
   }
 
   body {
-    @apply bg-background
+    @apply bg-background;
   }
 }

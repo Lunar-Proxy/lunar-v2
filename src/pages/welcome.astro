@@ -1,82 +1,55 @@
 ---
 import '@/main.css';
+import messages from '../../public/a/json/messages.json';
+
+function getQuote() {
+  const index = Math.floor(Math.random() * messages.length);
+  return messages[index].message;
+}
+const quote = getQuote();
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="generator" content={Astro.generator} />
-    <script src="@scripts/script.ts"></script>
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <style>
-      @keyframes glow {
-        0% {
-          text-shadow:
-            0 0 5px #3b82f6,
-            0 0 10px #3b82f6,
-            0 0 15px #3b82f6,
-            0 0 20px #3b82f6;
-        }
-        50% {
-          text-shadow:
-            0 0 10px #3b82f6,
-            0 0 15px #3b82f6,
-            0 0 20px #3b82f6,
-            0 0 25px #3b82f6;
-        }
-        100% {
-          text-shadow:
-            0 0 5px #3b82f6,
-            0 0 10px #3b82f6,
-            0 0 15px #3b82f6,
-            0 0 20px #3b82f6;
-        }
+<html>
+  <style>
+    @keyframes glow {
+      0% {
+        text-shadow:
+          0 0 5px #3b82f6,
+          0 0 10px #3b82f6,
+          0 0 15px #3b82f6,
+          0 0 20px #3b82f6;
       }
+      50% {
+        text-shadow:
+          0 0 10px #3b82f6,
+          0 0 15px #3b82f6,
+          0 0 20px #3b82f6,
+          0 0 25px #3b82f6;
+      }
+      100% {
+        text-shadow:
+          0 0 5px #3b82f6,
+          0 0 10px #3b82f6,
+          0 0 15px #3b82f6,
+          0 0 20px #3b82f6;
+      }
+    }
 
-      .logo {
-        animation: glow 1.5s ease-in-out infinite alternate;
-      }
-    </style>
-  </head>
+    .logo {
+      animation: glow 1.5s ease-in-out infinite alternate;
+    }
+  </style>
   <body
-    class="min-h-screen bg-[#0B0F19] flex items-center justify-center px-6 py-16 text-white font-sans"
+    class="flex flex-col h-screen justify-center items-center bg-background text-text-header px-4 overflow-hidden"
   >
-    <div class="flex flex-col items-center gap-10 w-full max-w-6xl">
-      <h1
-        class="text-6xl sm:text-7xl md:text-8xl font-linux font-extrabold tracking-tight text-center logo text-text-HEADER"
+    <h1 class="text-text-header font-bold logo font-linux text-8xl">Lunar</h1>
+    <p class="text-text-secondary mt-12 text-2xl text-center max-w-3xl">{quote}</p>
+    <div id="updates" class="w-full flex justify-center pt-10">
+      <div
+        class="w-full max-w-2xl p-6 rounded-2xl bg-[#111827] border border-blue-900 shadow-xl hover:shadow-blue-700/50 hover:scale-[1.02] transform transition duration-300 ease-in-out backdrop-blur-md"
       >
-        Lunar
-      </h1>
-
-      <p
-        class="text-text-SECONDARY text-base sm:text-lg md:text-xl font-mono font-medium text-center min-h-[2.5rem] opacity-80 transition-opacity duration-500 ease-in-out"
-      >
-        -
-      </p>
-
-      <div class="flex flex-wrap justify-center gap-4 sm:gap-6 mt-4">
-        <button
-          class="px-5 py-3 text-base sm:text-lg font-semibold rounded-xl border border-blue-500/30 bg-[#111827] text-white shadow-md hover:shadow-blue-400/20 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:border-blue-400 focus:outline-hidden backdrop-blur-xs"
-          onclick="top?.document.dispatchEvent(new KeyboardEvent('keydown', { key: 'z', ctrlKey: true, bubbles: true }));"
-        >
-          AB Cloak
-        </button>
-
-        <button
-          onclick="location.href = './browse'"
-          class="px-5 py-3 text-base sm:text-lg font-semibold rounded-xl border border-purple-500/30 bg-[#111827] text-white shadow-md hover:shadow-purple-400/20 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:border-purple-400 focus:outline-hidden backdrop-blur-xs"
-        >
-          Search Freely
-        </button>
-      </div>
-
-      <div id="updates" class="w-full flex justify-center animate-fade-in pt-10">
-        <div
-          class="flex items-start gap-4 p-6 rounded-2xl bg-[#111827] shadow-xl border border-blue-900 w-full max-w-2xl transform transition-transform hover:scale-[1.02] hover:shadow-blue-700/50 backdrop-blur-md"
-        >
-          <div class="text-blue-400 mt-1 shrink-0">
+        <div class="flex items-center gap-4">
+          <div class="text-blue-500 shrink-0">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="w-6 h-6"
@@ -92,37 +65,13 @@ import '@/main.css';
             </svg>
           </div>
           <div>
-            <h3 class="font-linux font-semibold text-white text-xl">Latest Update: V1 Release</h3>
-            <p class="mt-2 text-gray-300 text-md leading-relaxed whitespace-pre-wrap">
-              Added: 
-              
-              - PlaceHolder text
-            </p>
+            <h3 class="font-linux text-white text-2xl font-semibold tracking-wide">Version 1.0</h3>
+            <ul class="mt-4 text-gray-300 text-lg leading-relaxed space-y-1 list-disc list-inside">
+              <li>idk</li>
+            </ul>
           </div>
         </div>
       </div>
     </div>
-  
-    <script>
-      (async () => {
-        try {
-          const res = await fetch('/a/json/msg.json');
-          const data = await res.json();
-          if (Array.isArray(data) && data.length > 0) {
-            const index = Math.floor(Math.random() * data.length);
-            const msgElement = document.querySelector('p');
-            if (msgElement) {
-              msgElement.style.opacity = '0';
-              setTimeout(() => {
-                msgElement.innerText = data[index].message;
-                msgElement.style.opacity = '1';
-              }, 300);
-            }
-          }
-        } catch (error) {
-          console.error('Failed to fetch quote:', error);
-        }
-      })();
-    </script>
   </body>
 </html>

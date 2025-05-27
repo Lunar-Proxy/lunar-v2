@@ -4,7 +4,7 @@
     <a href="https://discord.gg/fuPtWjYuf8">
         <img src="https://skillicons.dev/icons?i=discord" alt="Join our Discord">
     </a>
-    <a href="https://github.com/Lunar-proxy/Lunar-v1">
+    <a href="https://github.com/Lunar-proxy/Lunar-v2">
         <img src="https://skillicons.dev/icons?i=github" alt="View on GitHub">
     </a>
 </p>
@@ -24,10 +24,10 @@ Lunar is a powerful web proxy created to bypass censorship.
 ## Deployment Options
 
 <div>  
-    <a href="https://render.com/deploy?repo=https://github.com/lunar-proxy/lunar-v1">  
+    <a href="https://render.com/deploy?repo=https://github.com/lunar-proxy/lunar-v2">  
         <img src="https://raw.githubusercontent.com/BinBashBanana/deploy-buttons/main/buttons/remade/render.svg" alt="Deploy to Render">  
     </a>  
-    <a href="https://app.koyeb.com/services/deploy?type=git&repository=github.com/lunar-proxy/lunar-v1&builder=dockerfile&instance_type=free&regions=was&ports=8080%3Bhttp%3B%2F&hc_protocol%5B808">  
+    <a href="https://app.koyeb.com/services/deploy?type=git&repository=github.com/lunar-proxy/lunar-v2&builder=dockerfile&instance_type=free&regions=was&ports=8080%3Bhttp%3B%2F&hc_protocol%5B808">  
         <img src="https://binbashbanana.github.io/deploy-buttons/buttons/remade/koyeb.svg" alt="Deploy to Koyeb" style="float: left; margin-right: 10px;">  
     </a>  
 </div>
@@ -50,8 +50,8 @@ Lunar is a powerful web proxy created to bypass censorship.
 1. Clone the Lunar repository:
 
    ```bash
-   git clone https://github.com/Lunar-Proxy/Lunar-v1.git
-   cd Lunar-v1
+   git clone https://github.com/Lunar-Proxy/Lunar-v2.git
+   cd Lunar-v2
    ```
 
 2. Install dependencies and launch Lunar:
@@ -81,6 +81,6 @@ For assistance, please create a [GitHub Issue](https://github.com/Lunar-Proxy/lu
 
 Thank you to everyone who has contributed to Lunar ❤️
 
-<a href="https://github.com/lunar-proxy/lunar-v1/graphs/contributors">
-<img src="https://contrib.rocks/image?repo=lunar-proxy/lunar-v1"/>
+<a href="https://github.com/lunar-proxy/lunar-v2/graphs/contributors">
+<img src="https://contrib.rocks/image?repo=lunar-proxy/lunar-v2"/>
 </a>

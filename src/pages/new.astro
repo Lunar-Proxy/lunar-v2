@@ -1,6 +1,5 @@
 ---
 import '@/main.css';
-import Bookmark from '../layouts/bm.astro';
 ---
 
 <!doctype html>
@@ -10,17 +9,20 @@ import Bookmark from '../layouts/bm.astro';
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     <title>New Tab</title>
-    <script src="@scripts/script.ts"></script>
   </head>
   <body class="h-screen flex items-center justify-center flex-col relative">
-    <h1 class="text-7xl text-text-HEADER font-linux font-bold" id="clock"></h1>
-    <p id="date" class="text-xl text-text-SECONDARY font-mono mt-2"></p>
+    <h1 class="text-8xl text-text-header font-linux font-bold" id="clock"></h1>
+    <p id="date" class="text-xl text-text-secondary font-mono mt-2"></p>
     <p
       id="weather"
-      class="absolute top-4 right-4 text-text-SECONDARY font-linux px-6 py-3 rounded-xl text-[16px] font-bold"
+      class="absolute top-4 right-4 text-text-secondary font-linux px-6 py-3 rounded-xl text-[16px] font-bold"
     >
     </p>
-    <Bookmark />
+    <p
+      id="battery"
+      class="absolute top-4 left-4 text-text-secondary font-linux px-6 py-3 rounded-xl text-[16px] font-bold"
+    >
+    </p>
   </body>
   <script>
     function Clock() {
@@ -30,7 +32,7 @@ import Bookmark from '../layouts/bm.astro';
         clockElement.innerText = now.toLocaleTimeString([], { hour12: false });
       }
     }
-  
+
     async function DisplayInfo() {
       const todayDate = new Date();
       const dateElement = document.getElementById('date');
@@ -42,30 +44,58 @@ import Bookmark from '../layouts/bm.astro';
           year: 'numeric',
         });
       }
+
+      const weatherCodes = {
+        0: ['Clear', '☀️'],
+        1: ['Mostly clear', '🌤️'],
+        2: ['Partly cloudy', '⛅'],
+        3: ['Cloudy', '☁️'],
+        45: ['Fog', '🌫️'],
+        48: ['Freezing fog', '🌫️'],
+        51: ['Light drizzle', '🌦️'],
+        53: ['Drizzle', '🌧️'],
+        55: ['Heavy drizzle', '🌧️'],
+        56: ['Freezing drizzle', '🌧️'],
+        57: ['Heavy freezing drizzle', '🌧️'],
+        61: ['Light rain', '🌧️'],
+        63: ['Rain', '🌧️'],
+        65: ['Heavy rain', '🌧️'],
+        66: ['Freezing rain', '🌧️'],
+        67: ['Heavy freezing rain', '🌧️'],
+        71: ['Light snow', '🌨️'],
+        73: ['Snow', '🌨️'],
+        75: ['Heavy snow', '❄️'],
+        77: ['Snow grains', '❄️'],
+        80: ['Rain showers', '🌦️'],
+        81: ['Heavy rain showers', '🌧️'],
+        82: ['Violent rain showers', '⛈️'],
+        85: ['Snow showers', '🌨️'],
+        86: ['Heavy snow showers', '❄️'],
+        95: ['Thunderstorm', '⛈️'],
+        96: ['Thunderstorm with hail', '⛈️'],
+        99: ['Severe thunderstorm with hail', '⛈️'],
+      };
+
       try {
         const ipRes = await fetch('https://ipapi.co/json/');
         const ipData = await ipRes.json();
         const { latitude, longitude } = ipData;
-    
-        if (!latitude || !longitude) {
-          throw new Error('Could not determine location');
-        }
-  
-        const weatherRes = await fetch(`https://api.weather.gov/points/${latitude},${longitude}`);
-        const pointData = await weatherRes.json();
-  
-        const forecastUrl = pointData.properties.forecast;
-        // realistically should NEVER happen
-        if (!forecastUrl) throw new Error('No forecast URL found for location.');
-  
-        const forecastRes = await fetch(forecastUrl);
-        const forecastData = await forecastRes.json();
-  
-        const currentForecast = forecastData.properties.periods[0];
+
+        if (!latitude || !longitude) throw new Error('Could not determine location');
+
+        const weatherRes = await fetch(
+          `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&temperature_unit=fahrenheit`,
+        );
+        const weatherData = await weatherRes.json();
+
         const weatherElement = document.getElementById('weather');
-        if (currentForecast && weatherElement) {
-          weatherElement.innerText =
-            `${currentForecast.shortForecast}, ${currentForecast.temperature}°${currentForecast.temperatureUnit}`;
+        if (weatherData.current_weather && weatherElement) {
+          const weather = weatherData.current_weather;
+          const roundedTemp = Math.round(weather.temperature);
+          const code = Number(weather.weathercode) as keyof typeof weatherCodes;
+          const info = weatherCodes[code];
+          const display = info ? `${info[1]} ${info[0]}, ${roundedTemp}°F` : `${roundedTemp}°F`;
+          weatherElement.innerText = display;
         } else if (weatherElement) {
           weatherElement.innerText = 'Weather unavailable';
         }
@@ -77,9 +107,29 @@ import Bookmark from '../layouts/bm.astro';
         }
       }
     }
-  
+
+    async function DisplayBattery() {
+      try {
+        const battery = await (navigator as any).getBattery();
+        const batteryElement = document.getElementById('battery');
+        if (batteryElement) {
+          const updateBattery = () => {
+            const level = Math.round(battery.level * 100);
+            const charging = battery.charging ? '⚡' : '';
+            batteryElement.innerText = `${charging} ${level}%`;
+          };
+          updateBattery();
+          battery.addEventListener('levelchange', updateBattery);
+          battery.addEventListener('chargingchange', updateBattery);
+        }
+      } catch (err) {
+        console.error('Battery status error:', err);
+      }
+    }
+
     DisplayInfo();
+    DisplayBattery();
     Clock();
     setInterval(Clock, 1000);
-  </script>  
+  </script>
 </html>

@@ -1,11 +1,15 @@
-import ConfigAPI from './config';
 import TabManager from './tb';
-import { Search } from './search';
+import { ValidateUrl } from './url';
+import ConfigAPI from './config';
 import { BareMuxConnection } from '@mercuryworkshop/bare-mux';
 
-const wispUrl = await ConfigAPI.get('wispUrl');
-console.log('[DEBUG] Wisp URL:', wispUrl);
+TabManager.addTab();
 
+const reload = document.getElementById('refresh') as HTMLButtonElement | null;
+const back = document.getElementById('back') as HTMLButtonElement | null;
+const forward = document.getElementById('forward') as HTMLButtonElement | null;
+const wispUrl = await ConfigAPI.get('wispUrl');
+const urlbar = document.getElementById('urlbar') as HTMLInputElement | null;
 const scramjet = new ScramjetController({
   prefix: '/sj/',
   files: {
@@ -15,73 +19,16 @@ const scramjet = new ScramjetController({
     shared: '/a/bundled/scram/shared.js',
     sync: '/a/bundled/scram/sync.js',
   },
-  flags: {
-    serviceworkers: true,
-    syncxhr: true,
-  },
 });
-
 scramjet.init();
-TabManager.addTab();
-
-const connection = new BareMuxConnection('/bm/worker.js');
-const sch = document.querySelector('input[type="text"]') as HTMLInputElement | null;
-const reload = document.querySelector('button[id="refresh"]') as HTMLButtonElement | null;
-const back = document.querySelector('button[id="back"]') as HTMLButtonElement | null;
-const foward = document.querySelector('button[id="foward"]') as HTMLButtonElement | null;
-
 navigator.serviceWorker.register('./sw.js');
-
-sch?.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    const value = sch?.value.trim();
-    if (value) {
-      launch(value);
-    }
-  }
-});
-
-const frame = top?.document.getElementById('frame') as HTMLIFrameElement;
-const frurl = frame?.contentWindow?.location.href;
-const realur = frurl ? new URL(frurl).searchParams.get('url') : null;
-
-if (realur) {
-  launch(realur);
-}
+const connection = new BareMuxConnection('/bm/worker.js');
 
 function ActiveFrame(): HTMLIFrameElement | null {
   const activeTabId = TabManager.activeTabId;
   const frame = document.getElementById(`frame-${activeTabId}`) as HTMLIFrameElement | null;
-  console.log('[DEBUG] Active Frame ID:', `frame-${activeTabId}`);
+  console.debug('[DEBUG] Active Frame ID:', `frame-${activeTabId}`);
   return frame;
-}
-
-async function launch(value: string) {
-  const frame = ActiveFrame();
-  if (!frame) {
-    console.warn('[WARN] No active frame found for launch');
-    return;
-  }
-
-  if ((await connection.getTransport()) !== '/lc/index.mjs') {
-    await connection.setTransport('/lc/index.mjs', [{ wisp: wispUrl }]);
-  }
-
-  const url = await Search(value);
-  console.log('[DEBUG] Searching for:', url);
-
-  const backend = await ConfigAPI.get('backend');
-  if (backend === 'uv') {
-    frame.src = `/pre/${UltraConfig.encodeUrl(url)}`;
-  } else if (backend === 'sj') {
-    frame.src = `${scramjet.encodeUrl(url)}`;
-  } else {
-    console.warn('[WARN] Unknown backend:', backend);
-  }
-
-  frame.addEventListener('load', () => {
-    // todo: (idk if i want to do this)  interceptLinks();
-  });
 }
 
 reload?.addEventListener('click', () => {
@@ -97,19 +44,77 @@ reload?.addEventListener('click', () => {
 back?.addEventListener('click', () => {
   const frame = ActiveFrame();
   if (frame?.contentWindow) {
-    console.log('[DEBUG] Going back in frame:', frame.id);
+    console.debug('[DEBUG] Going back in frame:', frame.id);
     frame.contentWindow.history.back();
   } else {
     console.warn('[WARN] Cannot go back: No active frame');
   }
 });
 
-foward?.addEventListener('click', () => {
+forward?.addEventListener('click', () => {
   const frame = ActiveFrame();
   if (frame?.contentWindow) {
-    console.log('[DEBUG] Going forward in frame:', frame.id);
+    console.debug('[DEBUG] Going forward in frame:', frame.id);
     frame.contentWindow.history.forward();
   } else {
     console.warn('[WARN] Cannot go forward: No active frame');
   }
 });
+
+urlbar?.addEventListener('keydown', async (e) => {
+  if (e.key !== 'Enter') return;
+
+  const frame = ActiveFrame();
+  if (!frame) return;
+
+  if ((await connection.getTransport()) !== '/lc/index.mjs') {
+    await connection.setTransport('/lc/index.mjs', [{ wisp: wispUrl }]);
+  }
+
+  const backend = await ConfigAPI.get('backend');
+  const input = (e.target as HTMLInputElement).value.trim();
+  let url = await ValidateUrl(input);
+
+  urlbar.value = url;
+  // you make my head right a round, baby, right round
+  if (reload) {
+    reload.style.transition = 'transform 0.5s ease';
+    reload.style.animation = 'none';
+    void reload.offsetWidth;
+    reload.style.animation = 'spin 0.5s linear';
+  }
+
+  if (backend === 'uv') {
+    url = `/pre/${UltraConfig.encodeUrl(url)}`;
+  } else {
+    url = scramjet.encodeUrl(url);
+  }
+
+  frame.src = url;
+
+  let lastHref = '';
+  setInterval(async () => {
+    try {
+      const href = frame.contentWindow?.location.href;
+      if (href && href !== lastHref) {
+        lastHref = href;
+        urlbar.value = await getURL(href);
+      }
+    } catch {
+      // yap sessions smh
+    }
+  }, 500);
+});
+
+async function getURL(proxiedUrl: string) {
+  const backend = await ConfigAPI.get('backend');
+  const url = new URL(proxiedUrl);
+
+  if (backend === 'uv') {
+    const path = url.pathname.slice(5);
+    return UltraConfig.decodeUrl(path);
+  } else {
+    const path = url.pathname.slice(4);
+    return scramjet.decodeUrl(path);
+  }
+}

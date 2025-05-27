@@ -15,6 +15,7 @@ Before creating a pull request, please run `pnpm run precommit` in your terminal
 An asset is a game or an app.
 
 **To add games or apps, follow this format**:
+
 ```json
 {
   "name": "Google", // Name of asset
@@ -24,5 +25,6 @@ An asset is a game or an app.
 ```
 
 **Files:**
-- Apps → ```public/a/json/al.json```
-- Games → ```public/a/json/gl.json```
+
+- Apps → `public/a/json/al.json`
+- Games → `public/a/json/gl.json`
