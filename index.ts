@@ -12,7 +12,6 @@ import { version } from './package.json';
 import { server as wisp, logging } from '@mercuryworkshop/wisp-js/server';
 import fetch from 'node-fetch';
 import { updateChecker } from 'serverlib/check';
-import { error } from 'node:console';
 
 const port: number = parseInt(process.env.PORT as string) || parseInt('8080');
 

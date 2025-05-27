@@ -25,16 +25,6 @@ layer(base);
 }
 
 @layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
-  }
-}
-
-@layer base {
   :root {
     --background: #191724;
     --background-overlay: #232136;

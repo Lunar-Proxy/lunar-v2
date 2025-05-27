@@ -18,52 +18,24 @@ const ConfigAPI = {
     const existingValue = await this.get(key);
     if (existingValue !== null) {
       await this.set(key, newValue);
-      console.log(`[DEBUG] - Setting for ${key} updated.`);
+      console.debug(`[DEBUG] - Setting for ${key} updated.`);
     } else {
-      console.log(`[WARNING] - No existing value found for ${key}.`);
+      console.warn(`[WARNING] - No existing value found for ${key}.`);
     }
   },
 
   async initializeDefaults() {
     const defaults = {
-      backend: 'uv',
+      backend: 'sj',
       engine: 'https://duckduckgo.com/?q=',
       cloak: 'off',
       wispUrl: (location.protocol === 'https:' ? 'wss' : 'ws') + '://' + location.host + '/wisp/',
-      bm: [
-        {
-          name: 'Youtube',
-          logo: '/api/icon/?url=https://www.youtube.com/',
-          redir: 'https://www.youtube.com',
-        },
-        {
-          name: 'Google',
-          logo: '/api/icon/?url=https://www.google.com/',
-          redir: 'https://www.google.com',
-        },
-        {
-          name: 'X',
-          logo: '/api/icon/?url=https://www.x.com/',
-          redir: 'https://www.x.com',
-        },
-        {
-          name: 'Spotify',
-          logo: '/api/icon/?url=https://www.spotify.com/',
-          redir: 'https://www.spotify.com',
-        },
-        {
-          name: 'Discord',
-          logo: '/api/icon/?url=https://www.discord.com/',
-          redir: 'https://www.discord.com',
-        },
-      ],
     };
 
     for (const [key, value] of Object.entries(defaults)) {
       const existingValue = await this.get(key);
       if (existingValue === null) {
         await this.set(key, value);
-        console.log(`[DEBUG] - Default value set for ${key}: ${JSON.stringify(value)}`);
       }
     }
   },

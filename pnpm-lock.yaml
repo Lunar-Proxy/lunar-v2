@@ -43,15 +43,15 @@ importers:
       astro:
         specifier: 5.7.12
         version: 5.7.12(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.29.3)(rollup@4.40.2)(terser@5.39.0)(tsx@4.19.3)(typescript@5.8.3)(yaml@2.7.1)
-      astro-seo:
-        specifier: ^0.8.4
-        version: 0.8.4(prettier-plugin-astro@0.14.1)(prettier@3.5.3)(typescript@5.8.3)
       chalk:
         specifier: ^5.4.1
         version: 5.4.1
       fastify:
         specifier: ^5.3.3
         version: 5.3.3
+      is-url-superb:
+        specifier: ^6.1.0
+        version: 6.1.0
       localforage:
         specifier: ^1.10.0
         version: 1.10.0
@@ -88,15 +88,6 @@ importers:
         version: 3.5.3
 
 packages:
-  "@astrojs/check@0.5.10":
-    resolution:
-      {
-        integrity: sha512-vliHXM9cu/viGeKiksUM4mXfO816ohWtawTl2ADPgTsd4nUMjFiyAl7xFZhF34yy4hq4qf7jvK1F2PlR3b5I5w==,
-      }
-    hasBin: true
-    peerDependencies:
-      typescript: ^5.0.0
-
   "@astrojs/check@0.9.4":
     resolution:
       {
@@ -1675,12 +1666,6 @@ packages:
         integrity: sha512-I1jXZMjAgCMmxT4qxXfPXa6SthSoE8h6gkSI9BGGNv8mP8G/v0blc+qFnZu6K42vTOiuME596QaLO0TP3Lk0xg==,
       }
 
-  astro-seo@0.8.4:
-    resolution:
-      {
-        integrity: sha512-Ou1vzQSXAxa0K8rtNtXNvSpYqOGEgMhh0immMxJeXmbVZac3UKCNWAoXWyOQDFYsZvBugCRSg0N1phBqPMVgCw==,
-      }
-
   astro@5.7.12:
     resolution:
       {
@@ -2791,6 +2776,13 @@ packages:
     resolution:
       {
         integrity: sha512-+Pgi+vMuUNkJyExiMBt5IlFoMyKnr5zhJ4Uspz58WOhBF5QoIZkFyNHIbBAtHwzVAgk5RtndVNsDRN61/mmDqg==,
+      }
+    engines: { node: ">=12" }
+
+  is-url-superb@6.1.0:
+    resolution:
+      {
+        integrity: sha512-LXdhGlYqUPdvEyIhWPEEwYYK3yrUiPcBjmFGlZNv1u5GtIL5qQRf7ddDyPNAvsMFqdzS923FROpTQU97tLe3JQ==,
       }
     engines: { node: ">=12" }
 
@@ -5150,18 +5142,6 @@ packages:
       }
 
 snapshots:
-  "@astrojs/check@0.5.10(prettier-plugin-astro@0.14.1)(prettier@3.5.3)(typescript@5.8.3)":
-    dependencies:
-      "@astrojs/language-server": 2.15.4(prettier-plugin-astro@0.14.1)(prettier@3.5.3)(typescript@5.8.3)
-      chokidar: 3.6.0
-      fast-glob: 3.3.3
-      kleur: 4.1.5
-      typescript: 5.8.3
-      yargs: 17.7.2
-    transitivePeerDependencies:
-      - prettier
-      - prettier-plugin-astro
-
   "@astrojs/check@0.9.4(prettier-plugin-astro@0.14.1)(prettier@3.5.3)(typescript@5.8.3)":
     dependencies:
       "@astrojs/language-server": 2.15.4(prettier-plugin-astro@0.14.1)(prettier@3.5.3)(typescript@5.8.3)
@@ -6042,14 +6022,6 @@ snapshots:
 
   array-iterate@2.0.1: {}
 
-  astro-seo@0.8.4(prettier-plugin-astro@0.14.1)(prettier@3.5.3)(typescript@5.8.3):
-    dependencies:
-      "@astrojs/check": 0.5.10(prettier-plugin-astro@0.14.1)(prettier@3.5.3)(typescript@5.8.3)
-    transitivePeerDependencies:
-      - prettier
-      - prettier-plugin-astro
-      - typescript
-
   astro@5.7.12(@types/node@22.14.0)(jiti@2.4.2)(lightningcss@1.29.3)(rollup@4.40.2)(terser@5.39.0)(tsx@4.19.3)(typescript@5.8.3)(yaml@2.7.1):
     dependencies:
       "@astrojs/compiler": 2.12.0
@@ -6837,6 +6809,8 @@ snapshots:
   is-number@7.0.0: {}
 
   is-plain-obj@4.1.0: {}
+
+  is-url-superb@6.1.0: {}
 
   is-wsl@3.1.0:
     dependencies:
