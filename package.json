@@ -22,7 +22,7 @@
     "@playform/compress": "^0.1.9",
     "@tailwindcss/vite": "^4.1.4",
     "@types/html-minifier": "^4.0.5",
-    "astro": "5.7.12",
+    "astro": "5.8.1",
     "chalk": "^5.4.1",
     "fastify": "^5.3.3",
     "is-url-superb": "^6.1.0",
