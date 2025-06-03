@@ -1,49 +1,54 @@
 ---
 import '@/main.css';
-import messages from '../../public/a/json/messages.json';
+import messages from '@assets/json/messages.json';
 
 function getQuote() {
   const index = Math.floor(Math.random() * messages.length);
   return messages[index].message;
 }
-const quote = getQuote();
+const Quote = getQuote();
 ---
 
-<html>
-  <style>
-    @keyframes glow {
-      0% {
-        text-shadow:
-          0 0 5px #3b82f6,
-          0 0 10px #3b82f6,
-          0 0 15px #3b82f6,
-          0 0 20px #3b82f6;
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      @keyframes glow {
+        0% {
+          text-shadow:
+            0 0 5px #3b82f6,
+            0 0 10px #3b82f6,
+            0 0 15px #3b82f6,
+            0 0 20px #3b82f6;
+        }
+        50% {
+          text-shadow:
+            0 0 10px #3b82f6,
+            0 0 15px #3b82f6,
+            0 0 20px #3b82f6,
+            0 0 25px #3b82f6;
+        }
+        100% {
+          text-shadow:
+            0 0 5px #3b82f6,
+            0 0 10px #3b82f6,
+            0 0 15px #3b82f6,
+            0 0 20px #3b82f6;
+        }
       }
-      50% {
-        text-shadow:
-          0 0 10px #3b82f6,
-          0 0 15px #3b82f6,
-          0 0 20px #3b82f6,
-          0 0 25px #3b82f6;
-      }
-      100% {
-        text-shadow:
-          0 0 5px #3b82f6,
-          0 0 10px #3b82f6,
-          0 0 15px #3b82f6,
-          0 0 20px #3b82f6;
-      }
-    }
 
-    .logo {
-      animation: glow 1.5s ease-in-out infinite alternate;
-    }
-  </style>
+      .logo {
+        animation: glow 1.5s ease-in-out infinite alternate;
+      }
+    </style></head
+  >
+
   <body
     class="flex flex-col h-screen justify-center items-center bg-background text-text-header px-4 overflow-hidden"
   >
     <h1 class="text-text-header font-bold logo font-linux text-8xl">Lunar</h1>
-    <p class="text-text-secondary mt-12 text-2xl text-center max-w-3xl">{quote}</p>
+    <p class="text-text-secondary mt-12 text-2xl text-center max-w-3xl">{Quote}</p>
+
     <div id="updates" class="w-full flex justify-center pt-10">
       <div
         class="w-full max-w-2xl p-6 rounded-2xl bg-[#111827] border border-blue-900 shadow-xl hover:shadow-blue-700/50 hover:scale-[1.02] transform transition duration-300 ease-in-out backdrop-blur-md"

@@ -15,7 +15,7 @@ import { updateChecker } from 'serverlib/check';
 
 const port: number = parseInt(process.env.PORT as string) || parseInt('8080');
 
-logging.set_level(`logging.INFO`);
+logging.set_level(logging.ERROR);
 wisp.options.wisp_version = 2;
 wisp.options.dns_method = 'resolve';
 wisp.options.dns_servers = ['94.140.14.14', '94.140.15.15', '1.1.1.3', '1.0.0.3'];

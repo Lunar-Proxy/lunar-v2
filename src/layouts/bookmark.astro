@@ -1,0 +1,197 @@
+<div
+  id="logo-container-wrapper"
+  class="flex flex-row justify-start items-center mt-6 space-x-6 flex-wrap relative min-h-[200px]"
+>
+  <button
+    id="addbm"
+    class="flex items-center justify-center bg-background-overlay text-white rounded-lg h-14 w-14 transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 z-10 mr-4"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-6 w-6"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14M5 12h14"
+      ></path>
+    </svg>
+  </button>
+
+  <div id="logo-container" class="flex flex-row flex-wrap space-x-6 items-start"></div>
+</div>
+
+<div
+  id="bminput"
+  class="hidden fixedhidden fixed inset-0 backdrop-blur-sm bg-black/30 z-40 flex justify-center items-center z-50"
+>
+  <div class="bg-background-overlay rounded-lg p-6 w-96 shadow-lg">
+    <h2 id="bm-title" class="text-lg font-semibold mb-4 text-text-header">Add Bookmark</h2>
+
+    <div>
+      <label for="bookmark-name" class="block text-sm font-semibold mb-2 text-text-header"
+        >Name</label
+      >
+      <input
+        type="text"
+        id="bookmark-name"
+        class="w-full p-3 border border-border rounded-md mb-4 bg-background-overlay text-text-header focus:ring-blue-500"
+        placeholder="Bookmark name"
+      />
+    </div>
+
+    <div>
+      <label for="bookmark-url" class="block text-sm font-semibold mb-2 text-text-secondary"
+        >URL</label
+      >
+      <input
+        type="url"
+        id="bookmark-url"
+        class="w-full p-3 border border-border rounded-md mb-4 bg-background-overlay text-text-header focus:ring-blue-500"
+        placeholder="https://example.com"
+      />
+    </div>
+
+    <div class="flex justify-end">
+      <button
+        id="cancel-btn"
+        class="mr-4 py-2 px-6 text-sm text-text-secondary bg-background-overlay border border-border rounded-md hover:bg-border"
+      >
+        Cancel
+      </button>
+      <button
+        id="save-btn"
+        class="py-2 px-6 text-sm text-white bg-blue-500 rounded-md hover:bg-blue-600"
+      >
+        Save
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import ConfigAPI from '../utils/config';
+  import { BareMuxConnection } from '@mercuryworkshop/bare-mux';
+
+  interface Bookmark {
+    name: string;
+    redir: string;
+  }
+
+  const container = document.getElementById('logo-container') as HTMLDivElement;
+  const addBtn = document.getElementById('addbm') as HTMLButtonElement;
+  const modal = document.getElementById('bminput') as HTMLDivElement;
+  const nameInput = document.getElementById('bookmark-name') as HTMLInputElement;
+  const urlInput = document.getElementById('bookmark-url') as HTMLInputElement;
+  const cancelBtn = document.getElementById('cancel-btn') as HTMLButtonElement;
+  const saveBtn = document.getElementById('save-btn') as HTMLButtonElement;
+
+  let bookmarks: Bookmark[] = [];
+  let editingIndex: number | null = null;
+
+  function showBMScreen(name = '', redir = '') {
+    nameInput.value = name;
+    urlInput.value = redir;
+    modal.classList.remove('hidden');
+  }
+
+  function hideBMScreen() {
+    nameInput.value = '';
+    urlInput.value = '';
+    editingIndex = null;
+    modal.classList.add('hidden');
+  }
+
+  function render() {
+    container.innerHTML = '';
+    bookmarks.forEach((bm, i) => {
+      const div = document.createElement('div');
+      div.className =
+        'relative flex flex-col justify-center items-center rounded-xl overflow-hidden p-4 bg-background-overlay border border-border transition hover:border-blue-500 hover:shadow-lg transform hover:scale-105 cursor-pointer';
+
+      const logoUrl = `/api/icon/?url=${bm.redir}`;
+
+      div.innerHTML = `
+  <div class="absolute top-1 right-1 flex space-x-1 z-10">
+    <button class="edit bg-yellow-400 hover:bg-yellow-500 rounded-full p-1 transition">
+      <img src="/a/images/logo/edit.svg" alt="Edit" class="h-4 w-4 filter brightness-0 invert" />
+    </button>
+    <button class="delete bg-red-500 hover:bg-red-600 rounded-full p-1 transition">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+  <div class="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center overflow-hidden">
+    <img src="${logoUrl}" alt="${bm.name}" class="object-contain w-10 h-10" />
+  </div>
+  <p class="mt-2 text-sm font-mono font-semibold text-text-secondary text-center break-words max-w-[120px]">${bm.name}</p>
+`;
+
+      (div.querySelector('.edit') as HTMLButtonElement).addEventListener('click', (e) => {
+        e.stopPropagation();
+        editingIndex = i;
+        showBMScreen(bm.name, bm.redir);
+      });
+
+      (div.querySelector('.delete') as HTMLButtonElement).addEventListener('click', async (e) => {
+        e.stopPropagation();
+        bookmarks.splice(i, 1);
+        await ConfigAPI.set('bm', bookmarks);
+        render();
+      });
+
+      div.addEventListener('click', async () => {
+        const input = window.parent.document.getElementById('urlbar') as HTMLInputElement | null;
+        input!.value = bm.redir; // easier ig
+        if (input) {
+         input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        }
+      });
+
+      container.appendChild(div);
+    });
+  }
+
+  async function init() {
+    const raw = await ConfigAPI.get('bm');
+    bookmarks = Array.isArray(raw)
+      ? raw.map((b: any) => ({
+          name: b.name,
+          redir: b.redir || '',
+        }))
+      : [];
+
+    render();
+  }
+
+  addBtn.addEventListener('click', () => {
+    editingIndex = null;
+    showBMScreen();
+  });
+
+  cancelBtn.addEventListener('click', () => {
+    hideBMScreen();
+  });
+
+  saveBtn.addEventListener('click', async () => {
+    const name = nameInput.value.trim();
+    const redir = urlInput.value.trim();
+
+    if (!name || !redir) return;
+
+    const newEntry: Bookmark = { name, redir };
+
+    if (editingIndex != null) {
+      bookmarks[editingIndex] = newEntry;
+    } else {
+      bookmarks.push(newEntry);
+    }
+
+    await ConfigAPI.set('bm', bookmarks);
+    hideBMScreen();
+    render();
+  });
+
+  init();
+</script>

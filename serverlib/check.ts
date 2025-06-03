@@ -2,6 +2,7 @@ import { execSync } from 'child_process';
 
 export function updateChecker() {
   try {
+    9;
     const status = execSync('git status -uno', { encoding: 'utf8' }).trim();
     const commitId = execSync('git log -1 --format=%H').toString().trim();
     if (status.includes('Your branch is up to date with')) {
