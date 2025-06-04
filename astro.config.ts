@@ -8,9 +8,10 @@ import { version } from './package.json';
 import { baremuxPath } from '@mercuryworkshop/bare-mux/node';
 import { libcurlPath } from '@mercuryworkshop/libcurl-transport';
 import { server as wisp } from '@mercuryworkshop/wisp-js/server';
-import { ViteMinifyPlugin } from 'vite-plugin-minify';
 import type { Plugin } from 'vite';
 import type { IncomingMessage, ServerResponse } from 'http';
+import minify from 'astro-min';
+import playformCompress from '@playform/compress';
 
 wisp.options.wisp_version = 2;
 
@@ -74,9 +75,22 @@ function IconBackend(): Plugin {
 }
 
 export default defineConfig({
+  integrations: [
+    minify({
+      ensure_spec_compliant_unquoted_attribute_values: false,
+      keep_closing_tags: false,
+      keep_comments: false,
+      keep_html_and_head_opening_tags: false,
+      keep_input_type_text_attr: false,
+      keep_spaces_between_attributes: false,
+      keep_ssi_comments: false,
+      minify_css: true,
+      minify_js: true,
+    }),
+    playformCompress(),
+  ],
   output: 'server',
   adapter: node({ mode: 'middleware' }),
-  compressHTML: true,
   prefetch: {
     prefetchAll: true,
     defaultStrategy: 'load',
@@ -88,11 +102,6 @@ export default defineConfig({
     },
     plugins: [
       tailwindcss(),
-      ViteMinifyPlugin({
-        collapseWhitespace: true,
-        minifyCSS: true,
-        minifyJS: true,
-      }),
       WispServer(),
       IconBackend(),
       viteStaticCopy({

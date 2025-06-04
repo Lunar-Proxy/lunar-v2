@@ -71,7 +71,6 @@
 
 <script>
   import ConfigAPI from '../utils/config';
-  import { BareMuxConnection } from '@mercuryworkshop/bare-mux';
 
   interface Bookmark {
     name: string;
@@ -145,7 +144,7 @@
         const input = window.parent.document.getElementById('urlbar') as HTMLInputElement | null;
         input!.value = bm.redir; // easier ig
         if (input) {
-         input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+          input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
         }
       });
 
