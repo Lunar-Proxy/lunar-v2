@@ -10,7 +10,6 @@ import { libcurlPath } from '@mercuryworkshop/libcurl-transport';
 import { server as wisp } from '@mercuryworkshop/wisp-js/server';
 import type { Plugin } from 'vite';
 import type { IncomingMessage, ServerResponse } from 'http';
-import minify from 'astro-min';
 import playformCompress from '@playform/compress';
 
 wisp.options.wisp_version = 2;
