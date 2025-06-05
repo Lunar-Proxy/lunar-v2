@@ -1,7 +1,6 @@
 import TabManager from './tb';
 import { ValidateUrl } from './url';
 import ConfigAPI from './config';
-import { BareMuxConnection } from '@mercuryworkshop/bare-mux';
 
 TabManager.addTab();
 
@@ -11,7 +10,6 @@ const forward = document.getElementById('forward') as HTMLButtonElement | null;
 const urlbar = document.getElementById('urlbar') as HTMLInputElement | null;
 const wispUrl = await ConfigAPI.get('wispUrl');
 const backend = await ConfigAPI.get('backend');
-
 const scramjet = new ScramjetController({
   prefix: '/sj/',
   files: {
@@ -26,7 +24,7 @@ scramjet.init();
 
 navigator.serviceWorker.register('./sw.js');
 
-const connection = new BareMuxConnection('/bm/worker.js');
+const connection = new BareMux.BareMuxConnection('/bm/worker.js');
 
 function getActiveFrame(): HTMLIFrameElement | null {
   const activeTabId = TabManager.activeTabId;
@@ -103,7 +101,7 @@ urlbar?.addEventListener('keydown', async (e) => {
       const href = frame.contentWindow?.location.href;
       if (href && href !== lastHref) {
         lastHref = href;
-        urlbar.value = await getURL(href);
+        urlbar.value = (await getURL(href)) ?? ''; // shouldnt be blank but wtv
       }
     } catch {
       // yap session smh

@@ -13,7 +13,6 @@ import type { IncomingMessage, ServerResponse } from 'http';
 import playformCompress from '@playform/compress';
 
 wisp.options.wisp_version = 2;
-
 const iconURL =
   'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64';
 
@@ -74,9 +73,7 @@ function IconBackend(): Plugin {
 }
 
 export default defineConfig({
-  integrations: [
-   playformCompress(),
-  ],
+  integrations: [playformCompress()],
   output: 'server',
   adapter: node({ mode: 'middleware' }),
   prefetch: {

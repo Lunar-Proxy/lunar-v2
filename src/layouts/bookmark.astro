@@ -29,7 +29,7 @@
     <h2 id="bm-title" class="text-lg font-semibold mb-4 text-text-header">Add Bookmark</h2>
 
     <div>
-      <label for="bookmark-name" class="block text-sm font-semibold mb-2 text-text-header"
+      <label for="bookmark-name" class="block text-sm font-semibold mb-2 text-text-secondary"
         >Name</label
       >
       <input
@@ -111,20 +111,22 @@
       const logoUrl = `/api/icon/?url=${bm.redir}`;
 
       div.innerHTML = `
-  <div class="absolute top-1 right-1 flex space-x-1 z-10">
-    <button class="edit bg-yellow-400 hover:bg-yellow-500 rounded-full p-1 transition">
+  <div class="absolute top-0 right-0 flex space-x-0.5 z-10 p-1">
+    <button class="edit bg-background hover:bg-blue-600 rounded-full p-1 transition duration-200 shadow-sm">
       <img src="/a/images/logo/edit.svg" alt="Edit" class="h-4 w-4 filter brightness-0 invert" />
     </button>
-    <button class="delete bg-red-500 hover:bg-red-600 rounded-full p-1 transition">
+    <button class="delete bg-background hover:bg-red-600 rounded-full p-1 transition duration-200 shadow-sm">
       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
       </svg>
     </button>
   </div>
-  <div class="w-14 h-14 rounded-full bg-white/10 flex items-center justify-center overflow-hidden">
+  <div class="w-14 h-14 rounded-full bg-white/10 backdrop-blur-sm border border-white/10 flex items-center justify-center overflow-hidden shadow-inner">
     <img src="${logoUrl}" alt="${bm.name}" class="object-contain w-10 h-10" />
   </div>
-  <p class="mt-2 text-sm font-mono font-semibold text-text-secondary text-center break-words max-w-[120px]">${bm.name}</p>
+  <p class="mt-2 text-sm font-mono font-semibold text-text-secondary text-center break-words max-w-[120px]">
+    ${bm.name}
+  </p>
 `;
 
       (div.querySelector('.edit') as HTMLButtonElement).addEventListener('click', (e) => {
