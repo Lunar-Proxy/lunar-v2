@@ -8,8 +8,10 @@ TabManager.addTab();
 const reload = document.getElementById('refresh') as HTMLButtonElement | null;
 const back = document.getElementById('back') as HTMLButtonElement | null;
 const forward = document.getElementById('forward') as HTMLButtonElement | null;
-const wispUrl = await ConfigAPI.get('wispUrl');
 const urlbar = document.getElementById('urlbar') as HTMLInputElement | null;
+const wispUrl = await ConfigAPI.get('wispUrl');
+const backend = await ConfigAPI.get('backend');
+
 const scramjet = new ScramjetController({
   prefix: '/sj/',
   files: {
@@ -21,18 +23,33 @@ const scramjet = new ScramjetController({
   },
 });
 scramjet.init();
+
 navigator.serviceWorker.register('./sw.js');
+
 const connection = new BareMuxConnection('/bm/worker.js');
 
-function ActiveFrame(): HTMLIFrameElement | null {
+function getActiveFrame(): HTMLIFrameElement | null {
   const activeTabId = TabManager.activeTabId;
-  const frame = document.getElementById(`frame-${activeTabId}`) as HTMLIFrameElement | null;
-  console.debug('[DEBUG] Active Frame ID:', `frame-${activeTabId}`);
-  return frame;
+  return document.getElementById(`frame-${activeTabId}`) as HTMLIFrameElement | null;
+}
+
+function loading() {
+  // baby you spin me right around, baby right round
+  if (!reload) return;
+  reload.style.transition = 'transform 0.5s ease';
+  reload.style.animation = 'none';
+  void reload.offsetWidth;
+  reload.style.animation = 'spin 0.5s linear';
+}
+
+async function getURL(proxiedUrl: string) {
+  const url = new URL(proxiedUrl);
+  const path = backend === 'uv' ? url.pathname.slice(5) : url.pathname.slice(4);
+  return backend === 'uv' ? UltraConfig.decodeUrl(path) : scramjet.decodeUrl(path);
 }
 
 reload?.addEventListener('click', () => {
-  const frame = ActiveFrame();
+  const frame = getActiveFrame();
   if (frame?.contentWindow) {
     console.log('[DEBUG] Reloading frame:', frame.id);
     frame.src = frame.contentWindow.location.href;
@@ -42,7 +59,7 @@ reload?.addEventListener('click', () => {
 });
 
 back?.addEventListener('click', () => {
-  const frame = ActiveFrame();
+  const frame = getActiveFrame();
   if (frame?.contentWindow) {
     console.debug('[DEBUG] Going back in frame:', frame.id);
     frame.contentWindow.history.back();
@@ -52,7 +69,7 @@ back?.addEventListener('click', () => {
 });
 
 forward?.addEventListener('click', () => {
-  const frame = ActiveFrame();
+  const frame = getActiveFrame();
   if (frame?.contentWindow) {
     console.debug('[DEBUG] Going forward in frame:', frame.id);
     frame.contentWindow.history.forward();
@@ -64,32 +81,20 @@ forward?.addEventListener('click', () => {
 urlbar?.addEventListener('keydown', async (e) => {
   if (e.key !== 'Enter') return;
 
-  const frame = ActiveFrame();
+  const frame = getActiveFrame();
   if (!frame) return;
 
   if ((await connection.getTransport()) !== '/lc/index.mjs') {
     await connection.setTransport('/lc/index.mjs', [{ wisp: wispUrl }]);
   }
 
-  const backend = await ConfigAPI.get('backend');
   const input = (e.target as HTMLInputElement).value.trim();
   let url = await ValidateUrl(input);
 
   urlbar.value = url;
-  // you make my head right a round, baby, right round
-  if (reload) {
-    reload.style.transition = 'transform 0.5s ease';
-    reload.style.animation = 'none';
-    void reload.offsetWidth;
-    reload.style.animation = 'spin 0.5s linear';
-  }
+  loading();
 
-  if (backend === 'uv') {
-    url = `/pre/${UltraConfig.encodeUrl(url)}`;
-  } else {
-    url = scramjet.encodeUrl(url);
-  }
-
+  url = backend === 'uv' ? `/pre/${UltraConfig.encodeUrl(url)}` : scramjet.encodeUrl(url);
   frame.src = url;
 
   let lastHref = '';
@@ -101,20 +106,7 @@ urlbar?.addEventListener('keydown', async (e) => {
         urlbar.value = await getURL(href);
       }
     } catch {
-      // yap sessions smh
+      // yap session smh
     }
   }, 500);
 });
-
-async function getURL(proxiedUrl: string) {
-  const backend = await ConfigAPI.get('backend');
-  const url = new URL(proxiedUrl);
-
-  if (backend === 'uv') {
-    const path = url.pathname.slice(5);
-    return UltraConfig.decodeUrl(path);
-  } else {
-    const path = url.pathname.slice(4);
-    return scramjet.decodeUrl(path);
-  }
-}
