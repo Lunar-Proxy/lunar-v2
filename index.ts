@@ -112,7 +112,7 @@ app.setNotFoundHandler((request, reply) => {
   reply.type('text/plain').send(fs.readFileSync('/404'));
 });
 
-app.listen({ port: port, host: '0.0.0.0' }).then(async () => {
+app.listen({ host: '0.0.0.0', port: port }, (err) => {
   const updateStatus = updateChecker();
   const statusMsg =
     updateStatus.status === 'u'

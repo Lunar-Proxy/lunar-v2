@@ -8,6 +8,7 @@ const reload = document.getElementById('refresh') as HTMLButtonElement | null;
 const back = document.getElementById('back') as HTMLButtonElement | null;
 const forward = document.getElementById('forward') as HTMLButtonElement | null;
 const urlbar = document.getElementById('urlbar') as HTMLInputElement | null;
+const devtools = document.getElementById('code') as HTMLButtonElement | null;
 const wispUrl = await ConfigAPI.get('wispUrl');
 const backend = await ConfigAPI.get('backend');
 const scramjet = new ScramjetController({
@@ -75,6 +76,41 @@ forward?.addEventListener('click', () => {
     console.warn('[WARN] Cannot go forward: No active frame');
   }
 });
+
+devtools?.addEventListener('click', () => {
+  const frame = getActiveFrame();
+  try {
+    const eruda = frame?.contentWindow?.eruda;
+
+    if (eruda?._isInit) {
+      eruda.destroy();
+      console.debug('[DEBUG] Eruda console destroyed.');
+      return;
+    }
+
+    if (!eruda) {
+      console.debug('[DEBUG] Eruda console not loaded yet.');
+    } else {
+      console.debug('[DEBUG] Eruda console is not initialized.');
+    }
+
+    if (frame?.contentDocument) {
+      const script = frame?.contentDocument.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/eruda';
+      script.onload = () => {
+        frame.contentWindow?.eruda.init();
+        frame.contentWindow?.eruda.show();
+        console.debug('[DEBUG] Eruda console initialized.');
+      };
+      frame.contentDocument.head.appendChild(script);
+    } else {
+      throw new Error('[ERROR] Cannot inject script.');
+    }
+  } catch (err) {
+    console.error('[ERROR] Failed to toggle Eruda:', err);
+  }
+});
+
 
 urlbar?.addEventListener('keydown', async (e) => {
   if (e.key !== 'Enter') return;

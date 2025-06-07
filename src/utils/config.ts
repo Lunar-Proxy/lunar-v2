@@ -24,7 +24,7 @@ const ConfigAPI = {
     }
   },
 
-  async initializeDefaults() {
+  async init() {
     const defaults = {
       backend: 'sj',
       engine: 'https://duckduckgo.com/?q=',
@@ -60,14 +60,14 @@ const ConfigAPI = {
     };
 
     for (const [key, value] of Object.entries(defaults)) {
-      const existingValue = await this.get(key);
-      if (existingValue === null) {
+      const existing = await this.get(key);
+      if (existing === null) {
         await this.set(key, value);
       }
     }
   },
 };
 
-ConfigAPI.initializeDefaults();
+ConfigAPI.init();
 
 export default ConfigAPI;
