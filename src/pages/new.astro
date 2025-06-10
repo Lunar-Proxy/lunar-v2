@@ -4,134 +4,215 @@ import Bookmarks from '../layouts/bookmark.astro';
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <title>New Tab</title>
+
+    <style>
+      @layer utilities {
+        @keyframes slideDown {
+          0% {
+            transform: translateY(-30%);
+            opacity: 0;
+          }
+          100% {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+        .animate-slideDown {
+          animation: slideDown 0.35s ease-out;
+        }
+      }
+    </style>
   </head>
-  <body class="h-screen flex items-center justify-center flex-col relative">
-    <h1 class="text-8xl text-text-header font-linux font-bold" id="clock"></h1>
-    <p id="date" class="text-xl text-text-secondary font-mono mt-2"></p>
+  <body
+    class="h-screen flex flex-col items-center justify-center bg-background text-text-header font-linux relative select-none"
+  >
+    <h1
+      id="clock"
+      class="text-8xl font-bold tracking-tight font-mono select-none"
+      style="letter-spacing: 0;"
+    >
+      <span
+        id="h"
+        class="inline-block min-w-[1.5ch] text-center clock-part"
+        >--</span
+      >:<span
+        id="m"
+        class="inline-block min-w-[1.5ch] text-center clock-part"
+        >--</span
+      >:<span
+        id="s"
+        class="inline-block min-w-[1.5ch] text-center clock-part"
+        >--</span
+      >
+      <span
+        id="ampm"
+        class="inline-block ml-1 text-4xl align-bottom clock-part"
+      ></span>
+    </h1>
+
+    <p
+      id="date"
+      class="text-2xl text-text-secondary font-mono mt-4 select-none"
+    ></p>
+
     <p
       id="weather"
-      class="absolute top-4 right-4 text-text-secondary font-linux px-6 py-3 rounded-xl text-[16px] font-bold"
-    >
-    </p>
+      class="absolute top-4 right-4 px-6 py-3 rounded-xl text-[16px] font-bold font-linux text-text-secondary bg-background-overlay backdrop-blur-sm shadow-md select-none"
+    ></p>
+
     <p
       id="battery"
-      class="absolute top-4 left-4 text-text-secondary font-linux px-6 py-3 rounded-xl text-[16px] font-bold"
-    >
-    </p>
+      class="absolute top-4 left-4 px-6 py-3 rounded-xl text-[16px] font-bold font-linux text-text-secondary bg-background-overlay backdrop-blur-sm shadow-md select-none"
+    ></p>
+
     <Bookmarks />
-  </body>
-  <script>
-    function Clock() {
-      const now = new Date();
-      const clockElement = document.getElementById('clock');
-      if (clockElement) {
-        clockElement.innerText = now.toLocaleTimeString([], { hour12: false });
-      }
-    }
 
-    async function DisplayInfo() {
-      const todayDate = new Date();
-      const dateElement = document.getElementById('date');
-      if (dateElement) {
-        dateElement.innerText = todayDate.toLocaleDateString([], {
-          weekday: 'long',
-          month: 'long',
-          day: 'numeric',
-          year: 'numeric',
-        });
-      }
+    <script>
+      type ClockId = 'h' | 'm' | 's' | 'ampm';
 
-      const weatherCodes = {
-        0: ['Clear', '☀️'],
-        1: ['Mostly clear', '🌤️'],
-        2: ['Partly cloudy', '⛅'],
-        3: ['Cloudy', '☁️'],
-        45: ['Fog', '🌫️'],
-        48: ['Freezing fog', '🌫️'],
-        51: ['Light drizzle', '🌦️'],
-        53: ['Drizzle', '🌧️'],
-        55: ['Heavy drizzle', '🌧️'],
-        56: ['Freezing drizzle', '🌧️'],
-        57: ['Heavy freezing drizzle', '🌧️'],
-        61: ['Light rain', '🌧️'],
-        63: ['Rain', '🌧️'],
-        65: ['Heavy rain', '🌧️'],
-        66: ['Freezing rain', '🌧️'],
-        67: ['Heavy freezing rain', '🌧️'],
-        71: ['Light snow', '🌨️'],
-        73: ['Snow', '🌨️'],
-        75: ['Heavy snow', '❄️'],
-        77: ['Snow grains', '❄️'],
-        80: ['Rain showers', '🌦️'],
-        81: ['Heavy rain showers', '🌧️'],
-        82: ['Violent rain showers', '⛈️'],
-        85: ['Snow showers', '🌨️'],
-        86: ['Heavy snow showers', '❄️'],
-        95: ['Thunderstorm', '⛈️'],
-        96: ['Thunderstorm with hail', '⛈️'],
-        99: ['Severe thunderstorm with hail', '⛈️'],
+      const clockIds: ClockId[] = ['h', 'm', 's', 'ampm'];
+      const last: Record<ClockId, string> = {
+        h: '',
+        m: '',
+        s: '',
+        ampm: '',
       };
 
-      try {
-        const ipRes = await fetch('https://ipapi.co/json/');
-        const ipData = await ipRes.json();
-        const { latitude, longitude } = ipData;
-
-        if (!latitude || !longitude) throw new Error('Could not determine location');
-
-        const weatherRes = await fetch(
-          `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&temperature_unit=fahrenheit`,
-        );
-        const weatherData = await weatherRes.json();
-
-        const weatherElement = document.getElementById('weather');
-        if (weatherData.current_weather && weatherElement) {
-          const weather = weatherData.current_weather;
-          const roundedTemp = Math.round(weather.temperature);
-          const code = Number(weather.weathercode) as keyof typeof weatherCodes;
-          const info = weatherCodes[code];
-          const display = info ? `${info[1]} ${info[0]}, ${roundedTemp}°F` : `${roundedTemp}°F`;
-          weatherElement.innerText = display;
-        } else if (weatherElement) {
-          weatherElement.innerText = 'Weather unavailable';
-        }
-      } catch (error) {
-        console.error('error fetching weather:', error);
-        const weatherElement = document.getElementById('weather');
-        if (weatherElement) {
-          weatherElement.innerText = 'Weather unavailable';
+      function animateClock(id: ClockId, value: string) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (last[id] !== value) {
+          el.textContent = value;
+          el.classList.remove('animate-slideDown');
+          void el.offsetWidth;
+          el.classList.add('animate-slideDown');
+          last[id] = value;
         }
       }
-    }
 
-    async function DisplayBattery() {
-      try {
-        const battery = await (navigator as any).getBattery();
-        const batteryElement = document.getElementById('battery');
-        if (batteryElement) {
-          const updateBattery = () => {
-            const level = Math.round(battery.level * 100);
-            const charging = battery.charging ? '⚡' : '';
-            batteryElement.innerText = `${charging} ${level}%`;
-          };
-          updateBattery();
-          battery.addEventListener('levelchange', updateBattery);
-          battery.addEventListener('chargingchange', updateBattery);
-        }
-      } catch (err) {
-        console.error('Battery status error:', err);
+      function Clock() {
+        const now = new Date();
+        let hh = now.getHours();
+        const ampm = hh >= 12 ? 'PM' : 'AM';
+        hh = hh % 12 || 12;
+
+        const hhStr = hh.toString().padStart(2, '0');
+        const mmStr = now.getMinutes().toString().padStart(2, '0');
+        const ssStr = now.getSeconds().toString().padStart(2, '0');
+
+        animateClock('h', hhStr);
+        animateClock('m', mmStr);
+        animateClock('s', ssStr);
+        animateClock('ampm', ampm);
       }
-    }
 
-    DisplayInfo();
-    DisplayBattery();
-    Clock();
-    setInterval(Clock, 1000);
-  </script>
+      async function DisplayInfo() {
+        const todayDate = new Date();
+        const dateElement = document.getElementById('date');
+        if (dateElement) {
+          dateElement.innerText = todayDate.toLocaleDateString(undefined, {
+            weekday: 'long',
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric',
+          });
+        }
+
+        const weatherCodes: Record<number, [string, string]> = {
+          0: ['Clear', '☀️'],
+          1: ['Mostly clear', '🌤️'],
+          2: ['Partly cloudy', '⛅'],
+          3: ['Cloudy', '☁️'],
+          45: ['Fog', '🌫️'],
+          48: ['Freezing fog', '🌫️'],
+          51: ['Light drizzle', '🌦️'],
+          53: ['Drizzle', '🌧️'],
+          55: ['Heavy drizzle', '🌧️'],
+          56: ['Freezing drizzle', '🌧️'],
+          57: ['Heavy freezing drizzle', '🌧️'],
+          61: ['Light rain', '🌧️'],
+          63: ['Rain', '🌧️'],
+          65: ['Heavy rain', '🌧️'],
+          66: ['Freezing rain', '🌧️'],
+          67: ['Heavy freezing rain', '🌧️'],
+          71: ['Light snow', '🌨️'],
+          73: ['Snow', '🌨️'],
+          75: ['Heavy snow', '❄️'],
+          77: ['Snow grains', '❄️'],
+          80: ['Rain showers', '🌦️'],
+          81: ['Heavy rain showers', '🌧️'],
+          82: ['Violent rain showers', '⛈️'],
+          85: ['Snow showers', '🌨️'],
+          86: ['Heavy snow showers', '❄️'],
+          95: ['Thunderstorm', '⛈️'],
+          96: ['Thunderstorm with hail', '⛈️'],
+          99: ['Severe thunderstorm with hail', '⛈️'],
+        };
+
+        try {
+          const ipRes = await fetch('https://ipapi.co/json/');
+          const ipData = await ipRes.json();
+          const { latitude, longitude } = ipData;
+
+          if (!latitude || !longitude) throw new Error('Could not determine location');
+
+          const weatherRes = await fetch(
+            `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&temperature_unit=fahrenheit`
+          );
+          const weatherData = await weatherRes.json();
+
+          const weatherElement = document.getElementById('weather');
+          if (weatherData.current_weather && weatherElement) {
+            const weather = weatherData.current_weather;
+            const roundedTemp = Math.round(weather.temperature);
+            const code = Number(weather.weathercode);
+            const info = weatherCodes[code];
+            const display = info ? `${info[1]} ${info[0]}, ${roundedTemp}°F` : `${roundedTemp}°F`;
+            weatherElement.innerText = display;
+          } else if (weatherElement) {
+            weatherElement.innerText = 'Weather unavailable';
+          }
+        } catch {
+          const weatherElement = document.getElementById('weather');
+          if (weatherElement) {
+            weatherElement.innerText = 'Weather unavailable';
+          }
+        }
+      }
+
+      async function DisplayBattery() {
+        try {
+          // @ts-ignore
+          const battery = await navigator.getBattery?.();
+          const batteryElement = document.getElementById('battery');
+
+          if (batteryElement && battery) {
+            const updateBattery = () => {
+              const level = Math.round(battery.level * 100);
+              const charging = battery.charging ? '⚡' : '';
+              batteryElement.innerText = `${charging} ${level}%`;
+              batteryElement.classList.remove('fade-scale');
+              void batteryElement.offsetWidth;
+              batteryElement.classList.add('fade-scale');
+            };
+
+            updateBattery();
+            battery.addEventListener('levelchange', updateBattery);
+            battery.addEventListener('chargingchange', updateBattery);
+          }
+        } catch {}
+      }
+
+      DisplayInfo();
+      DisplayBattery();
+      Clock();
+      setInterval(Clock, 1000);
+    </script>
+  </body>
 </html>
