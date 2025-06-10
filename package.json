@@ -19,7 +19,7 @@
     "@mercuryworkshop/bare-mux": "^2.1.7",
     "@mercuryworkshop/libcurl-transport": "^1.5.0",
     "@mercuryworkshop/wisp-js": "^0.3.3",
-    "@playform/compress": "^0.1.9",
+    "@playform/compress": "^0.2.0",
     "@tailwindcss/vite": "^4.1.4",
     "@types/html-minifier": "^4.0.5",
     "astro": "^5.9.2",
