@@ -4,18 +4,17 @@ import Bookmarks from '../layouts/bookmark.astro';
 ---
 
 <!doctype html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <title>New Tab</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-    <title>New Tab</title>
-
     <style>
       @layer utilities {
         @keyframes slideDown {
           0% {
-            transform: translateY(-30%);
+            transform: translateY(-100%);
             opacity: 0;
           }
           100% {
@@ -23,196 +22,148 @@ import Bookmarks from '../layouts/bookmark.astro';
             opacity: 1;
           }
         }
-        .animate-slideDown {
-          animation: slideDown 0.35s ease-out;
+        .slide-digit {
+          animation: slideDown 0.4s ease-out;
         }
       }
     </style>
   </head>
   <body
-    class="h-screen flex flex-col items-center justify-center bg-background text-text-header font-linux relative select-none"
+    class="h-screen w-screen text-[#d0d6f9] font-sans flex items-center justify-center flex-col gap-4 relative select-none"
   >
-    <h1
-      id="clock"
-      class="text-8xl font-bold tracking-tight font-mono select-none"
-      style="letter-spacing: 0;"
-    >
-      <span
-        id="h"
-        class="inline-block min-w-[1.5ch] text-center clock-part"
-        >--</span
-      >:<span
-        id="m"
-        class="inline-block min-w-[1.5ch] text-center clock-part"
-        >--</span
-      >:<span
-        id="s"
-        class="inline-block min-w-[1.5ch] text-center clock-part"
-        >--</span
-      >
-      <span
-        id="ampm"
-        class="inline-block ml-1 text-4xl align-bottom clock-part"
-      ></span>
-    </h1>
-
-    <p
-      id="date"
-      class="text-2xl text-text-secondary font-mono mt-4 select-none"
-    ></p>
-
-    <p
-      id="weather"
-      class="absolute top-4 right-4 px-6 py-3 rounded-xl text-[16px] font-bold font-linux text-text-secondary bg-background-overlay backdrop-blur-sm shadow-md select-none"
-    ></p>
-
-    <p
-      id="battery"
-      class="absolute top-4 left-4 px-6 py-3 rounded-xl text-[16px] font-bold font-linux text-text-secondary bg-background-overlay backdrop-blur-sm shadow-md select-none"
-    ></p>
+    <div class="flex flex-col items-center gap-2">
+      <h1 id="clock" class="text-8xl font-bold font-mono tracking-tight flex items-baseline gap-1">
+        <span id="h" class="inline-block min-w-[1.5ch] text-center">--</span>
+        <span>:</span>
+        <span id="m" class="inline-block min-w-[1.5ch] text-center">--</span>
+        <span>:</span>
+        <span id="s" class="inline-block min-w-[1.5ch] text-center">--</span>
+        <span id="ampm" class="ml-2 text-3xl text-[#aab0d0]"></span>
+      </h1>
+      <p id="date" class="text-2xl text-[#aab0d0] font-mono">-</p>
+    </div>
 
     <Bookmarks />
 
+    <div
+      class="absolute top-4 left-4 bg-white/5 backdrop-blur-md font-linux font-semibold rounded-xl px-5 py-2 text-sm text-[#aab0d0] shadow-lg"
+      id="battery"
+    >
+      -
+    </div>
+    <div
+      class="absolute top-4 right-4 bg-white/5 backdrop-blur-md font-semibold font-linux rounded-xl px-5 py-2 text-sm text-[#aab0d0] shadow-lg"
+      id="weather"
+    >
+    -
+    </div>
+
     <script>
-      type ClockId = 'h' | 'm' | 's' | 'ampm';
+      type TimeKeys = 'h' | 'm' | 's';
+      const last: Record<TimeKeys, string> = { h: '', m: '', s: '' };
 
-      const clockIds: ClockId[] = ['h', 'm', 's', 'ampm'];
-      const last: Record<ClockId, string> = {
-        h: '',
-        m: '',
-        s: '',
-        ampm: '',
-      };
-
-      function animateClock(id: ClockId, value: string) {
+      function updateDigit(id: string, value: string, key: TimeKeys) {
         const el = document.getElementById(id);
         if (!el) return;
-        if (last[id] !== value) {
-          el.textContent = value;
-          el.classList.remove('animate-slideDown');
+        if (last[key] !== value) {
+          el.classList.remove('slide-digit');
           void el.offsetWidth;
-          el.classList.add('animate-slideDown');
-          last[id] = value;
+          el.classList.add('slide-digit');
+          el.textContent = value;
+          last[key] = value;
         }
       }
 
-      function Clock() {
+      function updateClock() {
         const now = new Date();
-        let hh = now.getHours();
-        const ampm = hh >= 12 ? 'PM' : 'AM';
-        hh = hh % 12 || 12;
+        let h = now.getHours();
+        const m = now.getMinutes().toString().padStart(2, '0');
+        const s = now.getSeconds().toString().padStart(2, '0');
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        h = h % 12 || 12;
+        const hStr = h.toString().padStart(2, '0');
 
-        const hhStr = hh.toString().padStart(2, '0');
-        const mmStr = now.getMinutes().toString().padStart(2, '0');
-        const ssStr = now.getSeconds().toString().padStart(2, '0');
-
-        animateClock('h', hhStr);
-        animateClock('m', mmStr);
-        animateClock('s', ssStr);
-        animateClock('ampm', ampm);
+        updateDigit('h', hStr, 'h');
+        updateDigit('m', m, 'm');
+        updateDigit('s', s, 's');
+        document.getElementById('ampm')!.textContent = ampm;
       }
 
-      async function DisplayInfo() {
-        const todayDate = new Date();
-        const dateElement = document.getElementById('date');
-        if (dateElement) {
-          dateElement.innerText = todayDate.toLocaleDateString(undefined, {
-            weekday: 'long',
-            month: 'long',
-            day: 'numeric',
-            year: 'numeric',
-          });
-        }
-
-        const weatherCodes: Record<number, [string, string]> = {
-          0: ['Clear', '☀️'],
-          1: ['Mostly clear', '🌤️'],
-          2: ['Partly cloudy', '⛅'],
-          3: ['Cloudy', '☁️'],
-          45: ['Fog', '🌫️'],
-          48: ['Freezing fog', '🌫️'],
-          51: ['Light drizzle', '🌦️'],
-          53: ['Drizzle', '🌧️'],
-          55: ['Heavy drizzle', '🌧️'],
-          56: ['Freezing drizzle', '🌧️'],
-          57: ['Heavy freezing drizzle', '🌧️'],
-          61: ['Light rain', '🌧️'],
-          63: ['Rain', '🌧️'],
-          65: ['Heavy rain', '🌧️'],
-          66: ['Freezing rain', '🌧️'],
-          67: ['Heavy freezing rain', '🌧️'],
-          71: ['Light snow', '🌨️'],
-          73: ['Snow', '🌨️'],
-          75: ['Heavy snow', '❄️'],
-          77: ['Snow grains', '❄️'],
-          80: ['Rain showers', '🌦️'],
-          81: ['Heavy rain showers', '🌧️'],
-          82: ['Violent rain showers', '⛈️'],
-          85: ['Snow showers', '🌨️'],
-          86: ['Heavy snow showers', '❄️'],
-          95: ['Thunderstorm', '⛈️'],
-          96: ['Thunderstorm with hail', '⛈️'],
-          99: ['Severe thunderstorm with hail', '⛈️'],
+      function updateDate() {
+        const now = new Date();
+        const options: Intl.DateTimeFormatOptions = {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
         };
+        document.getElementById('date')!.textContent = now.toLocaleDateString(undefined, options);
+      }
 
+      async function updateBattery() {
+        if ('getBattery' in navigator) {
+          const battery = await navigator.getBattery();
+          const level = Math.round(battery.level * 100);
+          document.getElementById('battery')!.textContent = `🔋 ${level}%`;
+        }
+      }
+
+      async function fetchWeather(lat: number, lon: number) {
         try {
-          const ipRes = await fetch('https://ipapi.co/json/');
-          const ipData = await ipRes.json();
-          const { latitude, longitude } = ipData;
-
-          if (!latitude || !longitude) throw new Error('Could not determine location');
-
-          const weatherRes = await fetch(
-            `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&temperature_unit=fahrenheit`
+          const res = await fetch(
+            `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&temperature_unit=fahrenheit`,
           );
-          const weatherData = await weatherRes.json();
+          const data = await res.json();
 
-          const weatherElement = document.getElementById('weather');
-          if (weatherData.current_weather && weatherElement) {
-            const weather = weatherData.current_weather;
-            const roundedTemp = Math.round(weather.temperature);
-            const code = Number(weather.weathercode);
-            const info = weatherCodes[code];
-            const display = info ? `${info[1]} ${info[0]}, ${roundedTemp}°F` : `${roundedTemp}°F`;
-            weatherElement.innerText = display;
-          } else if (weatherElement) {
-            weatherElement.innerText = 'Weather unavailable';
+          const weather = data.current_weather;
+          if (!weather) throw new Error('No weather data');
+
+          const temperature = Math.round(weather.temperature);
+          const code = weather.weathercode;
+          const { emoji, description } = getWeatherInfo(code);
+
+          document.getElementById('weather')!.textContent =
+            `${emoji} ${description}, ${temperature}°F`;
+        } catch {
+          document.getElementById('weather')!.textContent = '🌤️ Weather Unavailable';
+        }
+      }
+
+      function getWeatherInfo(code: number): { emoji: string; description: string } {
+        if (code === 0) return { emoji: '☀️', description: 'Sunny' };
+        if ([1, 2].includes(code)) return { emoji: '🌤️', description: 'Partly Cloudy' };
+        if (code === 3) return { emoji: '☁️', description: 'Overcast' };
+        if ([45, 48].includes(code)) return { emoji: '🌫️', description: 'Foggy' };
+        if ([51, 53, 55, 56, 57].includes(code)) return { emoji: '🌦️', description: 'Drizzle' };
+        if ([61, 63, 65, 66, 67].includes(code)) return { emoji: '🌧️', description: 'Rain' };
+        if ([71, 73, 75, 77, 85, 86].includes(code)) return { emoji: '❄️', description: 'Snow' };
+        if ([80, 81, 82].includes(code)) return { emoji: '🌧️', description: 'Rain Showers' };
+        if ([95, 96, 99].includes(code)) return { emoji: '⛈️', description: 'Thunderstorm' };
+        return { emoji: '🌤️', description: 'Unknown' };
+      }
+
+      async function updateWeather() {
+        try {
+          const res = await fetch('https://ipapi.co/json/');
+          const data = await res.json();
+          if (data && data.latitude && data.longitude) {
+            await fetchWeather(data.latitude, data.longitude);
+          } else {
+            document.getElementById('weather')!.textContent = '🌤️ Weather Unavailable';
           }
         } catch {
-          const weatherElement = document.getElementById('weather');
-          if (weatherElement) {
-            weatherElement.innerText = 'Weather unavailable';
-          }
+          document.getElementById('weather')!.textContent = '🌤️ Weather Unavailable';
         }
       }
 
-      async function DisplayBattery() {
-        try {
-          // @ts-ignore
-          const battery = await navigator.getBattery?.();
-          const batteryElement = document.getElementById('battery');
+      updateClock();
+      updateDate();
+      updateBattery();
+      updateWeather();
 
-          if (batteryElement && battery) {
-            const updateBattery = () => {
-              const level = Math.round(battery.level * 100);
-              const charging = battery.charging ? '⚡' : '';
-              batteryElement.innerText = `${charging} ${level}%`;
-              batteryElement.classList.remove('fade-scale');
-              void batteryElement.offsetWidth;
-              batteryElement.classList.add('fade-scale');
-            };
-
-            updateBattery();
-            battery.addEventListener('levelchange', updateBattery);
-            battery.addEventListener('chargingchange', updateBattery);
-          }
-        } catch {}
-      }
-
-      DisplayInfo();
-      DisplayBattery();
-      Clock();
-      setInterval(Clock, 1000);
+      setInterval(updateClock, 1000);
+      setInterval(updateDate, 60000);
+      setInterval(updateBattery, 300000);
     </script>
   </body>
 </html>

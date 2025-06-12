@@ -1,0 +1,105 @@
+---
+import type { AstroComponentFactory } from 'astro';
+interface Game {
+  name: string;
+  desc: string;
+  url: string;
+  icon: string;
+}
+const { list }: { list: Game[] } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <style>
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+          filter: blur(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+          filter: blur(0);
+        }
+      }
+
+      @keyframes shine {
+        0% {
+          transform: translateX(-100%) rotate(25deg);
+        }
+        100% {
+          transform: translateX(100%) rotate(25deg);
+        }
+      }
+
+      .shine::before {
+        content: '';
+        position: absolute;
+        top: -100%;
+        left: -100%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(120deg, transparent, rgba(255,255,255,0.2), transparent);
+        animation: shine 2.5s infinite;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .card-glow {
+        transition: all 0.4s ease;
+      }
+
+      .card-glow:hover {
+        box-shadow:
+          0 0 20px rgba(208, 214, 249, 0.3),
+          0 0 40px rgba(208, 214, 249, 0.2),
+          0 0 60px rgba(208, 214, 249, 0.1);
+        transform: scale(1.05);
+      }
+
+      .card-loading {
+        background: linear-gradient(135deg, #1a1b2b, #11121c);
+        animation: pulse 1.5s infinite ease-in-out;
+        filter: blur(8px);
+      }
+
+      @keyframes pulse {
+        0%, 100% {
+          opacity: 0.8;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+    </style>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.game-card img').forEach(img => {
+          img.onload = () => {
+            img.parentElement.classList.remove('card-loading');
+          };
+        });
+      });
+    </script>
+  </head>
+  <body class="text-white min-h-screen p-6 font-sans overflow-x-hidden bg-[#0e0f1a]">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+      {
+        list.map((game, i) => (
+          <a
+            href={game.url}
+            target="_blank"
+            class="relative game-card bg-[#12131f] border border-[#1f1f30] rounded-2xl p-6 overflow-hidden shine card-glow card-loading"
+            style={`animation: fadeInUp 0.6s ease-out ${i * 0.1}s both;`}
+          >
+            <img src={game.icon} alt={game.name} class="w-16 h-16 mb-4 rounded-md mx-auto shadow-lg transition-all duration-500 opacity-0" onload="this.style.opacity='1'" />
+            <h2 class="text-xl font-linux font-bold text-center text-[#d0d6f9] mt-2 transition duration-300">{game.name}</h2>
+            <p class="text-sm font-mono text-[#aab0d0] text-center mt-2">{game.desc}</p>
+          </a>
+        ))
+      }
+    </div>
+  </body>
+</html>

@@ -111,7 +111,6 @@ devtools?.addEventListener('click', () => {
   }
 });
 
-
 urlbar?.addEventListener('keydown', async (e) => {
   if (e.key !== 'Enter') return;
 

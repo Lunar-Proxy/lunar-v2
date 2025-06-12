@@ -3,13 +3,13 @@
     {
       "name": "Google",
       "desc": "Google.com helps you find anything online.",
-      "icon": "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/4e/e8/5a/4ee85abc-f95a-85d8-619d-62890748cfdc/logo_gsa_gradient_ios_color-0-1x_U007epad-0-0-0-1-0-0-sRGB-0-0-85-220-0.png/1200x630wa.png",
+      "icon": "/a/images/assets/goog.png",
       "url": "https://google.com"
     },
     {
       "name": "Bing",
       "desc": "Search freely with Bing, by Microsoft.",
-      "icon": "https://www.latevaweb.com/web-design/bing-seo.jpg",
+      "icon": "/a/images/assets/bing.png",
       "url": "https://bing.com"
     },
     {
