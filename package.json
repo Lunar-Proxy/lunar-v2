@@ -30,7 +30,7 @@
     "node-fetch": "^3.3.2",
     "prettier-plugin-astro": "^0.14.1",
     "tailwindcss": "^4.1.4",
-    "tsx": "^4.19.3",
+    "tsx": "^4.20.2",
     "typescript": "^5.8.3",
     "vite": "^6.3.4",
     "vite-plugin-minify": "^2.1.0",
