@@ -1,293 +1,293 @@
 {
-  "gms": [
-    {
-      "name": "Google",
-      "desc": "Google.com helps you find anything online.",
-      "icon": "/a/images/assets/goog.png",
-      "url": "https://google.com"
-    },
-    {
-      "name": "Bing",
-      "desc": "Search freely with Bing, by Microsoft.",
-      "icon": "/a/images/assets/bing.png",
-      "url": "https://bing.com"
-    },
-    {
-      "name": "Pinterest",
-      "desc": "Discover and save ideas with Pinterest.",
-      "icon": "https://static-00.iconduck.com/assets.00/pinterest-icon-512x512-3vn0ggs9.png",
-      "url": "https://pinterest.com"
-    },
-    {
-      "name": "Twitch",
-      "desc": "Watch and stream games live on Twitch.tv.",
-      "icon": "https://static-00.iconduck.com/assets.00/twitch-icon-2048x2048-p5q6c4tc.png",
-      "url": "https://twitch.tv"
-    },
-    {
-      "name": "Minecraft 1.20",
-      "desc": "Play modded Minecraft 1.8 in your browser.",
-      "icon": "/assets/images/icons/mc.png",
-      "url": "https://client.eaglercraft.win/eagler-files/modded/1.8/EaglyMC/index.html"
-    },
-    {
-      "name": "Wordle",
-      "desc": "Guess the daily word in 6 tries.",
-      "icon": "/assets/images/icons/word.png",
-      "url": "https://www.nytimes.com/games/wordle/index.html"
-    },
-    {
-      "name": "Cookie Clicker",
-      "desc": "Addictive incremental cookie-clicking game.",
-      "icon": "/assets/images/icons/cc.png",
-      "url": "https://orteil.dashnet.org/cookieclicker/"
-    },
-    {
-      "name": "SmashKarts",
-      "desc": "Battle against others in kart-style combat.",
-      "icon": "/assets/images/icons/sk.jpeg",
-      "url": "https://smashkarts.io/"
-    },
-    {
-      "name": "BlockBlast",
-      "desc": "Puzzle-style block game.",
-      "icon": "/assets/images/icons/bb.webp",
-      "url": "https://reunbozdo.github.io/"
-    },
-    {
-      "name": "FNF",
-      "desc": "Friday Night Funkin' browser rhythm game.",
-      "icon": "/assets/images/icons/fnf.jpg",
-      "url": "https://fnf.kdata1.com/2024/fnf/5201/"
-    },
-    {
-      "name": "OvO",
-      "desc": "Speedrun-style parkour platformer.",
-      "icon": "/assets/images/icons/ovo.png",
-      "url": "https://www.coolmathgames.com/0-ovo/play"
-    },
-    {
-      "name": "digdigIo",
-      "desc": "Multiplayer digging battle game.",
-      "icon": "/assets/images/icons/dig.png",
-      "url": "https://digdig.io/"
-    },
-    {
-      "name": "2048",
-      "desc": "Slide tiles to reach 2048.",
-      "icon": "/assets/images/icons/2048.png",
-      "url": "https://2048game.com/"
-    },
-    {
-      "name": "Stickman Hook",
-      "desc": "Swing your way to the finish!",
-      "icon": "/assets/images/icons/sh.png",
-      "url": "https://stickman-hook-game.github.io/file/"
-    },
-    {
-      "name": "EmulatorJs",
-      "desc": "Play retro console games online.",
-      "icon": "/assets/images/icons/emjs.png",
-      "url": "https://demo.emulatorjs.org/"
-    },
-    {
-      "name": "Subway Surfers",
-      "desc": "Dodge trains and collect coins!",
-      "icon": "/assets/images/icons/subway.png",
-      "url": "https://ubg77.github.io/updatefaqs/subway-surfers-winter-holiday/"
-    },
-    {
-      "name": "KourIo",
-      "desc": "First-person shooter parkour.",
-      "icon": "/assets/images/icons/kio.jpg",
-      "url": "https://www.kour.io/"
-    },
-    {
-      "name": "Nvidia GeForce Now",
-      "desc": "Play PC games via cloud streaming.",
-      "icon": "/assets/images/icons/gfn.webp",
-      "url": "https://play.geforcenow.com/mall/"
-    },
-    {
-      "name": "Bitlife",
-      "desc": "Live a digital life from birth to death.",
-      "icon": "/assets/images/icons/bl.webp",
-      "url": "https://xlegends.github.io/bitlife/"
-    },
-    {
-      "name": "N-gon",
-      "desc": "Multiplayer building & PvP browser game.",
-      "icon": "/assets/images/icons/ngon.png",
-      "url": "https://landgreen.github.io/n-gon/"
-    },
-    {
-      "name": "DriveMad",
-      "desc": "Physics-based driving game with crazy levels.",
-      "icon": "/assets/images/icons/dm.png",
-      "url": "https://ubg77.github.io/game131022/drive-mad/"
-    },
-    {
-      "name": "FruitNinja",
-      "desc": "Slash fruit with your mouse!",
-      "icon": "/assets/images/icons/fn.jpg",
-      "url": "http://huningxin.github.io/spp.js/examples/fruitNinja/"
-    },
-    {
-      "name": "CraftMine",
-      "desc": "Minecraft-like game in a browser gadget.",
-      "icon": "/assets/images/icons/cm.jpg",
-      "url": "https://images-opensocial.googleusercontent.com/gadgets/ifr?url=https://cdn.jsdelivr.net/gh/bobydob/JSEngine@bdd7d45deaeaa50131e1913f2f0598cf147f8c56/build/crmine/crmi.xml&container=ig"
-    },
-    {
-      "name": "DriftBoss",
-      "desc": "Keep drifting without falling off.",
-      "icon": "/assets/images/icons/db.png",
-      "url": "https://driftbossunblocked.github.io/"
-    },
-    {
-      "name": "Merge Round Racers",
-      "desc": "Merge cars and win races!",
-      "icon": "/assets/images/icons/mrr.avif",
-      "url": "https://ubg77.github.io/edit/merge-round-racers/"
-    },
-    {
-      "name": "Geometry Dash",
-      "desc": "Dodge obstacles in rhythm-based platformer.",
-      "icon": "/assets/images/icons/gd.png",
-      "url": "https://assets.3kh0.net/geodash/"
-    },
-    {
-      "name": "Flappy Bird",
-      "desc": "Classic bird-flying game in browser.",
-      "icon": "/assets/images/icons/fb.jpg",
-      "url": "https://ellisonleao.github.io/clumsy-bird/"
-    },
-    {
-      "name": "Idle Dice",
-      "desc": "Clicker game based on rolling dice.",
-      "icon": "/assets/images/icons/id.jpeg",
-      "url": "https://ubg77.github.io/game131022/idle-dice/"
-    },
-    {
-      "name": "Idle Miner",
-      "desc": "Run your mining operation and grow!",
-      "icon": "/assets/images/icons/im.png",
-      "url": "https://ubg77.github.io/game131022/idle-miner/"
-    },
-    {
-      "name": "Idle Mining Empire",
-      "desc": "Build your mining empire empire!",
-      "icon": "/assets/images/icons/ime.webp",
-      "url": "https://ubg77.github.io/fix/idle-mining-empire/"
-    },
-    {
-      "name": "Idle Startup Tycoon",
-      "desc": "Grow your tech startup into a giant.",
-      "icon": "/assets/images/icons/ist.webp",
-      "url": "https://ubg77.github.io/game131022/idle-startup-tycoon/"
-    },
-    {
-      "name": "Awesome Tanks 2",
-      "desc": "Blow up enemy tanks and upgrade yours.",
-      "icon": "/assets/images/icons/at2.png",
-      "url": "https://ubg98.github.io/AwesomeTanks2/"
-    },
-    {
-      "name": "BasketBall Random",
-      "desc": "Crazy physics-based basketball game.",
-      "icon": "/assets/images/icons/bbr.png",
-      "url": "https://tylerpalko.github.io/gamehub/basketrandom/"
-    },
-    {
-      "name": "Basketbros",
-      "desc": "Multiplayer basketball with a twist.",
-      "icon": "/assets/images/icons/bbs.jpeg",
-      "url": "https://basketbros.io/"
-    },
-    {
-      "name": "Adventure Drivers",
-      "desc": "Race across crazy tracks and terrains.",
-      "icon": "/assets/images/icons/ad.jpg",
-      "url": "https://ubg77.github.io/game131022/adventure-drivers/"
-    },
-    {
-      "name": "Parking Fury",
-      "desc": "Test your parking skills in 3D!",
-      "icon": "/assets/images/icons/pf.png",
-      "url": "https://webglmath.github.io/parking-fury/"
-    },
-    {
-      "name": "Roblox",
-      "icon": "/assets/images/icons/rb.png",
-      "url": "https://www.easyfun.gg/cloud-games/roblox.html?start=1"
-    },
-    {
-      "name": "Tiny Fishing",
-      "desc": "Catch fish and earn upgrades.",
-      "icon": "/assets/images/icons/tf.jpeg",
-      "url": "https://ubg77.github.io/game131022/tiny-fishing/"
-    }
-  ],
-  "aps": [
-    [
-      {
-        "name": "Discord - Login",
-        "image": "/assets/images/icons/dis.png",
-        "link": [
-          { "name": "Discord", "url": "https://discord.com/login" },
-          {
+    "gms": [
+        {
+            "name": "Google",
+            "desc": "Google.com helps you find anything online.",
+            "icon": "/a/images/assets/goog.png",
+            "url": "https://google.com"
+        },
+        {
+            "name": "Bing",
+            "desc": "Search freely with Bing, by Microsoft.",
+            "icon": "/a/images/assets/bing.png",
+            "url": "https://bing.com"
+        },
+        {
+            "name": "Pinterest",
+            "desc": "Discover and save ideas with Pinterest.",
+            "icon": "https://static-00.iconduck.com/assets.00/pinterest-icon-512x512-3vn0ggs9.png",
+            "url": "https://pinterest.com"
+        },
+        {
+            "name": "Twitch",
+            "desc": "Watch and stream games live on Twitch.tv.",
+            "icon": "https://static-00.iconduck.com/assets.00/twitch-icon-2048x2048-p5q6c4tc.png",
+            "url": "https://twitch.tv"
+        },
+        {
+            "name": "Minecraft 1.20",
+            "desc": "Play modded Minecraft 1.8 in your browser.",
+            "icon": "/a/images/assets/mc.png",
+            "url": "https://client.eaglercraft.win/eagler-files/modded/1.8/EaglyMC/index.html"
+        },
+        {
+            "name": "Wordle",
+            "desc": "Guess the daily word in 6 tries.",
+            "icon": "/a/images/assets/word.png",
+            "url": "https://www.nytimes.com/games/wordle/index.html"
+        },
+        {
+            "name": "Cookie Clicker",
+            "desc": "Addictive incremental cookie-clicking game.",
+            "icon": "/a/images/assets/cc.png",
+            "url": "https://orteil.dashnet.org/cookieclicker/"
+        },
+        {
+            "name": "SmashKarts",
+            "desc": "Battle against others in kart-style combat.",
+            "icon": "/a/images/assets/sk.jpeg",
+            "url": "https://smashkarts.io/"
+        },
+        {
+            "name": "BlockBlast",
+            "desc": "Puzzle-style block game.",
+            "icon": "/a/images/assets/bb.webp",
+            "url": "https://reunbozdo.github.io/"
+        },
+        {
+            "name": "FNF",
+            "desc": "Friday Night Funkin' browser rhythm game.",
+            "icon": "/a/images/assets/fnf.jpg",
+            "url": "https://fnf.kdata1.com/2024/fnf/5201/"
+        },
+        {
+            "name": "OvO",
+            "desc": "Speedrun-style parkour platformer.",
+            "icon": "/a/images/assets/ovo.png",
+            "url": "https://www.coolmathgames.com/0-ovo/play"
+        },
+        {
+            "name": "digdigIo",
+            "desc": "Multiplayer digging battle game.",
+            "icon": "/a/images/assets/dig.png",
+            "url": "https://digdig.io/"
+        },
+        {
+            "name": "2048",
+            "desc": "Slide tiles to reach 2048.",
+            "icon": "/a/images/assets/2048.png",
+            "url": "https://2048game.com/"
+        },
+        {
+            "name": "Stickman Hook",
+            "desc": "Swing your way to the finish!",
+            "icon": "/a/images/assets/sh.png",
+            "url": "https://stickman-hook-game.github.io/file/"
+        },
+        {
+            "name": "EmulatorJs",
+            "desc": "Play retro console games online.",
+            "icon": "/a/images/assets/emjs.png",
+            "url": "https://demo.emulatorjs.org/"
+        },
+        {
+            "name": "Subway Surfers",
+            "desc": "Dodge trains and collect coins!",
+            "icon": "/a/images/assets/subway.png",
+            "url": "https://ubg77.github.io/updatefaqs/subway-surfers-winter-holiday/"
+        },
+        {
+            "name": "KourIo",
+            "desc": "First-person shooter parkour.",
+            "icon": "/a/images/assets/kio.jpg",
+            "url": "https://www.kour.io/"
+        },
+        {
+            "name": "Nvidia GeForce Now",
+            "desc": "Play PC games via cloud streaming.",
+            "icon": "/a/images/assets/gfn.webp",
+            "url": "https://play.geforcenow.com/mall/"
+        },
+        {
+            "name": "Bitlife",
+            "desc": "Live a digital life from birth to death.",
+            "icon": "/a/images/assets/bl.webp",
+            "url": "https://xlegends.github.io/bitlife/"
+        },
+        {
+            "name": "N-gon",
+            "desc": "Multiplayer building & PvP browser game.",
+            "icon": "/a/images/assets/ngon.png",
+            "url": "https://landgreen.github.io/n-gon/"
+        },
+        {
+            "name": "DriveMad",
+            "desc": "Physics-based driving game with crazy levels.",
+            "icon": "/a/images/assets/dm.png",
+            "url": "https://ubg77.github.io/game131022/drive-mad/"
+        },
+        {
+            "name": "FruitNinja",
+            "desc": "Slash fruit with your mouse!",
+            "icon": "/a/images/assets/fn.jpg",
+            "url": "http://huningxin.github.io/spp.js/examples/fruitNinja/"
+        },
+        {
+            "name": "CraftMine",
+            "desc": "Minecraft-like game in a browser gadget.",
+            "icon": "/a/images/assets/cm.jpg",
+            "url": "https://images-opensocial.googleusercontent.com/gadgets/ifr?url=https://cdn.jsdelivr.net/gh/bobydob/JSEngine@bdd7d45deaeaa50131e1913f2f0598cf147f8c56/build/crmine/crmi.xml&container=ig"
+        },
+        {
+            "name": "DriftBoss",
+            "desc": "Keep drifting without falling off.",
+            "icon": "/a/images/assets/db.png",
+            "url": "https://driftbossunblocked.github.io/"
+        },
+        {
+            "name": "Merge Round Racers",
+            "desc": "Merge cars and win races!",
+            "icon": "/a/images/assets/mrr.avif",
+            "url": "https://ubg77.github.io/edit/merge-round-racers/"
+        },
+        {
+            "name": "Geometry Dash",
+            "desc": "Dodge obstacles in rhythm-based platformer.",
+            "icon": "/a/images/assets/gd.png",
+            "url": "https://assets.3kh0.net/geodash/"
+        },
+        {
+            "name": "Flappy Bird",
+            "desc": "Classic bird-flying game in browser.",
+            "icon": "/a/images/assets/fb.jpg",
+            "url": "https://ellisonleao.github.io/clumsy-bird/"
+        },
+        {
+            "name": "Idle Dice",
+            "desc": "Clicker game based on rolling dice.",
+            "icon": "/a/images/assets/id.jpeg",
+            "url": "https://ubg77.github.io/game131022/idle-dice/"
+        },
+        {
+            "name": "Idle Miner",
+            "desc": "Run your mining operation and grow!",
+            "icon": "/a/images/assets/im.png",
+            "url": "https://ubg77.github.io/game131022/idle-miner/"
+        },
+        {
+            "name": "Idle Mining Empire",
+            "desc": "Build your mining empire empire!",
+            "icon": "/a/images/assets/ime.webp",
+            "url": "https://ubg77.github.io/fix/idle-mining-empire/"
+        },
+        {
+            "name": "Idle Startup Tycoon",
+            "desc": "Grow your tech startup into a giant.",
+            "icon": "/a/images/assets/ist.webp",
+            "url": "https://ubg77.github.io/game131022/idle-startup-tycoon/"
+        },
+        {
+            "name": "Awesome Tanks 2",
+            "desc": "Blow up enemy tanks and upgrade yours.",
+            "icon": "/a/images/assets/at2.png",
+            "url": "https://ubg98.github.io/AwesomeTanks2/"
+        },
+        {
+            "name": "BasketBall Random",
+            "desc": "Crazy physics-based basketball game.",
+            "icon": "/a/images/assets/bbr.png",
+            "url": "https://tylerpalko.github.io/gamehub/basketrandom/"
+        },
+        {
+            "name": "Basketbros",
+            "desc": "Multiplayer basketball with a twist.",
+            "icon": "/a/images/assets/bbs.jpeg",
+            "url": "https://basketbros.io/"
+        },
+        {
+            "name": "Adventure Drivers",
+            "desc": "Race across crazy tracks and terrains.",
+            "icon": "/a/images/assets/ad.jpg",
+            "url": "https://ubg77.github.io/game131022/adventure-drivers/"
+        },
+        {
+            "name": "Parking Fury",
+            "desc": "Test your parking skills in 3D!",
+            "icon": "/a/images/assets/pf.png",
+            "url": "https://webglmath.github.io/parking-fury/"
+        },
+        {
+            "name": "Roblox",
+            "icon": "/a/images/assets/rb.png",
+            "url": "https://www.easyfun.gg/cloud-games/roblox.html?start=1"
+        },
+        {
+            "name": "Tiny Fishing",
+            "desc": "Catch fish and earn upgrades.",
+            "icon": "/a/images/assets/tf.jpeg",
+            "url": "https://ubg77.github.io/game131022/tiny-fishing/"
+        }
+    ],
+    "aps": [
+        {
+            "name": "Discord - Login",
+            "desc": "Connect with friends and communities on Discord.",
+            "icon": "/a/images/assets/dis.png",
+            "url": "https://discord.com/login"
+        },
+        {
             "name": "Discord Canary",
+            "desc": "Early access version of Discord with latest features.",
+            "icon": "/a/images/assets/dis.png",
             "url": "https://canary.discord.com/login"
-          },
-          {
-            "name": "Discord PTB (Public Testing Build)",
+        },
+        {
+            "name": "Discord PTB",
+            "desc": "Public testing build of Discord for beta features.",
+            "icon": "/a/images/assets/dis.png",
             "url": "https://ptb.discord.com/login"
-          }
-        ],
-        "error": false
-      },
-      {
-        "name": "W3schools",
-        "image": "/assets/images/icons/w3.png",
-        "link": "https://www.w3schools.com/",
-        "error": false
-      },
-      {
-        "name": "VS Code",
-        "image": "/assets/images/icons/vs.jpeg",
-        "link": "https://code.visualstudio.com/",
-        "error": false
-      },
-      {
-        "name": "Youtube",
-        "image": "/assets/images/icons/yt.webp",
-        "link": "https://youtube.com",
-        "error": false
-      },
-      {
-        "name": "Amazon",
-        "image": "/assets/images/icons/ama.jpeg",
-        "link": "https://www.amazon.com/",
-        "error": false
-      },
-      {
-        "name": "Spotify",
-        "image": "/assets/images/icons/spot.jpg",
-        "link": "https://spotify.com",
-        "error": false
-      },
-      {
-        "name": "espn",
-        "image": "/assets/images/icons/espn.webp",
-        "link": "https://www.espn.com",
-        "error": false
-      },
-      {
-        "name": "github",
-        "image": "/assets/images/icons/gh.png",
-        "link": "https://www.github.com",
-        "error": false
-      }
+        },
+        {
+            "name": "W3Schools",
+            "desc": "Learn web development with tutorials and references.",
+            "icon": "/a/images/assets/w3.png",
+            "url": "https://www.w3schools.com/"
+        },
+        {
+            "name": "VS Code",
+            "desc": "Powerful code editor for modern web development.",
+            "icon": "/a/images/assets/vs.jpeg",
+            "url": "https://code.visualstudio.com/"
+        },
+        {
+            "name": "YouTube",
+            "desc": "Watch and share videos from around the world.",
+            "icon": "/a/images/assets/yt.webp",
+            "url": "https://youtube.com"
+        },
+        {
+            "name": "Amazon",
+            "desc": "Shop millions of products with fast delivery.",
+            "icon": "/a/images/assets/ama.jpeg",
+            "url": "https://www.amazon.com/"
+        },
+        {
+            "name": "Spotify",
+            "desc": "Stream music and podcasts from millions of tracks.",
+            "icon": "/a/images/assets/spot.jpg",
+            "url": "https://spotify.com"
+        },
+        {
+            "name": "ESPN",
+            "desc": "Get the latest sports news, scores, and highlights.",
+            "icon": "/a/images/assets/espn.webp",
+            "url": "https://www.espn.com"
+        },
+        {
+            "name": "GitHub",
+            "desc": "Host and collaborate on code repositories.",
+            "icon": "/a/images/assets/gh.png",
+            "url": "https://www.github.com"
+        }
     ]
-  ]
 }
