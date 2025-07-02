@@ -41,7 +41,7 @@ const { list }: { list: Game[] } = Astro.props;
         left: -100%;
         width: 200%;
         height: 200%;
-        background: linear-gradient(120deg, transparent, rgba(255,255,255,0.2), transparent);
+        background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.2), transparent);
         animation: shine 2.5s infinite;
         pointer-events: none;
         z-index: 1;
@@ -66,7 +66,8 @@ const { list }: { list: Game[] } = Astro.props;
       }
 
       @keyframes pulse {
-        0%, 100% {
+        0%,
+        100% {
           opacity: 0.8;
         }
         50% {
@@ -76,10 +77,19 @@ const { list }: { list: Game[] } = Astro.props;
     </style>
     <script>
       document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.game-card img').forEach(img => {
-          img.onload = () => {
-            img.parentElement.classList.remove('card-loading');
-          };
+        const cards = document.querySelectorAll('.game-card');
+
+        cards.forEach((card) => {
+          const img = card.querySelector('img');
+          if (img) {
+            if (img.complete && img.naturalWidth > 0) {
+              card.classList.remove('card-loading', 'shine');
+            } else {
+              img.onload = () => {
+                card.classList.remove('card-loading', 'shine');
+              };
+            }
+          }
         });
       });
     </script>
@@ -94,8 +104,15 @@ const { list }: { list: Game[] } = Astro.props;
             class="relative game-card bg-[#12131f] border border-[#1f1f30] rounded-2xl p-6 overflow-hidden shine card-glow card-loading"
             style={`animation: fadeInUp 0.6s ease-out ${i * 0.1}s both;`}
           >
-            <img src={game.icon} alt={game.name} class="w-16 h-16 mb-4 rounded-md mx-auto shadow-lg transition-all duration-500 opacity-0" onload="this.style.opacity='1'" />
-            <h2 class="text-xl font-linux font-bold text-center text-[#d0d6f9] mt-2 transition duration-300">{game.name}</h2>
+            <img
+              src={game.icon}
+              alt={game.name}
+              class="w-16 h-16 mb-4 rounded-md mx-auto shadow-lg transition-all duration-500 opacity-0"
+              onload="this.style.opacity='1'"
+            />
+            <h2 class="text-xl font-linux font-bold text-center text-[#d0d6f9] mt-2 transition duration-300">
+              {game.name}
+            </h2>
             <p class="text-sm font-mono text-[#aab0d0] text-center mt-2">{game.desc}</p>
           </a>
         ))
