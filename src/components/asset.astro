@@ -1,17 +1,41 @@
 ---
-import type { AstroComponentFactory } from 'astro';
 interface Game {
   name: string;
   desc: string;
   url: string;
   icon: string;
 }
-const { list }: { list: Game[] } = Astro.props;
+
+const { list = [] }: { list?: Game[] } = Astro.props;
 ---
 
 <html lang="en">
   <head>
     <style>
+      ::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1f1d2e;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c4a7e7;
+  border-radius: 10px;
+  border: 2px solid #1f1d2e;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d0a0f0;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c4a7e7 #1f1d2e;
+}
+
       @keyframes fadeInUp {
         from {
           opacity: 0;
@@ -41,7 +65,7 @@ const { list }: { list: Game[] } = Astro.props;
         left: -100%;
         width: 200%;
         height: 200%;
-        background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.08), transparent);
         animation: shine 2.5s infinite;
         pointer-events: none;
         z-index: 1;
@@ -53,70 +77,107 @@ const { list }: { list: Game[] } = Astro.props;
 
       .card-glow:hover {
         box-shadow:
-          0 0 20px rgba(208, 214, 249, 0.3),
-          0 0 40px rgba(208, 214, 249, 0.2),
-          0 0 60px rgba(208, 214, 249, 0.1);
+          0 0 20px rgba(216, 191, 216, 0.1),
+          0 0 40px rgba(216, 191, 216, 0.07),
+          0 0 60px rgba(216, 191, 216, 0.04);
         transform: scale(1.05);
       }
 
       .card-loading {
-        background: linear-gradient(135deg, #1a1b2b, #11121c);
+        background: linear-gradient(135deg, #1f1d2e, #191724);
         animation: pulse 1.5s infinite ease-in-out;
         filter: blur(8px);
       }
 
       @keyframes pulse {
-        0%,
-        100% {
-          opacity: 0.8;
-        }
-        50% {
-          opacity: 1;
-        }
+        0%, 100% { opacity: 0.8; }
+        50% { opacity: 1; }
       }
     </style>
+
     <script>
       document.addEventListener('DOMContentLoaded', () => {
-        const cards = document.querySelectorAll('.game-card');
-
+        const cards = document.querySelectorAll('.card');
         cards.forEach((card) => {
-          const img = card.querySelector('img');
-          if (img) {
-            if (img.complete && img.naturalWidth > 0) {
-              card.classList.remove('card-loading', 'shine');
-            } else {
-              img.onload = () => {
-                card.classList.remove('card-loading', 'shine');
-              };
-            }
-          }
+          if (!(card instanceof HTMLElement)) return;
+
+          const img = new Image();
+          const bg = card.dataset.bg;
+          if (!bg) return;
+
+          img.src = bg;
+          img.onload = () => {
+            card.classList.remove('card-loading', 'shine');
+            card.style.backgroundImage = `url('${img.src}')`;
+          };
+        });
+
+        const gridView = document.querySelector('[data-view="grid"]');
+        const listView = document.querySelector('[data-view="list"]');
+        const container = document.querySelector('[data-container]');
+
+        gridView?.addEventListener('click', () => {
+          container?.classList.remove('flex', 'flex-col', 'space-y-6');
+          container?.classList.add('grid', 'grid-cols-1', 'sm:grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-4', 'gap-8');
+        });
+
+        listView?.addEventListener('click', () => {
+          container?.classList.remove('grid', 'grid-cols-1', 'sm:grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-4', 'gap-8');
+          container?.classList.add('flex', 'flex-col', 'space-y-6');
         });
       });
     </script>
   </head>
-  <body class="text-white min-h-screen p-6 font-sans overflow-x-hidden bg-[#0e0f1a]">
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+
+  <body class="text-[#e0def4] font-linux min-h-screen p-6 font-sans overflow-x-hidden bg-[#191724]">
+  <div class="flex justify-between items-center mb-8 max-w-7xl mx-auto">
+  <div class="flex items-center gap-3">
+    <input
+      type="text"
+      data-input="why-are-you-looking-here->:("
+      placeholder="Search here..."
+      class="h-12 px-5 w-full max-w-md rounded-xl border border-[#26233a] bg-[#1f1d2e] text-[#e0def4] placeholder-[#908caa99] focus:outline-none focus:ring-2 focus:ring-[#c4a7e7] transition-all duration-300 shadow-md"
+    />
+    <button
+      class="h-12 w-16 flex items-center justify-center rounded-xl bg-[#1f1d2e] hover:bg-[#26233a] shadow-md transition-all duration-200"
+    >
+      <img src="/a/images/logo/random.svg" data-random="stawwwp" alt="Random" class="w-6 h-6" />
+    </button>
+  </div>
+
+  <div class="flex gap-3 ml-4">
+    <button data-view="grid" class="h-12 w-12 rounded-xl bg-[#1f1d2e] hover:bg-[#26233a] transition-all duration-200 flex items-center justify-center shadow-md">
+      <img src="/a/images/logo/grid.svg" alt="Grid View" class="w-6 h-6" />
+    </button>
+    <button data-view="list" class="h-12 w-12 rounded-xl bg-[#1f1d2e] hover:bg-[#26233a] transition-all duration-200 flex items-center justify-center shadow-md">
+      <img src="/a/images/logo/list.svg" alt="List View" class="w-6 h-6" />
+    </button>
+  </div>
+</div>
+
+    <div data-container class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
       {
         list.map((game, i) => (
           <a
-            href={game.url}
+            data-href={game.url}
             target="_blank"
-            class="relative game-card bg-[#12131f] border border-[#1f1f30] rounded-2xl p-6 overflow-hidden shine card-glow card-loading"
+            data-bg={game.icon}
+            class="relative card border border-[#26233a] rounded-2xl overflow-hidden card-glow card-loading shine bg-center bg-cover bg-no-repeat"
             style={`animation: fadeInUp 0.6s ease-out ${i * 0.1}s both;`}
           >
-            <img
-              src={game.icon}
-              alt={game.name}
-              class="w-16 h-16 mb-4 rounded-md mx-auto shadow-lg transition-all duration-500 opacity-0"
-              onload="this.style.opacity='1'"
-            />
-            <h2 class="text-xl font-linux font-bold text-center text-[#d0d6f9] mt-2 transition duration-300">
-              {game.name}
-            </h2>
-            <p class="text-sm font-mono text-[#aab0d0] text-center mt-2">{game.desc}</p>
+            <div class="absolute inset-0 bg-black/60 hover:bg-black/40 backdrop-blur-sm transition-all duration-300 z-10" />
+            <div class="relative z-20 p-6 flex flex-col items-center justify-center h-full text-center">
+              <h2 class="text-xl font-linux font-bold text-text-header mb-2 drop-shadow">
+                {game.name}
+              </h2>
+              <p class="text-sm font-mono text-text-secondary">{game.desc}</p>
+            </div>
+            <div class="absolute inset-0 rounded-2xl pointer-events-none hover:ring-2 hover:ring-violet-500/60 transition duration-300 z-30" />
           </a>
         ))
       }
     </div>
+
+    <script src="../utils/assets"></script>
   </body>
 </html>

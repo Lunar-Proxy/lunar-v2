@@ -2,6 +2,7 @@
 
 - [x] Fix tab dragging
 - [x] Fix reload button reloading all tabs
+- [x] Add bookmarks to the tab page
 
 # 🔨 To Do
 
@@ -13,6 +14,5 @@
   - [ ] Remove unused files
   - [ ] Optimize functions
   - [ ] Improve readability
-- [ ] Add bookmarks to the tab page
 - [ ] Fix any bugs in general
 - [ ] Make AB Cloaking Keybinds

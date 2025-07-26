@@ -8,9 +8,9 @@ import Tabs from '../layouts/tab.astro';
 </head>
 <body class="h-screen text-white overflow-hidden">
   <Tabs />
-  <script is:inline src="/a/bundled/v/b.js"></script>
-  <script is:inline src="/a/bundled/v/cnfg.js"></script>
-  <link rel="prefetch" href="/a/bundled/scram/worker.js" />
+  <script is:inline src="/a/bundled/v/b.js" defer></script>
+  <script is:inline src="/a/bundled/v/cnfg.js" defer></script>
+  <link rel="prefetch" href="/a/bundled/scram/worker.js"/>
   <link rel="prefetch" href="/a/bundled/scram/shared.js" />
   <script is:inline src="/bm/index.js"></script>
   <script src="@scripts/navigation"></script>

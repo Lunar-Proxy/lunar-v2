@@ -55,7 +55,7 @@ import Bookmarks from '../layouts/bookmark.astro';
       class="absolute top-4 right-4 bg-white/5 backdrop-blur-md font-semibold font-linux rounded-xl px-5 py-2 text-sm text-[#aab0d0] shadow-lg"
       id="weather"
     >
-    -
+      -
     </div>
 
     <script>
@@ -102,7 +102,7 @@ import Bookmarks from '../layouts/bookmark.astro';
 
       async function updateBattery() {
         if ('getBattery' in navigator) {
-          const battery = await navigator.getBattery();
+          const battery = await (navigator as any).getBattery();
           const level = Math.round(battery.level * 100);
           document.getElementById('battery')!.textContent = `🔋 ${level}%`;
         }

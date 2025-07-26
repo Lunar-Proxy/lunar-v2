@@ -11,15 +11,15 @@
 
 ## What is Lunar?
 
-Lunar is a powerful web proxy created to bypass censorship.
+Lunar is a web proxy created to bypass censorship.
 
 ## Features
 
 - 🚀 **High Speed** – Designed to be fast
 - 🪞 **Enhanced Tab Cloaking** – Mask the tab title and favicon to be educational.
-- 🎮 **Games** – Play a wide page of games
-- ⚡️ **Site Support** - Lunar supports popular websites such as Gforce Now, Nowgg, Spotify, and
-  more.
+- 🎮 **Games** – Play over 40+ games, all unbl0cked
+- ⚡️ **Site Support** - Lunar supports popular websites such as Gforce Now, spotify, and
+  more thanks to Ultraviolet & scramjet technology
 
 ## Deployment Options
 
