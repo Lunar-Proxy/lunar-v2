@@ -19,12 +19,13 @@ An asset is a game or an app.
 ```json
 {
   "name": "Google", // Name of asset
-  "image": "/assets/images/assets/g.png", // Image of asset
+  "image": "/a/images/assets/ap/g.png", // Image of asset
   "link": "https://www.google.com" // URL for asset
 }
 ```
 
-**Files:**
+**Files/Foleders:**
 
-- Apps → `public/a/json/al.json`
-- Games → `public/a/json/gl.json`
+- Apps & Games → `public/a/json/lists.json`
+- Games images: `public/a/images/assets/ga`
+- Apps images: `public/a/images/assets/ap`
