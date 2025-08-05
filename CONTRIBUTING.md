@@ -24,7 +24,7 @@ An asset is a game or an app.
 }
 ```
 
-**Files/Foleders:**
+**Files/Folders:**
 
 - Apps & Games → `public/a/json/lists.json`
 - Games images: `public/a/images/assets/ga`
