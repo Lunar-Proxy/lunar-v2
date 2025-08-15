@@ -1,47 +1,115 @@
 /** @type {import("prettier").Config} */
 export default {
-  plugins: ['prettier-plugin-astro'],
   printWidth: 100,
   tabWidth: 2,
   useTabs: false,
   semi: true,
   singleQuote: true,
-  trailingComma: 'all',
+  quoteProps: 'as-needed',
+  trailingComma: 'es5',
   bracketSpacing: true,
-  arrowParens: 'always',
+  bracketSameLine: false,
+  arrowParens: 'avoid',
+  endOfLine: 'lf',
+  embeddedLanguageFormatting: 'auto',
+
+  plugins: ['prettier-plugin-astro', '@trivago/prettier-plugin-sort-imports', 'prettier-plugin-tailwindcss'],
+
+  importOrder: ['^astro:(.*)$', '^@astrojs/(.*)$', '^@?\\w', '^[./]'],
+  importOrderSeparation: true,
+  importOrderSortSpecifiers: true,
 
   overrides: [
     {
       files: '*.astro',
-      options: { parser: 'astro' },
+      options: {
+        parser: 'astro',
+        printWidth: 120,
+        bracketSameLine: true,
+      },
     },
     {
-      files: ['*.ts', '*.tsx'],
-      options: { parser: 'typescript' },
+      files: ['*.ts', '*.tsx', '*.mts', '*.cts'],
+      options: {
+        parser: 'typescript',
+        semi: true,
+        trailingComma: 'all',
+      },
     },
     {
-      files: ['*.js', '*.jsx'],
-      options: { parser: 'babel' },
+      files: ['*.js', '*.jsx', '*.mjs', '*.cjs'],
+      options: {
+        parser: 'babel',
+        trailingComma: 'es5',
+      },
     },
     {
       files: ['*.md', '*.mdx'],
-      options: { parser: 'markdown', proseWrap: 'always' },
+      options: {
+        parser: 'markdown',
+        printWidth: 80,
+        proseWrap: 'always',
+        singleQuote: false,
+      },
     },
     {
-      files: ['*.json', '.prettierrc'],
-      options: { parser: 'json', printWidth: 80 },
+      files: ['*.json', '.prettierrc', 'tsconfig*.json'],
+      options: {
+        parser: 'json',
+        printWidth: 80,
+        tabWidth: 2,
+        trailingComma: 'none',
+      },
+    },
+    {
+      files: 'package.json',
+      options: {
+        parser: 'json-stringify',
+        printWidth: 80,
+        tabWidth: 2,
+      },
     },
     {
       files: ['*.yaml', '*.yml'],
-      options: { parser: 'yaml', singleQuote: false },
+      options: {
+        parser: 'yaml',
+        singleQuote: false,
+        bracketSpacing: true,
+        printWidth: 80,
+      },
     },
     {
-      files: ['*.css', '*.scss', '*.less'],
-      options: { parser: 'css' },
+      files: ['*.css', '*.pcss'],
+      options: {
+        parser: 'css',
+        singleQuote: false,
+        printWidth: 120,
+      },
     },
     {
-      files: ['*.html', '*.svg'],
-      options: { parser: 'html' },
+      files: ['*.html', '*.htm'],
+      options: {
+        parser: 'html',
+        printWidth: 120,
+        bracketSameLine: true,
+        htmlWhitespaceSensitivity: 'css',
+      },
+    },
+    {
+      files: '*.svg',
+      options: {
+        parser: 'html',
+        printWidth: 120,
+        htmlWhitespaceSensitivity: 'ignore',
+      },
+    },
+    {
+      files: ['*.config.ts', 'astro.config.*'],
+      options: {
+        parser: 'typescript',
+        printWidth: 120,
+        trailingComma: 'es5',
+      },
     },
   ],
 };

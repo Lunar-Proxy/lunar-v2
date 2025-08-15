@@ -1,19 +1,19 @@
 /// <reference path="../.astro/types.d.ts" />
 
-const LAST_UPDATED: string;
-const VERSION: string;
-const UltraConfig: UltraConfig;
-const BareMux: any;
+declare const LAST_UPDATED: string;
+declare const VERSION: string;
+declare const UltraConfig: UltraConfig;
+declare const BareMux: any;
+
 interface UltraConfig {
   prefix: string;
   encodeUrl: (str: string) => string | null;
   decodeUrl: (str: string) => string | null;
 }
+
 interface ScramjetFiles {
   wasm: string;
-  worker: string;
-  client: string;
-  shared: string;
+  all: string;
   sync: string;
 }
 

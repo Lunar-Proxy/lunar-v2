@@ -1,3 +1,7 @@
+---
+import ImportLucide from './lucide.astro';
+---
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -5,72 +9,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="@scripts/tb"></script>
   </head>
-  <body class="text-white font-sans p-4 bg-gray-900">
+  <body class="bg-gray-900 p-4 font-sans text-white">
     <div class="w-full">
       <div
         id="tab-wrapper"
-        class="h-14 flex items-center bg-background-overlay rounded-t-lg p-2 relative transition-all"
-      >
-        <div id="tcontainer" class="flex flex-nowrap overflow-x-auto space-x-2 ml-2 max-w-full">
-        </div>
+        class="bg-background-overlay relative flex h-14 items-center rounded-t-lg p-2 transition-all">
+        <div id="tcontainer" class="ml-2 flex max-w-full flex-nowrap space-x-2 overflow-x-auto"></div>
         <button
           id="add"
-          class="ml-2 mt-[2px] flex items-center justify-center w-8 h-8 text-lg rounded-md text-gray-400 hover:text-white hover:bg-gray-700 transition-colors"
-        >
+          class="mt-[2px] ml-2 flex h-8 w-8 items-center justify-center rounded-md text-lg text-gray-400 transition-colors hover:bg-gray-700 hover:text-white">
           +
         </button>
       </div>
 
-      <div
-        class="border-border-default flex items-center bg-background-overlay h-12 transition-all px-6"
-      >
+      <div class="border-border-default bg-background-overlay flex h-12 items-center px-6 transition-all">
         <div class="flex items-center space-x-4">
           <button
             id="back"
-            class="flex items-center justify-center w-8 h-8 text-lg rounded-md text-gray-400 hover:text-white hover:bg-gray-700 transition-colors"
-          >
-            <img src="/a/images/logo/left-arr.svg" class="w-4 h-4" />
+            class="flex h-8 w-8 items-center justify-center rounded-md text-lg text-gray-400 transition-colors hover:bg-gray-700 hover:text-white">
+            <i data-lucide="arrow-left" class="h-4 w-4 flex-shrink-0 text-[#9aa0b3]"></i>
           </button>
           <button
             id="forward"
-            class="flex items-center justify-center w-8 h-8 text-lg rounded-md text-gray-400 hover:text-white hover:bg-gray-700 transition-colors"
-          >
-            <img src="/a/images/logo/right-arr.svg" class="w-4 h-4" />
+            class="flex h-8 w-8 items-center justify-center rounded-md text-lg text-gray-400 transition-colors hover:bg-gray-700 hover:text-white">
+            <i data-lucide="arrow-right" class="h-4 w-4 flex-shrink-0 text-[#9aa0b3]"></i>
           </button>
           <button
             id="refresh"
-            class="group flex items-center justify-center w-8 h-8 text-lg rounded-md text-gray-400 hover:text-white hover:bg-gray-700 transition-colors"
-          >
-            <img
-              src="/a/images/logo/refresh.svg"
-              class="w-4 h-4 transition-transform duration-500 group-hover:animate-spin"
-            />
+            class="group flex h-8 w-8 items-center justify-center rounded-md text-lg text-gray-400 transition-colors hover:bg-gray-700 hover:text-white">
+            <i
+              data-lucide="refresh-cw"
+              class="h-4 w-4 text-[#9aa0b3] transition-transform duration-500 group-hover:animate-spin"></i>
           </button>
         </div>
 
-        <div class="flex grow items-center ml-8">
-          <div class="flex items-center w-full gap-3">
+        <div class="ml-8 flex grow items-center">
+          <div class="flex w-full items-center gap-3">
             <input
               type="text"
               id="urlbar"
-              class="font-linux w-full px-4 py-2 h-10 hover:text-white hover:bg-gray-700 transition bg-[#1c1a2b] text-text-secondary border-t-2 rounded-full text-sm font-semibold transition-all duration-300 ease-in-out focus:outline-none focus:ring-0"
+              class="font-linux text-text-secondary border-border-default h-10 w-full rounded-full border-t-2 bg-[#1c1a2b] px-4 py-2 text-sm font-semibold transition transition-all duration-300 ease-in-out hover:text-white focus:ring-0 focus:outline-none"
               placeholder="Enter a URL or a query..."
             />
-            <img
-              src="/a/images/logo/box.svg"
-              class="w-6 h-6 opacity-70 hover:opacity-100 cursor-pointer"
-              id="ext"
-            />
-            <img
-              src="/a/images/logo/code.svg"
-              class="w-6 h-6 opacity-70 hover:opacity-100 cursor-pointer"
+            <button
               id="code"
-            />
+              class="group flex h-8 w-8 items-center justify-center rounded-md text-lg text-gray-400 transition-colors hover:bg-gray-700 hover:text-white">
+              <i data-lucide="code" class="h-6 w-6 text-[#9aa0b3] transition-transform duration-500"></i>
+            </button>
           </div>
         </div>
       </div>
     </div>
 
-    <div id="fcontainer" class="w-full h-[calc(100vh-4rem)] rounded-b-lg overflow-hidden"></div>
+    <div id="fcontainer" class="h-[calc(100vh-4rem)] w-full overflow-hidden rounded-b-lg"></div>
   </body>
+  <ImportLucide />
 </html>

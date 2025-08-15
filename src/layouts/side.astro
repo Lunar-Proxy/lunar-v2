@@ -1,164 +1,28 @@
 ---
 import '@/main.css';
+import Item from '../components/navitem.astro';
 ---
 
 <aside
-  class="border-r-[1px] border-gray-700 fixed top-0 left-0 bottom-0 h-full rounded-md w-[72px] bg-background-overlay flex flex-col items-center pt-5 overflow-visible z-50 shadow-lg"
->
-  <div class="relative group mb-3">
-    <a href="#">
-      <button
-        class="w-10 h-10 flex items-center justify-center bg-[#393552] rounded-lg hover:bg-gray-700 hover:scale-110 transition-all duration-300 ease-out hover:rotate-3 hover:shadow-xl"
-      >
-        <img
-          src="/a/images/logo/moon.svg"
-          class="w-6 h-6 hover:stroke-text-blue-400 hover:fill-text-blue-400 transition-transform duration-300 group-hover:scale-110"
-        />
-      </button>
-    </a>
-    <span
-      class="absolute font-linux left-full ml-2 top-1/2 -translate-y-1/2 bg-[#393552] text-white text-sm px-3 py-1 rounded-lg opacity-0 scale-90 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-300 ease-out whitespace-nowrap z-9999 shadow-lg"
-    >
-      Home
-    </span>
-  </div>
-
-  <img src="/a/images/logo/spacer.svg" class="w-5 h-5 text-gray-500 opacity-60 mb-3" />
-
-  <div class="relative group mb-3">
-    <a href="#">
-      <button
-        class="w-10 h-10 flex items-center justify-center bg-[#393552] rounded-lg hover:bg-gray-700 hover:scale-110 transition-all duration-300 ease-out hover:rotate-3 hover:shadow-xl"
-      >
-        <img
-          src="/a/images/logo/bro.svg"
-          class="w-6 h-6 text-gray-300 transition-transform duration-300 group-hover:scale-110"
-        />
-      </button>
-    </a>
-    <span
-      class="absolute font-linux left-full ml-2 top-1/2 -translate-y-1/2 bg-[#393552] text-white text-sm px-3 py-1 rounded-lg opacity-0 scale-90 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-300 ease-out whitespace-nowrap z-9999 shadow-lg"
-    >
-      Search
-    </span>
-  </div>
-
-  <div class="relative group mb-3">
-    <a href="#">
-      <button
-        class="w-10 h-10 flex items-center justify-center bg-[#393552] rounded-lg hover:bg-gray-700 hover:scale-110 transition-all duration-300 ease-out hover:rotate-3 hover:shadow-xl"
-      >
-        <img
-          src="/a/images/logo/pad.svg"
-          class="w-6 h-6 text-gray-300 transition-transform duration-300 group-hover:scale-110"
-        />
-      </button>
-    </a>
-    <span
-      class="absolute font-linux left-full ml-2 top-1/2 -translate-y-1/2 bg-[#393552] text-white text-sm px-3 py-1 rounded-lg opacity-0 scale-90 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-300 ease-out whitespace-nowrap z-9999 shadow-lg"
-    >
-      Games
-    </span>
-  </div>
-
-  <div class="relative group mb-3">
-    <a href="#">
-      <button
-        class="w-10 h-10 flex items-center justify-center bg-[#393552] rounded-lg hover:bg-gray-700 hover:scale-110 transition-all duration-300 ease-out hover:rotate-3 hover:shadow-xl"
-      >
-        <img
-          src="/a/images/logo/grip.svg"
-          class="w-6 h-6 text-gray-300 transition-transform duration-300 group-hover:scale-110"
-        />
-      </button>
-    </a>
-    <span
-      class="absolute font-linux left-full ml-2 top-1/2 -translate-y-1/2 bg-[#393552] text-white text-sm px-3 py-1 rounded-lg opacity-0 scale-90 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-300 ease-out whitespace-nowrap z-9999 shadow-lg"
-    >
-      Apps
-    </span>
-  </div>
-
-  <div class="relative group mb-3">
-    <a href="#">
-      <button
-        class="w-10 h-10 flex items-center justify-center bg-[#393552] rounded-lg hover:bg-gray-700 hover:scale-110 transition-all duration-300 ease-out hover:rotate-3 hover:shadow-xl"
-      >
-        <img
-          src="/a/images/logo/bot.svg"
-          class="w-6 h-6 text-gray-300 transition-transform duration-300 group-hover:scale-110"
-        />
-      </button>
-    </a>
-    <span
-      class="absolute font-linux left-full ml-2 top-1/2 -translate-y-1/2 bg-[#393552] text-white text-sm px-3 py-1 rounded-lg opacity-0 scale-90 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-300 ease-out whitespace-nowrap z-9999 shadow-lg"
-    >
-      Ai
-    </span>
-  </div>
-
-  <div class="relative group mb-3">
-    <a href="#">
-      <button
-        class="w-10 h-10 flex items-center justify-center bg-[#393552] rounded-lg hover:bg-gray-700 hover:scale-110 transition-all duration-300 ease-out hover:rotate-3 hover:shadow-xl"
-      >
-        <img
-          src="/a/images/logo/gear.svg"
-          class="w-6 h-6 text-gray-300 transition-transform duration-300 group-hover:scale-110"
-        />
-      </button>
-    </a>
-    <span
-      class="absolute font-linux left-full ml-2 top-1/2 -translate-y-1/2 bg-[#393552] text-white text-sm px-3 py-1 rounded-lg opacity-0 scale-90 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-300 ease-out whitespace-nowrap z-9999 shadow-lg"
-    >
-      Settings
-    </span>
-  </div>
-
-  <img src="/a/images/logo/spacer.svg" class="w-5 h-5 text-gray-500 opacity-60 mb-3" />
-
-  <div class="relative group mb-3">
-    <a href="#">
-      <button
-        id="parentSignIn"
-        class="w-10 h-10 flex items-center justify-center bg-[#393552] rounded-lg hover:bg-gray-700 hover:scale-110 transition-all duration-300 ease-out hover:rotate-3 hover:shadow-xl"
-      >
-        <img
-          src="/a/images/logo/hide.svg"
-          class="w-6 h-6 text-gray-300 transition-transform duration-300 group-hover:scale-110"
-        />
-      </button>
-    </a>
-    <span
-      class="absolute font-linux left-full ml-2 top-1/2 -translate-y-1/2 bg-[#393552] text-white text-sm px-3 py-1 rounded-lg opacity-0 scale-90 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-300 ease-out whitespace-nowrap z-9999 shadow-lg"
-    >
-      AB Cloak (Ctrl + Z)
-    </span>
-  </div>
-
-  <div class="relative group">
-    <a href="#">
-      <button
-        id="LoginForm"
-        class="w-10 h-10 flex items-center justify-center bg-[#393552] rounded-lg hover:bg-gray-700 hover:scale-110 transition-all duration-300 ease-out hover:rotate-3 hover:shadow-xl"
-      >
-        <img
-          src="/a/images/logo/exit.svg"
-          class="w-6 h-6 text-gray-300 transition-transform duration-300 group-hover:scale-110"
-        />
-      </button>
-    </a>
-    <span
-      class="absolute font-linux left-full ml-2 top-1/2 -translate-y-1/2 bg-[#393552] text-white text-sm px-3 py-1 rounded-lg opacity-0 scale-90 pointer-events-none group-hover:opacity-100 group-hover:scale-100 group-hover:pointer-events-auto transition-all duration-300 ease-out whitespace-nowrap z-9999 shadow-lg"
-    >
-      Exit (Ctrl + X)
-    </span>
-  </div>
+  class="border-border-default bg-background-overlay fixed top-0 bottom-0 left-0 z-50 flex h-full w-[72px] flex-col items-center overflow-visible rounded-md border-r-[1.8px] pt-5 shadow-lg">
+  <Item name="Home" icon="moon-star" />
+  <i data-lucide="minus" class="mb-3 h-5 w-5 text-gray-500 opacity-60"></i>
+  <Item name="Search" icon="search" />
+  <Item name="Games" icon="gamepad" />
+  <Item name="Apps" icon="grip" />
+  <i data-lucide="minus" class="mb-3 h-5 w-5 text-gray-500 opacity-60"></i>
+  <Item name="VM" icon="monitor" />
+  <Item name="Tools" icon="hammer" />
+  <Item name="Settings" icon="settings" />
+  <i data-lucide="minus" class="mb-3 h-5 w-5 text-gray-500 opacity-60"></i>
+  <Item id="parentSignIn" name="AB Cloak (Ctrl Z)" icon="eye-off" />
+  <Item id="LoginForm" name="Exit (Ctrl + X)" icon="log-out" />
 </aside>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('LoginForm')?.addEventListener('click', function () {
+      console.log('exit clicked');
       const event = new KeyboardEvent('keydown', {
         key: 'x',
         ctrlKey: true,
@@ -168,6 +32,7 @@ import '@/main.css';
     });
 
     document.getElementById('parentSignIn')?.addEventListener('click', function () {
+      console.log('cloak clicked');
       const event = new KeyboardEvent('keydown', {
         key: 'z',
         ctrlKey: true,
@@ -176,28 +41,28 @@ import '@/main.css';
       document.dispatchEvent(event);
     });
   });
+  
   const frameNavigator = document.querySelector('iframe') as HTMLIFrameElement | null;
-
   const Navigation = [
-    { btn: 'Home', url: './welcome' },
-    { btn: 'Search', url: './tab' },
-    { btn: 'Games', url: './math' },
-    { btn: 'Apps', url: './ap' },
-    { btn: 'Ai', url: './a' },
-    { btn: 'Settings', url: './st' },
+    { btn: 'Home', url: '/welcome' },
+    { btn: 'Search', url: '/tab' },
+    { btn: 'Games', url: '/math' },
+    { btn: 'Apps', url: '/sci' },
+    { btn: 'VM', url: '/v' },
+    { btn: 'Tools', url: '/to' },
+    { btn: 'Settings', url: '/st' },
   ];
 
   Navigation.forEach(({ btn, url }) => {
     const button =
       Array.from(document.querySelectorAll('span'))
-        .find((el) => el.textContent?.trim() === btn)
+        .find(el => el.textContent?.trim() === btn)
         ?.previousElementSibling?.querySelector('button') || null;
 
     if (button) {
       button!.addEventListener('click', () => {
-        if (frameNavigator) {
-          frameNavigator.src = url;
-        }
+        // @ts-ignore f you
+        frameNavigator.src = url;
       });
     }
   });

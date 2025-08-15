@@ -8,7 +8,8 @@ Thank you for your interest in contributing to Lunar.
 
 ### Before creating a pull request
 
-Before creating a pull request, please run `pnpm run precommit` in your terminal.
+Before creating a pull request, please run `pnpm run precommit` in your
+terminal.
 
 ### Adding games / apps
 

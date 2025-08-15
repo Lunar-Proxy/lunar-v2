@@ -1,17 +1,18 @@
-import Fastify from 'fastify';
+import fastifyCompress from '@fastify/compress';
 import fastifyMiddie from '@fastify/middie';
 import fastifyStatic from '@fastify/static';
-import fastifyCompress from '@fastify/compress';
-import fs from 'node:fs';
-import { execSync } from 'child_process';
+import { logging, server as wisp } from '@mercuryworkshop/wisp-js/server';
 import chalk from 'chalk';
+import { execSync } from 'child_process';
+import Fastify from 'fastify';
+import fetch from 'node-fetch';
+import fs from 'node:fs';
 import { createServer } from 'node:http';
 import { Socket } from 'node:net';
 import path from 'node:path';
-import { version } from './package.json';
-import { server as wisp, logging } from '@mercuryworkshop/wisp-js/server';
-import fetch from 'node-fetch';
 import { updateChecker } from 'serverlib/check';
+
+import { version } from './package.json';
 
 const port: number = parseInt(process.env.PORT as string) || parseInt('8080');
 
@@ -39,7 +40,7 @@ async function build() {
 
 const app = Fastify({
   logger: false,
-  serverFactory: (handler) =>
+  serverFactory: handler =>
     createServer(handler).on('upgrade', (req, socket: Socket, head) => {
       wisp.routeRequest(req, socket, head);
     }),
@@ -99,6 +100,7 @@ app.get('/api/icon/', async (req, reply) => {
 
 await app.register(fastifyStatic, {
   root: path.join(import.meta.dirname, 'dist', 'client'),
+  preCompressed: true,
   ...staticOptions,
 });
 
@@ -112,7 +114,7 @@ app.setNotFoundHandler((request, reply) => {
   reply.type('text/plain').send(fs.readFileSync('/404'));
 });
 
-app.listen({ host: '0.0.0.0', port: port }, (err) => {
+app.listen({ host: '0.0.0.0', port: port }, () => {
   const updateStatus = updateChecker();
   const statusMsg =
     updateStatus.status === 'u'

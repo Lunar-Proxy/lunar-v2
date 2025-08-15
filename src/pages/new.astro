@@ -1,6 +1,6 @@
 ---
 import '@/main.css';
-import Bookmarks from '../layouts/bookmark.astro';
+import Shortcuts from '../layouts/shortcuts.astro';
 ---
 
 <!doctype html>
@@ -10,160 +10,38 @@ import Bookmarks from '../layouts/bookmark.astro';
     <title>New Tab</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
-    <style>
-      @layer utilities {
-        @keyframes slideDown {
-          0% {
-            transform: translateY(-100%);
-            opacity: 0;
-          }
-          100% {
-            transform: translateY(0);
-            opacity: 1;
-          }
-        }
-        .slide-digit {
-          animation: slideDown 0.4s ease-out;
-        }
-      }
-    </style>
   </head>
-  <body
-    class="h-screen w-screen text-[#d0d6f9] font-sans flex items-center justify-center flex-col gap-4 relative select-none"
-  >
-    <div class="flex flex-col items-center gap-2">
-      <h1 id="clock" class="text-8xl font-bold font-mono tracking-tight flex items-baseline gap-1">
-        <span id="h" class="inline-block min-w-[1.5ch] text-center">--</span>
-        <span>:</span>
-        <span id="m" class="inline-block min-w-[1.5ch] text-center">--</span>
-        <span>:</span>
-        <span id="s" class="inline-block min-w-[1.5ch] text-center">--</span>
-        <span id="ampm" class="ml-2 text-3xl text-[#aab0d0]"></span>
-      </h1>
-      <p id="date" class="text-2xl text-[#aab0d0] font-mono">-</p>
-    </div>
 
-    <Bookmarks />
-
-    <div
-      class="absolute top-4 left-4 bg-white/5 backdrop-blur-md font-linux font-semibold rounded-xl px-5 py-2 text-sm text-[#aab0d0] shadow-lg"
-      id="battery"
-    >
-      -
+  <body class="font-linux flex h-screen w-screen flex-col items-center justify-center text-white select-none">
+    <div id="clock" class="flex items-end space-x-2 text-6xl font-bold tracking-wide sm:text-7xl md:text-8xl">
+      <span id="hours" class="font-extrabold text-white">12</span>
+      <span>:</span>
+      <span id="minutes" class="text-white">59</span>
+      <span>:</span>
+      <span id="seconds" class="text-white">48</span>
+      <span id="ampm" class="mb-1 text-base font-semibold text-white md:text-xl">AM</span>
     </div>
-    <div
-      class="absolute top-4 right-4 bg-white/5 backdrop-blur-md font-semibold font-linux rounded-xl px-5 py-2 text-sm text-[#aab0d0] shadow-lg"
-      id="weather"
-    >
-      -
-    </div>
-
+    <Shortcuts />
     <script>
-      type TimeKeys = 'h' | 'm' | 's';
-      const last: Record<TimeKeys, string> = { h: '', m: '', s: '' };
-
-      function updateDigit(id: string, value: string, key: TimeKeys) {
-        const el = document.getElementById(id);
-        if (!el) return;
-        if (last[key] !== value) {
-          el.classList.remove('slide-digit');
-          void el.offsetWidth;
-          el.classList.add('slide-digit');
-          el.textContent = value;
-          last[key] = value;
-        }
-      }
-
       function updateClock() {
         const now = new Date();
         let h = now.getHours();
-        const m = now.getMinutes().toString().padStart(2, '0');
-        const s = now.getSeconds().toString().padStart(2, '0');
+        const m = now.getMinutes();
+        const s = now.getSeconds();
         const ampm = h >= 12 ? 'PM' : 'AM';
         h = h % 12 || 12;
-        const hStr = h.toString().padStart(2, '0');
-
-        updateDigit('h', hStr, 'h');
-        updateDigit('m', m, 'm');
-        updateDigit('s', s, 's');
-        document.getElementById('ampm')!.textContent = ampm;
+        //@ts-ignore
+        document.getElementById('hours').textContent = String(h).padStart(2, '0');
+        //@ts-ignore
+        document.getElementById('minutes').textContent = String(m).padStart(2, '0');
+        //@ts-ignore
+        document.getElementById('seconds').textContent = String(s).padStart(2, '0');
+        //@ts-ignore
+        document.getElementById('ampm').textContent = ampm;
       }
-
-      function updateDate() {
-        const now = new Date();
-        const options: Intl.DateTimeFormatOptions = {
-          weekday: 'long',
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        };
-        document.getElementById('date')!.textContent = now.toLocaleDateString(undefined, options);
-      }
-
-      async function updateBattery() {
-        if ('getBattery' in navigator) {
-          const battery = await (navigator as any).getBattery();
-          const level = Math.round(battery.level * 100);
-          document.getElementById('battery')!.textContent = `🔋 ${level}%`;
-        }
-      }
-
-      async function fetchWeather(lat: number, lon: number) {
-        try {
-          const res = await fetch(
-            `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&temperature_unit=fahrenheit`,
-          );
-          const data = await res.json();
-
-          const weather = data.current_weather;
-          if (!weather) throw new Error('No weather data');
-
-          const temperature = Math.round(weather.temperature);
-          const code = weather.weathercode;
-          const { emoji, description } = getWeatherInfo(code);
-
-          document.getElementById('weather')!.textContent =
-            `${emoji} ${description}, ${temperature}°F`;
-        } catch {
-          document.getElementById('weather')!.textContent = '🌤️ Weather Unavailable';
-        }
-      }
-
-      function getWeatherInfo(code: number): { emoji: string; description: string } {
-        if (code === 0) return { emoji: '☀️', description: 'Sunny' };
-        if ([1, 2].includes(code)) return { emoji: '🌤️', description: 'Partly Cloudy' };
-        if (code === 3) return { emoji: '☁️', description: 'Overcast' };
-        if ([45, 48].includes(code)) return { emoji: '🌫️', description: 'Foggy' };
-        if ([51, 53, 55, 56, 57].includes(code)) return { emoji: '🌦️', description: 'Drizzle' };
-        if ([61, 63, 65, 66, 67].includes(code)) return { emoji: '🌧️', description: 'Rain' };
-        if ([71, 73, 75, 77, 85, 86].includes(code)) return { emoji: '❄️', description: 'Snow' };
-        if ([80, 81, 82].includes(code)) return { emoji: '🌧️', description: 'Rain Showers' };
-        if ([95, 96, 99].includes(code)) return { emoji: '⛈️', description: 'Thunderstorm' };
-        return { emoji: '🌤️', description: 'Unknown' };
-      }
-
-      async function updateWeather() {
-        try {
-          const res = await fetch('https://ipapi.co/json/');
-          const data = await res.json();
-          if (data && data.latitude && data.longitude) {
-            await fetchWeather(data.latitude, data.longitude);
-          } else {
-            document.getElementById('weather')!.textContent = '🌤️ Weather Unavailable';
-          }
-        } catch {
-          document.getElementById('weather')!.textContent = '🌤️ Weather Unavailable';
-        }
-      }
-
-      updateClock();
-      updateDate();
-      updateBattery();
-      updateWeather();
 
       setInterval(updateClock, 1000);
-      setInterval(updateDate, 60000);
-      setInterval(updateBattery, 300000);
+      updateClock();
     </script>
   </body>
 </html>

@@ -1,6 +1,7 @@
 ---
 import '@/main.css';
 import messages from '@assets/json/messages.json';
+import ImportLucide from '../layouts/lucide.astro';
 
 function getQuote() {
   const index = Math.floor(Math.random() * messages.length);
@@ -11,7 +12,6 @@ const Quote = getQuote();
 
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
     <style>
       @keyframes glow {
         0% {
@@ -37,46 +37,60 @@ const Quote = getQuote();
         }
       }
 
-      .logo {
-        animation: glow 1.5s ease-in-out infinite alternate;
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
       }
-    </style></head
-  >
 
+      .logo {
+        animation:
+          glow 1.5s ease-in-out infinite alternate,
+          fadeUp 1s ease-out;
+      }
+
+      .fade-in-up {
+        animation: fadeUp 0.8s ease-out both;
+      }
+
+      .float {
+        animation: float 3s ease-in-out infinite;
+      }
+    </style>
+    <script src="../utils/home.ts"></script>
+  </head>
   <body
-    class="flex flex-col h-screen justify-center items-center bg-background text-text-header px-4 overflow-hidden"
-  >
-    <h1 class="text-text-header font-bold logo font-linux text-8xl">Lunar</h1>
-    <p class="text-text-secondary font-mono mt-12 text-[20px] text-center max-w-3xl">{Quote}</p>
-
-    <div id="updates" class="w-full flex justify-center pt-10">
-      <div
-        class="w-full max-w-2xl p-6 rounded-2xl bg-[#111827] border border-blue-900 shadow-xl hover:shadow-blue-700/50 hover:scale-[1.02] transform transition duration-300 ease-in-out backdrop-blur-md"
-      >
-        <div class="flex items-center gap-4">
-          <div class="text-blue-500 shrink-0">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-6 h-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"></path>
-            </svg>
-          </div>
-          <div>
-            <h3 class="font-linux text-white text-2xl font-semibold tracking-wide">V1.0 ChangeLog</h3>
-            <ul class="mt-4 text-gray-300 font-mono text-lg leading-relaxed space-y-1 list-disc list-inside">
-              <li>idk</li>
-            </ul>
-          </div>
-        </div>
-      </div>
+    class="bg-background text-text-header flex min-h-screen flex-col items-center justify-center gap-12 px-6 py-16 sm:px-12">
+    <h1 class="logo font-linux text-text-header text-center text-6xl font-bold sm:text-7xl md:text-8xl lg:text-9xl">
+      Lunar
+    </h1>
+    <p class="fade-in-up text-text-secondary max-w-4xl px-4 text-center font-mono text-lg sm:text-xl md:text-2xl">
+      {Quote}
+    </p>
+    <div class="fade-in-up w-full max-w-3xl px-4">
+      <input
+        type="text"
+        placeholder="Type something..."
+        class="border-border-default bg-background-overlay font-linux text-text-secondary w-full rounded-full border-2 px-8 py-5 text-lg placeholder-gray-400 shadow-lg backdrop-blur-md transition duration-300 ease-in-out hover:scale-[1.01] focus:outline-none sm:text-xl"
+      />
     </div>
+    <section
+      id="updates"
+      class="fade-in-up bg-background-overlay mt-6 flex w-full max-w-2xl items-start gap-4 rounded-2xl border border-blue-900 p-6 shadow-xl backdrop-blur-md transition duration-300 ease-in-out hover:scale-[1.02] hover:shadow-blue-700/50"
+      role="region">
+      <i data-lucide="info" class="h-8 w-8 flex-shrink-0 text-blue-500"></i>
+      <div>
+        <h3 class="font-linux text-2xl font-semibold tracking-wide text-white">v1.0 ChangeLog</h3>
+        <ul class="mt-4 list-inside list-disc space-y-1 font-mono text-base leading-relaxed text-gray-300 sm:text-lg">
+          <li>idk</li>
+        </ul>
+      </div>
+    </section>
   </body>
+  <ImportLucide />
 </html>

@@ -1,0 +1,22 @@
+---
+let { name, icon, id } = Astro.props;
+---
+
+<div class="group relative mb-3">
+  <a href="#">
+    <button
+      id={id}
+      class="flex h-10 w-10 items-center justify-center rounded-lg border-none bg-[#313244] transition-all duration-300 ease-out hover:scale-110 hover:rotate-4 hover:bg-gray-700 hover:shadow-xl">
+      <i
+        data-lucide={icon}
+        class={`h-6 w-6 transition-transform duration-300 group-hover:scale-110 ${
+          icon === 'moon-star' ? 'text-blue-400 drop-shadow-[0_0_22px_#60a5fa]' : 'text-[#9aa0b3]'
+        }`}></i>
+    </button>
+  </a>
+
+  <span
+    class="font-linux pointer-events-none absolute top-1/2 left-full z-9999 ml-2 -translate-y-1/2 scale-90 rounded-lg bg-[#313244] px-3 py-1 text-sm whitespace-nowrap text-white opacity-0 shadow-lg transition-all duration-300 ease-out group-hover:pointer-events-auto group-hover:scale-100 group-hover:opacity-100">
+    {name}
+  </span>
+</div>

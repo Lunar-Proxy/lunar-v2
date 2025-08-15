@@ -50,8 +50,8 @@ function handleLoad(tab: Tab): void {
     const url = new URL(doc.URL);
     if (url.origin === location.origin) throw new Error('Same origin');
     fetch(iconURL + encodeURIComponent(url.origin))
-      .then((res) => res.blob())
-      .then((blob) => {
+      .then(res => res.blob())
+      .then(blob => {
         const reader = new FileReader();
         reader.onloadend = () => {
           tab.favicon = (reader.result as string) || defaultFavicon;
@@ -71,9 +71,9 @@ function handleLoad(tab: Tab): void {
 
 function setActiveTab(id: number): void {
   activeTabId = id;
-  document.querySelectorAll('iframe').forEach((iframe) => iframe.classList.add('hidden'));
+  document.querySelectorAll('iframe').forEach(iframe => iframe.classList.add('hidden'));
   document.getElementById(`frame-${id}`)?.classList.remove('hidden');
-  document.querySelectorAll('.tab').forEach((el) => {
+  document.querySelectorAll('.tab').forEach(el => {
     const isActive = parseInt(el.getAttribute('data-id') || '') === id;
     el.classList.toggle('bg-[#2e2c45]', isActive);
     el.classList.toggle('bg-[#29263c]', !isActive);
@@ -81,7 +81,7 @@ function setActiveTab(id: number): void {
 }
 
 function removeTab(id: number): void {
-  const index = tabs.findIndex((tab) => tab.id === id);
+  const index = tabs.findIndex(tab => tab.id === id);
   if (index === -1) return;
   tabs[index].iframe.remove();
   tabs.splice(index, 1);
@@ -97,7 +97,7 @@ function removeTab(id: number): void {
 
 function renderTabs(): void {
   tabContainer.innerHTML = '';
-  tabs.forEach((tab) => {
+  tabs.forEach(tab => {
     const tabElement = document.createElement('div');
     tabElement.className = `
       h-9 tab mb-4 px-4 py-2 min-w-[210px] border-[#3a3758] border rounded-md transition-all cursor-pointer
@@ -119,24 +119,24 @@ function renderTabs(): void {
     closeBtn.className = `
       text-gray-400 hover:bg-gray-500 font-semibold hover:text-white rounded-full w-6 h-6
       flex items-center justify-center transition-all text-sm aspect-square ml-auto`;
-    closeBtn.onclick = (e) => {
+    closeBtn.onclick = e => {
       e.stopPropagation();
       removeTab(tab.id);
     };
     content.append(favicon, title, closeBtn);
     tabElement.appendChild(content);
     tabElement.onclick = () => setActiveTab(tab.id);
-    tabElement.ondragstart = (e) => {
+    tabElement.ondragstart = e => {
       draggedTabId = tab.id;
       tabElement.classList.add('opacity-50');
       e.dataTransfer?.setData('text/plain', tab.id.toString());
     };
-    tabElement.ondragover = (e) => e.preventDefault();
-    tabElement.ondrop = (e) => {
+    tabElement.ondragover = e => e.preventDefault();
+    tabElement.ondrop = e => {
       e.preventDefault();
       if (draggedTabId === null || draggedTabId === tab.id) return;
-      const draggedIndex = tabs.findIndex((t) => t.id === draggedTabId);
-      const targetIndex = tabs.findIndex((t) => t.id === tab.id);
+      const draggedIndex = tabs.findIndex(t => t.id === draggedTabId);
+      const targetIndex = tabs.findIndex(t => t.id === tab.id);
       if (draggedIndex !== -1 && targetIndex !== -1) {
         const [moved] = tabs.splice(draggedIndex, 1);
         tabs.splice(targetIndex, 0, moved);

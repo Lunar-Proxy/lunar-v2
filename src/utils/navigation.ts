@@ -1,6 +1,8 @@
+import ConfigAPI from './config';
 import TabManager from './tb';
 import { ValidateUrl } from './url';
-import ConfigAPI from './config';
+// @ts-ignore
+const { ScramjetController } = $scramjetLoadController();
 
 TabManager.addTab();
 
@@ -11,21 +13,23 @@ const urlbar = document.getElementById('urlbar') as HTMLInputElement | null;
 const devtools = document.getElementById('code') as HTMLButtonElement | null;
 const wispUrl = await ConfigAPI.get('wispUrl');
 const backend = await ConfigAPI.get('backend');
+const connection = new BareMux.BareMuxConnection('/bm/worker.js');
+
 const scramjet = new ScramjetController({
   prefix: '/sj/',
   files: {
-    wasm: '/a/bundled/scram/wasm.wasm',
-    worker: '/a/bundled/scram/worker.js',
-    client: '/a/bundled/scram/client.js',
-    shared: '/a/bundled/scram/shared.js',
-    sync: '/a/bundled/scram/sync.js',
-  },
+		wasm: "/a/bundled/scram/wasm.wasm",
+		all: "/a/bundled/scram/all.js",
+		sync: "/a/bundled/scram/sync.js",
+	},
+  flags: {
+		rewriterLogs: false,
+		scramitize: false,
+		cleanErrors: true,
+  }
 });
 scramjet.init();
-
 navigator.serviceWorker.register('./sw.js');
-
-const connection = new BareMux.BareMuxConnection('/bm/worker.js');
 
 function getActiveFrame(): HTMLIFrameElement | null {
   const activeTabId = TabManager.activeTabId;
@@ -111,10 +115,11 @@ devtools?.addEventListener('click', () => {
   }
 });
 
-urlbar?.addEventListener('keydown', async (e) => {
+urlbar?.addEventListener('keydown', async e => {
   if (e.key !== 'Enter') return;
 
   const frame = getActiveFrame();
+  console.log('[DEBUG] Active frame:', frame?.id);
   if (!frame) return;
 
   if ((await connection.getTransport()) !== '/lc/index.mjs') {
@@ -136,10 +141,18 @@ urlbar?.addEventListener('keydown', async (e) => {
       const href = frame.contentWindow?.location.href;
       if (href && href !== lastHref) {
         lastHref = href;
-        urlbar.value = (await getURL(href)) ?? ''; // shouldnt be blank but wtv
+        urlbar.value = (await getURL(href)) ?? '';
       }
     } catch {
       // yap session smh
     }
   }, 500);
 });
+
+const last = decodeURIComponent(localStorage.getItem('last') ?? '');
+if (last && urlbar) {
+  urlbar.value = last;
+  urlbar.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+  console.log('[DEBUG] URL is:', last);
+  localStorage.removeItem('last');
+}

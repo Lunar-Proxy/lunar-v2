@@ -16,10 +16,11 @@ Lunar is a web proxy created to bypass censorship.
 ## Features
 
 - 🚀 **High Speed** – Designed to be fast
-- 🪞 **Enhanced Tab Cloaking** – Mask the tab title and favicon to be educational.
+- 🪞 **Enhanced Tab Cloaking** – Mask the tab title and favicon to be
+  educational.
 - 🎮 **Games** – Play over 40+ games, all unbl0cked
-- ⚡️ **Site Support** - Lunar supports popular websites such as Gforce Now, spotify, and
-  more thanks to Ultraviolet & scramjet technology
+- ⚡️ **Site Support** - Lunar supports popular websites such as Gforce Now,
+  spotify, and more thanks to Ultraviolet & scramjet technology
 
 ## Deployment Options
 
@@ -32,13 +33,13 @@ Lunar is a web proxy created to bypass censorship.
     </a>  
 </div>
 
-> [!NOTE] Lunar cannot be deployed on static hosting services like Netlify, Vercel (Due to
-> websockets), or GitHub Pages.
+> [!NOTE] Lunar cannot be deployed on static hosting services like Netlify,
+> Vercel (Due to websockets), or GitHub Pages.
 
 ## Deployment via Terminal
 
-> [!IMPORTANT] By default, we use pnpm for deploying Lunar. However, you can utilize any package
-> manager (npm, pnpm, bun, etc.) for deployment.
+> [!IMPORTANT] By default, we use pnpm for deploying Lunar. However, you can
+> utilize any package manager (npm, pnpm, bun, etc.) for deployment.
 >
 > Before you begin, ensure you have the following dependencies installed:
 >
@@ -61,7 +62,8 @@ Lunar is a web proxy created to bypass censorship.
 
 ### Development
 
-If you are modifying Lunar, use the development setup to prevent the need for repeated builds:
+If you are modifying Lunar, use the development setup to prevent the need for
+repeated builds:
 
 ```bash
 pnpm install && pnpm dev
@@ -69,12 +71,13 @@ pnpm install && pnpm dev
 
 # Contributing
 
-If you are making any changes, please review [this guide](CONTRIBUTING.md) for proper instructions
-on how to contribute.
+If you are making any changes, please review [this guide](CONTRIBUTING.md) for
+proper instructions on how to contribute.
 
 # Support
 
-For assistance, please create a [GitHub Issue](https://github.com/Lunar-Proxy/lunar-v1/issues) or
+For assistance, please create a
+[GitHub Issue](https://github.com/Lunar-Proxy/lunar-v1/issues) or
 [join our Discord community](https://discord.gg/fuPtWjYuf8).
 
 # Credits

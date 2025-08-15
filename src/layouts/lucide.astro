@@ -1,0 +1,13 @@
+<script type="module" is:inline>
+  import { createIcons, icons } from 'https://esm.sh/lucide';
+
+  createIcons({ icons });
+
+  document.addEventListener('astro:page-load', () => {
+    createIcons({ icons });
+  });
+
+  document.addEventListener('astro:after-swap', () => {
+    createIcons({ icons });
+  });
+</script>

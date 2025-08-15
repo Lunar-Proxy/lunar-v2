@@ -1,20 +1,21 @@
-import { execSync } from 'child_process';
-import { defineConfig } from 'astro/config';
 import node from '@astrojs/node';
-import tailwindcss from '@tailwindcss/vite';
-import { viteStaticCopy } from 'vite-plugin-static-copy';
-import { normalizePath } from 'vite';
-import { version } from './package.json';
+
 import { baremuxPath } from '@mercuryworkshop/bare-mux/node';
 import { libcurlPath } from '@mercuryworkshop/libcurl-transport';
 import { server as wisp } from '@mercuryworkshop/wisp-js/server';
-import type { Plugin } from 'vite';
-import type { IncomingMessage, ServerResponse } from 'http';
 import playformCompress from '@playform/compress';
+import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'astro/config';
+import { execSync } from 'child_process';
+import type { IncomingMessage, ServerResponse } from 'http';
+import { normalizePath } from 'vite';
+import type { Plugin } from 'vite';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
+
+import { version } from './package.json';
 
 wisp.options.wisp_version = 2;
-const iconURL =
-  'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64';
+const iconURL = 'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64';
 
 function getDate(): string {
   try {
@@ -72,6 +73,48 @@ function IconBackend(): Plugin {
   };
 }
 
+function searchBackend(): Plugin {
+  return {
+    name: 'vite-query-middleware',
+    configureServer({ middlewares }) {
+      middlewares.use('/api/query', async (req: IncomingMessage, res: ServerResponse) => {
+        const urlObj = new URL(req.url ?? '', 'http://localhost');
+        const query = urlObj.searchParams.get('q');
+
+        if (!query) {
+          res.statusCode = 400;
+          res.end('Query parameter "q" is required.');
+          return;
+        }
+
+        try {
+          const apiUrl = `https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}`;
+          const response = await fetch(apiUrl, {
+            headers: {
+              'User-Agent': 'Mozilla/5.0',
+              Accept: 'application/json',
+            },
+          });
+
+          if (!response.ok) {
+            res.statusCode = 500;
+            res.end('Failed to fetch suggestions.');
+            return;
+          }
+
+          const suggestions = await response.json();
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify(suggestions));
+        } catch (err) {
+          console.error(err);
+          res.statusCode = 500;
+          res.end('Internal server error.');
+        }
+      });
+    },
+  };
+}
+
 export default defineConfig({
   integrations: [playformCompress()],
   output: 'server',
@@ -89,6 +132,7 @@ export default defineConfig({
       tailwindcss(),
       WispServer(),
       IconBackend(),
+      searchBackend(),
       viteStaticCopy({
         targets: [
           {

@@ -36,7 +36,11 @@ document.addEventListener('DOMContentLoaded', () => {
     card.addEventListener('click', () => {
       const assetUrl = card.getAttribute('data-href');
       console.log('card was clicked', assetUrl);
-      // todo: implement the game => p0xxy
+      if (assetUrl) {
+        const query = encodeURIComponent(assetUrl);
+        localStorage.setItem('last', query);
+        window.location.href = '/tab';
+      }
     });
   });
 });

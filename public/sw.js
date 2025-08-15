@@ -8,12 +8,12 @@ importScripts(
   '/a/bundled/v/b.js',
   '/a/bundled/v/cnfg.js',
   '/a/bundled/v/s.js',
-  '/a/bundled/scram/shared.js',
-  '/a/bundled/scram/worker.js',
+  '/a/bundled/scram/all.js',
 );
 
+const { ScramjetServiceWorker } = $scramjetLoadWorker();
 const v = new UVServiceWorker();
-const sj = new ScramjetServiceWorker();
+const sj = new  ScramjetServiceWorker();
 
 let playgroundData;
 
@@ -35,6 +35,6 @@ async function handleRequest(event) {
   return await fetch(event.request);
 }
 
-self.addEventListener('fetch', (event) => {
+self.addEventListener('fetch', event => {
   event.respondWith(handleRequest(event));
 });

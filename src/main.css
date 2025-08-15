@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Prompt:wght@400;500;600;700;800&display=swap')
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Prompt:wght@400;500;600;700;800&display=swap")
 layer(base);
 
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @theme {
   --font-linux: outfit, sans-serif;
@@ -26,14 +26,12 @@ layer(base);
 
 @layer base {
   :root {
-    --background: #191724;
-    --background-overlay: #232136;
-    --border: #1f1f30;
+    --background: #232136;
+    --background-overlay: #1f1d2e;
+    --border: #374151;
     --text-header: #e0def4;
-    --text-secondary: #908caa;
-    ---background-disabled: #2a2b3c;
-    --font-sans: 'Outfit', 'Prompt', system-ui, sans-serif;
-    --font-accent: 'Prompt', 'Outfit', system-ui, sans-serif;
+    --text-secondary: #a19eb3;
+    --background-disabled: #2a2b3c;
   }
 
   html {

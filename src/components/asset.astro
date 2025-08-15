@@ -1,4 +1,6 @@
 ---
+import ImportLucide from '../layouts/lucide.astro';
+
 interface Game {
   name: string;
   desc: string;
@@ -13,28 +15,28 @@ const { list = [] }: { list?: Game[] } = Astro.props;
   <head>
     <style>
       ::-webkit-scrollbar {
-  width: 10px;
-}
+        width: 10px;
+      }
 
-::-webkit-scrollbar-track {
-  background: #1f1d2e;
-  border-radius: 10px;
-}
+      ::-webkit-scrollbar-track {
+        background: #1f1d2e;
+        border-radius: 10px;
+      }
 
-::-webkit-scrollbar-thumb {
-  background: #c4a7e7;
-  border-radius: 10px;
-  border: 2px solid #1f1d2e;
-}
+      ::-webkit-scrollbar-thumb {
+        background: #c4a7e7;
+        border-radius: 10px;
+        border: 2px solid #1f1d2e;
+      }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #d0a0f0;
-}
+      ::-webkit-scrollbar-thumb:hover {
+        background: #d0a0f0;
+      }
 
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #c4a7e7 #1f1d2e;
-}
+      * {
+        scrollbar-width: thin;
+        scrollbar-color: #c4a7e7 #1f1d2e;
+      }
 
       @keyframes fadeInUp {
         from {
@@ -90,15 +92,20 @@ const { list = [] }: { list?: Game[] } = Astro.props;
       }
 
       @keyframes pulse {
-        0%, 100% { opacity: 0.8; }
-        50% { opacity: 1; }
+        0%,
+        100% {
+          opacity: 0.8;
+        }
+        50% {
+          opacity: 1;
+        }
       }
     </style>
 
     <script>
       document.addEventListener('DOMContentLoaded', () => {
         const cards = document.querySelectorAll('.card');
-        cards.forEach((card) => {
+        cards.forEach(card => {
           if (!(card instanceof HTMLElement)) return;
 
           const img = new Image();
@@ -118,66 +125,81 @@ const { list = [] }: { list?: Game[] } = Astro.props;
 
         gridView?.addEventListener('click', () => {
           container?.classList.remove('flex', 'flex-col', 'space-y-6');
-          container?.classList.add('grid', 'grid-cols-1', 'sm:grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-4', 'gap-8');
+          container?.classList.add(
+            'grid',
+            'grid-cols-1',
+            'sm:grid-cols-2',
+            'md:grid-cols-3',
+            'lg:grid-cols-4',
+            'gap-8'
+          );
         });
 
         listView?.addEventListener('click', () => {
-          container?.classList.remove('grid', 'grid-cols-1', 'sm:grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-4', 'gap-8');
+          container?.classList.remove(
+            'grid',
+            'grid-cols-1',
+            'sm:grid-cols-2',
+            'md:grid-cols-3',
+            'lg:grid-cols-4',
+            'gap-8'
+          );
           container?.classList.add('flex', 'flex-col', 'space-y-6');
         });
       });
     </script>
   </head>
 
-  <body class="text-[#e0def4] font-linux min-h-screen p-6 font-sans overflow-x-hidden bg-[#191724]">
-  <div class="flex justify-between items-center mb-8 max-w-7xl mx-auto">
-  <div class="flex items-center gap-3">
-    <input
-      type="text"
-      data-input="why-are-you-looking-here->:("
-      placeholder="Search here..."
-      class="h-12 px-5 w-full max-w-md rounded-xl border border-[#26233a] bg-[#1f1d2e] text-[#e0def4] placeholder-[#908caa99] focus:outline-none focus:ring-2 focus:ring-[#c4a7e7] transition-all duration-300 shadow-md"
-    />
-    <button
-      class="h-12 w-16 flex items-center justify-center rounded-xl bg-[#1f1d2e] hover:bg-[#26233a] shadow-md transition-all duration-200"
-    >
-      <img src="/a/images/logo/random.svg" data-random="stawwwp" alt="Random" class="w-6 h-6" />
-    </button>
-  </div>
+  <body class="font-linux min-h-screen overflow-x-hidden p-6 font-sans text-[#e0def4]">
+    <div class="mx-auto mb-8 flex max-w-7xl items-center justify-between">
+      <div class="flex items-center gap-3">
+        <input
+          type="text"
+          data-input="why-are-you-looking-here->:("
+          placeholder="Search through 9 apps"
+          class="font-linux border-border-default bg-background-overlay text-text-header h-9 h-[48px] w-[260px] rounded-[9999px] border px-4 text-sm placeholder-[#a3aed0] focus:ring-2 focus:ring-[#c4a7e7] focus:outline-none"
+        />
+        <button
+          class="bg-background-overlay border-border-default flex h-12 w-14 items-center justify-center rounded-lg border shadow-md transition-all duration-200 hover:bg-[#26233a]">
+          <i data-lucide="dice-6" data-random="stawwwp" class="h-6 w-6 text-[#9aa0b3]"></i>
+        </button>
+      </div>
 
-  <div class="flex gap-3 ml-4">
-    <button data-view="grid" class="h-12 w-12 rounded-xl bg-[#1f1d2e] hover:bg-[#26233a] transition-all duration-200 flex items-center justify-center shadow-md">
-      <img src="/a/images/logo/grid.svg" alt="Grid View" class="w-6 h-6" />
-    </button>
-    <button data-view="list" class="h-12 w-12 rounded-xl bg-[#1f1d2e] hover:bg-[#26233a] transition-all duration-200 flex items-center justify-center shadow-md">
-      <img src="/a/images/logo/list.svg" alt="List View" class="w-6 h-6" />
-    </button>
-  </div>
-</div>
+      <div class="ml-4 flex gap-3">
+        <button
+          data-view="grid"
+          class="bg-background-overlay border-border-default flex h-12 w-14 items-center justify-center rounded-xl border shadow-md transition-all duration-200 hover:bg-[#26233a]">
+          <i data-lucide="grid-2x2" class="h-6 w-6 text-[#9aa0b3]"></i>
+        </button>
+        <button
+          data-view="list"
+          class="bg-background-overlay border-border-default flex h-12 w-14 items-center justify-center rounded-xl border shadow-md transition-all duration-200 hover:bg-[#26233a]">
+          <i data-lucide="list" class="h-6 w-6 text-[#9aa0b3]"></i>
+        </button>
+      </div>
+    </div>
 
-    <div data-container class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+    <div data-container class="mx-auto grid max-w-7xl grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {
         list.map((game, i) => (
           <a
             data-href={game.url}
             target="_blank"
             data-bg={game.icon}
-            class="relative card border border-[#26233a] rounded-2xl overflow-hidden card-glow card-loading shine bg-center bg-cover bg-no-repeat"
-            style={`animation: fadeInUp 0.6s ease-out ${i * 0.1}s both;`}
-          >
-            <div class="absolute inset-0 bg-black/60 hover:bg-black/40 backdrop-blur-sm transition-all duration-300 z-10" />
-            <div class="relative z-20 p-6 flex flex-col items-center justify-center h-full text-center">
-              <h2 class="text-xl font-linux font-bold text-text-header mb-2 drop-shadow">
-                {game.name}
-              </h2>
-              <p class="text-sm font-mono text-text-secondary">{game.desc}</p>
+            class="card card-glow card-loading shine relative flex h-[148px] flex-col justify-between overflow-hidden rounded-2xl border border-[#26233a] bg-cover bg-center bg-no-repeat transition-transform duration-300 hover:scale-105"
+            style={`animation: fadeInUp 0.6s ease-out ${i * 0.1}s both;`}>
+            <div class="bg-background-overlay/60 absolute inset-0 z-10 backdrop-blur-sm transition-all duration-300 hover:bg-black/40" />
+            <div class="relative z-20 flex h-full flex-col items-center justify-center p-6 text-center">
+              <h2 class="font-linux text-text-header mb-2 text-xl font-bold drop-shadow-sm">{game.name}</h2>
+              <p class="text-text-secondary font-linux text-base leading-relaxed drop-shadow-sm">{game.desc}</p>
             </div>
-            <div class="absolute inset-0 rounded-2xl pointer-events-none hover:ring-2 hover:ring-violet-500/60 transition duration-300 z-30" />
+            <div class="pointer-events-none absolute inset-0 z-30 rounded-2xl transition duration-300 hover:ring-2 hover:ring-violet-500/60" />
           </a>
         ))
       }
     </div>
 
+    <ImportLucide />
     <script src="../utils/assets"></script>
   </body>
 </html>
