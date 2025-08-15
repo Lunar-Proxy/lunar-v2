@@ -24,7 +24,7 @@
     "@types/html-minifier": "^4.0.5",
     "astro": "^5.10.1",
     "chalk": "^5.4.1",
-    "fastify": "^5.4.0",
+    "fastify": "^5.5.0",
     "is-url-superb": "^6.1.0",
     "localforage": "^1.10.0",
     "lucide": "^0.539.0",
