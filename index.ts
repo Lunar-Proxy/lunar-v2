@@ -13,7 +13,7 @@ import path from 'node:path';
 import { updateChecker } from 'serverlib/check';
 import { version } from './package.json';
 
-const port: number = parseInt(process.env.PORT as string) || parseInt('6060');
+const port: number = parseInt(process.env.PORT as string) || parseInt('8080');
 
 logging.set_level(logging.NONE);
 wisp.options.wisp_version = 2;
@@ -97,6 +97,25 @@ app.get('/api/icon/', async (req, reply) => {
   } catch (error) {
     console.error(error);
     reply.status(500).send('Internal server error.');
+  }
+});
+
+
+app.get('/api/query', async (request, reply) => {
+  const { q: query } = request.query as { q?: string };
+  if (!query) return reply.status(400).send({ error: 'Query parameter "q" is required.' });
+
+  try {
+    const response = await fetch(`https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}`, {
+      headers: { 'User-Agent': 'Mozilla/5.0', Accept: 'application/json' },
+    });
+
+    if (!response.ok) return reply.status(response.status).send({ error: 'Failed to fetch suggestions.' });
+
+    const suggestions = await response.json();
+    reply.send(suggestions);
+  } catch (err) {
+    reply.status(500).send({ error: 'Internal server error.' });
   }
 });
 

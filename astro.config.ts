@@ -107,6 +107,12 @@ export default defineConfig({
         ],
       }) as any,
     ],
-    build: { minify: 'esbuild', sourcemap: false },
+    server: {
+      allowedHosts: [
+        'localhost',
+        '.trycloudflare.com',
+        '.github.dev'
+      ],
+    },
   },
 });
