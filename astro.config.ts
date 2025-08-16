@@ -1,5 +1,4 @@
 import node from '@astrojs/node';
-
 import { baremuxPath } from '@mercuryworkshop/bare-mux/node';
 import { libcurlPath } from '@mercuryworkshop/libcurl-transport';
 import { server as wisp } from '@mercuryworkshop/wisp-js/server';
@@ -11,7 +10,6 @@ import type { IncomingMessage, ServerResponse } from 'http';
 import { normalizePath } from 'vite';
 import type { Plugin } from 'vite';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
-
 import { version } from './package.json';
 
 wisp.options.wisp_version = 2;
@@ -30,9 +28,7 @@ function WispServer(): Plugin {
     name: 'vite-wisp-server',
     configureServer(server) {
       server.httpServer?.on('upgrade', (req, socket, head) => {
-        if (req.url?.startsWith('/w')) {
-          wisp.routeRequest(req, socket, head);
-        }
+        if (req.url?.startsWith('/w')) wisp.routeRequest(req, socket, head);
       });
     },
   };
@@ -45,26 +41,15 @@ function IconBackend(): Plugin {
       middlewares.use('/api/icon', async (req: IncomingMessage, res: ServerResponse) => {
         const urlObj = new URL(req.url ?? '', 'http://localhost');
         const iconUrl = urlObj.searchParams.get('url');
-
-        if (!iconUrl) {
-          res.statusCode = 400;
-          res.end('URL parameter is required.');
-          return;
-        }
+        if (!iconUrl) return res.end('URL parameter is required.');
 
         try {
           const response = await fetch(`${iconURL}&url=${encodeURIComponent(iconUrl)}`);
-          if (!response.ok) {
-            res.statusCode = 500;
-            res.end('Failed to fetch the favicon.');
-            return;
-          }
-
+          if (!response.ok) return res.end('Failed to fetch favicon.');
           const buffer = Buffer.from(await response.arrayBuffer());
           res.setHeader('Content-Type', 'image/jpeg');
           res.end(buffer);
-        } catch (err) {
-          console.error(err);
+        } catch {
           res.statusCode = 500;
           res.end('Internal server error.');
         }
@@ -80,33 +65,17 @@ function searchBackend(): Plugin {
       middlewares.use('/api/query', async (req: IncomingMessage, res: ServerResponse) => {
         const urlObj = new URL(req.url ?? '', 'http://localhost');
         const query = urlObj.searchParams.get('q');
-
-        if (!query) {
-          res.statusCode = 400;
-          res.end('Query parameter "q" is required.');
-          return;
-        }
+        if (!query) return res.end('Query parameter "q" is required.');
 
         try {
-          const apiUrl = `https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}`;
-          const response = await fetch(apiUrl, {
-            headers: {
-              'User-Agent': 'Mozilla/5.0',
-              Accept: 'application/json',
-            },
+          const response = await fetch(`https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}`, {
+            headers: { 'User-Agent': 'Mozilla/5.0', Accept: 'application/json' },
           });
-
-          if (!response.ok) {
-            res.statusCode = 500;
-            res.end('Failed to fetch suggestions.');
-            return;
-          }
-
+          if (!response.ok) return res.end('Failed to fetch suggestions.');
           const suggestions = await response.json();
           res.setHeader('Content-Type', 'application/json');
           res.end(JSON.stringify(suggestions));
-        } catch (err) {
-          console.error(err);
+        } catch {
           res.statusCode = 500;
           res.end('Internal server error.');
         }
@@ -119,11 +88,9 @@ export default defineConfig({
   integrations: [playformCompress()],
   output: 'server',
   adapter: node({ mode: 'middleware' }),
-  prefetch: {
-    prefetchAll: true,
-    defaultStrategy: 'load',
-  },
+  prefetch: { prefetchAll: true, defaultStrategy: 'load' },
   vite: {
+    optimizeDeps: { include: ['lucide'] },
     define: {
       VERSION: JSON.stringify(version),
       UPDATE_DATE: JSON.stringify(getDate()),
@@ -135,18 +102,12 @@ export default defineConfig({
       searchBackend(),
       viteStaticCopy({
         targets: [
-          {
-            src: normalizePath(`${libcurlPath}/**/*.mjs`),
-            dest: 'lc',
-            overwrite: false,
-          },
-          {
-            src: normalizePath(`${baremuxPath}/**/*.js`),
-            dest: 'bm',
-            overwrite: false,
-          },
+          { src: normalizePath(`${libcurlPath}/**/*.mjs`), dest: 'lc', overwrite: false },
+          { src: normalizePath(`${baremuxPath}/**/*.js`), dest: 'bm', overwrite: false },
         ],
-      }),
+      }) as any,
     ],
+    server: { fs: { strict: false } },
+    build: { minify: 'esbuild', sourcemap: false },
   },
 });

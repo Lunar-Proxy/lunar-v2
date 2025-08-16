@@ -11,10 +11,9 @@ import { createServer } from 'node:http';
 import { Socket } from 'node:net';
 import path from 'node:path';
 import { updateChecker } from 'serverlib/check';
-
 import { version } from './package.json';
 
-const port: number = parseInt(process.env.PORT as string) || parseInt('8080');
+const port: number = parseInt(process.env.PORT as string) || parseInt('6060');
 
 logging.set_level(logging.NONE);
 wisp.options.wisp_version = 2;
@@ -54,23 +53,26 @@ await app.register(fastifyCompress, {
 await build();
 
 const staticOptions = {
-  maxAge: '1d',
+  maxAge: 31536000000,
   etag: true,
   lastModified: true,
   redirect: false,
   setHeaders(res: any, filePath: string) {
-    if (filePath.endsWith('.html')) {
-      res.setHeader('Cache-Control', 'public, max-age=0');
-    } else if (/\.(js|css|jpg|jpeg|png|gif|ico|svg|webp|avif)$/.test(filePath)) {
-      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable'); // 1 year
-    } else {
-      res.setHeader('Cache-Control', 'public, max-age=3600'); // 1 hour
-    }
-    res.setHeader('X-Content-Type-Options', 'nosniff');
-    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
-    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
-    res.setHeader('X-XSS-Protection', '1; mode=block');
-  },
+  if (filePath.endsWith('.html') || filePath.endsWith('.astro')) {
+    res.setHeader('Cache-Control', 'public, max-age=604800'); // 7 day
+  } else if (/\.(js|css|jpg|jpeg|png|gif|ico|svg|webp|avif)$/.test(filePath)) {
+    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable'); // 1 year
+  } else if (/\.(json|xml|txt)$/.test(filePath)) {
+    res.setHeader('Cache-Control', 'public, max-age=604800'); // 7 days
+  } else {
+    res.setHeader('Cache-Control', 'public, max-age=604800'); // 7 day
+  }
+
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+}
 };
 
 app.get('/api/icon/', async (req, reply) => {
@@ -120,13 +122,13 @@ app.listen({ host: '0.0.0.0', port: port }, () => {
     updateStatus.status === 'u'
       ? '✅'
       : updateStatus.status === 'n'
-        ? `❌, Please update to ${updateStatus.commitId}:\n  https://github.com/lunar-proxy/lunar-v1/wiki`
+        ? `❌, Please update to ${updateStatus.commitId} by following:\n  https://github.com/lunar-proxy/lunar-v1/wiki`
         : '❌ Error checking for updates';
 
-  console.log(chalk.green.bold(`🚀 Lunar is running\n`));
+  console.log(chalk.green.bold(`Lunar is running\n`));
   console.log(chalk.gray('───────────────────────────────────────────────'));
   console.log(chalk.whiteBright(`Up to date:`), chalk.cyanBright(statusMsg));
-  console.log(chalk.whiteBright(`🛠  Version:`), chalk.cyanBright(version));
+  console.log(chalk.whiteBright(`Version:`), chalk.cyanBright(`v${version}`));
   console.log(chalk.gray('───────────────────────────────────────────────'));
 
   const deploymentURL =
@@ -149,11 +151,11 @@ app.listen({ host: '0.0.0.0', port: port }, () => {
     console.log(chalk.underline(chalk.green(deploymentURL)));
   } else {
     console.log(chalk.blueBright(`\n💻 Local:`));
-    console.log(chalk.underline(chalk.yellow(`http://localhost:${port}`)));
+    console.log(chalk.underline(chalk.cyan(`http://localhost:${port}`)));
     console.log(chalk.blueBright(`\n🌐 Network:`));
     console.log(chalk.underline(chalk.cyan(`http://127.0.0.1:${port}`)));
   }
 
   console.log(chalk.gray('───────────────────────────────────────────────'));
-  console.log(chalk.magentaBright.bold(`\n✨ Thanks for using Lunar V2 :)\n`));
+  console.log(chalk.magentaBright.bold(`\n✨ Thanks for using Lunar v2 :)\n`));
 });
