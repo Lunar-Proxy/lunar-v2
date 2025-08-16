@@ -107,7 +107,6 @@ export default defineConfig({
         ],
       }) as any,
     ],
-    server: { fs: { strict: false } },
     build: { minify: 'esbuild', sourcemap: false },
   },
 });
