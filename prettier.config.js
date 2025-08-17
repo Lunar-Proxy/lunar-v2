@@ -13,7 +13,11 @@ export default {
   endOfLine: 'lf',
   embeddedLanguageFormatting: 'auto',
 
-  plugins: ['prettier-plugin-astro', '@trivago/prettier-plugin-sort-imports', 'prettier-plugin-tailwindcss'],
+  plugins: [
+    'prettier-plugin-astro',
+    '@trivago/prettier-plugin-sort-imports',
+    'prettier-plugin-tailwindcss',
+  ],
 
   importOrder: ['^astro:(.*)$', '^@astrojs/(.*)$', '^@?\\w', '^[./]'],
   importOrderSeparation: true,

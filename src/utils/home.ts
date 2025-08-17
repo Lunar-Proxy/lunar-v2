@@ -1,4 +1,5 @@
 import { Search, createIcons } from 'lucide';
+
 import ConfigAPI from './config';
 
 const input = document.querySelector('input[type="text"]') as HTMLInputElement;
@@ -66,12 +67,13 @@ input.addEventListener('keydown', async event => {
     if (box) {
       box.remove();
     }
-    const query = encodeURIComponent(await ConfigAPI.get("engine") + encodeURI(input.value.trim()));
+    const query = encodeURIComponent(
+      (await ConfigAPI.get('engine')) + encodeURI(input.value.trim()),
+    );
     localStorage.setItem('last', query);
     window.location.href = `/tab`;
   }
-}
-)
+});
 input?.addEventListener('focus', () => {
   const value = input.value;
   if (value) {

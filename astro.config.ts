@@ -1,4 +1,5 @@
 import node from '@astrojs/node';
+
 import { baremuxPath } from '@mercuryworkshop/bare-mux/node';
 import { libcurlPath } from '@mercuryworkshop/libcurl-transport';
 import { server as wisp } from '@mercuryworkshop/wisp-js/server';
@@ -9,7 +10,9 @@ import { execSync } from 'child_process';
 import type { IncomingMessage, ServerResponse } from 'http';
 import { normalizePath } from 'vite';
 import type { Plugin } from 'vite';
+import obfuscatorPlugin from 'vite-plugin-javascript-obfuscator';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
+
 import { version } from './package.json';
 
 wisp.options.wisp_version = 2;
@@ -100,6 +103,35 @@ export default defineConfig({
       WispServer(),
       IconBackend(),
       searchBackend(),
+      obfuscatorPlugin({
+        include: ['**/*.js', '**/*.mjs', '**/*.cjs', '**/*.ts'],
+        apply: 'build',
+        debugger: true,
+        options: {
+          debugProtection: false,
+          compact: true,
+          controlFlowFlattening: false,
+          deadCodeInjection: false,
+          disableConsoleOutput: true,
+          identifierNamesGenerator: 'hexadecimal',
+          renameGlobals: false,
+          renameProperties: false,
+          selfDefending: false,
+          simplify: true,
+          splitStrings: true,
+          splitStringsChunkLength: 10,
+          stringArray: true,
+          stringArrayThreshold: 0.75,
+          stringArrayRotate: true,
+          stringArrayShuffle: true,
+          stringArrayEncoding: ['base64'],
+          stringArrayWrappersType: 'variable',
+          stringArrayWrappersCount: 1,
+          target: 'browser',
+          unicodeEscapeSequence: false,
+          // ...  [See more options](https://github.com/javascript-obfuscator/javascript-obfuscator)
+        },
+      }),
       viteStaticCopy({
         targets: [
           { src: normalizePath(`${libcurlPath}/**/*.mjs`), dest: 'lc', overwrite: false },
@@ -108,11 +140,7 @@ export default defineConfig({
       }) as any,
     ],
     server: {
-      allowedHosts: [
-        'localhost',
-        '.trycloudflare.com',
-        '.github.dev'
-      ],
+      allowedHosts: ['localhost', '.trycloudflare.com', '.github.dev'],
     },
   },
 });

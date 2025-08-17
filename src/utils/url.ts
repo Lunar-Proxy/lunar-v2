@@ -1,4 +1,5 @@
 import isUrl from 'is-url-superb';
+
 import ConfigAPI from './config';
 
 export async function ValidateUrl(url: string) {

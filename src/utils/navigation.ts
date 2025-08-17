@@ -1,6 +1,7 @@
 import ConfigAPI from './config';
 import TabManager from './tb';
 import { ValidateUrl } from './url';
+
 // @ts-ignore
 const { ScramjetController } = $scramjetLoadController();
 
@@ -12,23 +13,22 @@ const forward = document.getElementById('forward') as HTMLButtonElement | null;
 const urlbar = document.getElementById('urlbar') as HTMLInputElement | null;
 const devtools = document.getElementById('code') as HTMLButtonElement | null;
 const wispUrl = await ConfigAPI.get('wispUrl');
-const backend = await ConfigAPI.get('backend');
-const connection = new BareMux.BareMuxConnection('/bm/worker.js');
-
 const scramjet = new ScramjetController({
   prefix: '/sj/',
   files: {
-		wasm: "/a/bundled/scram/wasm.wasm",
-		all: "/a/bundled/scram/all.js",
-		sync: "/a/bundled/scram/sync.js",
-	},
+    wasm: '/a/bundled/scram/wasm.wasm',
+    all: '/a/bundled/scram/all.js',
+    sync: '/a/bundled/scram/sync.js',
+  }, // TODO: add encoding other then basic
   flags: {
-		rewriterLogs: false,
-		scramitize: false,
-		cleanErrors: true,
-  }
+    rewriterLogs: false,
+    scramitize: false,
+    cleanErrors: true,
+  },
 });
+
 scramjet.init();
+const connection = new BareMux.BareMuxConnection('/bm/worker.js');
 navigator.serviceWorker.register('./sw.js');
 
 function getActiveFrame(): HTMLIFrameElement | null {
@@ -47,8 +47,9 @@ function loading() {
 
 async function getURL(proxiedUrl: string) {
   const url = new URL(proxiedUrl);
-  const path = backend === 'uv' ? url.pathname.slice(5) : url.pathname.slice(4);
-  return backend === 'uv' ? UltraConfig.decodeUrl(path) : scramjet.decodeUrl(path);
+  console.log('[DEBUG] Proxied URL:', proxiedUrl);
+  const path = url.pathname.slice(4); // TODO: fix
+  return decodeURIComponent(path);
 }
 
 reload?.addEventListener('click', () => {
@@ -132,7 +133,7 @@ urlbar?.addEventListener('keydown', async e => {
   urlbar.value = url;
   loading();
 
-  url = backend === 'uv' ? `/pre/${UltraConfig.encodeUrl(url)}` : scramjet.encodeUrl(url);
+  url = scramjet.encodeUrl(url);
   frame.src = url;
 
   let lastHref = '';

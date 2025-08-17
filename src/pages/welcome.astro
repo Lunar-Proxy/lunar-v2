@@ -61,6 +61,24 @@ const Quote = getQuote();
       .float {
         animation: float 3s ease-in-out infinite;
       }
+
+      .search-container {
+        position: relative;
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 24px;
+        height: 24px;
+        z-index: 10;
+      }
+
+      .search-input-with-icon {
+        padding-left: 60px !important;
+      }
     </style>
     <script src="../utils/home.ts"></script>
   </head>
@@ -72,13 +90,40 @@ const Quote = getQuote();
     <p class="fade-in-up text-text-secondary max-w-4xl px-4 text-center font-mono text-lg sm:text-xl md:text-2xl">
       {Quote}
     </p>
-    <div class="fade-in-up w-full max-w-3xl px-4">
-      <input
-        type="text"
-        placeholder="Type something..."
-        class="border-border-default bg-background-overlay font-linux text-text-secondary w-full rounded-full border-2 px-8 py-5 text-lg placeholder-gray-400 shadow-lg backdrop-blur-md transition duration-300 ease-in-out hover:scale-[1.01] focus:outline-none sm:text-xl"
-      />
+    <div class="fade-in-up w-full max-w-6xl px-4">
+      <div>
+        <img src="/api/icon/?url=https://google.com" class="search rounded-full object-cover" />
+        <input
+          type="text"
+          placeholder="Type something..."
+          class="border-border-default bg-background-overlay font-linux text-text-secondary w-full rounded-full border-2 py-5 text-lg placeholder-gray-400 shadow-lg backdrop-blur-md transition duration-300 ease-in-out hover:scale-[1.01] focus:outline-none sm:text-xl"
+        />
+      </div>
     </div>
+
+    <script>
+      import ConfigAPI from '../utils/config';
+
+      async function updateIcon() {
+        const engine = await ConfigAPI.get('engine');
+        const icon = document.getElementById('search') as HTMLImageElement | null;
+
+        if (icon && typeof engine === 'string' && engine.length > 0) {
+          let domain = engine;
+          try {
+            const url = new URL(engine);
+            domain = url.hostname;
+          } catch {
+            domain = engine.replace(/^https?:\/\//, '').split('/')[0];
+          }
+
+          icon.src = `/api/icon/?url=https://${domain}`;
+        }
+      }
+
+      updateIcon();
+    </script>
+
     <section
       id="updates"
       class="fade-in-up bg-background-overlay mt-6 flex w-full max-w-2xl items-start gap-4 rounded-2xl border border-blue-900 p-6 shadow-xl backdrop-blur-md transition duration-300 ease-in-out hover:scale-[1.02] hover:shadow-blue-700/50"
