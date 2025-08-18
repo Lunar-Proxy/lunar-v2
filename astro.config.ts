@@ -1,9 +1,7 @@
 import node from '@astrojs/node';
-
 import { baremuxPath } from '@mercuryworkshop/bare-mux/node';
 import { libcurlPath } from '@mercuryworkshop/libcurl-transport';
 import { server as wisp } from '@mercuryworkshop/wisp-js/server';
-import playformCompress from '@playform/compress';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'astro/config';
 import { execSync } from 'child_process';
@@ -12,8 +10,9 @@ import { normalizePath } from 'vite';
 import type { Plugin } from 'vite';
 import obfuscatorPlugin from 'vite-plugin-javascript-obfuscator';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
-
 import { version } from './package.json';
+
+import compress from 'astro-compress';
 
 wisp.options.wisp_version = 2;
 const iconURL = 'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64';
@@ -88,10 +87,32 @@ function searchBackend(): Plugin {
 }
 
 export default defineConfig({
-  integrations: [playformCompress()],
+  integrations: [compress(
+    {
+      CSS: true,
+		  HTML: {
+    "html-minifier-terser": {
+        removeAttributeQuotes: false,
+        collapseWhitespace: true,
+        removeComments: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        removeEmptyAttributes: true,
+        removeOptionalTags: false,
+        keepClosingSlash: true,
+        minifyCSS: true,
+        minifyJS: true,
+    },
+},
+			Image: true,
+			JavaScript: true,
+			SVG: true,
+    }
+  )],
   output: 'server',
   adapter: node({ mode: 'middleware' }),
   prefetch: { prefetchAll: true, defaultStrategy: 'load' },
+
   vite: {
     optimizeDeps: { include: ['lucide'] },
     define: {
@@ -106,7 +127,7 @@ export default defineConfig({
       obfuscatorPlugin({
         include: ['**/*.js', '**/*.mjs', '**/*.cjs', '**/*.ts'],
         apply: 'build',
-        debugger: true,
+        debugger: false,
         options: {
           debugProtection: false,
           compact: true,
