@@ -9,7 +9,7 @@ Thank you for your interest in contributing to Lunar.
 ### Before creating a pull request
 
 Before creating a pull request, please run `pnpm run precommit` in your
-terminal.
+terminal. This will format the code.
 
 ### Adding games / apps
 
@@ -20,7 +20,7 @@ An asset is a game or an app.
 ```json
 {
   "name": "Google", // Name of asset
-  "image": "/a/images/assets/ap/g.png", // Image of asset
+  "image": "/a/images/ap/g.png", // Image of asset
   "link": "https://www.google.com" // URL for asset
 }
 ```
@@ -28,5 +28,5 @@ An asset is a game or an app.
 **Files/Folders:**
 
 - Apps & Games → `public/a/json/lists.json`
-- Games images: `public/a/images/assets/ga`
-- Apps images: `public/a/images/assets/ap`
+- Games images: `public/a/images/ga`
+- Apps images: `public/a/images/ap`
