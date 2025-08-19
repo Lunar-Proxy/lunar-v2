@@ -21,9 +21,15 @@ const scramjet = new ScramjetController({
     sync: '/a/bundled/scram/sync.js',
   }, // TODO: add encoding other then basic
   flags: {
+    captureErrors: true,
+    cleanErrors: false,
     rewriterLogs: false,
     scramitize: false,
-    cleanErrors: true,
+    serviceworkers: false,
+    sourcemaps: true,
+    strictRewrites: true,
+    syncxhr: false,
+
   },
 });
 
