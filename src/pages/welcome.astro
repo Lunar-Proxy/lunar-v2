@@ -13,7 +13,7 @@ const Quote = getQuote();
 <html lang="en">
   <head>
     <style>
-      @keyframes glow {
+        @keyframes glowHeader {
         0% {
           text-shadow:
             0 0 5px #3b82f6,
@@ -37,6 +37,27 @@ const Quote = getQuote();
         }
       }
 
+      @keyframes glow {
+        0% {
+          text-shadow:
+            0 0 5px var(--text-secondary),
+            0 0 10px var(--text-secondary),
+            0 0 15px var(--text-secondary);
+        }
+        50% {
+          text-shadow:
+            0 0 10px var(--text-secondary),
+            0 0 15px var(--text-secondary),
+            0 0 20px var(--text-secondary);
+        }
+        100% {
+          text-shadow:
+            0 0 5px var(--text-secondary),
+            0 0 10px var(--text-secondary),
+            0 0 15px var(--text-secondary);
+        }
+      }
+
       @keyframes fadeUp {
         from {
           opacity: 0;
@@ -48,9 +69,18 @@ const Quote = getQuote();
         }
       }
 
+      @keyframes shimmer {
+        0% {
+          background-position: -200% 0;
+        }
+        100% {
+          background-position: 200% 0;
+        }
+      }
+
       .logo {
         animation:
-          glow 1.5s ease-in-out infinite alternate,
+          glowHeader 1.5s ease-in-out infinite alternate,
           fadeUp 1s ease-out;
       }
 
@@ -60,6 +90,15 @@ const Quote = getQuote();
 
       .icons {
         animation: fadeUp 0.8s ease-out both;
+      }
+
+      .version-badge {
+        background: linear-gradient(90deg, var(--text-secondary), var(--text-header), var(--text-secondary));
+        background-size: 200% 100%;
+        animation: shimmer 2s ease-in-out infinite;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
       }
     </style>
     <script src="../utils/home.ts"></script>
@@ -81,9 +120,9 @@ const Quote = getQuote();
         <input
           type="text"
           placeholder="Type something..."
-          class="w-full pl-20 pr-16 py-5 text-lg sm:text-xl rounded-full border-2 border-border-default bg-background-overlay font-linux text-text-secondary placeholder-gray-400 shadow-lg backdrop-blur-md transition duration-300 ease-in-out hover:scale-[1.01] focus:outline-none"
+          class="w-full pl-20 pr-16 py-5 text-lg sm:text-xl rounded-full border-2 border-border-default bg-background-overlay font-linux text-text-secondary placeholder-text-secondary/50 shadow-lg backdrop-blur-md transition duration-300 ease-in-out hover:scale-[1.01] focus:outline-none focus:border-text-secondary/50 focus:ring-2 focus:ring-text-secondary/20"
         />
-        <i data-lucide="search" class="absolute right-5 top-1/2 transform -translate-y-1/2 w-6 h-6 z-10 text-gray-400"></i>
+        <i data-lucide="search" class="absolute right-5 top-1/2 transform -translate-y-1/2 w-6 h-6 z-10 text-text-secondary/60"></i>
       </div>
     </div>
 
@@ -111,18 +150,47 @@ const Quote = getQuote();
     </script>
 
     <section
-      id="updates"
-      class="fade-in-up bg-background-overlay mt-6 flex w-full max-w-2xl items-start gap-4 rounded-2xl border border-blue-900 p-6 shadow-xl backdrop-blur-md transition duration-300 ease-in-out hover:scale-[1.02] hover:shadow-blue-700/50"
+      id="changelog"
+      class="fade-in-up group relative w-full max-w-lg overflow-hidden rounded-2xl bg-background-overlay/60 backdrop-blur-md border border-border-default/30 transition-all duration-500 hover:border-text-secondary/30 hover:shadow-2xl hover:shadow-text-secondary/10"
       role="region">
-      <i data-lucide="info" class="h-8 w-8 flex-shrink-0 text-blue-500"></i>
-      <div class="w-full">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="font-linux text-2xl font-semibold tracking-wide text-white">v2.0 ChangeLog</h3>
-        </div>
-        <div class="space-y-4">
-          <div class="border-l-2 border-green-500 pl-4">
-            <h4 class="text-green-400 font-mono text-sm font-semibold mb-2">Lunar v2 release</h4>
+      
+      <div class="absolute inset-0 bg-gradient-to-br from-text-secondary/5 via-transparent to-text-header/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      
+      <div class="relative z-10 p-6">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-text-secondary/20 to-text-header/20 backdrop-blur-sm border border-border-default/20">
+            <i data-lucide="sparkles" class="h-6 w-6 text-text-secondary"></i>
           </div>
+          <div>
+            <h3 class="font-linux text-xl font-bold text-text-header">
+              What's New
+            </h3>
+            <p class="text-sm font-semibold text-text-secondary/70">
+              Latest updates
+            </p>
+          </div>
+        </div>
+        
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-background-overlay/80 border border-border-default/30 mb-4">
+          <div class="w-2 h-2 rounded-full bg-gradient-to-r from-text-secondary to-text-header animate-pulse"></div>
+          <span class="version-badge text-sm font-bold">
+            Version 2.0
+          </span>
+        </div>
+        
+        <div class="space-y-3">
+          <div class="flex items-start gap-3 p-4 rounded-xl bg-background/30 border border-border-default/20 transition-all duration-300 hover:bg-background/50">
+            <div class="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-text-secondary mt-2"></div>
+            <div>
+              <p class="text-text-header font-medium leading-relaxed">
+                Lunar v2.0 released! 
+              </p>
+              <span class="text-xs text-text-secondary/60 mt-1 block">
+                Major release
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </body>

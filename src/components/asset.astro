@@ -1,4 +1,5 @@
 ---
+import '@/main.css';
 import ImportLucide from '../layouts/lucide.astro';
 
 interface Game {
@@ -19,23 +20,23 @@ const { list = [] }: { list?: Game[] } = Astro.props;
       }
 
       ::-webkit-scrollbar-track {
-        background: #1f1d2e;
+        background: var(--background-overlay);
         border-radius: 10px;
       }
 
       ::-webkit-scrollbar-thumb {
-        background: #c4a7e7;
+        background: var(--text-secondary);
         border-radius: 10px;
-        border: 2px solid #1f1d2e;
+        border: 2px solid var(--background-overlay);
       }
 
       ::-webkit-scrollbar-thumb:hover {
-        background: #d0a0f0;
+        background: var(--text-header);
       }
 
       * {
         scrollbar-width: thin;
-        scrollbar-color: #c4a7e7 #1f1d2e;
+        scrollbar-color: var(--text-secondary) var(--background-overlay);
       }
 
       @keyframes fadeInUp {
@@ -60,6 +61,15 @@ const { list = [] }: { list?: Game[] } = Astro.props;
         }
       }
 
+      @keyframes shimmer {
+        0% {
+          background-position: -200% 0;
+        }
+        100% {
+          background-position: 200% 0;
+        }
+      }
+
       .shine::before {
         content: '';
         position: absolute;
@@ -67,33 +77,32 @@ const { list = [] }: { list?: Game[] } = Astro.props;
         left: -100%;
         width: 200%;
         height: 200%;
-        background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+        background: linear-gradient(120deg, transparent, rgba(224, 222, 244, 0.08), transparent);
         animation: shine 2.5s infinite;
         pointer-events: none;
         z-index: 1;
       }
 
       .card-glow {
-        transition: all 0.4s ease;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       .card-glow:hover {
         box-shadow:
-          0 0 20px rgba(216, 191, 216, 0.1),
-          0 0 40px rgba(216, 191, 216, 0.07),
-          0 0 60px rgba(216, 191, 216, 0.04);
-        transform: scale(1.05);
+          0 0 20px rgba(161, 158, 179, 0.15),
+          0 0 40px rgba(161, 158, 179, 0.1),
+          0 0 60px rgba(161, 158, 179, 0.05);
+        transform: scale(1.02) translateY(-2px);
       }
 
       .card-loading {
-        background: linear-gradient(135deg, #1f1d2e, #191724);
+        background: linear-gradient(135deg, var(--background-overlay), var(--background));
         animation: pulse 1.5s infinite ease-in-out;
         filter: blur(8px);
       }
 
       @keyframes pulse {
-        0%,
-        100% {
+        0%, 100% {
           opacity: 0.8;
         }
         50% {
@@ -133,6 +142,8 @@ const { list = [] }: { list?: Game[] } = Astro.props;
             'lg:grid-cols-4',
             'gap-8'
           );
+          gridView.classList.add('bg-text-secondary/20', 'text-text-header');
+          listView?.classList.remove('bg-text-secondary/20', 'text-text-header');
         });
 
         listView?.addEventListener('click', () => {
@@ -145,59 +156,104 @@ const { list = [] }: { list?: Game[] } = Astro.props;
             'gap-8'
           );
           container?.classList.add('flex', 'flex-col', 'space-y-6');
+          listView.classList.add('bg-text-secondary/20', 'text-text-header');
+          gridView?.classList.remove('bg-text-secondary/20', 'text-text-header');
+        });
+
+        const searchInput = document.querySelector('[data-input]') as HTMLInputElement;
+        const randomBtn = document.querySelector('[data-random]');
+        
+        searchInput?.addEventListener('input', (e) => {
+          const query = (e.target as HTMLInputElement).value.toLowerCase();
+          cards.forEach(card => {
+            const name = card.querySelector('h2')?.textContent?.toLowerCase() || '';
+            const desc = card.querySelector('p')?.textContent?.toLowerCase() || '';
+            
+            if (name.includes(query) || desc.includes(query)) {
+              (card as HTMLElement).style.display = 'block';
+            } else {
+              (card as HTMLElement).style.display = query ? 'none' : 'block';
+            }
+          });
+        });
+
+        randomBtn?.addEventListener('click', () => {
+          const visibleCards = Array.from(cards).filter(card => 
+            card instanceof HTMLElement && card.style.display !== 'none'
+          );
+          if (visibleCards.length > 0) {
+            const randomCard = visibleCards[Math.floor(Math.random() * visibleCards.length)] as HTMLElement;
+            randomCard.click();
+          }
         });
       });
     </script>
   </head>
 
-  <body class="font-linux min-h-screen overflow-x-hidden p-6 font-sans text-[#e0def4]">
-    <div class="mx-auto mb-8 flex max-w-7xl items-center justify-between">
-      <div class="flex items-center gap-3">
-        <input
-          type="text"
-          data-input="why-are-you-looking-here->:("
-          placeholder="Search through 9 apps"
-          class="font-linux border-border-default bg-background-overlay text-text-header h-9 h-[48px] w-[260px] rounded-[9999px] border px-4 text-sm placeholder-[#a3aed0] focus:ring-2 focus:ring-[#c4a7e7] focus:outline-none"
-        />
+  <body class="font-linux min-h-screen overflow-x-hidden p-6 bg-background text-text-header">
+    <div class="mx-auto mb-8 flex max-w-7xl items-center justify-between backdrop-blur-sm">
+      <div class="flex items-center gap-4">
+        <div class="relative">
+          <i data-lucide="search" class="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-text-secondary/60 z-10"></i>
+          <input
+            type="text"
+            data-input="search"
+            placeholder="Search through apps..."
+            class="font-linux border-border-default/30 bg-background-overlay/80 text-text-header backdrop-blur-sm h-12 w-80 rounded-xl border pl-12 pr-4 text-sm placeholder-text-secondary/50 focus:ring-2 focus:ring-text-secondary/30 focus:outline-none focus:border-text-secondary/50 transition-all duration-200 shadow-lg"
+          />
+        </div>
+        
         <button
-          class="bg-background-overlay border-border-default flex h-12 w-14 items-center justify-center rounded-lg border shadow-md transition-all duration-200 hover:bg-[#26233a]">
-          <i data-lucide="dice-6" data-random="stawwwp" class="h-6 w-6 text-[#9aa0b3]"></i>
+          data-random="random"
+          class="bg-background-overlay/80 border-border-default/30 backdrop-blur-sm flex h-12 w-12 items-center justify-center rounded-xl border shadow-lg transition-all duration-200 hover:bg-background-overlay hover:scale-105 hover:shadow-xl group">
+          <i data-lucide="shuffle" class="h-5 w-5 text-text-secondary group-hover:text-text-header transition-colors duration-200"></i>
         </button>
       </div>
 
-      <div class="ml-4 flex gap-3">
+      <div class="flex gap-2 bg-background-overlay/60 backdrop-blur-sm rounded-xl p-1 border border-border-default/30 shadow-lg">
         <button
           data-view="grid"
-          class="bg-background-overlay border-border-default flex h-12 w-14 items-center justify-center rounded-xl border shadow-md transition-all duration-200 hover:bg-[#26233a]">
-          <i data-lucide="grid-2x2" class="h-6 w-6 text-[#9aa0b3]"></i>
+          class="bg-text-secondary/20 text-text-header flex h-10 w-10 items-center justify-center rounded-lg transition-all duration-200 hover:bg-text-secondary/30">
+          <i data-lucide="grid-3x3" class="h-5 w-5"></i>
         </button>
         <button
           data-view="list"
-          class="bg-background-overlay border-border-default flex h-12 w-14 items-center justify-center rounded-xl border shadow-md transition-all duration-200 hover:bg-[#26233a]">
-          <i data-lucide="list" class="h-6 w-6 text-[#9aa0b3]"></i>
+          class="flex h-10 w-10 items-center justify-center rounded-lg transition-all duration-200 hover:bg-text-secondary/20 text-text-secondary hover:text-text-header">
+          <i data-lucide="list" class="h-5 w-5"></i>
         </button>
       </div>
     </div>
 
-    <div data-container class="mx-auto grid max-w-7xl grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <div data-container class="mx-auto grid max-w-7xl grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
       {
         list.map((game, i) => (
           <a
             data-href={game.url}
             target="_blank"
             data-bg={game.icon}
-            class="card card-glow card-loading shine relative flex h-[148px] flex-col justify-between overflow-hidden rounded-2xl border border-[#26233a] bg-cover bg-center bg-no-repeat transition-transform duration-300 hover:scale-105"
+            class="card card-glow card-loading shine relative flex h-40 flex-col justify-between overflow-hidden rounded-2xl border border-border-default/30 bg-cover bg-center bg-no-repeat transition-all duration-300 hover:border-text-secondary/50 group"
             style={`animation: fadeInUp 0.6s ease-out ${i * 0.1}s both;`}>
-            <div class="bg-background-overlay/60 absolute inset-0 z-10 backdrop-blur-sm transition-all duration-300 hover:bg-black/40" />
+            
+            <div class="bg-background-overlay/70 absolute inset-0 z-10 backdrop-blur-sm transition-all duration-300 group-hover:bg-background/60" />
             <div class="relative z-20 flex h-full flex-col items-center justify-center p-6 text-center">
-              <h2 class="font-linux text-text-header mb-2 text-xl font-bold drop-shadow-sm">{game.name}</h2>
-              <p class="text-text-secondary font-linux text-base leading-relaxed drop-shadow-sm">{game.desc}</p>
+              <h2 class="font-linux text-text-header mb-2 text-lg font-bold drop-shadow-lg group-hover:text-text-header transition-colors duration-200">{game.name}</h2>
+              <p class="text-text-secondary font-linux text-sm leading-relaxed drop-shadow-sm group-hover:text-text-secondary/90 transition-colors duration-200 line-clamp-2">{game.desc}</p>
             </div>
-            <div class="pointer-events-none absolute inset-0 z-30 rounded-2xl transition duration-300 hover:ring-2 hover:ring-violet-500/60" />
+            <div class="pointer-events-none absolute inset-0 z-30 rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 ring-2 ring-text-secondary/30" />
           </a>
         ))
       }
     </div>
+
+    {list.length === 0 && (
+      <div class="flex flex-col items-center justify-center py-20 text-center">
+        <div class="bg-background-overlay/60 backdrop-blur-sm rounded-2xl p-8 border border-border-default/30">
+          <i data-lucide="package-x" class="h-16 w-16 text-text-secondary/50 mx-auto mb-4"></i>
+          <h3 class="text-text-header text-xl font-bold mb-2">No apps found</h3>
+          <p class="text-text-secondary">You have broken this page, good job</p>
+        </div>
+      </div>
+    )}
 
     <ImportLucide />
     <script src="../utils/assets"></script>
