@@ -76,7 +76,7 @@ const staticOptions = {
   },
 };
 
-// build __dirname in ESM
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 await app.register(fastifyStatic, {
