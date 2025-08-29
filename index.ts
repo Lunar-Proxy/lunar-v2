@@ -10,10 +10,11 @@ import fs from 'node:fs';
 import { createServer } from 'node:http';
 import { Socket } from 'node:net';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { updateChecker } from 'serverlib/check';
 import { version } from './package.json';
 
-const port: number = parseInt(process.env.PORT as string) || parseInt('8080');
+const port: number = parseInt(process.env.PORT as string) || 8080;
 
 logging.set_level(logging.NONE);
 wisp.options.wisp_version = 2;
@@ -58,69 +59,28 @@ const staticOptions = {
   lastModified: true,
   redirect: false,
   setHeaders(res: any, filePath: string) {
-  if (filePath.endsWith('.html') || filePath.endsWith('.astro')) {
-    res.setHeader('Cache-Control', 'public, max-age=604800'); // 7 day
-  } else if (/\.(js|css|jpg|jpeg|png|gif|ico|svg|webp|avif)$/.test(filePath)) {
-    res.setHeader('Cache-Control', 'public, max-age=31536000, immutable'); // 1 year
-  } else if (/\.(json|xml|txt)$/.test(filePath)) {
-    res.setHeader('Cache-Control', 'public, max-age=604800'); // 7 days
-  } else {
-    res.setHeader('Cache-Control', 'public, max-age=604800'); // 7 day
-  }
+    if (filePath.endsWith('.html') || filePath.endsWith('.astro')) {
+      res.setHeader('Cache-Control', 'public, max-age=604800'); // 7 days
+    } else if (/\.(js|css|jpg|jpeg|png|gif|ico|svg|webp|avif)$/.test(filePath)) {
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable'); // 1 year
+    } else if (/\.(json|xml|txt)$/.test(filePath)) {
+      res.setHeader('Cache-Control', 'public, max-age=604800'); // 7 days
+    } else {
+      res.setHeader('Cache-Control', 'public, max-age=604800'); // 7 days
+    }
 
-  res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
-  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
-  res.setHeader('X-XSS-Protection', '1; mode=block');
-}
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+  },
 };
 
-app.get('/api/icon/', async (req, reply) => {
-  try {
-    const url = (req.query as { url?: string }).url;
-    if (!url) {
-      return reply.status(400).send('URL parameter is required.');
-    }
-
-    const response = await fetch(
-      `https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${url}&size=64`,
-    );
-
-    if (!response.ok) {
-      return reply.status(500).send('Failed to fetch the favicon.');
-    }
-
-    const data = await response.arrayBuffer();
-    const buffer = Buffer.from(data);
-
-    reply.type('image/jpeg').send(buffer);
-  } catch (error) {
-    console.error(error);
-    reply.status(500).send('Internal server error.');
-  }
-});
-
-
-app.get('/api/query', async (request, reply) => {
-  const { q: query } = request.query as { q?: string };
-  if (!query) return reply.status(400).send({ error: 'Query parameter "q" is required.' });
-
-  try {
-    const response = await fetch(`https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}`, {
-      headers: { 'User-Agent': 'Mozilla/5.0', Accept: 'application/json' },
-    });
-
-    if (!response.ok) return reply.status(response.status).send({ error: 'Failed to fetch suggestions.' });
-
-    const suggestions = await response.json();
-    reply.send(suggestions);
-  } catch (err) {
-    reply.status(500).send({ error: 'Internal server error.' });
-  }
-});
+// build __dirname in ESM
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 await app.register(fastifyStatic, {
-  root: path.join(import.meta.dirname, 'dist', 'client'),
+  root: path.join(__dirname, 'dist', 'client'),
   preCompressed: true,
   ...staticOptions,
 });
@@ -135,7 +95,7 @@ app.setNotFoundHandler((request, reply) => {
   reply.type('text/plain').send(fs.readFileSync('/404'));
 });
 
-app.listen({ host: '0.0.0.0', port: port }, () => {
+app.listen({ host: '0.0.0.0', port }, () => {
   const updateStatus = updateChecker();
   const statusMsg =
     updateStatus.status === 'u'
