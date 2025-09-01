@@ -117,6 +117,9 @@ export default defineConfig({
   adapter: node({ mode: 'middleware' }),
   prefetch: { prefetchAll: true, defaultStrategy: 'load' },
   vite: {
+    build: {
+      minify: 'esbuild',
+    },
     optimizeDeps: { include: ['lucide'] },
     define: {
       VERSION: JSON.stringify(version),
