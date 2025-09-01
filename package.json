@@ -28,7 +28,7 @@
     "htmlparser2": "^10.0.0",
     "is-url-superb": "^6.1.0",
     "localforage": "^1.10.0",
-    "lucide": "^0.539.0",
+    "lucide": "^0.542.0",
     "node-fetch": "^3.3.2",
     "prettier-plugin-astro": "^0.14.1",
     "tailwindcss": "^4.1.12",
