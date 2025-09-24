@@ -2,7 +2,7 @@
 # Lunar is one of the fastest web-proxies.
 Lunar v2 is designed to bypass censorship and provide the best user-experience.
 
-[![Join our Discord](https://skillicons.dev/icons?i=discord)](https://discord.gg/fuPtWjYuf8) [![View on GitHub](https://skillicons.dev/icons?i=github)](https://github.com/Lunar-proxy/Lunar-v1)
+[![Join our Discord](https://skillicons.dev/icons?i=discord)](https://discord.gg/fuPtWjYuf8) [![View on GitHub](https://skillicons.dev/icons?i=github)](https://github.com/Lunar-proxy/lunar-v2)
 
 ## Features
 
@@ -16,10 +16,10 @@ Lunar v2 is designed to bypass censorship and provide the best user-experience.
 > Lunar cannot be deployed to Netlify, Vercel, GitHub Pages, or any other static hosting platform.
 
 <div>
-    <a href="https://render.com/deploy?repo=https://github.com/lunar-proxy/lunar-v1">
+    <a href="https://render.com/deploy?repo=https://github.com/lunar-proxy/lunar-v2">
         <img src="https://raw.githubusercontent.com/BinBashBanana/deploy-buttons/main/buttons/remade/render.svg" alt="Deploy to Render">
     </a>
-    <a href="https://app.koyeb.com/services/deploy?type=git&repository=github.com/lunar-proxy/lunar-v1&builder=dockerfile&instance_type=free&regions=was&ports=8080%3Bhttp%3B%2F&hc_protocol%5B808">
+    <a href="https://app.koyeb.com/services/deploy?type=git&repository=github.com/lunar-proxy/lunar-v2&builder=dockerfile&instance_type=free&regions=was&ports=8080%3Bhttp%3B%2F&hc_protocol%5B808">
         <img src="https://binbashbanana.github.io/deploy-buttons/buttons/remade/koyeb.svg" alt="Deploy to Koyeb" style="float: left; margin-right: 10px;">
     </a>
 </div>
@@ -35,7 +35,7 @@ Lunar v2 is designed to bypass censorship and provide the best user-experience.
 
    ```bash
    git clone https://github.com/Lunar-Proxy/Lunar-v2.git
-   cd Lunar-v1
+   cd lunar-v2
    ```
 
 2. Install dependencies and start Lunar:
