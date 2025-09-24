@@ -35,7 +35,7 @@ Lunar v2 is designed to bypass censorship and provide the best user-experience.
 
    ```bash
    git clone https://github.com/Lunar-Proxy/Lunar-v2.git
-   cd lunar-v2
+   cd Lunar-v2
    ```
 
 2. Install dependencies and start Lunar:
