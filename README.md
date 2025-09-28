@@ -1,52 +1,35 @@
-# Lunar V2
+![Lunar](./lunar.svg)
+# Lunar is one of the fastest web-proxies.
+Lunar v2 is designed to bypass censorship and provide the best user-experience.
 
-<p align="left">
-    <a href="https://discord.gg/fuPtWjYuf8">
-        <img src="https://skillicons.dev/icons?i=discord" alt="Join our Discord">
-    </a>
-    <a href="https://github.com/Lunar-proxy/Lunar-v2">
-        <img src="https://skillicons.dev/icons?i=github" alt="View on GitHub">
-    </a>
-</p>
-
-## What is Lunar?
-
-Lunar is a web proxy created to bypass censorship.
+[![Join our Discord](https://skillicons.dev/icons?i=discord)](https://discord.gg/fuPtWjYuf8) [![View on GitHub](https://skillicons.dev/icons?i=github)](https://github.com/Lunar-proxy/lunar-v2)
 
 ## Features
 
-- 🚀 **High Speed** – Designed to be fast
-- 🪞 **Enhanced Tab Cloaking** – Mask the tab title and favicon to be
-  educational.
-- 🎮 **Games** – Play over 40+ games, all unbl0cked
-- ⚡️ **Site Support** - Lunar supports popular websites such as Gforce Now,
-  spotify, and more thanks to Ultraviolet & scramjet technology
+- 🚀 **High-Speed Performance**
+- 🪞 **Advanced Tab Cloaking**
+- 🎮 **Tons of Popular Games & Apps**
 
 ## Deployment Options
 
-<div>  
-    <a href="https://render.com/deploy?repo=https://github.com/lunar-proxy/lunar-v2">  
-        <img src="https://raw.githubusercontent.com/BinBashBanana/deploy-buttons/main/buttons/remade/render.svg" alt="Deploy to Render">  
-    </a>  
-    <a href="https://app.koyeb.com/services/deploy?type=git&repository=github.com/lunar-proxy/lunar-v2&builder=dockerfile&instance_type=free&regions=was&ports=8080%3Bhttp%3B%2F&hc_protocol%5B808">  
-        <img src="https://binbashbanana.github.io/deploy-buttons/buttons/remade/koyeb.svg" alt="Deploy to Koyeb" style="float: left; margin-right: 10px;">  
-    </a>  
+> [!NOTE]
+> Lunar cannot be deployed to Netlify, Vercel, GitHub Pages, or any other static hosting platform.
+
+<div>
+    <a href="https://render.com/deploy?repo=https://github.com/lunar-proxy/lunar-v2">
+        <img src="https://raw.githubusercontent.com/BinBashBanana/deploy-buttons/main/buttons/remade/render.svg" alt="Deploy to Render">
+    </a>
+    <a href="https://app.koyeb.com/services/deploy?type=git&repository=github.com/lunar-proxy/lunar-v2&builder=dockerfile&instance_type=free&regions=was&ports=8080%3Bhttp%3B%2F&hc_protocol%5B808">
+        <img src="https://binbashbanana.github.io/deploy-buttons/buttons/remade/koyeb.svg" alt="Deploy to Koyeb" style="float: left; margin-right: 10px;">
+    </a>
 </div>
 
-> [!NOTE] Lunar cannot be deployed on static hosting services like Netlify,
-> Vercel (Due to websockets), or GitHub Pages.
+### Deployment via Terminal
 
-## Deployment via Terminal
+> [!NOTE]
+> Before deploying, install [git](https://git-scm.com/downloads) and [node.js](https://nodejs.org/en/download/prebuilt-installer). Then, install pnpm with `npm install -g pnpm`.
 
-> [!IMPORTANT] By default, we use pnpm for deploying Lunar. However, you can
-> utilize any package manager (npm, pnpm, bun, etc.) for deployment.
->
-> Before you begin, ensure you have the following dependencies installed:
->
-> - [Git](https://git-scm.com/downloads)
-> - [Node.js](https://nodejs.org/en/download/prebuilt-installer)
-
-### Production
+#### Production
 
 1. Clone the Lunar repository:
 
@@ -55,34 +38,30 @@ Lunar is a web proxy created to bypass censorship.
    cd Lunar-v2
    ```
 
-2. Install dependencies and launch Lunar:
+2. Install dependencies and start Lunar:
    ```bash
-   pnpm install && pnpm start
+   pnpm i && pnpm start
    ```
 
-### Development
+#### Development
 
-If you are modifying Lunar, use the development setup to prevent the need for
-repeated builds:
+If you’re making changes to Lunar, use the development setup to avoid rebuilding repeatedly:
 
 ```bash
 pnpm install && pnpm dev
 ```
 
-# Contributing
+## Contributing
 
-If you are making any changes, please review [this guide](CONTRIBUTING.md) for
-proper instructions on how to contribute.
+If you would like to make a change to Lunar, please read [the contributing guide](CONTRIBUTING.md) before committing.
 
-# Support
+## Support
 
-For assistance, please create a
-[GitHub Issue](https://github.com/Lunar-Proxy/lunar-v1/issues) or
-[join our Discord community](https://discord.gg/fuPtWjYuf8).
+If you need help, please make a [GitHub Issue](https://github.com/Lunar-Proxy/lunar-v2/issues) or ask in [our Discord](https://discord.gg/fuPtWjYuf8).
 
-# Credits
+## Credits
 
-Thank you to everyone who has contributed to Lunar ❤️
+Thanks to everybody who has contributed to Lunar! ❤️
 
 <a href="https://github.com/lunar-proxy/lunar-v2/graphs/contributors">
 <img src="https://contrib.rocks/image?repo=lunar-proxy/lunar-v2"/>
