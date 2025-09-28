@@ -1,11 +1,8 @@
 import ConfigAPI from './config';
-import TabManager from './tb';
+import { TabManager } from './tb';
 import { ValidateUrl } from './url';
-
 // @ts-ignore
 const { ScramjetController } = $scramjetLoadController();
-
-TabManager.addTab();
 
 const reload = document.getElementById('refresh') as HTMLButtonElement | null;
 const back = document.getElementById('back') as HTMLButtonElement | null;
@@ -13,29 +10,34 @@ const forward = document.getElementById('forward') as HTMLButtonElement | null;
 const urlbar = document.getElementById('urlbar') as HTMLInputElement | null;
 const devtools = document.getElementById('code') as HTMLButtonElement | null;
 const wispUrl = await ConfigAPI.get('wispUrl');
+const nativePaths: Record<string, string> = {
+  'lunar://settings': '/st',
+  'lunar://new': '/new',
+  'lunar://games': '/gm',
+};
+
 const scramjet = new ScramjetController({
   prefix: '/sj/',
   files: {
     wasm: '/a/bundled/scram/wasm.wasm',
     all: '/a/bundled/scram/all.js',
     sync: '/a/bundled/scram/sync.js',
-  }, // TODO: add encoding other then basic
+  },
   flags: {
     captureErrors: true,
     cleanErrors: false,
     rewriterLogs: false,
     scramitize: false,
     serviceworkers: false,
-    sourcemaps: true,
     strictRewrites: true,
     syncxhr: false,
-
   },
 });
 
-scramjet.init();
+await scramjet.init();
+
 const connection = new BareMux.BareMuxConnection('/bm/worker.js');
-navigator.serviceWorker.register('./sw.js');
+await navigator.serviceWorker.register('./sw.js');
 
 function getActiveFrame(): HTMLIFrameElement | null {
   const activeTabId = TabManager.activeTabId;
@@ -43,25 +45,18 @@ function getActiveFrame(): HTMLIFrameElement | null {
 }
 
 function loading() {
-  // baby you spin me right around, baby right round
   if (!reload) return;
   reload.style.transition = 'transform 0.5s ease';
   reload.style.animation = 'none';
-  void reload.offsetWidth;
+  void reload.offsetWidth; // force 
   reload.style.animation = 'spin 0.5s linear';
-}
-
-async function getURL(proxiedUrl: string) {
-  const url = new URL(proxiedUrl);
-  console.log('[DEBUG] Proxied URL:', proxiedUrl);
-  const path = url.pathname.slice(4); // TODO: fix
-  return decodeURIComponent(path);
 }
 
 reload?.addEventListener('click', () => {
   const frame = getActiveFrame();
   if (frame?.contentWindow) {
     console.log('[DEBUG] Reloading frame:', frame.id);
+    loading();
     frame.src = frame.contentWindow.location.href;
   } else {
     console.warn('[WARN] Cannot reload: No active frame');
@@ -106,7 +101,7 @@ devtools?.addEventListener('click', () => {
     }
 
     if (frame?.contentDocument) {
-      const script = frame?.contentDocument.createElement('script');
+      const script = frame.contentDocument.createElement('script');
       script.src = 'https://cdn.jsdelivr.net/npm/eruda';
       script.onload = () => {
         frame.contentWindow?.eruda.init();
@@ -122,12 +117,19 @@ devtools?.addEventListener('click', () => {
   }
 });
 
-urlbar?.addEventListener('keydown', async e => {
+urlbar?.addEventListener('keydown', async (e) => {
   if (e.key !== 'Enter') return;
 
   const frame = getActiveFrame();
-  console.log('[DEBUG] Active frame:', frame?.id);
-  if (!frame) return;
+  if (!frame) {
+    console.warn('[WARN] No active frame to navigate.');
+    return;
+  }
+
+  if (nativePaths[urlbar.value]) {
+    frame.src = nativePaths[urlbar.value];
+    return;
+  }
 
   if ((await connection.getTransport()) !== '/lc/index.mjs') {
     await connection.setTransport('/lc/index.mjs', [{ wisp: wispUrl }]);
@@ -141,25 +143,4 @@ urlbar?.addEventListener('keydown', async e => {
 
   url = scramjet.encodeUrl(url);
   frame.src = url;
-
-  let lastHref = '';
-  setInterval(async () => {
-    try {
-      const href = frame.contentWindow?.location.href;
-      if (href && href !== lastHref) {
-        lastHref = href;
-        urlbar.value = (await getURL(href)) ?? '';
-      }
-    } catch {
-      // yap session smh
-    }
-  }, 500);
 });
-
-const last = decodeURIComponent(localStorage.getItem('last') ?? '');
-if (last && urlbar) {
-  urlbar.value = last;
-  urlbar.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-  console.log('[DEBUG] URL is:', last);
-  localStorage.removeItem('last');
-}

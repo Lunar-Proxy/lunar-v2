@@ -1,55 +1,40 @@
 ---
 import '@/main.css';
-import Item from '../components/navitem.astro';
 ---
-
 <aside
-  class="border-border-default bg-background-overlay fixed top-0 bottom-0 left-0 z-50 flex h-full w-[72px] flex-col items-center overflow-visible rounded-md border-r-[1.8px] pt-5 shadow-lg">
-  <Item name="Home" icon="moon-star" />
-  <i data-lucide="minus" class="mb-3 h-5 w-5 text-gray-500 opacity-60"></i>
-  <Item name="Search" icon="search" />
-  <Item name="Games" icon="gamepad" />
-  <Item name="Apps" icon="grip" />
-  <i data-lucide="minus" class="mb-3 h-5 w-5 text-gray-500 opacity-60"></i>
-  <Item name="VM" icon="monitor" />
-  <Item name="Tools" icon="hammer" />
-  <Item name="Settings" icon="settings" />
-  <i data-lucide="minus" class="mb-3 h-5 w-5 text-gray-500 opacity-60"></i>
-  <Item id="parentSignIn" name="AB Cloak (Ctrl Z)" icon="eye-off" />
-  <Item id="LoginForm" name="Exit (Ctrl + X)" icon="log-out" />
+  class="fixed top-0 bottom-0 left-0 z-50 flex h-full w-[66px] flex-col items-center rounded-md bg-[#1a1b26] shadow-xl overflow-hidden">
+  <img src="path/to/your/image.png" 
+       class="mb-4 mt-3 w-12 h-12 rounded-xl object-contain hover:scale-110 transition-transform duration-300" />
+  <div class="flex flex-1 flex-col gap-4 items-center justify-center">
+    <a>
+      <button
+        class="group relative flex h-10 w-10 items-center justify-center rounded-lg bg-[#313244] transition-all duration-300 ease-out hover:scale-110 hover:rotate-4 hover:shadow-xl">
+        <i data-lucide="gamepad" class="h-6 w-6 transition-transform duration-300 group-hover:scale-110"></i>
+        <span
+          class="absolute left-full top-1/2 ml-2 -translate-y-1/2 scale-90 rounded-lg bg-[#313244] px-3 py-1 text-sm text-white opacity-0 shadow-lg transition-all duration-300 ease-out group-hover:scale-100 group-hover:opacity-100">
+          Games
+        </span>
+      </button>
+    </a>
+  </div>
+  <div class="mb-4 flex flex-col gap-3 items-center">
+    <a>
+      <button
+        class="group relative flex h-10 w-10 items-center justify-center rounded-lg bg-[#292a36] transition-all duration-300 ease-out hover:scale-110 hover:rotate-4 hover:shadow-xl">
+        <i data-lucide="settings" class="h-6 w-6 transition-transform duration-300 group-hover:scale-110"></i>
+        <span
+          class="absolute left-full top-1/2 ml-2 -translate-y-1/2 scale-90 rounded-lg bg-[#292a36] px-3 py-1 text-sm text-white opacity-0 shadow-lg transition-all duration-300 ease-out group-hover:scale-100 group-hover:opacity-100">
+          Settings
+        </span>
+      </button>
+    </a>
+  </div>
 </aside>
-
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('LoginForm')?.addEventListener('click', function () {
-      console.log('exit clicked');
-      const event = new KeyboardEvent('keydown', {
-        key: 'x',
-        ctrlKey: true,
-        bubbles: true,
-      });
-      document.dispatchEvent(event);
-    });
-
-    document.getElementById('parentSignIn')?.addEventListener('click', function () {
-      console.log('cloak clicked');
-      const event = new KeyboardEvent('keydown', {
-        key: 'z',
-        ctrlKey: true,
-        bubbles: true,
-      });
-      document.dispatchEvent(event);
-    });
-  });
-
   const frameNavigator = document.querySelector('iframe') as HTMLIFrameElement | null;
   const Navigation = [
     { btn: 'Home', url: '/welcome' },
-    { btn: 'Search', url: '/tab' },
-    { btn: 'Games', url: '/math' },
-    { btn: 'Apps', url: '/sci' },
-    { btn: 'VM', url: '/v' },
-    { btn: 'Tools', url: '/to' },
+    { btn: 'Games', url: '/ga' },
     { btn: 'Settings', url: '/st' },
   ];
 
@@ -61,8 +46,11 @@ import Item from '../components/navitem.astro';
 
     if (button) {
       button!.addEventListener('click', () => {
-        // @ts-ignore f you
-        frameNavigator.src = url;
+        const input = window.parent.document.getElementById('urlbar') as HTMLInputElement | null;
+        if (input) {
+          input.value = url;
+          input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        }
       });
     }
   });

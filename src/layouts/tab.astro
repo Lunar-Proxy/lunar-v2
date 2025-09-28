@@ -1,67 +1,78 @@
 ---
-import ImportLucide from './lucide.astro';
+import ImportLucide from "./lucide.astro";
 ---
-
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="@scripts/tb"></script>
+    <script src="@scripts/tb.ts"></script>
   </head>
   <body class="bg-gray-900 p-4 font-sans text-white">
     <div class="w-full">
       <div
         id="tab-wrapper"
-        class="bg-background-overlay relative flex h-14 items-center rounded-t-lg p-2 transition-all">
-        <div id="tcontainer" class="ml-2 flex max-w-full flex-nowrap space-x-2 overflow-x-auto"></div>
+        class="bg-[#1c1a2b] relative flex h-14 items-center p-2">
+        <div
+          id="tcontainer"
+          class="ml-2 flex max-w-full flex-nowrap space-x-2 overflow-x-auto"
+        ></div>
         <button
           id="add"
-          class="mt-[2px] ml-2 flex h-8 w-8 items-center justify-center rounded-md text-lg text-gray-400 transition-colors hover:bg-gray-700 hover:text-white">
+          class="ml-2 flex h-8 w-8 items-center justify-center rounded-md text-lg text-gray-400 hover:bg-gray-700 hover:text-white"
+        >
           +
         </button>
       </div>
-
-      <div class="border-border-default bg-background-overlay flex h-12 items-center px-6 transition-all">
-        <div class="flex items-center space-x-4">
+      <div
+        class="border-t border-[#3a3758] bg-[#1c1a2b] flex h-12 items-center px-4"
+      >
+        <div class="flex items-center space-x-2">
           <button
             id="back"
-            class="flex h-8 w-8 items-center justify-center rounded-md text-lg text-gray-400 transition-colors hover:bg-gray-700 hover:text-white">
-            <i data-lucide="arrow-left" class="h-4 w-4 flex-shrink-0 text-[#9aa0b3]"></i>
+            class="flex h-8 w-8 items-center justify-center rounded-md text-gray-400 hover:bg-gray-700 hover:text-white"
+          >
+            <i data-lucide="arrow-left" class="h-4 w-4"></i>
           </button>
           <button
             id="forward"
-            class="flex h-8 w-8 items-center justify-center rounded-md text-lg text-gray-400 transition-colors hover:bg-gray-700 hover:text-white">
-            <i data-lucide="arrow-right" class="h-4 w-4 flex-shrink-0 text-[#9aa0b3]"></i>
+            class="flex h-8 w-8 items-center justify-center rounded-md text-gray-400 hover:bg-gray-700 hover:text-white"
+          >
+            <i data-lucide="arrow-right" class="h-4 w-4"></i>
           </button>
           <button
             id="refresh"
-            class="group flex h-8 w-8 items-center justify-center rounded-md text-lg text-gray-400 transition-colors hover:bg-gray-700 hover:text-white">
+            class="group flex h-8 w-8 items-center justify-center rounded-md text-gray-400 hover:bg-gray-700"
+          >
             <i
               data-lucide="refresh-cw"
-              class="h-4 w-4 text-[#9aa0b3] transition-transform duration-500 group-hover:animate-spin"></i>
+              class="h-4 w-4 transition-transform duration-500 group-hover:animate-spin"
+            ></i>
           </button>
         </div>
-
-        <div class="ml-8 flex grow items-center">
-          <div class="flex w-full items-center gap-3">
+        <div class="ml-4 flex grow items-center">
+          <div class="flex w-full items-center gap-2">
             <input
               type="text"
               id="urlbar"
-              class="font-linux text-text-secondary border-border-default h-10 w-full rounded-full border-t-2 bg-[#1c1a2b] px-4 py-2 text-sm font-semibold transition transition-all duration-300 ease-in-out hover:text-white focus:ring-0 focus:outline-none"
+              class="font-linux text-gray-300 border border-[#3a3758] h-9 w-full rounded-full bg-[#29263c] px-4 text-sm font-medium transition-colors focus:outline-none focus:ring-0 hover:text-white"
               placeholder="Enter a URL or a query..."
             />
             <button
               id="code"
-              class="group flex h-8 w-8 items-center justify-center rounded-md text-lg text-gray-400 transition-colors hover:bg-gray-700 hover:text-white">
-              <i data-lucide="code" class="h-6 w-6 text-[#9aa0b3] transition-transform duration-500"></i>
+              class="flex h-8 w-8 items-center justify-center rounded-md text-gray-400 hover:bg-gray-700 hover:text-white"
+            >
+              <i data-lucide="code" class="h-5 w-5"></i>
             </button>
           </div>
         </div>
       </div>
     </div>
-
-    <div id="fcontainer" class="h-[calc(100vh-4rem)] w-full overflow-hidden rounded-b-lg"></div>
+    <div
+      id="fcontainer"
+      class="h-[calc(100vh-7rem)] w-full overflow-hidden rounded-b-lg"
+    ></div>
+    <ImportLucide />
   </body>
-  <ImportLucide />
 </html>
+

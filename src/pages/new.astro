@@ -3,7 +3,7 @@ import '@/main.css';
 import Shortcuts from '../layouts/shortcuts.astro';
 ---
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -21,8 +21,15 @@ import Shortcuts from '../layouts/shortcuts.astro';
       <span id="seconds" class="text-white">48</span>
       <span id="ampm" class="mb-1 text-base font-semibold text-white md:text-xl">AM</span>
     </div>
+
     <Shortcuts />
+
     <script>
+      const hoursEl = document.getElementById('hours');
+      const minutesEl = document.getElementById('minutes');
+      const secondsEl = document.getElementById('seconds');
+      const ampmEl = document.getElementById('ampm');
+
       function updateClock() {
         const now = new Date();
         let h = now.getHours();
@@ -30,14 +37,11 @@ import Shortcuts from '../layouts/shortcuts.astro';
         const s = now.getSeconds();
         const ampm = h >= 12 ? 'PM' : 'AM';
         h = h % 12 || 12;
-        //@ts-ignore
-        document.getElementById('hours').textContent = String(h).padStart(2, '0');
-        //@ts-ignore
-        document.getElementById('minutes').textContent = String(m).padStart(2, '0');
-        //@ts-ignore
-        document.getElementById('seconds').textContent = String(s).padStart(2, '0');
-        //@ts-ignore
-        document.getElementById('ampm').textContent = ampm;
+
+        if (hoursEl) hoursEl.textContent = String(h).padStart(2, '0');
+        if (minutesEl) minutesEl.textContent = String(m).padStart(2, '0');
+        if (secondsEl) secondsEl.textContent = String(s).padStart(2, '0');
+        if (ampmEl) ampmEl.textContent = ampm;
       }
 
       setInterval(updateClock, 1000);
