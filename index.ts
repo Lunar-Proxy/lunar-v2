@@ -19,22 +19,20 @@ const port: number = parseInt(process.env.PORT as string) || 8080;
 logging.set_level(logging.NONE);
 wisp.options.wisp_version = 2;
 wisp.options.dns_method = 'resolve';
-wisp.options.dns_servers = ['94.140.14.14', '94.140.15.15', '1.1.1.3', '1.0.0.3'];
+wisp.options.dns_servers = ['1.1.1.3', '1.0.0.3'];
 wisp.options.dns_result_order = 'ipv4first';
 
 async function build() {
   if (!fs.existsSync('dist')) {
-    console.log(chalk.yellow.bold('🚀 Building Lunar...'));
+    console.log(chalk.hex('#FF6B35')('🚀 Building Lunar...'));
     try {
       execSync('npm run build', { stdio: 'inherit' });
-      console.log(chalk.green.bold('✅ Successfully built Lunar V2!'));
+      console.log(chalk.hex('#00C896')('✅ Build completed successfully!'));
     } catch (error) {
-      throw new Error(
-        `An error occurred while building: ${error instanceof Error ? error.message : String(error)}`,
-      );
+      throw new Error(`Build failed: ${error instanceof Error ? error.message : String(error)}`);
     }
   } else {
-    console.log(chalk.blue.bold('📂 Lunar is already built! Skipping the build process...'));
+    console.log(chalk.hex('#4ECDC4')('📦 Lunar is already built, skipping...'));
   }
 }
 
@@ -76,9 +74,7 @@ const staticOptions = {
   },
 };
 
-
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
 await app.register(fastifyStatic, {
   root: path.join(__dirname, 'dist', 'client'),
   preCompressed: true,
@@ -90,25 +86,55 @@ const { handler } = await import('./dist/server/entry.mjs');
 await app.register(fastifyMiddie);
 app.use(handler);
 
-// @ts-ignore later astro
+// @ts-ignore
 app.setNotFoundHandler((request, reply) => {
   reply.type('text/plain').send(fs.readFileSync('/404'));
 });
 
 app.listen({ host: '0.0.0.0', port }, () => {
   const updateStatus = updateChecker();
-  const statusMsg =
-    updateStatus.status === 'u'
-      ? '✅'
-      : updateStatus.status === 'n'
-        ? `❌, Please update to ${updateStatus.commitId} by following:\n  https://github.com/lunar-proxy/lunar-v1/wiki`
-        : '❌ Error checking for updates';
+  console.log(chalk.hex('#9B59B6').bold('╭─────────────────────────────────────────────────╮'));
+  console.log(
+    chalk.hex('#9B59B6').bold('│') +
+      chalk.hex('#E74C3C').bold('               🌙 Lunar v2                      ') +
+      chalk.hex('#9B59B6').bold('│'),
+  );
+  console.log(chalk.hex('#9B59B6').bold('╰─────────────────────────────────────────────────╯'));
+  console.log();
 
-  console.log(chalk.green.bold(`Lunar is running\n`));
-  console.log(chalk.gray('───────────────────────────────────────────────'));
-  console.log(chalk.whiteBright(`Up to date:`), chalk.cyanBright(statusMsg));
-  console.log(chalk.whiteBright(`Version:`), chalk.cyanBright(`v${version}`));
-  console.log(chalk.gray('───────────────────────────────────────────────'));
+  const getUpdateStatus = () => {
+    switch (updateStatus.status) {
+      case 'u':
+        return { icon: '✅', text: 'Up to date', color: '#00C896' };
+      case 'n':
+        return {
+          icon: '🔄',
+          text: `Update available (${updateStatus.commitId})`,
+          color: '#F39C12',
+          extra: chalk.hex('#95A5A6')('   → https://github.com/lunar-proxy/lunar-v2/wiki'),
+        };
+      default:
+        return { icon: '❌', text: 'Update check failed', color: '#E74C3C' };
+    }
+  };
+
+  const status = getUpdateStatus();
+
+  console.log(chalk.hex('#3498DB')('📊 Status Information:'));
+  console.log(
+    chalk.hex('#BDC3C7')('   ├─ ') +
+      chalk.hex('#ECF0F1')('Version: ') +
+      chalk.hex('#E67E22').bold(`v${version}`),
+  );
+  console.log(
+    chalk.hex('#BDC3C7')('   └─ ') +
+      chalk.hex('#ECF0F1')('Updates: ') +
+      chalk.hex(status.color)(`${status.icon} ${status.text}`),
+  );
+  if (status.extra) console.log(status.extra);
+  console.log();
+
+  console.log(chalk.hex('#2ECC71')('🌐 Deployment Methods:'));
 
   const deploymentURL =
     process.env.RENDER_EXTERNAL_URL ||
@@ -126,15 +152,33 @@ app.listen({ host: '0.0.0.0', port }, () => {
     (process.env.NETLIFY_DEV === 'true' && process.env.SITE_URL);
 
   if (deploymentURL) {
-    console.log(chalk.blueBright(`\n🌐 Deployment URL:`));
-    console.log(chalk.underline(chalk.green(deploymentURL)));
+    console.log(
+      chalk.hex('#BDC3C7')('   ├─ ') +
+        chalk.hex('#ECF0F1')('Deployment: ') +
+        chalk.hex('#3498DB').underline(deploymentURL),
+    );
+    console.log(chalk.hex('#BDC3C7')('   └─ ') + chalk.hex('#95A5A6')('Environment: Cloud'));
   } else {
-    console.log(chalk.blueBright(`\n💻 Local:`));
-    console.log(chalk.underline(chalk.cyan(`http://localhost:${port}`)));
-    console.log(chalk.blueBright(`\n🌐 Network:`));
-    console.log(chalk.underline(chalk.cyan(`http://127.0.0.1:${port}`)));
+    console.log(
+      chalk.hex('#BDC3C7')('   ├─ ') +
+        chalk.hex('#ECF0F1')('Local: ') +
+        chalk.hex('#1ABC9C').underline(`http://localhost:${port}`),
+    );
+    console.log(
+      chalk.hex('#BDC3C7')('   └─ ') +
+        chalk.hex('#ECF0F1')('Network: ') +
+        chalk.hex('#16A085').underline(`http://127.0.0.1:${port}`),
+    );
   }
 
-  console.log(chalk.gray('───────────────────────────────────────────────'));
-  console.log(chalk.magentaBright.bold(`\n✨ Thanks for using Lunar v2 :)\n`));
+  console.log();
+
+  console.log(chalk.hex('#9B59B6')('╭─────────────────────────────────────────────────╮'));
+  console.log(
+    chalk.hex('#9B59B6')('│') +
+      chalk.hex('#F1C40F')('    Thanks for using Lunar V2!         ') +
+      chalk.hex('#9B59B6')('│'),
+  );
+  console.log(chalk.hex('#9B59B6')('╰─────────────────────────────────────────────────╯'));
+  console.log();
 });

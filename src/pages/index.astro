@@ -11,17 +11,20 @@ import ImportLucide from '../layouts/lucide.astro';
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     <title>Lunar v2</title>
-    <meta name="title" content="Lunar v2" />
-    <meta property="og:title" content="Lunar v2" />
-    <meta name="description" content="Lunar v2 is a tabbed proxy that mimics a browser but better" />
-    <meta property="og:description" content="Lunar v2 is a tabbed proxy that mimics a browser but better" />
+    <meta name="description" content="Lunar v2 is a tabbed pr0xy that mimics a browser but better" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <script is:inline src="/bm/index.js"></script>
-    <script src="@scripts/config.ts"></script>
   </head>
-  <body class="h-screen overflow-hidden text-white">
-    <SideBar />
-    <iframe id="frame" src="welcome" class="ml-[62px] h-full w-[calc(100%-62px)]"></iframe>
+  <body class="flex h-screen w-screen overflow-hidden text-white">
+    <SideBar class="h-full flex-shrink-0" />
+    <div class="h-full flex-1">
+      <iframe
+        id="frame"
+        src="welcome"
+        class="h-full w-full border-none"
+        sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+    </div>
+
+    <ImportLucide />
   </body>
-  <ImportLucide />
 </html>

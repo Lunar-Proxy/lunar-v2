@@ -5,7 +5,6 @@ if (navigator.userAgent.includes('Firefox')) {
   });
 }
 importScripts('/a/bundled/scram/all.js');
-
 const { ScramjetServiceWorker } = $scramjetLoadWorker();
 const sj = new ScramjetServiceWorker();
 

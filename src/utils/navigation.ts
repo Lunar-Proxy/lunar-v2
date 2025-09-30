@@ -1,9 +1,9 @@
 import ConfigAPI from './config';
 import { TabManager } from './tb';
 import { ValidateUrl } from './url';
+
 // @ts-ignore
 const { ScramjetController } = $scramjetLoadController();
-
 const reload = document.getElementById('refresh') as HTMLButtonElement | null;
 const back = document.getElementById('back') as HTMLButtonElement | null;
 const forward = document.getElementById('forward') as HTMLButtonElement | null;
@@ -13,7 +13,7 @@ const wispUrl = await ConfigAPI.get('wispUrl');
 const nativePaths: Record<string, string> = {
   'lunar://settings': '/st',
   'lunar://new': '/new',
-  'lunar://games': '/gm',
+  'lunar://games': '/math',
 };
 
 const scramjet = new ScramjetController({
@@ -35,9 +35,8 @@ const scramjet = new ScramjetController({
 });
 
 await scramjet.init();
-
-const connection = new BareMux.BareMuxConnection('/bm/worker.js');
 await navigator.serviceWorker.register('./sw.js');
+const connection = new BareMux.BareMuxConnection('/bm/worker.js');
 
 function getActiveFrame(): HTMLIFrameElement | null {
   const activeTabId = TabManager.activeTabId;
@@ -48,7 +47,7 @@ function loading() {
   if (!reload) return;
   reload.style.transition = 'transform 0.5s ease';
   reload.style.animation = 'none';
-  void reload.offsetWidth; // force 
+  void reload.offsetWidth; // force
   reload.style.animation = 'spin 0.5s linear';
 }
 
@@ -117,7 +116,7 @@ devtools?.addEventListener('click', () => {
   }
 });
 
-urlbar?.addEventListener('keydown', async (e) => {
+urlbar?.addEventListener('keydown', async e => {
   if (e.key !== 'Enter') return;
 
   const frame = getActiveFrame();
@@ -143,4 +142,31 @@ urlbar?.addEventListener('keydown', async (e) => {
 
   url = scramjet.encodeUrl(url);
   frame.src = url;
+});
+
+// @ts-ignore ig
+const elements = window.top.document.querySelectorAll<HTMLElement>('aside button, aside img');
+
+elements.forEach(el => {
+  el.addEventListener('click', async () => {
+    const frame = getActiveFrame();
+    if (!frame) return;
+    
+    let targetUrl: string | undefined;
+    if (el.tagName.toLowerCase() === 'button') {
+      targetUrl = el.dataset.url;
+    } else if (el.tagName.toLowerCase() === 'img') {
+      targetUrl = '/new';
+    }
+
+    if (!targetUrl) return;
+
+    const nativeKey = Object.keys(nativePaths).find(key => nativePaths[key] === targetUrl);
+    if (nativeKey) {
+      if (urlbar) urlbar.value = nativeKey;
+      frame.src = nativePaths[nativeKey];
+      loading();
+      return;
+    }
+  });
 });

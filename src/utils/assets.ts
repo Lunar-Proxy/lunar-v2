@@ -35,11 +35,9 @@ document.addEventListener('DOMContentLoaded', () => {
   cards.forEach(card => {
     card.addEventListener('click', () => {
       const assetUrl = card.getAttribute('data-href');
-      console.log('card was clicked', assetUrl);
+      // console.log('card was clicked', assetUrl);
       if (assetUrl) {
-        const query = encodeURIComponent(assetUrl);
-        localStorage.setItem('last', query);
-        window.location.href = '/tab';
+        window.location.href = assetUrl;
       }
     });
   });

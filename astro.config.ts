@@ -12,7 +12,9 @@ import type { Plugin } from 'vite';
 import obfuscatorPlugin from 'vite-plugin-javascript-obfuscator';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { version } from './package.json';
+
 wisp.options.wisp_version = 2;
+
 const iconURL = 'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64';
 
 function getDate(): string {
@@ -85,7 +87,7 @@ function searchBackend(): Plugin {
 }
 
 export default defineConfig({
-   integrations: [
+  integrations: [
     playformCompress({
       CSS: true,
       HTML: {
@@ -166,7 +168,7 @@ export default defineConfig({
       }) as any,
     ],
     server: {
-      allowedHosts: ['localhost', '.trycloudflare.com', '.github.dev'],
+      allowedHosts: ['localhost', '.trycloudflare.com', '.github.dev', '.bearcat.rocks'],
     },
   },
 });
