@@ -7,11 +7,13 @@ interface Tab {
 
 const defaultFavicon = '/a/moon.svg';
 const iconURL = '/api/icon/?url=';
+
 let tabs: Tab[] = [];
 let activeTabId: number | null = null;
 let draggedTabId: number | null = null;
 let tabCounter = 1;
 let updateInterval: ReturnType<typeof setInterval> | null = null;
+
 const tabContainer = document.getElementById('tcontainer') as HTMLDivElement;
 const frameContainer = document.getElementById('fcontainer') as HTMLDivElement;
 
@@ -23,18 +25,18 @@ function createFrame(id: number, url?: string): HTMLIFrameElement {
   const iframe = document.createElement('iframe');
   iframe.id = `frame-${id}`;
   iframe.src = url ?? 'new';
-  iframe.classList.add('w-full', 'h-full', 'hidden');
+  iframe.className = 'w-full h-full hidden';
   iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms');
   return iframe;
 }
 
 function cutTitle(title: string, limit = 16): string {
-  return title.length > limit ? title.slice(0, limit) + '...' : title;
+  return title.length > limit ? `${title.slice(0, limit)}...` : title;
 }
 
 function addTab(url?: string): void {
   const id = getNextId();
-  const iframe = createFrame(id, url ?? 'new');
+  const iframe = createFrame(id, url);
   frameContainer.appendChild(iframe);
 
   const tab: Tab = {
@@ -62,14 +64,14 @@ function handleLoad(tab: Tab): void {
     tab.title = doc.title?.trim() || 'New Tab';
 
     const url = new URL(tab.iframe.src);
-    if (url.origin === location.origin) throw new Error('Same origin'); // force the moon icon
+    if (url.origin === location.origin) throw new Error('Same origin');
 
     fetch(iconURL + encodeURIComponent(url.origin))
       .then(res => res.blob())
       .then(blob => {
         const reader = new FileReader();
         reader.onloadend = () => {
-          tab.favicon = (reader.result as string) || defaultFavicon;
+          tab.favicon = reader.result as string || defaultFavicon;
           renderTabs();
         };
         reader.readAsDataURL(blob);
@@ -88,8 +90,7 @@ function setActiveTab(id: number): void {
   activeTabId = id;
 
   tabs.forEach(tab => {
-    if (tab.id === id) tab.iframe.classList.remove('hidden');
-    else tab.iframe.classList.add('hidden');
+    tab.iframe.classList.toggle('hidden', tab.id !== id);
   });
 
   const input = document.getElementById('urlbar') as HTMLInputElement | null;
@@ -110,29 +111,26 @@ function setActiveTab(id: number): void {
 
   const updateUrl = () => {
     const frame = document.getElementById(`frame-${id}`) as HTMLIFrameElement;
-    // @ts-ignore lazyness is stopping me from typing this :3
-    const currentSrc = frame.contentWindow.location.href;
-    if (currentSrc === previousUrl) return;
+    const currentSrc = frame.contentWindow?.location.href;
+    if (!currentSrc || currentSrc === previousUrl) return;
     previousUrl = currentSrc;
 
     try {
       const framePath = new URL(currentSrc, window.location.origin).pathname;
-      const nativeEntry = Object.entries(nativePaths).find(
-        ([, shortPath]) => shortPath === framePath,
-      );
-      if (nativeEntry) input.value = nativeEntry[0];
-      else input.value = decodeURIComponent(currentSrc.split('/sj/')[1] || '');
-    } catch {}
+      const nativeEntry = Object.entries(nativePaths).find(([, path]) => path === framePath);
+      input.value = nativeEntry ? nativeEntry[0] : decodeURIComponent(currentSrc.split('/sj/')[1] || '');
+    } catch { }
   };
 
   updateUrl();
   updateInterval = setInterval(updateUrl, 200);
+
   updateActive();
 }
 
 function updateActive(): void {
-  document.querySelectorAll('.tab').forEach(el => {
-    const id = parseInt(el.getAttribute('data-id') || '', 10);
+  document.querySelectorAll<HTMLElement>('.tab').forEach(el => {
+    const id = parseInt(el.dataset.id || '', 10);
     const isActive = id === activeTabId;
     el.classList.toggle('bg-[#34324d]', isActive);
     el.classList.toggle('shadow-[0_0_8px_#5c59a5]', isActive);
@@ -150,7 +148,7 @@ function removeTab(id: number): void {
   tabs[index].iframe.remove();
   tabs.splice(index, 1);
 
-  if (tabs.length === 0) addTab();
+  if (!tabs.length) addTab();
   else setActiveTab(tabs[Math.max(0, index - 1)]?.id ?? tabs[0].id);
 
   renderTabs();
