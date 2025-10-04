@@ -39,7 +39,7 @@ import ImportLucide from './lucide.astro';
             <i data-lucide="refresh-cw" class="h-4 w-4 transition-transform duration-500 group-hover:animate-spin"></i>
           </button>
         </div>
-        <div class="ml-4 flex grow items-center space-x-2">
+        <div class="relative ml-4 flex grow items-center space-x-2">
           <div class="relative flex grow">
             <input
               type="text"
@@ -53,15 +53,38 @@ import ImportLucide from './lucide.astro';
               <i data-lucide="star" class="h-4 w-4"></i>
             </button>
           </div>
-          <button
-            id="code"
-            class="flex h-8 w-8 items-center justify-center rounded-md text-gray-400 hover:bg-gray-700 hover:text-white">
-            <i data-lucide="menu" class="h-5 w-5"></i>
-          </button>
+          <div class="relative">
+            <button
+              id="menubtn"
+              class="flex h-8 w-8 items-center justify-center rounded-md text-gray-400 transition hover:bg-gray-700 hover:text-white">
+              <i data-lucide="menu" class="h-5 w-5"></i>
+            </button>
+            <div
+              id="menu"
+              class="font-linux absolute top-full right-0 z-30 mt-2 hidden w-52 overflow-hidden rounded-2xl border border-[#3a3758] bg-[#1f1f30] font-medium shadow-2xl backdrop-blur-md">
+              <button
+                class="menu-item flex w-full items-center space-x-3 px-4 py-3 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
+                <i data-lucide="clock" class="h-4 w-4 flex-shrink-0"></i>
+                <span>History</span>
+              </button>
+
+              <button
+                class="menu-item flex w-full items-center space-x-3 px-4 py-3 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
+                <i data-lucide="maximize-2" class="h-4 w-4 flex-shrink-0"></i>
+                <span>Full Screen</span>
+              </button>
+
+              <button
+                class="menu-item flex w-full items-center space-x-3 px-4 py-3 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
+                <i data-lucide="code" class="h-4 w-4 flex-shrink-0"></i>
+                <span>Inspect Element</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
+      <div id="fcontainer" class="h-[calc(100vh-7rem)] w-full overflow-hidden rounded-b-lg"></div>
+      <ImportLucide />
     </div>
-    <div id="fcontainer" class="h-[calc(100vh-7rem)] w-full overflow-hidden rounded-b-lg"></div>
-    <ImportLucide />
   </body>
 </html>

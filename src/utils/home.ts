@@ -1,5 +1,4 @@
 import { Search, createIcons } from 'lucide';
-
 import ConfigAPI from './config';
 
 const input = document.querySelector('input[type="text"]') as HTMLInputElement;

@@ -8,8 +8,12 @@ const reload = document.getElementById('refresh') as HTMLButtonElement | null;
 const back = document.getElementById('back') as HTMLButtonElement | null;
 const forward = document.getElementById('forward') as HTMLButtonElement | null;
 const urlbar = document.getElementById('urlbar') as HTMLInputElement | null;
-const devtools = document.getElementById('code') as HTMLButtonElement | null;
+const menu = document.getElementById('menubtn') as HTMLButtonElement | null;
+const cmenu = document.getElementById("menu") as HTMLDivElement | null
 const wispUrl = await ConfigAPI.get('wispUrl');
+const inspectElement = document.querySelector('#menu .menu-item:nth-child(3)');
+const fullscreen = document.querySelector('#menu .menu-item:nth-child(2)');
+
 const nativePaths: Record<string, string> = {
   'lunar://settings': '/st',
   'lunar://new': '/new',
@@ -82,7 +86,53 @@ forward?.addEventListener('click', () => {
   }
 });
 
-devtools?.addEventListener('click', () => {
+if (menu && cmenu) {
+  const toggleMenu = (e: MouseEvent) => {
+    e.stopPropagation();
+    cmenu.classList.toggle('hidden');
+  };
+
+  const hideMenu = () => {
+    if (!cmenu.classList.contains('hidden')) {
+      cmenu.classList.add('hidden');
+    }
+  };
+
+  menu.addEventListener('click', toggleMenu);
+
+  document.addEventListener('click', (e: MouseEvent) => {
+    if (!menu.contains(e.target as Node) && !cmenu.contains(e.target as Node)) {
+      hideMenu();
+    }
+  });
+
+  window.addEventListener('blur', () => {
+    setTimeout(() => {
+      if (document.activeElement?.tagName === 'IFRAME') {
+        hideMenu();
+      }
+    }, 0);
+  });
+
+  const menuItems = cmenu.querySelectorAll('.menu-item');
+  menuItems.forEach(item => {
+    item.addEventListener('click', hideMenu);
+  });
+}
+
+fullscreen?.addEventListener('click', () => {
+  if (!top?.document.fullscreenElement) {
+    top?.document.documentElement.requestFullscreen().catch(err => {
+      console.error('[ERROR] Failed to enter fullscreen:', err);
+    });
+  } else {
+    top?.document.exitFullscreen().catch(err => {
+      console.error('[ERROR] Failed to exit fullscreen:', err);
+    });
+  }
+});
+
+inspectElement?.addEventListener('click', () => {
   const frame = getActiveFrame();
   try {
     const eruda = frame?.contentWindow?.eruda;
