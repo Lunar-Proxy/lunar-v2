@@ -1,3 +1,5 @@
+import { nativePaths } from "./navigation";
+
 interface Tab {
   id: number;
   title: string;
@@ -101,12 +103,6 @@ function setActiveTab(id: number): void {
     updateInterval = null;
   }
 
-  const nativePaths: Record<string, string> = {
-    'lunar://settings': '/st',
-    'lunar://new': '/new',
-    'lunar://games': '/math',
-  };
-
   let previousUrl = '';
 
   const updateUrl = () => {
@@ -123,7 +119,7 @@ function setActiveTab(id: number): void {
   };
 
   updateUrl();
-  updateInterval = setInterval(updateUrl, 200);
+  updateInterval = setInterval(updateUrl, 400);
 
   updateActive();
 }
