@@ -3,36 +3,56 @@ import '@/main.css';
 ---
 
 <aside
-  class="top-0 left-0 z-50 flex h-full w-[66px] flex-col items-center overflow-hidden rounded-r-md bg-[#1c1a2b] shadow-xl">
-  <img
-    src="path/to/your/image.png"
-    class="mt-3 mb-4 h-12 w-12 rounded-xl object-contain transition-transform duration-300 hover:scale-110"
-    alt="Logo"
-  />
+  class="top-0 left-0 z-50 flex h-[100dvh] w-[66px] flex-col items-center overflow-visible rounded-r-md bg-[#1c1a2b] shadow-xl">
+  <button
+    data-url="/"
+    class="group relative mt-3 mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-[#29263c] transition-all duration-300 ease-out hover:scale-110 hover:rotate-3 hover:shadow-lg active:scale-95">
+    <img
+      src="/a/moon.svg"
+      class="h-6 w-6 object-contain transition-transform duration-300 group-hover:scale-110"
+      alt="Logo"
+    />
+    <span
+      class="tooltip absolute top-1/2 left-full z-[9999] ml-2 -translate-y-1/2 scale-90 rounded-lg bg-[#29263c] px-3 py-1 text-sm whitespace-nowrap text-[#aab0d0] opacity-0 shadow-lg transition-all duration-300 ease-out group-hover:scale-100 group-hover:text-[#d0d6f9] group-hover:opacity-100">
+      Home
+    </span>
+  </button>
   <div class="flex flex-1 flex-col items-center justify-center gap-4">
     <button
       data-url="/math"
-      class="nav-button group relative flex h-10 w-10 items-center justify-center rounded-lg bg-[#29263c] transition-all duration-300 ease-out hover:scale-110 hover:rotate-3 hover:shadow-lg">
+      class="nav-button group relative flex h-10 w-10 items-center justify-center rounded-lg bg-[#29263c] transition-all duration-300 ease-out hover:scale-110 hover:rotate-3 hover:shadow-lg active:scale-95">
       <i
         data-lucide="gamepad"
         class="h-6 w-6 text-[#aab0d0] transition-transform duration-300 group-hover:scale-110 group-hover:text-[#d0d6f9]"
       ></i>
       <span
-        class="tooltip absolute top-1/2 left-full ml-2 -translate-y-1/2 scale-90 rounded-lg bg-[#29263c] px-3 py-1 text-sm whitespace-nowrap text-[#aab0d0] opacity-0 shadow-lg transition-all duration-300 ease-out group-hover:scale-100 group-hover:text-[#d0d6f9] group-hover:opacity-100">
+        class="tooltip absolute top-1/2 left-full z-[9999] ml-2 -translate-y-1/2 scale-90 rounded-lg bg-[#29263c] px-3 py-1 text-sm whitespace-nowrap text-[#aab0d0] opacity-0 shadow-lg transition-all duration-300 ease-out group-hover:scale-100 group-hover:text-[#d0d6f9] group-hover:opacity-100">
         Games
+      </span>
+    </button>
+    <button
+      data-url="/sci"
+      class="nav-button group relative flex h-10 w-10 items-center justify-center rounded-lg bg-[#29263c] transition-all duration-300 ease-out hover:scale-110 hover:rotate-3 hover:shadow-lg">
+      <i
+        data-lucide="grip"
+        class="h-6 w-6 text-[#aab0d0] transition-transform duration-300 group-hover:scale-110 group-hover:text-[#d0d6f9]"
+      ></i>
+      <span
+        class="tooltip absolute top-1/2 left-full ml-2 -translate-y-1/2 scale-90 rounded-lg bg-[#29263c] px-3 py-1 text-sm whitespace-nowrap text-[#aab0d0] opacity-0 shadow-lg transition-all duration-300 ease-out group-hover:scale-100 group-hover:text-[#d0d6f9] group-hover:opacity-100">
+        Apps
       </span>
     </button>
   </div>
   <div class="mb-4 flex flex-col items-center gap-3">
     <button
       data-url="/st"
-      class="nav-button group relative flex h-10 w-10 items-center justify-center rounded-lg bg-[#29263c] transition-all duration-300 ease-out hover:scale-110 hover:rotate-3 hover:shadow-lg">
+      class="nav-button group relative flex h-10 w-10 items-center justify-center rounded-lg bg-[#29263c] transition-all duration-300 ease-out hover:scale-110 hover:rotate-3 hover:shadow-lg active:scale-95">
       <i
         data-lucide="settings"
         class="h-6 w-6 text-[#aab0d0] transition-transform duration-300 group-hover:scale-110 group-hover:text-[#d0d6f9]"
       ></i>
       <span
-        class="tooltip absolute top-1/2 left-full ml-2 -translate-y-1/2 scale-90 rounded-lg bg-[#29263c] px-3 py-1 text-sm whitespace-nowrap text-[#aab0d0] opacity-0 shadow-lg transition-all duration-300 ease-out group-hover:scale-100 group-hover:text-[#d0d6f9] group-hover:opacity-100">
+        class="tooltip absolute top-1/2 left-full z-[9999] ml-2 -translate-y-1/2 scale-90 rounded-lg bg-[#29263c] px-3 py-1 text-sm whitespace-nowrap text-[#aab0d0] opacity-0 shadow-lg transition-all duration-300 ease-out group-hover:scale-100 group-hover:text-[#d0d6f9] group-hover:opacity-100">
         Settings
       </span>
     </button>

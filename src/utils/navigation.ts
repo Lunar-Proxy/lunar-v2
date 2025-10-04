@@ -16,7 +16,7 @@ const fullscreen = document.querySelector('#menu .menu-item:nth-child(2)');
 
 const wispUrl = await ConfigAPI.get('wispUrl');
 
-export const nativePaths: Record<string, string> = {
+  const nativePaths: Record<string, string> = {
   'lunar://settings': '/st',
   'lunar://new': '/new',
   'lunar://games': '/math',

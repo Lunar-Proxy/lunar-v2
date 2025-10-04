@@ -1,5 +1,3 @@
-import { nativePaths } from "./navigation";
-
 interface Tab {
   id: number;
   title: string;
@@ -7,6 +5,11 @@ interface Tab {
   iframe: HTMLIFrameElement;
 }
 
+const nativePaths: Record<string, string> = {
+  'lunar://settings': '/st',
+  'lunar://new': '/new',
+  'lunar://games': '/math',
+};
 const defaultFavicon = '/a/moon.svg';
 const iconURL = '/api/icon/?url=';
 
