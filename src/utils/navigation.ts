@@ -1,49 +1,55 @@
 import ConfigAPI from './config';
-import TabManager from './tb';
+import { TabManager } from './tb';
 import { ValidateUrl } from './url';
 
 // @ts-ignore
 const { ScramjetController } = $scramjetLoadController();
 
-TabManager.addTab();
-
 const reload = document.getElementById('refresh') as HTMLButtonElement | null;
 const back = document.getElementById('back') as HTMLButtonElement | null;
 const forward = document.getElementById('forward') as HTMLButtonElement | null;
 const urlbar = document.getElementById('urlbar') as HTMLInputElement | null;
-const devtools = document.getElementById('code') as HTMLButtonElement | null;
+const menu = document.getElementById('menubtn') as HTMLButtonElement | null;
+const cmenu = document.getElementById('menu') as HTMLDivElement | null;
+const inspectElement = document.querySelector('#menu .menu-item:nth-child(3)');
+const fullscreen = document.querySelector('#menu .menu-item:nth-child(2)');
+
 const wispUrl = await ConfigAPI.get('wispUrl');
+
+const nativePaths: Record<string, string> = {
+  'lunar://settings': '/st',
+  'lunar://new': '/new',
+  'lunar://games': '/math',
+  'lunar://apps': '/sci',
+};
+
 const scramjet = new ScramjetController({
   prefix: '/sj/',
   files: {
     wasm: '/a/bundled/scram/wasm.wasm',
     all: '/a/bundled/scram/all.js',
     sync: '/a/bundled/scram/sync.js',
-  }, // TODO: add encoding other then basic
+  },
   flags: {
     captureErrors: true,
     cleanErrors: false,
     rewriterLogs: false,
     scramitize: false,
     serviceworkers: false,
-    sourcemaps: true,
     strictRewrites: true,
     syncxhr: false,
-
   },
 });
 
-scramjet.init();
+await scramjet.init();
+await navigator.serviceWorker.register('./sw.js');
 const connection = new BareMux.BareMuxConnection('/bm/worker.js');
-navigator.serviceWorker.register('./sw.js');
 
 function getActiveFrame(): HTMLIFrameElement | null {
-  const activeTabId = TabManager.activeTabId;
-  return document.getElementById(`frame-${activeTabId}`) as HTMLIFrameElement | null;
+  return document.getElementById(`frame-${TabManager.activeTabId}`) as HTMLIFrameElement | null;
 }
 
 function loading() {
-  // baby you spin me right around, baby right round
   if (!reload) return;
   reload.style.transition = 'transform 0.5s ease';
   reload.style.animation = 'none';
@@ -51,17 +57,11 @@ function loading() {
   reload.style.animation = 'spin 0.5s linear';
 }
 
-async function getURL(proxiedUrl: string) {
-  const url = new URL(proxiedUrl);
-  console.log('[DEBUG] Proxied URL:', proxiedUrl);
-  const path = url.pathname.slice(4); // TODO: fix
-  return decodeURIComponent(path);
-}
-
 reload?.addEventListener('click', () => {
   const frame = getActiveFrame();
   if (frame?.contentWindow) {
     console.log('[DEBUG] Reloading frame:', frame.id);
+    loading();
     frame.src = frame.contentWindow.location.href;
   } else {
     console.warn('[WARN] Cannot reload: No active frame');
@@ -70,52 +70,63 @@ reload?.addEventListener('click', () => {
 
 back?.addEventListener('click', () => {
   const frame = getActiveFrame();
-  if (frame?.contentWindow) {
-    console.debug('[DEBUG] Going back in frame:', frame.id);
-    frame.contentWindow.history.back();
-  } else {
-    console.warn('[WARN] Cannot go back: No active frame');
-  }
+  if (frame?.contentWindow) frame.contentWindow.history.back();
+  else console.warn('[WARN] Cannot go back: No active frame');
 });
 
 forward?.addEventListener('click', () => {
   const frame = getActiveFrame();
-  if (frame?.contentWindow) {
-    console.debug('[DEBUG] Going forward in frame:', frame.id);
-    frame.contentWindow.history.forward();
+  if (frame?.contentWindow) frame.contentWindow.history.forward();
+  else console.warn('[WARN] Cannot go forward: No active frame');
+});
+
+if (menu && cmenu) {
+  const toggleMenu = (e: MouseEvent) => {
+    e.stopPropagation();
+    cmenu.classList.toggle('hidden');
+  };
+
+  const hideMenu = () => cmenu.classList.add('hidden');
+
+  menu.addEventListener('click', toggleMenu);
+
+  document.addEventListener('click', e => {
+    if (!menu.contains(e.target as Node) && !cmenu.contains(e.target as Node)) hideMenu();
+  });
+
+  window.addEventListener('blur', () => {
+    setTimeout(() => {
+      if (document.activeElement?.tagName === 'IFRAME') hideMenu();
+    }, 0);
+  });
+
+  cmenu.querySelectorAll('.menu-item').forEach(item => {
+    item.addEventListener('click', hideMenu);
+  });
+}
+
+fullscreen?.addEventListener('click', () => {
+  const doc = top?.document;
+  if (!doc?.fullscreenElement) {
+    doc?.documentElement
+      .requestFullscreen()
+      .catch(err => console.error('[ERROR] Failed to enter fullscreen:', err));
   } else {
-    console.warn('[WARN] Cannot go forward: No active frame');
+    doc.exitFullscreen().catch(err => console.error('[ERROR] Failed to exit fullscreen:', err));
   }
 });
 
-devtools?.addEventListener('click', () => {
+inspectElement?.addEventListener('click', () => {
   const frame = getActiveFrame();
   try {
     const eruda = frame?.contentWindow?.eruda;
+    if (eruda?._isInit) return eruda.destroy();
 
-    if (eruda?._isInit) {
-      eruda.destroy();
-      console.debug('[DEBUG] Eruda console destroyed.');
-      return;
-    }
-
-    if (!eruda) {
-      console.debug('[DEBUG] Eruda console not loaded yet.');
-    } else {
-      console.debug('[DEBUG] Eruda console is not initialized.');
-    }
-
-    if (frame?.contentDocument) {
-      const script = frame?.contentDocument.createElement('script');
+    if (!eruda && frame?.contentDocument) {
+      const script = frame.contentDocument.createElement('script');
       script.src = 'https://cdn.jsdelivr.net/npm/eruda';
-      script.onload = () => {
-        frame.contentWindow?.eruda.init();
-        frame.contentWindow?.eruda.show();
-        console.debug('[DEBUG] Eruda console initialized.');
-      };
+      script.onload = () => frame.contentWindow?.eruda.init();
       frame.contentDocument.head.appendChild(script);
-    } else {
-      throw new Error('[ERROR] Cannot inject script.');
     }
   } catch (err) {
     console.error('[ERROR] Failed to toggle Eruda:', err);
@@ -124,42 +135,41 @@ devtools?.addEventListener('click', () => {
 
 urlbar?.addEventListener('keydown', async e => {
   if (e.key !== 'Enter') return;
-
   const frame = getActiveFrame();
-  console.log('[DEBUG] Active frame:', frame?.id);
-  if (!frame) return;
+  if (!frame) return console.warn('[WARN] No active frame to navigate.');
+
+  if (nativePaths[urlbar.value]) {
+    frame.src = nativePaths[urlbar.value];
+    return;
+  }
 
   if ((await connection.getTransport()) !== '/lc/index.mjs') {
     await connection.setTransport('/lc/index.mjs', [{ wisp: wispUrl }]);
   }
 
   const input = (e.target as HTMLInputElement).value.trim();
-  let url = await ValidateUrl(input);
-
+  const url = scramjet.encodeUrl(await ValidateUrl(input));
   urlbar.value = url;
   loading();
-
-  url = scramjet.encodeUrl(url);
   frame.src = url;
-
-  let lastHref = '';
-  setInterval(async () => {
-    try {
-      const href = frame.contentWindow?.location.href;
-      if (href && href !== lastHref) {
-        lastHref = href;
-        urlbar.value = (await getURL(href)) ?? '';
-      }
-    } catch {
-      // yap session smh
-    }
-  }, 500);
 });
 
-const last = decodeURIComponent(localStorage.getItem('last') ?? '');
-if (last && urlbar) {
-  urlbar.value = last;
-  urlbar.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
-  console.log('[DEBUG] URL is:', last);
-  localStorage.removeItem('last');
-}
+// @ts-ignore
+window.top.document.querySelectorAll<HTMLElement>('aside button, aside img').forEach(el => {
+  el.addEventListener('click', async () => {
+    const frame = getActiveFrame();
+    if (!frame) return;
+
+    let targetUrl: string | undefined;
+    if (el.tagName.toLowerCase() === 'button') targetUrl = el.dataset.url;
+    else if (el.tagName.toLowerCase() === 'img') targetUrl = '/new';
+    if (!targetUrl) return;
+
+    const nativeKey = Object.keys(nativePaths).find(key => nativePaths[key] === targetUrl);
+    if (nativeKey) {
+      if (urlbar) urlbar.value = nativeKey;
+      frame.src = nativePaths[nativeKey];
+      loading();
+    }
+  });
+});

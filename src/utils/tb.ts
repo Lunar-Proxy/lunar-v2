@@ -5,50 +5,73 @@ interface Tab {
   iframe: HTMLIFrameElement;
 }
 
-const defaultFavicon = '/a/images/logo/moon.svg';
+const nativePaths: Record<string, string> = {
+  'lunar://settings': '/st',
+  'lunar://new': '/new',
+  'lunar://games': '/math',
+  'lunar://apps': '/sci',
+};
+const defaultFavicon = '/a/moon.svg';
 const iconURL = '/api/icon/?url=';
 
 let tabs: Tab[] = [];
 let activeTabId: number | null = null;
 let draggedTabId: number | null = null;
 let tabCounter = 1;
+let updateInterval: ReturnType<typeof setInterval> | null = null;
 
 const tabContainer = document.getElementById('tcontainer') as HTMLDivElement;
 const frameContainer = document.getElementById('fcontainer') as HTMLDivElement;
-
-tabContainer.classList.add('flex', 'justify-center', 'items-center', 'mt-4', 'overflow-x-auto');
 
 function getNextId(): number {
   return tabCounter++;
 }
 
-function createframe(id: number, url?: string): HTMLIFrameElement {
+function createFrame(id: number, url?: string): HTMLIFrameElement {
   const iframe = document.createElement('iframe');
   iframe.id = `frame-${id}`;
   iframe.src = url ?? 'new';
-  iframe.classList.add('w-full', 'h-full', 'hidden');
+  iframe.className = 'w-full h-full hidden';
+  iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-forms');
   return iframe;
+}
+
+function cutTitle(title: string, limit = 16): string {
+  return title.length > limit ? `${title.slice(0, limit)}...` : title;
 }
 
 function addTab(url?: string): void {
   const id = getNextId();
-  const iframe = createframe(id, url);
+  const iframe = createFrame(id, url);
   frameContainer.appendChild(iframe);
-  const tab: Tab = { id, title: 'New Tab', favicon: defaultFavicon, iframe };
+
+  const tab: Tab = {
+    id,
+    title: 'New Tab',
+    favicon: defaultFavicon,
+    iframe,
+  };
+
   tabs.push(tab);
-  setActiveTab(id);
   renderTabs();
+  setActiveTab(id);
+
   iframe.onload = () => handleLoad(tab);
+
+  const urlbar = document.getElementById('urlbar') as HTMLInputElement | null;
+  if (urlbar) urlbar.value = 'lunar://new';
 }
 
 function handleLoad(tab: Tab): void {
-  const doc = tab.iframe.contentDocument || tab.iframe.contentWindow?.document;
-  if (!doc) return;
-  const title = doc.title?.trim() || 'New Tab';
-  tab.title = title.length > 16 ? title.slice(0, 16) + '...' : title;
   try {
-    const url = new URL(doc.URL);
+    const doc = tab.iframe.contentDocument;
+    if (!doc) return;
+
+    tab.title = doc.title?.trim() || 'New Tab';
+
+    const url = new URL(tab.iframe.src);
     if (url.origin === location.origin) throw new Error('Same origin');
+
     fetch(iconURL + encodeURIComponent(url.origin))
       .then(res => res.blob())
       .then(blob => {
@@ -71,61 +94,106 @@ function handleLoad(tab: Tab): void {
 
 function setActiveTab(id: number): void {
   activeTabId = id;
-  document.querySelectorAll('iframe').forEach(iframe => iframe.classList.add('hidden'));
-  document.getElementById(`frame-${id}`)?.classList.remove('hidden');
-  document.querySelectorAll('.tab').forEach(el => {
-    const isActive = parseInt(el.getAttribute('data-id') || '') === id;
-    el.classList.toggle('bg-[#2e2c45]', isActive);
-    el.classList.toggle('bg-[#29263c]', !isActive);
+
+  tabs.forEach(tab => {
+    tab.iframe.classList.toggle('hidden', tab.id !== id);
+  });
+
+  const input = document.getElementById('urlbar') as HTMLInputElement | null;
+  if (!input) return;
+
+  if (updateInterval !== null) {
+    clearInterval(updateInterval);
+    updateInterval = null;
+  }
+
+  let previousUrl = '';
+
+  const updateUrl = () => {
+    const frame = document.getElementById(`frame-${id}`) as HTMLIFrameElement;
+    const currentSrc = frame.contentWindow?.location.href;
+    if (!currentSrc || currentSrc === previousUrl) return;
+    previousUrl = currentSrc;
+
+    try {
+      const framePath = new URL(currentSrc, window.location.origin).pathname;
+      const nativeEntry = Object.entries(nativePaths).find(([, path]) => path === framePath);
+      input.value = nativeEntry
+        ? nativeEntry[0]
+        : decodeURIComponent(currentSrc.split('/sj/')[1] || '');
+    } catch {}
+  };
+
+  updateUrl();
+  updateInterval = setInterval(updateUrl, 400);
+
+  updateActive();
+}
+
+function updateActive(): void {
+  document.querySelectorAll<HTMLElement>('.tab').forEach(el => {
+    const id = parseInt(el.dataset.id || '', 10);
+    const isActive = id === activeTabId;
+    el.classList.toggle('bg-[#34324d]', isActive);
+    el.classList.toggle('shadow-[0_0_8px_#5c59a5]', isActive);
+    el.classList.toggle('border-t-2', isActive);
+    el.classList.toggle('border-[#5c59a5]', isActive);
+    el.classList.toggle('bg-[#2a283e]', !isActive);
+    el.classList.toggle('hover:bg-[#323048]', !isActive);
   });
 }
 
 function removeTab(id: number): void {
   const index = tabs.findIndex(tab => tab.id === id);
   if (index === -1) return;
+
   tabs[index].iframe.remove();
   tabs.splice(index, 1);
-  if (tabs.length === 0) {
-    activeTabId = null;
-    addTab();
-  } else {
-    activeTabId = tabs[tabs.length - 1].id;
-    setActiveTab(activeTabId);
-  }
+
+  if (!tabs.length) addTab();
+  else setActiveTab(tabs[Math.max(0, index - 1)]?.id ?? tabs[0].id);
+
   renderTabs();
 }
 
 function renderTabs(): void {
   tabContainer.innerHTML = '';
+
   tabs.forEach(tab => {
     const tabElement = document.createElement('div');
     tabElement.className = `
-      h-9 tab mb-4 px-4 py-2 min-w-[210px] border-[#3a3758] border rounded-md transition-all cursor-pointer
-      ${activeTabId === tab.id ? 'bg-[#2e2c45]' : 'bg-[#29263c]'}
-      text-white flex items-center`;
+      tab flex items-center h-10 min-w-[220px] px-3 rounded-t-2xl cursor-pointer select-none
+      transition-all duration-200 shadow
+    `;
     tabElement.draggable = true;
     tabElement.dataset.id = tab.id.toString();
-    const content = document.createElement('div');
-    content.className = 'flex items-center w-full';
+
     const favicon = document.createElement('img');
     favicon.src = tab.favicon;
     favicon.alt = 'favicon';
-    favicon.className = 'w-4 h-4 rounded-full mr-2';
+    favicon.className = 'w-4 h-4 rounded-full mr-2 flex-shrink-0';
+
     const title = document.createElement('span');
-    title.textContent = tab.title;
-    title.className = 'text-left font-linux text-sm font-semibold truncate grow';
+    title.textContent = cutTitle(tab.title, 20);
+    title.className = 'text-sm font-medium truncate grow';
+
     const closeBtn = document.createElement('button');
-    closeBtn.innerHTML = '✕';
+    closeBtn.textContent = '×';
     closeBtn.className = `
-      text-gray-400 hover:bg-gray-500 font-semibold hover:text-white rounded-full w-6 h-6
-      flex items-center justify-center transition-all text-sm aspect-square ml-auto`;
+      ml-2 flex-shrink-0 w-6 h-6 flex items-center justify-center
+      text-gray-400 hover:text-white hover:bg-[#5a567a] rounded-full
+      transition duration-150
+    `;
     closeBtn.onclick = e => {
       e.stopPropagation();
       removeTab(tab.id);
     };
-    content.append(favicon, title, closeBtn);
-    tabElement.appendChild(content);
-    tabElement.onclick = () => setActiveTab(tab.id);
+
+    tabElement.append(favicon, title, closeBtn);
+
+    tabElement.addEventListener('click', () => setActiveTab(tab.id));
+    tabElement.addEventListener('touchstart', () => setActiveTab(tab.id));
+
     tabElement.ondragstart = e => {
       draggedTabId = tab.id;
       tabElement.classList.add('opacity-50');
@@ -135,8 +203,10 @@ function renderTabs(): void {
     tabElement.ondrop = e => {
       e.preventDefault();
       if (draggedTabId === null || draggedTabId === tab.id) return;
+
       const draggedIndex = tabs.findIndex(t => t.id === draggedTabId);
       const targetIndex = tabs.findIndex(t => t.id === tab.id);
+
       if (draggedIndex !== -1 && targetIndex !== -1) {
         const [moved] = tabs.splice(draggedIndex, 1);
         tabs.splice(targetIndex, 0, moved);
@@ -147,16 +217,20 @@ function renderTabs(): void {
       draggedTabId = null;
       renderTabs();
     };
+
     tabContainer.appendChild(tabElement);
   });
+
+  updateActive();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const addbtn = document.getElementById('add') as HTMLButtonElement;
-  addbtn?.addEventListener('click', () => addTab());
+  const addBtn = document.getElementById('add') as HTMLButtonElement | null;
+  addBtn?.addEventListener('click', () => addTab());
+  addTab();
 });
 
-const TabManager = {
+export const TabManager = {
   get activeTabId() {
     return activeTabId;
   },
@@ -165,5 +239,3 @@ const TabManager = {
   },
   addTab,
 };
-
-export default TabManager;

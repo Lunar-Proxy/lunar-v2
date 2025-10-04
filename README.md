@@ -1,19 +1,21 @@
 ![Lunar](./lunar.svg)
+
 # Lunar is one of the fastest web-proxies.
+
 Lunar v2 is designed to bypass censorship and provide the best user-experience.
 
-[![Join our Discord](https://skillicons.dev/icons?i=discord)](https://discord.gg/fuPtWjYuf8) [![View on GitHub](https://skillicons.dev/icons?i=github)](https://github.com/Lunar-proxy/lunar-v2)
+[![Join our Discord](https://skillicons.dev/icons?i=discord)](https://discord.gg/fuPtWjYuf8)
+[![View on GitHub](https://skillicons.dev/icons?i=github)](https://github.com/Lunar-proxy/lunar-v2)
 
 ## Features
 
-- 🚀 **High-Speed Performance**
-- 🪞 **Advanced Tab Cloaking**
-- 🎮 **Tons of Popular Games & Apps**
+- 🚀 **Fast speeds**
+- 🪞 **Tabbed Proxy**
 
 ## Deployment Options
 
-> [!NOTE]
-> Lunar cannot be deployed to Netlify, Vercel, GitHub Pages, or any other static hosting platform.
+> [!NOTE] Lunar cannot be deployed to Netlify, Vercel, GitHub Pages, or any
+> other static hosting platform.
 
 <div>
     <a href="https://render.com/deploy?repo=https://github.com/lunar-proxy/lunar-v2">
@@ -26,16 +28,17 @@ Lunar v2 is designed to bypass censorship and provide the best user-experience.
 
 ### Deployment via Terminal
 
-> [!NOTE]
-> Before deploying, install [git](https://git-scm.com/downloads) and [node.js](https://nodejs.org/en/download/prebuilt-installer). Then, install pnpm with `npm install -g pnpm`.
+> [!NOTE] Before deploying, install [git](https://git-scm.com/downloads) and
+> [node.js](https://nodejs.org/en/download/prebuilt-installer). Then, install
+> pnpm with `npm install -g pnpm`.
 
 #### Production
 
 1. Clone the Lunar repository:
 
    ```bash
-   git clone https://github.com/Lunar-Proxy/Lunar-v2.git
-   cd Lunar-v2
+   git clone https://github.com/Lunar-Proxy/lunar-v2.git
+   cd lunar-v2
    ```
 
 2. Install dependencies and start Lunar:
@@ -45,7 +48,8 @@ Lunar v2 is designed to bypass censorship and provide the best user-experience.
 
 #### Development
 
-If you’re making changes to Lunar, use the development setup to avoid rebuilding repeatedly:
+If you’re making changes to Lunar, use the development setup to avoid rebuilding
+repeatedly:
 
 ```bash
 pnpm install && pnpm dev
@@ -53,11 +57,14 @@ pnpm install && pnpm dev
 
 ## Contributing
 
-If you would like to make a change to Lunar, please read [the contributing guide](CONTRIBUTING.md) before committing.
+If you would like to make a change to Lunar, please read
+[the contributing guide](CONTRIBUTING.md) before committing.
 
 ## Support
 
-If you need help, please make a [GitHub Issue](https://github.com/Lunar-Proxy/lunar-v2/issues) or ask in [our Discord](https://discord.gg/fuPtWjYuf8).
+If you need help, please make a
+[GitHub Issue](https://github.com/Lunar-Proxy/lunar-v2/issues) or ask in
+[our Discord](https://discord.gg/fuPtWjYuf8).
 
 ## Credits
 

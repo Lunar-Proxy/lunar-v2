@@ -1,62 +1,13 @@
 ---
 import ImportLucide from '../layouts/lucide.astro';
 ---
-<div
-  id="logo-container-wrapper"
-  class="relative mt-6 flex min-h-[200px] flex-row flex-wrap items-center justify-start gap-6">
-  <button
-    id="addbm"
-    class="bg-background-overlay/80 backdrop-blur-sm border border-border-default/30 z-10 mr-4 flex h-14 w-14 transform items-center justify-center rounded-xl text-text-header shadow-lg transition-all duration-300 hover:scale-110 hover:shadow-xl hover:bg-background-overlay group">
-    <i data-lucide="plus" class="h-6 w-6 text-text-secondary group-hover:text-text-header transition-colors duration-200"></i>
-  </button>
 
+<div id="logo-container-wrapper" class="relative mt-10 flex flex-row flex-wrap items-center justify-start gap-6">
   <div id="logo-container" class="flex flex-row flex-wrap items-start gap-6"></div>
 </div>
 
-<div id="bminput" class="fixed inset-0 z-50 flex hidden items-center justify-center bg-background/50 backdrop-blur-md">
-  <div class="bg-background-overlay/90 backdrop-blur-sm border border-border-default/30 w-96 rounded-2xl p-6 shadow-2xl">
-    <div class="flex items-center justify-between mb-6">
-      <h2 id="bm-title" class="text-text-header text-lg font-semibold">Add Bookmark</h2>
-      <button id="close" class="text-text-secondary hover:text-text-header transition-colors duration-200">
-        <i data-lucide="x" class="h-5 w-5"></i>
-      </button>
-    </div>
-
-    <div class="space-y-4">
-      <div>
-        <label for="bookmark-name" class="text-text-secondary mb-2 block text-sm font-semibold">Name</label>
-        <input
-          type="text"
-          id="bookmark-name"
-          class="border-border-default/30 bg-background/50 text-text-header placeholder-text-secondary/50 w-full rounded-lg border p-3 focus:border-text-secondary focus:ring-2 focus:ring-text-secondary/20 focus:outline-none transition-all duration-200"
-          placeholder="Bookmark name"
-        />
-      </div>
-
-      <div>
-        <label for="bookmark-url" class="text-text-secondary mb-2 block text-sm font-semibold">URL</label>
-        <input
-          type="url"
-          id="bookmark-url"
-          class="border-border-default/30 bg-background/50 text-text-header placeholder-text-secondary/50 w-full rounded-lg border p-3 focus:border-text-secondary focus:ring-2 focus:ring-text-secondary/20 focus:outline-none transition-all duration-200"
-          placeholder="https://example.com"
-        />
-      </div>
-    </div>
-
-    <div class="flex justify-end gap-3 mt-6">
-      <button
-        id="cancel-btn"
-        class="text-text-secondary bg-background/50 border-border-default/30 hover:bg-background-overlay/50 hover:text-text-header rounded-lg border px-6 py-2 text-sm font-medium transition-all duration-200">
-        Cancel
-      </button>
-      <button id="save-btn" class="rounded-lg bg-gradient-to-r from-text-secondary to-text-header text-background px-6 py-2 text-sm font-medium hover:from-text-header hover:to-text-secondary transition-all duration-200 shadow-lg">
-        Save
-      </button>
-    </div>
-  </div>
-</div>
 <ImportLucide />
+
 <script>
   import ConfigAPI from '../utils/config';
 
@@ -66,30 +17,7 @@ import ImportLucide from '../layouts/lucide.astro';
   }
 
   const container = document.getElementById('logo-container') as HTMLDivElement;
-  const addBtn = document.getElementById('addbm') as HTMLButtonElement;
-  const modal = document.getElementById('bminput') as HTMLDivElement;
-  const nameInput = document.getElementById('bookmark-name') as HTMLInputElement;
-  const urlInput = document.getElementById('bookmark-url') as HTMLInputElement;
-  const cancelBtn = document.getElementById('cancel-btn') as HTMLButtonElement;
-  const saveBtn = document.getElementById('save-btn') as HTMLButtonElement;
-  const modalClose = document.getElementById('close') as HTMLButtonElement;
-
   let bookmarks: Bookmark[] = [];
-  let editingIndex: number | null = null;
-
-  function showBMScreen(name = '', redir = '') {
-    nameInput.value = name;
-    urlInput.value = redir;
-    modal.classList.remove('hidden');
-    nameInput.focus();
-  }
-
-  function hideBMScreen() {
-    nameInput.value = '';
-    urlInput.value = '';
-    editingIndex = null;
-    modal.classList.add('hidden');
-  }
 
   function render() {
     container.innerHTML = '';
@@ -101,10 +29,7 @@ import ImportLucide from '../layouts/lucide.astro';
       const logoUrl = `/api/icon/?url=${bm.redir}`;
 
       div.innerHTML = `
-        <div class="absolute -top-2 -right-2 flex space-x-1 z-10 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-          <button class="edit bg-text-secondary/80 hover:bg-text-secondary rounded-full p-1.5 transition-all duration-200 shadow-lg hover:shadow-xl backdrop-blur-sm">
-            <i data-lucide="edit-3" class="h-3.5 w-3.5 text-background"></i>
-          </button>
+        <div class="absolute -top-2 -right-2 flex space-x-1 z-10 opacity-0 group-hover:opacity-100 transition-all duration-300">
           <button class="delete bg-red-500/80 hover:bg-red-500 rounded-full p-1.5 transition-all duration-200 shadow-lg hover:shadow-xl backdrop-blur-sm">
             <i data-lucide="trash-2" class="h-3.5 w-3.5 text-white"></i>
           </button>
@@ -122,12 +47,6 @@ import ImportLucide from '../layouts/lucide.astro';
         </div>
       `;
 
-      (div.querySelector('.edit') as HTMLButtonElement).addEventListener('click', e => {
-        e.stopPropagation();
-        editingIndex = i;
-        showBMScreen(bm.name, bm.redir);
-      });
-
       (div.querySelector('.delete') as HTMLButtonElement).addEventListener('click', async e => {
         e.stopPropagation();
         bookmarks.splice(i, 1);
@@ -135,10 +54,10 @@ import ImportLucide from '../layouts/lucide.astro';
         render();
       });
 
-      div.addEventListener('click', async () => {
+      div.addEventListener('click', () => {
         const input = window.parent.document.getElementById('urlbar') as HTMLInputElement | null;
-        input!.value = bm.redir;
         if (input) {
+          input.value = bm.redir;
           input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
         }
       });
@@ -149,67 +68,9 @@ import ImportLucide from '../layouts/lucide.astro';
 
   async function init() {
     const raw = await ConfigAPI.get('bm');
-    bookmarks = Array.isArray(raw)
-      ? raw.map((b: any) => ({
-          name: b.name,
-          redir: b.redir || '',
-        }))
-      : [];
-
+    bookmarks = Array.isArray(raw) ? raw.map((b: any) => ({ name: b.name, redir: b.redir || '' })) : [];
     render();
-      }
-
-  addBtn.addEventListener('click', () => {
-    editingIndex = null;
-    showBMScreen();
-  });
-
-  cancelBtn.addEventListener('click', () => {
-    hideBMScreen();
-  });
-
-  modalClose.addEventListener('click', () => {
-    hideBMScreen();
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-      hideBMScreen();
-    }
-  });
-
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      hideBMScreen();
-    }
-  });
-
-  saveBtn.addEventListener('click', async () => {
-    const name = nameInput.value.trim();
-    const redir = urlInput.value.trim();
-
-    if (!name || !redir) return;
-
-    const newEntry: Bookmark = { name, redir };
-
-    if (editingIndex != null) {
-      bookmarks[editingIndex] = newEntry;
-    } else {
-      bookmarks.push(newEntry);
-    }
-
-    await ConfigAPI.set('bm', bookmarks);
-    hideBMScreen();
-    render();
-  });
-
-  [nameInput, urlInput].forEach(input => {
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        saveBtn.click();
-      }
-    });
-  });
+  }
 
   init();
 </script>
