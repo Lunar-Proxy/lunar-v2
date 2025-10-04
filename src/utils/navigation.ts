@@ -16,10 +16,11 @@ const fullscreen = document.querySelector('#menu .menu-item:nth-child(2)');
 
 const wispUrl = await ConfigAPI.get('wispUrl');
 
-  const nativePaths: Record<string, string> = {
+const nativePaths: Record<string, string> = {
   'lunar://settings': '/st',
   'lunar://new': '/new',
   'lunar://games': '/math',
+  'lunar://apps': '/sci',
 };
 
 const scramjet = new ScramjetController({
@@ -107,7 +108,9 @@ if (menu && cmenu) {
 fullscreen?.addEventListener('click', () => {
   const doc = top?.document;
   if (!doc?.fullscreenElement) {
-    doc?.documentElement.requestFullscreen().catch(err => console.error('[ERROR] Failed to enter fullscreen:', err));
+    doc?.documentElement
+      .requestFullscreen()
+      .catch(err => console.error('[ERROR] Failed to enter fullscreen:', err));
   } else {
     doc.exitFullscreen().catch(err => console.error('[ERROR] Failed to exit fullscreen:', err));
   }

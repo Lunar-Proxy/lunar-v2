@@ -12,6 +12,7 @@ import { Socket } from 'node:net';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { updateChecker } from 'serverlib/check';
+
 import { version } from './package.json';
 
 const port: number = parseInt(process.env.PORT as string) || 8080;

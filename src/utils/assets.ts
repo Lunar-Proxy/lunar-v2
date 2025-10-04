@@ -1,4 +1,4 @@
-import ConfigAPI from "./config";
+import ConfigAPI from './config';
 
 document.addEventListener('DOMContentLoaded', async () => {
   // @ts-ignore

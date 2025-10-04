@@ -9,6 +9,7 @@ const nativePaths: Record<string, string> = {
   'lunar://settings': '/st',
   'lunar://new': '/new',
   'lunar://games': '/math',
+  'lunar://apps': '/sci',
 };
 const defaultFavicon = '/a/moon.svg';
 const iconURL = '/api/icon/?url=';
@@ -76,7 +77,7 @@ function handleLoad(tab: Tab): void {
       .then(blob => {
         const reader = new FileReader();
         reader.onloadend = () => {
-          tab.favicon = reader.result as string || defaultFavicon;
+          tab.favicon = (reader.result as string) || defaultFavicon;
           renderTabs();
         };
         reader.readAsDataURL(blob);
@@ -117,8 +118,10 @@ function setActiveTab(id: number): void {
     try {
       const framePath = new URL(currentSrc, window.location.origin).pathname;
       const nativeEntry = Object.entries(nativePaths).find(([, path]) => path === framePath);
-      input.value = nativeEntry ? nativeEntry[0] : decodeURIComponent(currentSrc.split('/sj/')[1] || '');
-    } catch { }
+      input.value = nativeEntry
+        ? nativeEntry[0]
+        : decodeURIComponent(currentSrc.split('/sj/')[1] || '');
+    } catch {}
   };
 
   updateUrl();

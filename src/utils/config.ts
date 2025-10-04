@@ -31,11 +31,27 @@ const ConfigAPI = {
       cloak: 'off',
       wispUrl: `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/wisp/`,
       bm: [
-        { name: 'Youtube', logo: '/api/icon/?url=https://www.youtube.com/', redir: 'https://www.youtube.com' },
-        { name: 'Google', logo: '/api/icon/?url=https://www.google.com/', redir: 'https://www.google.com' },
+        {
+          name: 'Youtube',
+          logo: '/api/icon/?url=https://www.youtube.com/',
+          redir: 'https://www.youtube.com',
+        },
+        {
+          name: 'Google',
+          logo: '/api/icon/?url=https://www.google.com/',
+          redir: 'https://www.google.com',
+        },
         { name: 'X', logo: '/api/icon/?url=https://www.x.com/', redir: 'https://www.x.com' },
-        { name: 'Spotify', logo: '/api/icon/?url=https://www.spotify.com/', redir: 'https://www.spotify.com' },
-        { name: 'Discord', logo: '/api/icon/?url=https://www.discord.com/', redir: 'https://www.discord.com' },
+        {
+          name: 'Spotify',
+          logo: '/api/icon/?url=https://www.spotify.com/',
+          redir: 'https://www.spotify.com',
+        },
+        {
+          name: 'Discord',
+          logo: '/api/icon/?url=https://www.discord.com/',
+          redir: 'https://www.discord.com',
+        },
       ],
     };
 
