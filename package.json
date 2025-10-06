@@ -24,7 +24,7 @@
     "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "astro": "^5.13.2",
     "chalk": "^5.6.2",
-    "fastify": "^5.5.0",
+    "fastify": "^5.6.1",
     "localforage": "^1.10.0",
     "lucide": "^0.539.0",
     "node-fetch": "^3.3.2",
