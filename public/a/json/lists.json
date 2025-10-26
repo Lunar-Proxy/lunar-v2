@@ -1,16 +1,88 @@
 {
   "gms": [
     {
+      "name": "Parking Fury",
+      "desc": "Together we are... Parking Fury.",
+      "icon": "/a/images/ga/parkingfury.webp",
+      "url": "https://www.coolmathgames.com/0-parking-fury/play"
+    },
+    {
+      "name": "Parking Fury 2",
+      "desc": "Together we are... Parking Fury 2.",
+      "icon": "/a/images/ga/parkingfury2.webp",
+      "url": "https://www.coolmathgames.com/0-parking-fury-2/play"
+    },
+    {
+      "name": "Parking Fury 3",
+      "desc": "Together we are... Parking Fury 3.",
+      "icon": "/a/images/ga/parkingfury2.webp",
+      "url": "https://www.coolmathgames.com/0-parking-fury-3/play"
+    },
+    {
+      "name": "Run 3",
+      "desc": "Run through space tunnels in this endless runner.",
+      "icon": "/a/images/ga/run3.webp",
+      "url": "https://www.coolmathgames.com/0-run-3/play"
+    },
+    {
+      "name": "Moto X3M",
+      "desc": "Experience thrilling bike stunts and challenges.",
+      "icon": "/a/images/ga/motox3m.webp",
+      "url": "https://www.coolmathgames.com/0-moto-x3m/play"
+    },
+    {
+      "name": "Fireboy and Watergirl",
+      "desc": "Control Fireboy and Watergirl to solve puzzles together.",
+      "icon": "/a/images/ga/fireboywatergirl.webp",
+      "url": "https://www.coolmathgames.com/sites/default/files/public_games/40034"
+    },
+    {
+      "name": "Papa's Pizzeria",
+      "desc": "Manage your own pizzeria and serve delicious pizzas.",
+      "icon": "/a/images/ga/papaspizzeria.webp",
+      "url": "https://www.coolmathgames.com/0-papas-pizzeria/play"
+    },
+    {
+      "name": "Papa's Freezeria",
+      "desc": "Run your own ice cream shop and create tasty treats.",
+      "icon": "/a/images/ga/papasfreezeria.webp",
+      "url": "https://www.coolmathgames.com/0-papas-freezeria/play"
+    },
+    {
+      "name": "Slice Master",
+      "desc": "Test your slicing skills in this fun arcade game.",
+      "icon": "/a/images/ga/slicemaster.webp",
+      "url": "https://www.coolmathgames.com/0-slice-master/play"
+    },
+    {
+      "name": "Tiny Fishing",
+      "desc": "Catch fish and upgrade your gear in Tiny Fishing.",
+      "icon": "/a/images/ga/tinyfishing.webp",
+      "url": "https://www.coolmathgames.com/0-tiny-fishing/play"
+    },
+    {
+      "name": "Suika Watermelon Game",
+      "desc": "Combine fruits to create larger ones in this addictive game.",
+      "icon": "/a/images/ga/suika.webp",
+      "url": "https://www.coolmathgames.com/0-suika-watermelon-game/play"
+    },
+    {
+      "name": "Chess",
+      "desc": "Play chess against the computer or a friend.",
+      "icon": "/a/images/ga/chess.webp",
+      "url": "https://www.coolmathgames.com/0-chess/play"
+    },
+    {
+      "name": "Cookie Clicker",
+      "desc": "Bake cookies and unlock upgrades in this idle game.",
+      "icon": "/a/images/ga/cc.webp",
+      "url": "https://orteil.dashnet.org/cookieclicker/"
+    },
+    {
       "name": "Wordle",
       "desc": "Guess the daily word in 6 tries.",
       "icon": "/a/images/ga/word.webp",
       "url": "https://www.nytimes.com/games/wordle/index.html"
-    },
-    {
-      "name": "Cookie Clicker",
-      "desc": "Addictive incremental cookie-clicking game.",
-      "icon": "/a/images/ga/cc.webp",
-      "url": "https://orteil.dashnet.org/cookieclicker/"
     },
     {
       "name": "SmashKarts",
@@ -179,24 +251,6 @@
       "desc": "Race across crazy tracks and terrains.",
       "icon": "/a/images/ad.jpg",
       "url": "https://ubg77.github.io/game131022/adventure-drivers/"
-    },
-    {
-      "name": "Parking Fury",
-      "desc": "Test your parking skills in 3D!",
-      "icon": "/a/images/pf.png",
-      "url": "https://webglmath.github.io/parking-fury/"
-    },
-    {
-      "name": "Roblox",
-      "desc": "Roblox is a user-generated online game platform and game creation system",
-      "icon": "/a/images/rb.png",
-      "url": "https://www.easyfun.gg/cloud-games/roblox.html?start=1"
-    },
-    {
-      "name": "Tiny Fishing",
-      "desc": "Catch fish and earn upgrades.",
-      "icon": "/a/images/tf.jpeg",
-      "url": "https://ubg77.github.io/game131022/tiny-fishing/"
     }
   ],
   "aps": [
@@ -225,10 +279,34 @@
       "url": "https://twitch.tv"
     },
     {
-      "name": "Discord - Login",
+      "name": "YouTube",
+      "desc": "Watch and share videos from around the world.",
+      "icon": "/a/images/yt.webp",
+      "url": "https://youtube.com"
+    },
+    {
+      "name": "Reddit",
+      "desc": "Join discussions and share content on Reddit.",
+      "icon": "/a/images/reddit.webp",
+      "url": "https://www.reddit.com"
+    },
+    {
+      "name": "Spotify",
+      "desc": "Stream music and podcasts from millions of tracks.",
+      "icon": "/a/images/spot.jpg",
+      "url": "https://spotify.com"
+    },
+    {
+      "name": "Discord",
       "desc": "Connect with friends and communities on Discord.",
       "icon": "/a/images/dis.png",
       "url": "https://discord.com/login"
+    },
+    {
+      "name": "Discord PTB",
+      "desc": "Public testing build of Discord for beta features.",
+      "icon": "/a/images/dis.png",
+      "url": "https://ptb.discord.com/login"
     },
     {
       "name": "Discord Canary",
@@ -237,10 +315,22 @@
       "url": "https://canary.discord.com/login"
     },
     {
-      "name": "Discord PTB",
-      "desc": "Public testing build of Discord for beta features.",
-      "icon": "/a/images/dis.png",
-      "url": "https://ptb.discord.com/login"
+      "name": "Stack Overflow",
+      "desc": "Get answers to your programming questions.",
+      "icon": "/a/images/so.png",
+      "url": "https://stackoverflow.com/"
+    },
+    {
+      "name": "MDN Web Docs",
+      "desc": "Comprehensive resource for web developers.",
+      "icon": "/a/images/mdn.png",
+      "url": "https://developer.mozilla.org/"
+    },
+    {
+      "name": "CodePen",
+      "desc": "Online code editor and community for front-end developers.",
+      "icon": "/a/images/cp.png",
+      "url": "https://codepen.io/"
     },
     {
       "name": "W3Schools",
@@ -255,10 +345,16 @@
       "url": "https://code.visualstudio.com/"
     },
     {
-      "name": "YouTube",
-      "desc": "Watch and share videos from around the world.",
-      "icon": "/a/images/yt.webp",
-      "url": "https://youtube.com"
+      "name": "GitHub",
+      "desc": "Host and collaborate on code repositories.",
+      "icon": "/a/images/gh.png",
+      "url": "https://www.github.com"
+    },
+    {
+      "name": "Wolfram Alpha",
+      "desc": "Computational knowledge engine for answers and data.",
+      "icon": "/a/images/wa.png",
+      "url": "https://www.wolframalpha.com/"
     },
     {
       "name": "Amazon",
@@ -267,22 +363,10 @@
       "url": "https://www.amazon.com/"
     },
     {
-      "name": "Spotify",
-      "desc": "Stream music and podcasts from millions of tracks.",
-      "icon": "/a/images/spot.jpg",
-      "url": "https://spotify.com"
-    },
-    {
       "name": "ESPN",
       "desc": "Get the latest sports news, scores, and highlights.",
       "icon": "/a/images/espn.webp",
       "url": "https://www.espn.com"
-    },
-    {
-      "name": "GitHub",
-      "desc": "Host and collaborate on code repositories.",
-      "icon": "/a/images/gh.png",
-      "url": "https://www.github.com"
     }
   ]
 }
