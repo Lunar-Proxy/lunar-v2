@@ -12,8 +12,10 @@ import Shortcuts from '../layouts/shortcuts.astro';
     <meta name="generator" content={Astro.generator} />
   </head>
 
-  <body class="font-linux flex h-screen w-screen flex-col items-center justify-center text-white select-none">
-    <div id="clock" class="flex items-end space-x-2 text-6xl font-bold tracking-wide sm:text-7xl md:text-8xl">
+  <body class="font-linux relative flex h-screen w-screen flex-col items-center justify-center text-white">
+    <div
+      id="clock"
+      class="flex items-end space-x-2 text-6xl font-bold tracking-wide select-none sm:text-7xl md:text-8xl">
       <span id="hours" class="font-extrabold text-white">12</span>
       <span>:</span>
       <span id="minutes" class="text-white">59</span>
@@ -24,13 +26,32 @@ import Shortcuts from '../layouts/shortcuts.astro';
 
     <Shortcuts />
 
-    <script>
-      const hoursEl = document.getElementById('hours');
-      const minutesEl = document.getElementById('minutes');
-      const secondsEl = document.getElementById('seconds');
-      const ampmEl = document.getElementById('ampm');
+    <div class="fixed right-4 bottom-4 z-50 flex items-center space-x-4 text-sm">
+      <a
+        href="https://github.com/Lunar-Proxy/lunar-v2"
+        target="_top"
+        class="text-white/70 transition-colors duration-200 hover:text-white">
+        GitHub
+      </a>
+      <span class="text-white/30">|</span>
+      <a href="https://discord.com" target="_top" class="text-white/70 transition-colors duration-200 hover:text-white">
+        Discord
+      </a>
+    </div>
 
-      function updateClock() {
+    <div class="pointer-events-none fixed bottom-4 left-4 z-50 text-sm">
+      <a id="sl" class="cursor-default text-white/70 transition-colors duration-200 hover:text-white">...</a>
+    </div>
+
+    <script>
+      import ConfigAPI from '../utils/config';
+      const hoursEl = document.getElementById('hours') as HTMLSpanElement | null;
+      const minutesEl = document.getElementById('minutes') as HTMLSpanElement | null;
+      const secondsEl = document.getElementById('seconds') as HTMLSpanElement | null;
+      const ampmEl = document.getElementById('ampm') as HTMLSpanElement | null;
+      const serverl = document.getElementById('sl') as HTMLAnchorElement | null;
+
+      function updateClock(): void {
         const now = new Date();
         let h = now.getHours();
         const m = now.getMinutes();
@@ -46,6 +67,73 @@ import Shortcuts from '../layouts/shortcuts.astro';
 
       setInterval(updateClock, 1000);
       updateClock();
+
+      interface PingResult {
+        status: 'OK' | 'Fail';
+        latency: number | 'N/A';
+      }
+
+      function ping(url: string): Promise<PingResult> {
+        return new Promise((resolve) => {
+          const websocket = new WebSocket(url);
+          const startTime = Date.now();
+
+          const cleanup = () => {
+            websocket.removeEventListener('open', onOpen);
+            websocket.removeEventListener('message', onMessage);
+            websocket.removeEventListener('error', onError);
+          };
+
+          const onOpen = () => {
+            const latency = Date.now() - startTime;
+            cleanup();
+            websocket.close();
+            resolve({ status: 'OK', latency });
+          };
+
+          const onMessage = () => {
+            const latency = Date.now() - startTime;
+            cleanup();
+            websocket.close();
+            resolve({ status: 'OK', latency });
+          };
+
+          const onError = () => {
+            cleanup();
+            websocket.close();
+            resolve({ status: 'Fail', latency: 'N/A' });
+          };
+
+          websocket.addEventListener('open', onOpen);
+          websocket.addEventListener('message', onMessage);
+          websocket.addEventListener('error', onError);
+
+          setTimeout(() => {
+            cleanup();
+            websocket.close();
+            resolve({ status: 'Fail', latency: 'N/A' });
+          }, 5000);
+        });
+      }
+
+      (async () => {
+        try {
+          const wsUrl = await ConfigAPI.get('wispUrl') as string;
+          if (wsUrl && wsUrl.startsWith('ws')) {
+            const result = await ping(wsUrl);
+            if (serverl) {
+              serverl.textContent = result.status === 'OK'
+                ? `Server latency: ${result.latency} ms`
+                : 'Ping failed';
+            }
+          } else if (serverl) {
+            serverl.textContent = 'Invalid Wisp Server URL';
+          }
+        } catch (e) {
+          console.error('Failed to ping wisp server with error:', e);
+          if (serverl) serverl.textContent = 'Ping failed';
+        }
+      })();
     </script>
   </body>
 </html>

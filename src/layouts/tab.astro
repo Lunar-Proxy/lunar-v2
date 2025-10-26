@@ -16,7 +16,7 @@ import ImportLucide from './lucide.astro';
           <div id="tcontainer" class="flex max-w-full flex-nowrap space-x-2 overflow-x-auto"></div>
           <button
             id="add"
-            class="flex h-10 w-10 items-center justify-center rounded-md text-gray-400 hover:bg-gray-700 hover:text-white">
+            class="mt-1 flex h-8 w-8 items-center justify-center rounded-md text-gray-400 hover:bg-gray-700 hover:text-white">
             <i data-lucide="plus" class="h-4 w-4"></i>
           </button>
         </div>
@@ -29,15 +29,15 @@ import ImportLucide from './lucide.astro';
             <i data-lucide="arrow-left" class="h-4 w-4"></i>
           </button>
           <button
-            id="forward"
-            class="flex h-8 w-8 items-center justify-center rounded-md text-gray-400 hover:bg-gray-700 hover:text-white">
-            <i data-lucide="arrow-right" class="h-4 w-4"></i>
-          </button>
-          <button
-            id="refresh"
-            class="group flex h-8 w-8 items-center justify-center rounded-md text-gray-400 hover:bg-gray-700">
-            <i data-lucide="refresh-cw" class="h-4 w-4 transition-transform duration-500 group-hover:animate-spin"></i>
-          </button>
+  id="forward"
+  class="flex h-8 w-8 items-center justify-center rounded-md text-gray-400 hover:bg-gray-700 hover:text-white">
+  <i data-lucide="arrow-right" class="h-4 w-4"></i>
+</button>
+<button
+  id="refresh"
+  class="group flex h-8 w-8 items-center justify-center rounded-md text-gray-400 hover:bg-gray-700 hover:text-white">
+  <i data-lucide="refresh-cw" class="h-4 w-4 transition-transform duration-500 group-hover:animate-spin"></i>
+</button>
         </div>
         <div class="relative ml-4 flex grow items-center space-x-2">
           <div class="relative flex grow">
@@ -49,8 +49,8 @@ import ImportLucide from './lucide.astro';
             />
             <button
               id="fav"
-              class="absolute top-1/2 right-2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-gray-400 transition duration-200 hover:scale-125 hover:text-yellow-400 active:scale-150">
-              <i data-lucide="star" class="h-4 w-4"></i>
+              class="absolute top-1/2 right-2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-gray-400 transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] hover:scale-125 hover:text-yellow-400 hover:drop-shadow-[0_0_8px_rgba(255,255,0,0.6)] focus:outline-none active:scale-150 active:drop-shadow-[0_0_12px_rgba(255,255,0,0.9)]">
+              <i data-lucide="star" class="h-4 w-4 transition-transform duration-300 ease-out"></i>
             </button>
           </div>
           <div class="relative">
