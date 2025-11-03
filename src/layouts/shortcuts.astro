@@ -2,8 +2,8 @@
 import ImportLucide from '../layouts/lucide.astro';
 ---
 
-<div id="logo-container-wrapper" class="relative mt-10 flex flex-row flex-wrap items-center justify-start gap-6">
-  <div id="logo-container" class="flex flex-row flex-wrap items-start gap-6"></div>
+<div class="relative mt-10 flex flex-row flex-wrap items-center justify-start gap-6">
+  <div id="shortcuts" class="flex flex-row flex-wrap items-start gap-6"></div>
 </div>
 
 <ImportLucide />
@@ -16,7 +16,7 @@ import ImportLucide from '../layouts/lucide.astro';
     redir: string;
   }
 
-  const container = document.getElementById('logo-container') as HTMLDivElement;
+  const container = document.getElementById('shortcuts') as HTMLDivElement;
   let bookmarks: Bookmark[] = [];
 
   function render() {

@@ -4,25 +4,19 @@ import { ValidateUrl } from './url';
 
 // @ts-ignore
 const { ScramjetController } = $scramjetLoadController();
-
 const reload = document.getElementById('refresh') as HTMLButtonElement | null;
 const back = document.getElementById('back') as HTMLButtonElement | null;
 const forward = document.getElementById('forward') as HTMLButtonElement | null;
 const urlbar = document.getElementById('urlbar') as HTMLInputElement | null;
-const menu = document.getElementById('menubtn') as HTMLButtonElement | null;
-const cmenu = document.getElementById('menu') as HTMLDivElement | null;
-const inspectElement = document.querySelector('#menu .menu-item:nth-child(3)');
-const fullscreen = document.querySelector('#menu .menu-item:nth-child(2)');
-
+const favorite = document.getElementById('fav') as HTMLButtonElement | null;
+const home = document.getElementById("home")
 const wispUrl = await ConfigAPI.get('wispUrl');
-
 const nativePaths: Record<string, string> = {
   'lunar://settings': '/st',
   'lunar://new': '/new',
   'lunar://games': '/math',
   'lunar://apps': '/sci',
 };
-
 const scramjet = new ScramjetController({
   prefix: '/sj/',
   files: {
@@ -59,84 +53,65 @@ function loading() {
 
 reload?.addEventListener('click', () => {
   const frame = getActiveFrame();
-  if (frame?.contentWindow) {
-    console.log('[DEBUG] Reloading frame:', frame.id);
-    loading();
-    frame.src = frame.contentWindow.location.href;
-  } else {
-    console.warn('[WARN] Cannot reload: No active frame');
-  }
+  if (!frame?.contentWindow) return;
+  loading();
+  frame.src = frame.contentWindow.location.href;
 });
 
 back?.addEventListener('click', () => {
   const frame = getActiveFrame();
-  if (frame?.contentWindow) frame.contentWindow.history.back();
-  else console.warn('[WARN] Cannot go back: No active frame');
+  frame?.contentWindow?.history.back();
 });
 
 forward?.addEventListener('click', () => {
   const frame = getActiveFrame();
-  if (frame?.contentWindow) frame.contentWindow.history.forward();
-  else console.warn('[WARN] Cannot go forward: No active frame');
+  frame?.contentWindow?.history.forward();
 });
 
-if (menu && cmenu) {
-  const toggleMenu = (e: MouseEvent) => {
-    e.stopPropagation();
-    cmenu.classList.toggle('hidden');
-  };
+home?.addEventListener('click', () => {
+   const frame = getActiveFrame();
+   if (!frame) return;
+   frame.src = "./new"
+})
 
-  const hideMenu = () => cmenu.classList.add('hidden');
+favorite?.addEventListener('click', async () => {
+  if (!urlbar) return;
 
-  menu.addEventListener('click', toggleMenu);
-
-  document.addEventListener('click', e => {
-    if (!menu.contains(e.target as Node) && !cmenu.contains(e.target as Node)) hideMenu();
-  });
-
-  window.addEventListener('blur', () => {
-    setTimeout(() => {
-      if (document.activeElement?.tagName === 'IFRAME') hideMenu();
-    }, 0);
-  });
-
-  cmenu.querySelectorAll('.menu-item').forEach(item => {
-    item.addEventListener('click', hideMenu);
-  });
-}
-
-fullscreen?.addEventListener('click', () => {
-  const doc = top?.document;
-  if (!doc?.fullscreenElement) {
-    doc?.documentElement
-      .requestFullscreen()
-      .catch(err => console.error('[ERROR] Failed to enter fullscreen:', err));
-  } else {
-    doc.exitFullscreen().catch(err => console.error('[ERROR] Failed to exit fullscreen:', err));
-  }
-});
-
-inspectElement?.addEventListener('click', () => {
   const frame = getActiveFrame();
-  try {
-    const eruda = frame?.contentWindow?.eruda;
-    if (eruda?._isInit) return eruda.destroy();
+  if (!frame || nativePaths[urlbar.value]) return;
 
-    if (!eruda && frame?.contentDocument) {
-      const script = frame.contentDocument.createElement('script');
-      script.src = 'https://cdn.jsdelivr.net/npm/eruda';
-      script.onload = () => frame.contentWindow?.eruda.init();
-      frame.contentDocument.head.appendChild(script);
-    }
-  } catch (err) {
-    console.error('[ERROR] Failed to toggle Eruda:', err);
+  const url = scramjet.decodeUrl(frame.src);
+  const name = frame.contentDocument?.title || url;
+
+  let domain: string;
+  try {
+    domain = new URL(url).hostname;
+  } catch {
+    domain = url;
   }
+  // @ts-ignore
+  const currentBm: Array<{ name: string; logo: string; redir: string }> =
+    (await ConfigAPI.get('bm')) ?? [];
+
+  const existingIndex = currentBm.findIndex(b => b.redir === url);
+
+  if (existingIndex !== -1) {
+    currentBm.splice(existingIndex, 1);
+  } else {
+    currentBm.push({
+      name,
+      logo: `/api/icon/?url=https://${domain}`,
+      redir: url,
+    });
+  }
+
+  await ConfigAPI.set('bm', currentBm);
 });
 
 urlbar?.addEventListener('keydown', async e => {
   if (e.key !== 'Enter') return;
   const frame = getActiveFrame();
-  if (!frame) return console.warn('[WARN] No active frame to navigate.');
+  if (!frame) return;
 
   if (nativePaths[urlbar.value]) {
     frame.src = nativePaths[urlbar.value];

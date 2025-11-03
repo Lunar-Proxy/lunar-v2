@@ -62,26 +62,44 @@ function IconBackend(): Plugin {
   };
 }
 
-function searchBackend(): Plugin {
+export function searchBackend(): Plugin {
   return {
-    name: 'vite-query-middleware',
+    name: 'search-suggestions-vite',
     configureServer({ middlewares }) {
       middlewares.use('/api/query', async (req: IncomingMessage, res: ServerResponse) => {
         const urlObj = new URL(req.url ?? '', 'http://localhost');
         const query = urlObj.searchParams.get('q');
-        if (!query) return res.end('Query parameter "q" is required.');
+
+        if (!query) {
+          res.statusCode = 400;
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ error: 'Query parameter "q" is required.' }));
+          return;
+        }
 
         try {
           const response = await fetch(`https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}`, {
-            headers: { 'User-Agent': 'Mozilla/5.0', Accept: 'application/json' },
+            headers: {
+              'User-Agent': 'Mozilla/5.0',
+              Accept: 'application/json',
+            },
           });
-          if (!response.ok) return res.end('Failed to fetch suggestions.');
-          const suggestions = await response.json();
+
+          if (!response.ok) {
+            res.statusCode = response.status;
+            res.end(JSON.stringify({ error: 'Failed to fetch suggestions.' }));
+            return;
+          }
+
+          const data = (await response.json()) as Array<{ phrase: string }>;
+          const suggestions = data.map(d => d.phrase).filter(Boolean);
+
           res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify(suggestions));
-        } catch {
+          res.end(JSON.stringify({ suggestions }));
+        } catch (err) {
+          console.error('Backend suggestion error:', err);
           res.statusCode = 500;
-          res.end('Internal server error.');
+          res.end(JSON.stringify({ error: 'Internal server error.' }));
         }
       });
     },

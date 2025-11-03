@@ -30,17 +30,24 @@ import Shortcuts from '../layouts/shortcuts.astro';
       <a
         href="https://github.com/Lunar-Proxy/lunar-v2"
         target="_top"
-        class="text-white/70 transition-colors duration-200 hover:text-white">
+        class="font-linux font-semibold text-white/70 transition-colors duration-200 hover:text-white">
         GitHub
       </a>
       <span class="text-white/30">|</span>
-      <a href="https://discord.com" target="_top" class="text-white/70 transition-colors duration-200 hover:text-white">
+      <a
+        href="https://discord.com"
+        target="_top"
+        class="font-linux font-semibold text-white/70 transition-colors duration-200 hover:text-white">
         Discord
       </a>
     </div>
 
     <div class="pointer-events-none fixed bottom-4 left-4 z-50 text-sm">
-      <a id="sl" class="cursor-default text-white/70 transition-colors duration-200 hover:text-white">...</a>
+      <a
+        id="sl"
+        class="text-md font-linux cursor-default font-semibold text-white/70 transition-colors duration-200 hover:text-white"
+        >...</a
+      >
     </div>
 
     <script>
@@ -74,7 +81,7 @@ import Shortcuts from '../layouts/shortcuts.astro';
       }
 
       function ping(url: string): Promise<PingResult> {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
           const websocket = new WebSocket(url);
           const startTime = Date.now();
 
@@ -118,13 +125,11 @@ import Shortcuts from '../layouts/shortcuts.astro';
 
       (async () => {
         try {
-          const wsUrl = await ConfigAPI.get('wispUrl') as string;
+          const wsUrl = (await ConfigAPI.get('wispUrl')) as string;
           if (wsUrl && wsUrl.startsWith('ws')) {
             const result = await ping(wsUrl);
             if (serverl) {
-              serverl.textContent = result.status === 'OK'
-                ? `Server latency: ${result.latency} ms`
-                : 'Ping failed';
+              serverl.textContent = result.status === 'OK' ? `Server latency: ${result.latency} ms` : 'Ping failed';
             }
           } else if (serverl) {
             serverl.textContent = 'Invalid Wisp Server URL';

@@ -8,15 +8,19 @@ import ImportLucide from './lucide.astro';
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="@scripts/tb.ts"></script>
+    <script src="@scripts/menu.ts"></script>
+    <script src="@scripts/suggestions.ts"></script>
   </head>
   <body class="bg-gray-900 p-4 font-sans text-white">
     <div class="w-full">
-      <div id="tab-wrapper" class="relative flex h-14 items-center bg-[#1c1a2b] px-2">
+      <div
+        id="tab-wrapper"
+        class="relative isolate flex h-14 items-end overflow-hidden rounded-t-2xl bg-[#1c1a2b] px-2">
         <div class="flex w-full items-center space-x-2">
           <div id="tcontainer" class="flex max-w-full flex-nowrap space-x-2 overflow-x-auto"></div>
           <button
             id="add"
-            class="mt-1 flex h-8 w-8 items-center justify-center rounded-md text-gray-400 hover:bg-gray-700 hover:text-white">
+            class="relative -top-1/2 flex h-8 w-8 items-center justify-center rounded-md text-gray-400 hover:bg-gray-700 hover:text-white">
             <i data-lucide="plus" class="h-4 w-4"></i>
           </button>
         </div>
@@ -29,15 +33,20 @@ import ImportLucide from './lucide.astro';
             <i data-lucide="arrow-left" class="h-4 w-4"></i>
           </button>
           <button
-  id="forward"
-  class="flex h-8 w-8 items-center justify-center rounded-md text-gray-400 hover:bg-gray-700 hover:text-white">
-  <i data-lucide="arrow-right" class="h-4 w-4"></i>
-</button>
-<button
-  id="refresh"
-  class="group flex h-8 w-8 items-center justify-center rounded-md text-gray-400 hover:bg-gray-700 hover:text-white">
-  <i data-lucide="refresh-cw" class="h-4 w-4 transition-transform duration-500 group-hover:animate-spin"></i>
-</button>
+            id="forward"
+            class="flex h-8 w-8 items-center justify-center rounded-md text-gray-400 hover:bg-gray-700 hover:text-white">
+            <i data-lucide="arrow-right" class="h-4 w-4"></i>
+          </button>
+          <button
+            id="refresh"
+            class="group flex h-8 w-8 items-center justify-center rounded-md text-gray-400 hover:bg-gray-700 hover:text-white">
+            <i data-lucide="refresh-cw" class="h-4 w-4 transition-transform duration-500 group-hover:animate-spin"></i>
+          </button>
+           <button
+            id="home"
+            class="flex h-8 w-8 items-center justify-center rounded-md text-gray-400 hover:bg-gray-700 hover:text-white">
+            <i data-lucide="house" class="h-4 w-4"></i>
+          </button>
         </div>
         <div class="relative ml-4 flex grow items-center space-x-2">
           <div class="relative flex grow">
@@ -61,29 +70,45 @@ import ImportLucide from './lucide.astro';
             </button>
             <div
               id="menu"
-              class="font-linux absolute top-full right-0 z-30 mt-2 hidden w-52 overflow-hidden rounded-2xl border border-[#3a3758] bg-[#1f1f30] font-medium shadow-2xl backdrop-blur-md">
+              class="font-linux absolute top-full right-0 z-30 mt-2 hidden w-64 overflow-hidden rounded-2xl border border-[#3a3758] bg-[#1f1f30] font-medium shadow-2xl backdrop-blur-md">
               <button
-                class="menu-item flex w-full items-center space-x-3 px-4 py-3 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
-                <i data-lucide="clock" class="h-4 w-4 flex-shrink-0"></i>
-                <span>History</span>
+                class="menu-item flex w-full items-center justify-between px-4 py-3 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
+                <div class="flex items-center space-x-3">
+                  <i data-lucide="clock" class="h-4 w-4 flex-shrink-0"></i>
+                  <span>History [SOON]</span>
+                </div>
               </button>
 
               <button
-                class="menu-item flex w-full items-center space-x-3 px-4 py-3 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
-                <i data-lucide="maximize-2" class="h-4 w-4 flex-shrink-0"></i>
-                <span>Full Screen</span>
+                class="menu-item flex w-full items-center justify-between px-4 py-3 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
+                <div class="flex items-center space-x-3">
+                  <i data-lucide="maximize-2" class="h-4 w-4 flex-shrink-0"></i>
+                  <span>Full Screen</span>
+                </div>
               </button>
 
               <button
-                class="menu-item flex w-full items-center space-x-3 px-4 py-3 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
-                <i data-lucide="code" class="h-4 w-4 flex-shrink-0"></i>
-                <span>Inspect Element</span>
+                class="menu-item flex w-full items-center justify-between px-4 py-3 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
+                <div class="flex items-center space-x-3">
+                  <i data-lucide="code" class="h-4 w-4 flex-shrink-0"></i>
+                  <span>Inspect Element</span>
+                </div>
+              </button>
+              <button
+                class="menu-item flex w-full items-center justify-between px-4 py-3 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
+                <div class="flex items-center space-x-3">
+                  <i data-lucide="log-out" class="h-4 w-4 flex-shrink-0"></i>
+                  <span>Panic</span>
+                </div>
               </button>
             </div>
           </div>
         </div>
       </div>
-      <div id="fcontainer" class="h-[calc(100vh-7rem)] w-full overflow-hidden rounded-b-lg"></div>
+      <div
+  id="fcontainer"
+  class="absolute top-[6.4rem] left-0 right-0 bottom-0 w-full overflow-hidden rounded-b-lg"
+></div>
       <ImportLucide />
     </div>
   </body>
