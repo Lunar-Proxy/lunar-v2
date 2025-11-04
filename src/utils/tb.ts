@@ -62,24 +62,28 @@ function handleLoad(tab: Tab): void {
     if (!doc) return;
     tab.title = doc.title?.trim() || 'New Tab';
     const url = new URL(tab.iframe.src);
-    if (url.origin === location.origin) throw new Error('Same origin');
-    fetch(iconURL + encodeURIComponent(url.origin))
-      .then(res => res.blob())
-      .then(blob => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          tab.favicon = (reader.result as string) || defaultFavicon;
-          renderTabs();
-        };
-        reader.readAsDataURL(blob);
-      })
-      .catch(() => {
-        tab.favicon = defaultFavicon;
-        renderTabs();
-      });
-  } catch {
+    const decodedUrl = decodeURIComponent(url.pathname.slice("/sj/".length));
+    fetch(iconURL + decodedUrl)
+  .then(res => {
+    if (!res.ok) throw new Error('Bad response'); // check response status here
+    return res.blob();
+  })
+  .then(blob => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      tab.favicon = (reader.result as string) || defaultFavicon;
+      renderTabs();
+    };
+    reader.readAsDataURL(blob);
+  })
+  .catch(() => {
     tab.favicon = defaultFavicon;
     renderTabs();
+  });
+  } catch (e) {
+    tab.favicon = defaultFavicon;
+    renderTabs();
+    console.error("Failed to fetch favicon for site:", e)
   }
 }
 

@@ -18,9 +18,6 @@ const ConfigAPI = {
     const existingValue = await this.get(key);
     if (existingValue !== null) {
       await this.set(key, newValue);
-      console.debug(`[DEBUG] Setting for "${key}" updated.`);
-    } else {
-      console.warn(`[WARN] No existing value found for "${key}".`);
     }
   },
 

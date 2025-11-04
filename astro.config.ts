@@ -1,5 +1,4 @@
 import node from '@astrojs/node';
-
 import { baremuxPath } from '@mercuryworkshop/bare-mux/node';
 import { libcurlPath } from '@mercuryworkshop/libcurl-transport';
 import { server as wisp } from '@mercuryworkshop/wisp-js/server';
@@ -12,12 +11,9 @@ import { normalizePath } from 'vite';
 import type { Plugin } from 'vite';
 import obfuscatorPlugin from 'vite-plugin-javascript-obfuscator';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
-
 import { version } from './package.json';
 
 wisp.options.wisp_version = 2;
-
-const iconURL = 'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64';
 
 function getDate(): string {
   try {
@@ -38,22 +34,40 @@ function WispServer(): Plugin {
   };
 }
 
-function IconBackend(): Plugin {
+export function IconBackend(): Plugin {
+  const faviconApi = 'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64';
+
   return {
     name: 'vite-icon-middleware',
     configureServer({ middlewares }) {
       middlewares.use('/api/icon', async (req: IncomingMessage, res: ServerResponse) => {
-        const urlObj = new URL(req.url ?? '', 'http://localhost');
-        const iconUrl = urlObj.searchParams.get('url');
-        if (!iconUrl) return res.end('URL parameter is required.');
-
         try {
-          const response = await fetch(`${iconURL}&url=${encodeURIComponent(iconUrl)}`);
-          if (!response.ok) return res.end('Failed to fetch favicon.');
-          const buffer = Buffer.from(await response.arrayBuffer());
-          res.setHeader('Content-Type', 'image/jpeg');
+          const urlObj = new URL(req.url ?? '', 'http://localhost');
+          const targetUrl = urlObj.searchParams.get('url');
+
+          if (!targetUrl) {
+            res.statusCode = 400;
+            res.end('URL parameter is required.');
+            return;
+          }
+
+          const response = await fetch(`${faviconApi}&url=${encodeURIComponent(targetUrl)}`);
+          if (!response.ok) {
+            res.statusCode = response.status;
+            res.end('Failed to fetch favicon.');
+            return;
+          }
+
+          const arrayBuffer = await response.arrayBuffer();
+          const buffer = Buffer.from(arrayBuffer);
+
+          const contentType = response.headers.get('content-type') || 'image/png';
+          res.setHeader('Content-Type', contentType);
+          res.setHeader('Cache-Control', 'public, max-age=3600');
+
           res.end(buffer);
-        } catch {
+        } catch (err) {
+          console.error('Icon error:', err);
           res.statusCode = 500;
           res.end('Internal server error.');
         }
