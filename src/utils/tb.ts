@@ -56,36 +56,35 @@ function addTab(url?: string): void {
   if (urlbar) urlbar.value = 'lunar://new';
 }
 
-function handleLoad(tab: Tab): void {
+async function handleLoad(tab: Tab): Promise<void> {
   try {
     const doc = tab.iframe.contentDocument;
     if (!doc) return;
+
     tab.title = doc.title?.trim() || 'New Tab';
+
     const url = new URL(tab.iframe.src);
-    const decodedUrl = decodeURIComponent(url.pathname.slice("/sj/".length));
-    fetch(iconURL + decodedUrl)
-  .then(res => {
-    if (!res.ok) throw new Error('Bad response'); // check response status here
-    return res.blob();
-  })
-  .then(blob => {
+    const decodedPath = decodeURIComponent(url.pathname.slice("/sj/".length));
+
+    const response = await fetch(iconURL + decodedPath);
+    if (!response.ok) throw new Error('Failed to fetch favicon');
+
+    const blob = await response.blob();
     const reader = new FileReader();
+
     reader.onloadend = () => {
       tab.favicon = (reader.result as string) || defaultFavicon;
       renderTabs();
     };
+
     reader.readAsDataURL(blob);
-  })
-  .catch(() => {
-    tab.favicon = defaultFavicon;
-    renderTabs();
-  });
   } catch (e) {
     tab.favicon = defaultFavicon;
     renderTabs();
-    console.error("Failed to fetch favicon for site:", e)
+    console.error("Failed to fetch favicon:", e);
   }
 }
+
 
 function setActiveTab(id: number): void {
   activeTabId = id;
