@@ -103,12 +103,10 @@ function setActiveTab(id: number): void {
     try {
       const framePath = new URL(currentSrc, window.location.origin).pathname;
       const nativeEntry = Object.entries(nativePaths).find(([, path]) => path === framePath);
-      console.log(nativeEntry[0])
-      console.log(decodeURIComponent(currentSrc.split('/sj/')[1] || ''))
       input.value = nativeEntry
         ? nativeEntry[0]
         : decodeURIComponent(currentSrc.split('/sj/')[1] || '');
-        
+
     } catch {}
   };
 
