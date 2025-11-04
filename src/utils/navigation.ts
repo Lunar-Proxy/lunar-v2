@@ -124,7 +124,6 @@ urlbar?.addEventListener('keydown', async e => {
 
   const input = (e.target as HTMLInputElement).value.trim();
   const url = scramjet.encodeUrl(await ValidateUrl(input));
-  urlbar.value = url;
   loading();
   frame.src = url;
 });
