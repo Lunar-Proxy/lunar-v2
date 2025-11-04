@@ -77,7 +77,7 @@ const staticOptions: FastifyStaticOptions = {
 };
 
 await app.register(fastifyStatic, staticOptions);
-
+// @ts-ignore i hate ts
 const { handler } = await import('./dist/server/entry.mjs');
 await app.register(fastifyMiddie);
 app.use(handler);
@@ -97,7 +97,7 @@ try {
   > = {
     u: { icon: '✅', text: 'Up to date', color: '#2ecc71' },
     n: {
-      icon: '⚠️',
+      icon: '❌',
       text: `Update available (${updateStatus.commitId})`,
       color: '#f1c40f',
       extra: chalk.hex('#95a5a6')('→ https://github.com/lunar-proxy/lunar-v2/wiki'),
