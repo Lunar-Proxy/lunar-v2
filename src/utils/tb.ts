@@ -64,7 +64,7 @@ async function handleLoad(tab: Tab): Promise<void> {
     tab.title = doc.title?.trim() || 'New Tab';
 
     const url = new URL(tab.iframe.src);
-    const decodedPath = decodeURIComponent(url.pathname.slice("/sj/".length));
+    const decodedPath = decodeURIComponent(url.pathname.slice('/sj/'.length));
 
     const response = await fetch(iconURL + decodedPath);
     if (!response.ok) throw new Error('Failed to fetch favicon');
@@ -81,10 +81,9 @@ async function handleLoad(tab: Tab): Promise<void> {
   } catch (e) {
     tab.favicon = defaultFavicon;
     renderTabs();
-    console.error("Failed to fetch favicon:", e);
+    console.error('Failed to fetch favicon:', e);
   }
 }
-
 
 function setActiveTab(id: number): void {
   activeTabId = id;
@@ -109,7 +108,6 @@ function setActiveTab(id: number): void {
       input.value = nativeEntry
         ? nativeEntry[0]
         : decodeURIComponent(currentSrc.split('/sj/')[1] || '');
-
     } catch {}
   };
 

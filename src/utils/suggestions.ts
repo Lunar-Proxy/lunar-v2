@@ -87,7 +87,12 @@ function pick(v: string) {
   bar.dispatchEvent(e);
 }
 
-function drawDrop(results: string[], lunar: [string, string][], math: string | null, query: string) {
+function drawDrop(
+  results: string[],
+  lunar: [string, string][],
+  math: string | null,
+  query: string,
+) {
   hideDrop();
   if (!bar) return;
   const max = 7;

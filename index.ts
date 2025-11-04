@@ -1,16 +1,17 @@
-import Fastify from 'fastify';
 import fastifyCompress from '@fastify/compress';
 import fastifyMiddie from '@fastify/middie';
 import fastifyStatic from '@fastify/static';
 import { logging, server as wisp } from '@mercuryworkshop/wisp-js/server';
 import chalk from 'chalk';
 import { execSync } from 'child_process';
+import Fastify from 'fastify';
 import fs from 'node:fs';
 import { createServer } from 'node:http';
 import { Socket } from 'node:net';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { updateChecker } from 'serverlib/check';
+
 import { version } from './package.json';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -74,7 +75,7 @@ await app.register(fastifyStatic, {
   preCompressed: true,
   ...staticOptions,
 });
-
+// @ts-ignore may not exist
 const { handler } = await import('./dist/server/entry.mjs');
 await app.register(fastifyMiddie);
 app.use(handler);
@@ -85,7 +86,7 @@ app.setNotFoundHandler((_, reply) => {
 });
 
 app.listen({ host: '0.0.0.0', port }, async () => {
-  const updateStatus = await updateChecker()
+  const updateStatus = updateChecker();
   const statusMap: any = {
     u: { icon: '✅', text: 'Up to date', color: '#00C896' },
     n: {
@@ -115,7 +116,7 @@ app.listen({ host: '0.0.0.0', port }, async () => {
   console.log(
     chalk.hex('#9B59B6').bold('│') +
       chalk.hex('#E74C3C').bold('               🌙 Lunar v2                      ') +
-      chalk.hex('#9B59B6').bold('│')
+      chalk.hex('#9B59B6').bold('│'),
   );
   console.log(chalk.hex('#9B59B6').bold('╰─────────────────────────────────────────────────╯'));
   console.log();
@@ -123,12 +124,12 @@ app.listen({ host: '0.0.0.0', port }, async () => {
   console.log(
     chalk.hex('#BDC3C7')('   ├─ ') +
       chalk.hex('#ECF0F1')('Version: ') +
-      chalk.hex('#E67E22').bold(`v${version}`)
+      chalk.hex('#E67E22').bold(`v${version}`),
   );
   console.log(
     chalk.hex('#BDC3C7')('   └─ ') +
       chalk.hex('#ECF0F1')('Updates: ') +
-      chalk.hex(status.color)(`${status.icon} ${status.text}`)
+      chalk.hex(status.color)(`${status.icon} ${status.text}`),
   );
   if (status.extra) console.log(status.extra);
   console.log();
@@ -137,19 +138,19 @@ app.listen({ host: '0.0.0.0', port }, async () => {
     console.log(
       chalk.hex('#BDC3C7')('   ├─ ') +
         chalk.hex('#ECF0F1')('Deployment: ') +
-        chalk.hex('#3498DB').underline(deploymentURL)
+        chalk.hex('#3498DB').underline(deploymentURL),
     );
     console.log(chalk.hex('#BDC3C7')('   └─ ') + chalk.hex('#95A5A6')('Environment: Cloud'));
   } else {
     console.log(
       chalk.hex('#BDC3C7')('   ├─ ') +
         chalk.hex('#ECF0F1')('Local: ') +
-        chalk.hex('#1ABC9C').underline(`http://localhost:${port}`)
+        chalk.hex('#1ABC9C').underline(`http://localhost:${port}`),
     );
     console.log(
       chalk.hex('#BDC3C7')('   └─ ') +
         chalk.hex('#ECF0F1')('Network: ') +
-        chalk.hex('#16A085').underline(`http://127.0.0.1:${port}`)
+        chalk.hex('#16A085').underline(`http://127.0.0.1:${port}`),
     );
   }
   console.log();
@@ -157,7 +158,7 @@ app.listen({ host: '0.0.0.0', port }, async () => {
   console.log(
     chalk.hex('#9B59B6')('│') +
       chalk.hex('#F1C40F')('    Thanks for using Lunar V2!         ') +
-      chalk.hex('#9B59B6')('│')
+      chalk.hex('#9B59B6')('│'),
   );
   console.log(chalk.hex('#9B59B6')('╰─────────────────────────────────────────────────╯'));
   console.log();

@@ -12,182 +12,155 @@ import Shortcuts from '../layouts/shortcuts.astro';
     <meta name="generator" content={Astro.generator} />
   </head>
 
-  <body
-    class="font-linux relative flex h-screen w-screen flex-col items-center justify-center text-white"
-  >
+  <body class="font-linux relative flex h-screen w-screen flex-col items-center justify-center text-white">
     <div
       id="clock"
-      class="flex items-end space-x-2 text-6xl font-bold tracking-wide select-none sm:text-7xl md:text-8xl"
-    >
+      class="flex items-end space-x-2 text-6xl font-bold tracking-wide select-none sm:text-7xl md:text-8xl">
       <span id="hours" class="font-extrabold text-white">12</span>
       <span>:</span>
       <span id="minutes" class="text-white">59</span>
       <span>:</span>
       <span id="seconds" class="text-white">48</span>
-      <span
-        id="ampm"
-        class="mb-1 text-base font-semibold text-white md:text-xl"
-        >AM</span
-      >
+      <span id="ampm" class="mb-1 text-base font-semibold text-white md:text-xl">AM</span>
     </div>
 
     <Shortcuts />
 
-    <div
-      class="fixed right-4 bottom-4 z-50 flex items-center space-x-4 text-sm"
-    >
+    <div class="fixed right-4 bottom-4 z-50 flex items-center space-x-4 text-sm">
       <a
         href="https://github.com/Lunar-Proxy/lunar-v2"
         target="_top"
-        class="font-linux font-semibold text-white/70 transition-colors duration-200 hover:text-white"
-      >
+        class="font-linux font-semibold text-white/70 transition-colors duration-200 hover:text-white">
         GitHub
       </a>
       <span class="text-white/30">|</span>
       <a
         href="https://discord.com"
         target="_top"
-        class="font-linux font-semibold text-white/70 transition-colors duration-200 hover:text-white"
-      >
+        class="font-linux font-semibold text-white/70 transition-colors duration-200 hover:text-white">
         Discord
       </a>
     </div>
 
-    <div
-      class="pointer-events-none fixed bottom-4 left-4 z-50 flex items-center space-x-2 text-sm"
-    >
-      <a
-        id="sl"
-        class="text-md font-linux cursor-default font-semibold text-white/70 transition-colors duration-200"
+    <div class="pointer-events-none fixed bottom-4 left-4 z-50 flex items-center space-x-2 text-sm">
+      <a id="sl" class="text-md font-linux cursor-default font-semibold text-white/70 transition-colors duration-200"
         >...</a
       >
-      <button
-        id="refresh"
-        class="pointer-events-auto text-white/60 transition hover:text-white focus:outline-none"
-      >
+      <button id="refresh" class="pointer-events-auto text-white/60 transition hover:text-white focus:outline-none">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="h-4 w-4"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
-          stroke-width="2"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M21 12a9 9 0 11-3-6.708M21 3v6h-6"
-          />
+          stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-3-6.708M21 3v6h-6"></path>
         </svg>
       </button>
     </div>
-
     <script>
       import ConfigAPI from '../utils/config';
 
-      const hoursEl = document.getElementById('hours');
-      const minutesEl = document.getElementById('minutes');
-      const secondsEl = document.getElementById('seconds');
-      const ampmEl = document.getElementById('ampm');
-      const serverl = document.getElementById('sl');
-      const refreshBtn = document.getElementById('refresh');
+      const hoursEl = document.getElementById('hours') as HTMLElement | null;
+      const minutesEl = document.getElementById('minutes') as HTMLElement | null;
+      const secondsEl = document.getElementById('seconds') as HTMLElement | null;
+      const ampmEl = document.getElementById('ampm') as HTMLElement | null;
+      const serverEl = document.getElementById('sl') as HTMLElement | null;
+      const refreshBtn = document.getElementById('refresh') as HTMLElement | null;
 
       function updateClock() {
         const now = new Date();
-        let h = now.getHours();
-        const m = now.getMinutes();
-        const s = now.getSeconds();
-        const ampm = h >= 12 ? 'PM' : 'AM';
-        h = h % 12 || 12;
+        let hours = now.getHours();
+        const minutes = now.getMinutes();
+        const seconds = now.getSeconds();
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12;
 
-        if (hoursEl) hoursEl.textContent = String(h).padStart(2, '0');
-        if (minutesEl) minutesEl.textContent = String(m).padStart(2, '0');
-        if (secondsEl) secondsEl.textContent = String(s).padStart(2, '0');
-        if (ampmEl) ampmEl.textContent = ampm;
+        hoursEl && (hoursEl.textContent = hours.toString().padStart(2, '0'));
+        minutesEl && (minutesEl.textContent = minutes.toString().padStart(2, '0'));
+        secondsEl && (secondsEl.textContent = seconds.toString().padStart(2, '0'));
+        ampmEl && (ampmEl.textContent = ampm);
       }
 
       setInterval(updateClock, 1000);
       updateClock();
 
-      function ping(url) {
+      interface PingResult {
+        status: 'OK' | 'Fail';
+        latency: number | 'N/A';
+      }
+
+      function ping(url: string): Promise<PingResult> {
         return new Promise(resolve => {
-          const websocket = new WebSocket(url);
+          const ws = new WebSocket(url);
           const startTime = Date.now();
 
           const cleanup = () => {
-            websocket.removeEventListener('open', onOpen);
-            websocket.removeEventListener('message', onMessage);
-            websocket.removeEventListener('error', onError);
+            ws.removeEventListener('open', onOpen);
+            ws.removeEventListener('message', onMessage);
+            ws.removeEventListener('error', onError);
           };
 
-          const onOpen = () => {
-            const latency = Date.now() - startTime;
+          const finish = (status: 'OK' | 'Fail', latency: number | 'N/A') => {
             cleanup();
-            websocket.close();
-            resolve({ status: 'OK', latency });
+            ws.close();
+            resolve({ status, latency });
           };
 
-          const onMessage = () => {
-            const latency = Date.now() - startTime;
-            cleanup();
-            websocket.close();
-            resolve({ status: 'OK', latency });
-          };
+          const onOpen = () => finish('OK', Date.now() - startTime);
+          const onMessage = () => finish('OK', Date.now() - startTime);
+          const onError = () => finish('Fail', 'N/A');
 
-          const onError = () => {
-            cleanup();
-            websocket.close();
-            resolve({ status: 'Fail', latency: 'N/A' });
-          };
+          ws.addEventListener('open', onOpen);
+          ws.addEventListener('message', onMessage);
+          ws.addEventListener('error', onError);
 
-          websocket.addEventListener('open', onOpen);
-          websocket.addEventListener('message', onMessage);
-          websocket.addEventListener('error', onError);
-
-          setTimeout(() => {
-            cleanup();
-            websocket.close();
-            resolve({ status: 'Fail', latency: 'N/A' });
-          }, 5000);
+          setTimeout(() => finish('Fail', 'N/A'), 5000);
         });
       }
 
       async function updatePing() {
-        if (serverl) {
-          serverl.textContent = 'Pinging...';
-          serverl.className =
-            'text-md font-linux cursor-default font-semibold text-white/70';
+        if (serverEl) {
+          serverEl.textContent = 'Pinging...';
+          serverEl.className = 'text-md font-linux cursor-default font-semibold text-white/70';
         }
+
         try {
-          const wsUrl = await ConfigAPI.get('wispUrl');
-          if (wsUrl && wsUrl.startsWith('ws')) {
-            const result = await ping(wsUrl);
-            if (serverl) {
-              if (result.status === 'OK') {
-                let color = 'text-green-400';
-                if (result.latency >= 100 && result.latency < 300)
-                  color = 'text-yellow-400';
-                else if (result.latency >= 300)
-                  color = 'text-red-500';
-                serverl.innerHTML = `Server latency: <span class="${color}">${result.latency} ms</span>`;
-              } else {
-                serverl.textContent = 'Ping failed';
-              }
-            }
-          } else if (serverl) {
-            serverl.textContent = 'Invalid Wisp Server URL';
+          const wsUrlRaw = await ConfigAPI.get('wispUrl');
+
+          // Ensure wsUrl is a string before using string methods
+          const wsUrl = typeof wsUrlRaw === 'string' ? wsUrlRaw : '';
+
+          if (!wsUrl.startsWith('ws') && !wsUrl.startsWith('wss')) {
+            serverEl && (serverEl.textContent = 'Invalid Wisp Server URL');
+            return;
           }
-        } catch (e) {
-          console.error('Failed to ping wisp server:', e);
-          if (serverl) serverl.textContent = 'Ping failed';
+
+          const result = await ping(wsUrl);
+
+          if (serverEl) {
+            if (result.status === 'OK') {
+              let colorClass = 'text-green-400';
+              if (typeof result.latency === 'number') {
+                if (result.latency >= 300) colorClass = 'text-red-500';
+                else if (result.latency >= 100) colorClass = 'text-yellow-400';
+              }
+              serverEl.innerHTML = `Server latency: <span class="${colorClass}">${result.latency} ms</span>`;
+            } else {
+              serverEl.textContent = 'Ping failed';
+            }
+          }
+        } catch (err) {
+          console.error('Failed to ping Wisp server:', err);
+          serverEl && (serverEl.textContent = 'Ping failed');
         }
       }
 
       refreshBtn?.addEventListener('click', () => {
         refreshBtn.classList.add('animate-spin');
-        updatePing().finally(() =>
-          setTimeout(() => refreshBtn.classList.remove('animate-spin'), 800)
-        );
+        updatePing().finally(() => {
+          setTimeout(() => refreshBtn.classList.remove('animate-spin'), 800);
+        });
       });
 
       updatePing();

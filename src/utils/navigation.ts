@@ -9,7 +9,7 @@ const back = document.getElementById('back') as HTMLButtonElement | null;
 const forward = document.getElementById('forward') as HTMLButtonElement | null;
 const urlbar = document.getElementById('urlbar') as HTMLInputElement | null;
 const favorite = document.getElementById('fav') as HTMLButtonElement | null;
-const home = document.getElementById("home")
+const home = document.getElementById('home');
 const wispUrl = await ConfigAPI.get('wispUrl');
 const nativePaths: Record<string, string> = {
   'lunar://settings': '/st',
@@ -69,10 +69,10 @@ forward?.addEventListener('click', () => {
 });
 
 home?.addEventListener('click', () => {
-   const frame = getActiveFrame();
-   if (!frame) return;
-   frame.src = "./new"
-})
+  const frame = getActiveFrame();
+  if (!frame) return;
+  frame.src = './new';
+});
 
 favorite?.addEventListener('click', async () => {
   if (!urlbar) return;
