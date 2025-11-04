@@ -8,9 +8,9 @@ export function updateChecker() {
     if (status.includes('Your branch is up to date with')) return { status: 'u', commitId };
     if (status.includes('Your branch is behind')) return { status: 'n', commitId };
 
-    return { status: '-', commitId };
+    return { status: '?????', commitId };
   } catch {
     console.error('[ERROR] To see if lunar is updated, please install git.');
-    return { status: '-', commitId: 'Unknown' };
+    return { status: '-', commitId: 'unknown' };
   }
 }

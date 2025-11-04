@@ -1,18 +1,20 @@
+import Fastify from 'fastify';
 import fastifyCompress from '@fastify/compress';
 import fastifyMiddie from '@fastify/middie';
 import fastifyStatic from '@fastify/static';
+import type { FastifyStaticOptions, SetHeadersResponse } from '@fastify/static';
 import { logging, server as wisp } from '@mercuryworkshop/wisp-js/server';
 import chalk from 'chalk';
-import { execSync } from 'child_process';
-import Fastify from 'fastify';
+import { execSync } from 'node:child_process';
 import fs from 'node:fs';
 import { createServer } from 'node:http';
 import { Socket } from 'node:net';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { Stats } from 'node:fs';
 import { updateChecker } from 'serverlib/check';
-
-import { version } from './package.json';
+import { findProvider } from 'serverlib/provider';
+import { version } from './package.json' assert { type: 'json' };
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const port = Number(process.env.PORT) || 6969;
@@ -27,15 +29,15 @@ Object.assign(wisp.options, {
 
 async function buildCode() {
   if (!fs.existsSync('dist')) {
-    console.log(chalk.hex('#FF6B35')('🚀 Building Lunar...'));
+    console.log(chalk.hex('#f39c12')('🚀 Building Lunar...'));
     try {
       execSync('npm run build', { stdio: 'inherit' });
-      console.log(chalk.hex('#00C896')('✅ Build completed successfully!'));
+      console.log(chalk.hex('#2ecc71')('✅ Build completed successfully!'));
     } catch (error) {
       throw new Error(`Build failed: ${error instanceof Error ? error.message : String(error)}`);
     }
   } else {
-    console.log(chalk.hex('#4ECDC4')('📦 Lunar is already built, skipping...'));
+    console.log(chalk.hex('#3498db')('📦 Lunar is already built, skipping...'));
   }
 }
 
@@ -54,112 +56,116 @@ await app.register(fastifyCompress, {
 
 await buildCode();
 
-const staticOptions = {
+const staticOptions: FastifyStaticOptions = {
   maxAge: 31536000000,
   etag: true,
   lastModified: true,
   redirect: false,
-  setHeaders(res: any, filePath: string) {
-    if (/\.(js|css|jpg|jpeg|png|gif|ico|svg|webp|avif)$/.test(filePath))
-      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-    else res.setHeader('Cache-Control', 'public, max-age=604800');
+  preCompressed: true,
+  setHeaders(res: SetHeadersResponse, filePath: string, _stat: Stats) {
+    const cacheLong = /\.(js|css|jpg|jpeg|png|gif|ico|svg|webp|avif)$/i.test(filePath);
+    res.setHeader(
+      'Cache-Control',
+      cacheLong ? 'public, max-age=31536000, immutable' : 'public, max-age=604800'
+    );
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'SAMEORIGIN');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
     res.setHeader('X-XSS-Protection', '1; mode=block');
   },
+  root: path.join(__dirname, 'dist', 'client'),
 };
 
-await app.register(fastifyStatic, {
-  root: path.join(__dirname, 'dist', 'client'),
-  preCompressed: true,
-  ...staticOptions,
-});
-// @ts-ignore may not exist
+await app.register(fastifyStatic, staticOptions);
+
 const { handler } = await import('./dist/server/entry.mjs');
 await app.register(fastifyMiddie);
 app.use(handler);
 
 app.setNotFoundHandler((_, reply) => {
-  const notFound = fs.existsSync('404') ? fs.readFileSync('404') : '404 Not Found';
+  const notFound = fs.existsSync('404') ? fs.readFileSync('404', 'utf8') : '404 Not Found';
   reply.type('text/plain').send(notFound);
 });
-
-app.listen({ host: '0.0.0.0', port }, async () => {
+try {
+  await app.listen({ host: '0.0.0.0', port });
   const updateStatus = updateChecker();
-  const statusMap: any = {
-    u: { icon: '✅', text: 'Up to date', color: '#00C896' },
+
+  type StatusKey = 'u' | 'n' | 'f';
+  const statusMap: Record<
+    StatusKey,
+    { icon: string; text: string; color: string; extra?: string }
+  > = {
+    u: { icon: '✅', text: 'Up to date', color: '#2ecc71' },
     n: {
-      icon: '🔄',
+      icon: '⚠️',
       text: `Update available (${updateStatus.commitId})`,
-      color: '#F39C12',
-      extra: chalk.hex('#95A5A6')('   → https://github.com/lunar-proxy/lunar-v2/wiki'),
+      color: '#f1c40f',
+      extra: chalk.hex('#95a5a6')('→ https://github.com/lunar-proxy/lunar-v2/wiki'),
     },
-    f: { icon: '❌', text: 'Update check failed', color: '#E74C3C' },
+    f: { icon: '❌', text: 'Failed to check for updates', color: '#e74c3c' },
   };
-  const status = statusMap[updateStatus.status] || statusMap.f;
-  const deploymentURL =
-    process.env.RENDER_EXTERNAL_URL ||
-    (process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`) ||
-    (process.env.RAILWAY_STATIC_URL && `https://${process.env.RAILWAY_STATIC_URL}`) ||
-    (process.env.FLY_APP_NAME && `https://${process.env.FLY_APP_NAME}.fly.dev`) ||
-    (process.env.CODESPACES &&
-      `https://${process.env.CODESPACE_NAME}-${port}.${process.env.GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN}`) ||
-    (process.env.GITPOD_WORKSPACE_URL &&
-      process.env.GITPOD_WORKSPACE_URL.replace('https://', `https://${port}-`)) ||
-    (process.env.REPL_ID && `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co`) ||
-    (process.env.KOYEB_APP_NAME && `https://${process.env.KOYEB_APP_NAME}.koyeb.app`) ||
-    (process.env.GLITCH_PROJECT_ID && `https://${process.env.PROJECT_DOMAIN}.glitch.me`) ||
-    (process.env.HEROKU_APP_NAME && `https://${process.env.HEROKU_APP_NAME}.herokuapp.com`) ||
-    (process.env.NETLIFY_DEV === 'true' && process.env.SITE_URL);
-  console.log(chalk.hex('#9B59B6').bold('╭─────────────────────────────────────────────────╮'));
-  console.log(
-    chalk.hex('#9B59B6').bold('│') +
-      chalk.hex('#E74C3C').bold('               🌙 Lunar v2                      ') +
-      chalk.hex('#9B59B6').bold('│'),
-  );
-  console.log(chalk.hex('#9B59B6').bold('╰─────────────────────────────────────────────────╯'));
+
+  const status = statusMap[(updateStatus.status as StatusKey) || 'f'];
+  const deploymentURL = findProvider(port);
+
   console.log();
-  console.log(chalk.hex('#3498DB')('📊 Status Information:'));
+  console.log(chalk.hex('#8e44ad').bold('╭────────────────────────────────────────────╮'));
   console.log(
-    chalk.hex('#BDC3C7')('   ├─ ') +
-      chalk.hex('#ECF0F1')('Version: ') +
-      chalk.hex('#E67E22').bold(`v${version}`),
+    chalk.hex('#8e44ad').bold('│ ') +
+      chalk.hex('#f39c12').bold('🌙 Lunar v2 Server Started') +
+      '                │'
   );
-  console.log(
-    chalk.hex('#BDC3C7')('   └─ ') +
-      chalk.hex('#ECF0F1')('Updates: ') +
-      chalk.hex(status.color)(`${status.icon} ${status.text}`),
-  );
-  if (status.extra) console.log(status.extra);
+  console.log(chalk.hex('#8e44ad').bold('╰────────────────────────────────────────────╯'));
   console.log();
-  console.log(chalk.hex('#2ECC71')('🌐 Deployment Methods:'));
+
+  console.log(chalk.hex('#00cec9')('Information:'));
+  console.log(
+    chalk.hex('#bdc3c7')('   ├─ ') +
+      chalk.hex('#ecf0f1')('Version: ') +
+      chalk.hex('#f39c12')(`v${version}`)
+  );
+  console.log(
+    chalk.hex('#bdc3c7')('   └─ ') +
+      chalk.hex('#ecf0f1')('Up to date: ') +
+      chalk.hex(status.color)(`${status.icon} ${status.text}`)
+  );
+  if (status.extra) console.log('       ' + status.extra);
+  console.log();
+
+  console.log(chalk.hex('#00b894')('🌐 Access Information:'));
   if (deploymentURL) {
     console.log(
-      chalk.hex('#BDC3C7')('   ├─ ') +
-        chalk.hex('#ECF0F1')('Deployment: ') +
-        chalk.hex('#3498DB').underline(deploymentURL),
+      chalk.hex('#bdc3c7')('   ├─ ') +
+        chalk.hex('#ecf0f1')('Deployment URL: ') +
+        chalk.hex('#0984e3').underline(deploymentURL)
     );
-    console.log(chalk.hex('#BDC3C7')('   └─ ') + chalk.hex('#95A5A6')('Environment: Cloud'));
+    console.log(
+      chalk.hex('#bdc3c7')('   └─ ') +
+        chalk.hex('#ecf0f1')('Hosting Method: ') +
+        chalk.hex('#95a5a6')('Cloud Hosting ☁️')
+    );
   } else {
     console.log(
-      chalk.hex('#BDC3C7')('   ├─ ') +
-        chalk.hex('#ECF0F1')('Local: ') +
-        chalk.hex('#1ABC9C').underline(`http://localhost:${port}`),
+      chalk.hex('#bdc3c7')('   ├─ ') +
+        chalk.hex('#ecf0f1')('Local: ') +
+        chalk.hex('#00cec9').underline(`http://localhost:${port}`)
     );
     console.log(
-      chalk.hex('#BDC3C7')('   └─ ') +
-        chalk.hex('#ECF0F1')('Network: ') +
-        chalk.hex('#16A085').underline(`http://127.0.0.1:${port}`),
+      chalk.hex('#bdc3c7')('   ├─ ') +
+        chalk.hex('#ecf0f1')('Network: ') +
+        chalk.hex('#00cec9').underline(`http://127.0.0.1:${port}`)
+    );
+    console.log(
+      chalk.hex('#bdc3c7')('   └─ ') +
+        chalk.hex('#ecf0f1')('Hosting Method: ') +
+        chalk.hex('#95a5a6')('Self Hosting 💻')
     );
   }
+
   console.log();
-  console.log(chalk.hex('#9B59B6')('╭─────────────────────────────────────────────────╮'));
-  console.log(
-    chalk.hex('#9B59B6')('│') +
-      chalk.hex('#F1C40F')('    Thanks for using Lunar V2!         ') +
-      chalk.hex('#9B59B6')('│'),
-  );
-  console.log(chalk.hex('#9B59B6')('╰─────────────────────────────────────────────────╯'));
+  console.log(chalk.hex('#8e44ad').bold('──────────────────────────────────────────────'));
   console.log();
-});
+} catch (err) {
+  console.error(chalk.red('Failed to start server:'), err);
+  process.exit(1);
+}
