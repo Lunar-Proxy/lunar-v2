@@ -27,8 +27,8 @@ importers:
         specifier: ^2.1.7
         version: 2.1.7
       '@mercuryworkshop/libcurl-transport':
-        specifier: ^1.5.0
-        version: 1.5.0
+        specifier: ^1.5.1
+        version: 1.5.1
       '@mercuryworkshop/wisp-js':
         specifier: ^0.4.0
         version: 0.4.0
@@ -697,8 +697,8 @@ packages:
   '@mercuryworkshop/bare-mux@2.1.7':
     resolution: {integrity: sha512-BUamyc7jsIFbWQVVWjVjaD+Wot77EPwolkrbP3UuIs6QeHR1RY52+IR2fq3GkRAbOOrAZNT7EgZSsupkh1NowQ==}
 
-  '@mercuryworkshop/libcurl-transport@1.5.0':
-    resolution: {integrity: sha512-FV3fFjJYoojmkolMESmZnWosz/tQ9AbVQurt6gcJX69BTvAXzjWf6ganpaeSvilQXVK59PDWyYT3gE0aShd12A==}
+  '@mercuryworkshop/libcurl-transport@1.5.1':
+    resolution: {integrity: sha512-tNyH1HuQIJRQ2sBVeFmHcIPf15Mv5v6Zq/qrOp3ReE5oBswT13MKLSybzu2VbVRo/QNud18nbKvVz3JeSre79g==}
 
   '@mercuryworkshop/wisp-js@0.4.0':
     resolution: {integrity: sha512-rtUSxW8krWS5RGtcFomnoQl/9nrsDnUh7duPcJeQtIqnt5txB7AZJEa6N87CD7UXJzCZVijr1mUHwZy0kHJ+fQ==}
@@ -1946,8 +1946,8 @@ packages:
     resolution: {integrity: sha512-0OO4y2iOHix2W6ujICbKIaEQXvFQHue65vUG3pb5EUomzPI90z9hsA1VsO/dbIIpC53J8gxM9Q4Oho0jrCM/yA==}
     engines: {node: '>= 0.8.0'}
 
-  libcurl.js@0.7.1:
-    resolution: {integrity: sha512-0wZSgCj0wqc3n/W8Lrsagm5E5FXEj41hvQF6bp5o4m3kutxAV2XRHuhudvVOwKxMJqRb4VlHxuUhQvkFAVUwQw==}
+  libcurl.js@0.7.3:
+    resolution: {integrity: sha512-svlEs42mmKocPKVsl+EViVPb/DuNRUecO+Fs7I3LOmu6YHfoBAfhTSmyCRg57H7QEFHgafZOf/TkA24s/i2AKg==}
 
   libphonenumber-js@1.12.12:
     resolution: {integrity: sha512-aWVR6xXYYRvnK0v/uIwkf5Lthq9Jpn0N8TISW/oDTWlYB2sOimuiLn9Q26aUw4KxkJoiT8ACdiw44Y8VwKFIfQ==}
@@ -3934,9 +3934,9 @@ snapshots:
 
   '@mercuryworkshop/bare-mux@2.1.7': {}
 
-  '@mercuryworkshop/libcurl-transport@1.5.0':
+  '@mercuryworkshop/libcurl-transport@1.5.1':
     dependencies:
-      libcurl.js: 0.7.1
+      libcurl.js: 0.7.3
 
   '@mercuryworkshop/wisp-js@0.4.0':
     dependencies:
@@ -5350,7 +5350,7 @@ snapshots:
       prelude-ls: 1.1.2
       type-check: 0.3.2
 
-  libcurl.js@0.7.1: {}
+  libcurl.js@0.7.3: {}
 
   libphonenumber-js@1.12.12: {}
 
