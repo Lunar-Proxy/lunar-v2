@@ -1,5 +1,4 @@
 import node from '@astrojs/node';
-
 import { baremuxPath } from '@mercuryworkshop/bare-mux/node';
 import { libcurlPath } from '@mercuryworkshop/libcurl-transport';
 import { server as wisp } from '@mercuryworkshop/wisp-js/server';
@@ -12,7 +11,6 @@ import { normalizePath } from 'vite';
 import type { Plugin } from 'vite';
 import obfuscatorPlugin from 'vite-plugin-javascript-obfuscator';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
-
 import { version } from './package.json';
 
 wisp.options.wisp_version = 2;
@@ -157,7 +155,10 @@ export default defineConfig({
     build: {
       minify: 'esbuild',
     },
-    optimizeDeps: { include: ['lucide'] },
+    optimizeDeps: {
+      include: ['lucide'],
+      exclude: [],
+    },
     define: {
       VERSION: JSON.stringify(version),
       UPDATE_DATE: JSON.stringify(getDate()),
@@ -204,7 +205,8 @@ export default defineConfig({
       }) as any,
     ],
     server: {
-      allowedHosts: ['localhost', '.trycloudflare.com', '.github.dev', '.bearcat.rocks'],
+      host: true,
+      allowedHosts: true,
     },
   },
 });

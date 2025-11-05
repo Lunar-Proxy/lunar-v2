@@ -127,8 +127,6 @@ import Shortcuts from '../layouts/shortcuts.astro';
 
         try {
           const wsUrlRaw = await ConfigAPI.get('wispUrl');
-
-          // Ensure wsUrl is a string before using string methods
           const wsUrl = typeof wsUrlRaw === 'string' ? wsUrlRaw : '';
 
           if (!wsUrl.startsWith('ws') && !wsUrl.startsWith('wss')) {

@@ -12,6 +12,7 @@ import { Socket } from 'node:net';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Stats } from 'node:fs';
+import { constants } from 'node:zlib';
 import { updateChecker } from 'serverlib/check';
 import { findProvider } from 'serverlib/provider';
 import { version } from './package.json' assert { type: 'json' };
@@ -45,23 +46,33 @@ const app = Fastify({
   logger: false,
   serverFactory: handler =>
     createServer(handler).on('upgrade', (req, socket: Socket, head) => {
+      socket.setMaxListeners(20); // it tells me i need to???
       wisp.routeRequest(req, socket, head);
     }),
 });
 
+await buildCode();
 await app.register(fastifyCompress, {
   global: true,
   encodings: ['gzip', 'deflate', 'br'],
+  threshold: 1024,
+  brotliOptions: {
+    params: {
+      [constants.BROTLI_PARAM_MODE]: constants.BROTLI_MODE_TEXT,
+      [constants.BROTLI_PARAM_QUALITY]: 4,
+    },
+  },
+  zlibOptions: {
+    level: 6,
+  },
 });
-
-await buildCode();
 
 const staticOptions: FastifyStaticOptions = {
   maxAge: 31536000000,
   etag: true,
   lastModified: true,
   redirect: false,
-  preCompressed: true,
+  preCompressed: false,
   setHeaders(res: SetHeadersResponse, filePath: string, _stat: Stats) {
     const cacheLong = /\.(js|css|jpg|jpeg|png|gif|ico|svg|webp|avif)$/i.test(filePath);
     res.setHeader(
@@ -77,15 +88,17 @@ const staticOptions: FastifyStaticOptions = {
 };
 
 await app.register(fastifyStatic, staticOptions);
+await app.register(fastifyMiddie);
+
 // @ts-ignore i hate ts
 const { handler } = await import('./dist/server/entry.mjs');
-await app.register(fastifyMiddie);
 app.use(handler);
 
 app.setNotFoundHandler((_, reply) => {
   const notFound = fs.existsSync('404') ? fs.readFileSync('404', 'utf8') : '404 Not Found';
   reply.type('text/plain').send(notFound);
 });
+
 try {
   await app.listen({ host: '0.0.0.0', port });
   const updateStatus = updateChecker();
