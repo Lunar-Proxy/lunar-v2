@@ -30,20 +30,20 @@ import Shortcuts from '../layouts/shortcuts.astro';
       <a
         href="https://github.com/Lunar-Proxy/lunar-v2"
         target="_top"
-        class="font-linux font-semibold text-white/70 transition-colors duration-200 hover:text-white">
-        GitHub
+        class="font-medium text-white/70 transition-colors duration-200 hover:text-white">
+        Github
       </a>
       <span class="text-white/30">|</span>
       <a
         href="https://discord.com"
         target="_top"
-        class="font-linux font-semibold text-white/70 transition-colors duration-200 hover:text-white">
+        class="font-medium text-white/70 transition-colors duration-200 hover:text-white">
         Discord
       </a>
     </div>
 
     <div class="pointer-events-none fixed bottom-4 left-4 z-50 flex items-center space-x-2 text-sm">
-      <a id="sl" class="text-md font-linux cursor-default font-semibold text-white/70 transition-colors duration-200"
+      <a id="sl" class="text-md cursor-default font-medium text-white/70 transition-colors duration-200"
         >...</a
       >
       <button id="refresh" class="pointer-events-auto text-white/60 transition hover:text-white focus:outline-none">
@@ -122,7 +122,7 @@ import Shortcuts from '../layouts/shortcuts.astro';
       async function updatePing() {
         if (serverEl) {
           serverEl.textContent = 'Pinging...';
-          serverEl.className = 'text-md font-linux cursor-default font-semibold text-white/70';
+          serverEl.className = 'text-md cursor-default font-medium text-white/70';
         }
 
         try {
@@ -143,7 +143,7 @@ import Shortcuts from '../layouts/shortcuts.astro';
                 if (result.latency >= 300) colorClass = 'text-red-500';
                 else if (result.latency >= 100) colorClass = 'text-yellow-400';
               }
-              serverEl.innerHTML = `Server latency: <span class="${colorClass}">${result.latency} ms</span>`;
+              serverEl.innerHTML = `Server latency: <span class="${colorClass} ml-1">${result.latency} ms</span>`;
             } else {
               serverEl.textContent = 'Ping failed';
             }
