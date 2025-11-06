@@ -12,6 +12,7 @@ import { normalizePath } from 'vite';
 import type { Plugin } from 'vite';
 import obfuscatorPlugin from 'vite-plugin-javascript-obfuscator';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
+
 import { version } from './package.json';
 
 wisp.options.wisp_version = 2;
