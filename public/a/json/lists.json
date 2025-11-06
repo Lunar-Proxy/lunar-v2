@@ -3,61 +3,61 @@
     {
       "name": "Parking Fury",
       "desc": "Together we are... Parking Fury.",
-      "icon": "/a/images/ga/parkingfury.webp",
+      "icon": "/a/images/ga/pf.webp",
       "url": "https://www.coolmathgames.com/0-parking-fury/play"
     },
     {
       "name": "Parking Fury 2",
       "desc": "Together we are... Parking Fury 2.",
-      "icon": "/a/images/ga/parkingfury2.webp",
+      "icon": "/a/images/ga/pf2.webp",
       "url": "https://www.coolmathgames.com/0-parking-fury-2/play"
     },
     {
       "name": "Parking Fury 3",
       "desc": "Together we are... Parking Fury 3.",
-      "icon": "/a/images/ga/parkingfury2.webp",
+      "icon": "/a/images/ga/pf3.webp",
       "url": "https://www.coolmathgames.com/0-parking-fury-3/play"
     },
     {
       "name": "Run 3",
       "desc": "Run through space tunnels in this endless runner.",
-      "icon": "/a/images/ga/run3.webp",
+      "icon": "/a/images/ga/r3.webp",
       "url": "https://www.coolmathgames.com/0-run-3/play"
     },
     {
       "name": "Moto X3M",
       "desc": "Experience thrilling bike stunts and challenges.",
-      "icon": "/a/images/ga/motox3m.webp",
+      "icon": "/a/images/ga/mx3m.webp",
       "url": "https://www.coolmathgames.com/0-moto-x3m/play"
     },
     {
       "name": "Fireboy and Watergirl",
       "desc": "Control Fireboy and Watergirl to solve puzzles together.",
-      "icon": "/a/images/ga/fireboywatergirl.webp",
+      "icon": "/a/images/ga/fbwg.webp",
       "url": "https://www.coolmathgames.com/sites/default/files/public_games/40034"
     },
     {
       "name": "Papa's Pizzeria",
       "desc": "Manage your own pizzeria and serve delicious pizzas.",
-      "icon": "/a/images/ga/papaspizzeria.webp",
+      "icon": "/a/images/ga/pp.webp",
       "url": "https://www.coolmathgames.com/0-papas-pizzeria/play"
     },
     {
       "name": "Papa's Freezeria",
       "desc": "Run your own ice cream shop and create tasty treats.",
-      "icon": "/a/images/ga/papasfreezeria.webp",
+      "icon": "/a/images/ga/ppf.webp",
       "url": "https://www.coolmathgames.com/0-papas-freezeria/play"
     },
     {
       "name": "Slice Master",
       "desc": "Test your slicing skills in this fun arcade game.",
-      "icon": "/a/images/ga/slicemaster.webp",
+      "icon": "/a/images/ga/sm.webp",
       "url": "https://www.coolmathgames.com/0-slice-master/play"
     },
     {
       "name": "Tiny Fishing",
       "desc": "Catch fish and upgrade your gear in Tiny Fishing.",
-      "icon": "/a/images/ga/tinyfishing.webp",
+      "icon": "/a/images/ga/tf.webp",
       "url": "https://www.coolmathgames.com/0-tiny-fishing/play"
     },
     {
@@ -97,9 +97,9 @@
       "url": "https://reunbozdo.github.io/"
     },
     {
-      "name": "FNAF",
+      "name": "FNF",
       "desc": "Friday Night Funkin' browser rhythm game.",
-      "icon": "/a/images/ga/fnaf.webp",
+      "icon": "/a/images/ga/fnf.webp",
       "url": "https://fnf.kdata1.com/2024/fnf/5201/"
     },
     {
@@ -173,12 +173,6 @@
       "desc": "Slash fruit with your mouse!",
       "icon": "/a/images/fn.jpg",
       "url": "http://huningxin.github.io/spp.js/examples/fruitNinja/"
-    },
-    {
-      "name": "CraftMine",
-      "desc": "Minecraft-like game in a browser gadget.",
-      "icon": "/a/images/cm.jpg",
-      "url": "https://images-opensocial.googleusercontent.com/gadgets/ifr?url=https://cdn.jsdelivr.net/gh/bobydob/JSEngine@bdd7d45deaeaa50131e1913f2f0598cf147f8c56/build/crmine/crmi.xml&container=ig"
     },
     {
       "name": "DriftBoss",
