@@ -31,7 +31,7 @@ import Shortcuts from '../layouts/shortcuts.astro';
         href="https://github.com/Lunar-Proxy/lunar-v2"
         target="_top"
         class="font-medium text-white/70 transition-colors duration-200 hover:text-white">
-        Github
+        GitHub
       </a>
       <span class="text-white/30">|</span>
       <a
@@ -58,110 +58,6 @@ import Shortcuts from '../layouts/shortcuts.astro';
         </svg>
       </button>
     </div>
-    <script>
-      import ConfigAPI from '../utils/config';
-
-      const hoursEl = document.getElementById('hours') as HTMLElement | null;
-      const minutesEl = document.getElementById('minutes') as HTMLElement | null;
-      const secondsEl = document.getElementById('seconds') as HTMLElement | null;
-      const ampmEl = document.getElementById('ampm') as HTMLElement | null;
-      const serverEl = document.getElementById('sl') as HTMLElement | null;
-      const refreshBtn = document.getElementById('refresh') as HTMLElement | null;
-
-      function updateClock() {
-        const now = new Date();
-        let hours = now.getHours();
-        const minutes = now.getMinutes();
-        const seconds = now.getSeconds();
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        hours = hours % 12 || 12;
-
-        hoursEl && (hoursEl.textContent = hours.toString().padStart(2, '0'));
-        minutesEl && (minutesEl.textContent = minutes.toString().padStart(2, '0'));
-        secondsEl && (secondsEl.textContent = seconds.toString().padStart(2, '0'));
-        ampmEl && (ampmEl.textContent = ampm);
-      }
-
-      setInterval(updateClock, 1000);
-      updateClock();
-
-      interface PingResult {
-        status: 'OK' | 'Fail';
-        latency: number | 'N/A';
-      }
-
-      function ping(url: string): Promise<PingResult> {
-        return new Promise(resolve => {
-          const ws = new WebSocket(url);
-          const startTime = Date.now();
-
-          const cleanup = () => {
-            ws.removeEventListener('open', onOpen);
-            ws.removeEventListener('message', onMessage);
-            ws.removeEventListener('error', onError);
-          };
-
-          const finish = (status: 'OK' | 'Fail', latency: number | 'N/A') => {
-            cleanup();
-            ws.close();
-            resolve({ status, latency });
-          };
-
-          const onOpen = () => finish('OK', Date.now() - startTime);
-          const onMessage = () => finish('OK', Date.now() - startTime);
-          const onError = () => finish('Fail', 'N/A');
-
-          ws.addEventListener('open', onOpen);
-          ws.addEventListener('message', onMessage);
-          ws.addEventListener('error', onError);
-
-          setTimeout(() => finish('Fail', 'N/A'), 5000);
-        });
-      }
-
-      async function updatePing() {
-        if (serverEl) {
-          serverEl.textContent = 'Pinging...';
-          serverEl.className = 'text-md cursor-default font-medium text-white/70';
-        }
-
-        try {
-          const wsUrlRaw = await ConfigAPI.get('wispUrl');
-          const wsUrl = typeof wsUrlRaw === 'string' ? wsUrlRaw : '';
-
-          if (!wsUrl.startsWith('ws') && !wsUrl.startsWith('wss')) {
-            serverEl && (serverEl.textContent = 'Invalid Wisp Server URL');
-            return;
-          }
-
-          const result = await ping(wsUrl);
-
-          if (serverEl) {
-            if (result.status === 'OK') {
-              let colorClass = 'text-green-400';
-              if (typeof result.latency === 'number') {
-                if (result.latency >= 300) colorClass = 'text-red-500';
-                else if (result.latency >= 100) colorClass = 'text-yellow-400';
-              }
-              serverEl.innerHTML = `Server latency: <span class="${colorClass} ml-1">${result.latency} ms</span>`;
-            } else {
-              serverEl.textContent = 'Ping failed';
-            }
-          }
-        } catch (err) {
-          console.error('Failed to ping Wisp server:', err);
-          serverEl && (serverEl.textContent = 'Ping failed');
-        }
-      }
-
-      refreshBtn?.addEventListener('click', () => {
-        refreshBtn.classList.add('animate-spin');
-        updatePing().finally(() => {
-          setTimeout(() => refreshBtn.classList.remove('animate-spin'), 800);
-        });
-      });
-
-      updatePing();
-    </script>
+    <script src="@scripts/new"></script>
   </body>
 </html>
