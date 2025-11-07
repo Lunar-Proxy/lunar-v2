@@ -52,32 +52,32 @@ const { list = [] }: { list?: Game[] } = Astro.props;
         }
       }
 
+      @keyframes pulse {
+        0%, 100% { opacity: 0.8; }
+        50% { opacity: 1; }
+      }
+
+      @keyframes shine {
+        0% { transform: translateX(-100%) rotate(25deg); }
+        100% { transform: translateX(100%) rotate(25deg); }
+      }
+
       .card-glow {
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       .card-glow:hover {
         box-shadow:
-          0 8px 24px rgba(161, 158, 179, 0.2),
-          0 16px 48px rgba(161, 158, 179, 0.15),
-          0 32px 80px rgba(161, 158, 179, 0.1);
-        transform: scale(1.03) translateY(-3px);
+          0 8px 24px rgba(99, 102, 241, 0.2),
+          0 16px 48px rgba(99, 102, 241, 0.15),
+          0 32px 80px rgba(99, 102, 241, 0.1);
+        transform: scale(1.03) translateY(-5px);
       }
 
       .card-loading {
         background: linear-gradient(135deg, var(--background-overlay), var(--background));
         animation: pulse 1.5s infinite ease-in-out;
         filter: blur(8px);
-      }
-
-      @keyframes pulse {
-        0%,
-        100% {
-          opacity: 0.8;
-        }
-        50% {
-          opacity: 1;
-        }
       }
 
       .shine::before {
@@ -87,178 +87,134 @@ const { list = [] }: { list?: Game[] } = Astro.props;
         left: -100%;
         width: 200%;
         height: 200%;
-        background: linear-gradient(120deg, transparent, rgba(224, 222, 244, 0.08), transparent);
+        background: linear-gradient(120deg, transparent, rgba(99, 102, 241, 0.08), transparent);
         animation: shine 2.5s infinite;
         pointer-events: none;
         z-index: 1;
       }
 
-      @keyframes shine {
-        0% {
-          transform: translateX(-100%) rotate(25deg);
-        }
-        100% {
-          transform: translateX(100%) rotate(25deg);
-        }
+      .gradient-text {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
       }
     </style>
-
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        const cards = document.querySelectorAll('.card');
-        cards.forEach(card => {
-          if (!(card instanceof HTMLElement)) return;
-
-          const img = new Image();
-          const bg = card.dataset.bg;
-          if (!bg) return;
-
-          img.src = bg;
-          img.onload = () => {
-            card.classList.remove('card-loading', 'shine');
-            const bgDiv = card.querySelector('.absolute.inset-0.z-0') as HTMLElement;
-            if (bgDiv) {
-              bgDiv.style.backgroundImage = `url('${img.src}')`;
-            }
-          };
-        });
-
-        const gridView = document.querySelector('[data-view="grid"]');
-        const listView = document.querySelector('[data-view="list"]');
-        const container = document.querySelector('[data-container]');
-
-        gridView?.addEventListener('click', () => {
-          container?.classList.remove('flex', 'flex-col', 'space-y-6');
-          container?.classList.add(
-            'grid',
-            'grid-cols-1',
-            'sm:grid-cols-2',
-            'md:grid-cols-3',
-            'lg:grid-cols-4',
-            'gap-8'
-          );
-          gridView.classList.add('bg-text-secondary/20', 'text-text-header');
-          listView?.classList.remove('bg-text-secondary/20', 'text-text-header');
-        });
-
-        listView?.addEventListener('click', () => {
-          container?.classList.remove(
-            'grid',
-            'grid-cols-1',
-            'sm:grid-cols-2',
-            'md:grid-cols-3',
-            'lg:grid-cols-4',
-            'gap-8'
-          );
-          container?.classList.add('flex', 'flex-col', 'space-y-8');
-          listView.classList.add('bg-text-secondary/20', 'text-text-header');
-          gridView?.classList.remove('bg-text-secondary/20', 'text-text-header');
-        });
-
-        const searchInput = document.querySelector('[data-input]') as HTMLInputElement;
-        const randomBtn = document.querySelector('[data-random]');
-
-        searchInput?.addEventListener('input', e => {
-          const query = (e.target as HTMLInputElement).value.toLowerCase();
-          cards.forEach(card => {
-            const name = card.querySelector('h2')?.textContent?.toLowerCase() || '';
-            const desc = card.querySelector('p')?.textContent?.toLowerCase() || '';
-
-            if (name.includes(query) || desc.includes(query)) {
-              (card as HTMLElement).style.display = 'block';
-            } else {
-              (card as HTMLElement).style.display = query ? 'none' : 'block';
-            }
-          });
-        });
-
-        randomBtn?.addEventListener('click', () => {
-          const visibleCards = Array.from(cards).filter(
-            card => card instanceof HTMLElement && card.style.display !== 'none'
-          );
-          if (visibleCards.length > 0) {
-            const randomCard = visibleCards[Math.floor(Math.random() * visibleCards.length)] as HTMLElement;
-            randomCard.click();
-          }
-        });
-      });
-    </script>
   </head>
 
-  <body class="font-linux bg-background text-text-header min-h-screen overflow-x-hidden p-6">
-    <div class="mx-auto mb-8 flex max-w-7xl items-center justify-between backdrop-blur-sm">
-      <div class="flex items-center gap-4">
-        <div class="relative">
-          <i data-lucide="search" class="text-text-secondary/60 absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2"></i>
-          <input
-            type="text"
-            data-input="search"
-            placeholder="Search..."
-            class="border-border-default/30 bg-background-overlay/40 text-text-header placeholder-text-secondary/50 focus:ring-text-secondary/30 h-12 w-80 rounded-xl border pr-4 pl-12 text-sm shadow-lg backdrop-blur-sm transition-all duration-200 focus:ring-2 focus:outline-none"
-          />
-        </div>
+  <body class="min-h-screen overflow-x-hidden bg-background font-linux text-text-header">
+    <div class="mx-auto max-w-7xl p-6">
 
-        <button
-          data-random="random"
-          class="border-border-default/30 bg-background-overlay/80 flex h-12 w-12 items-center justify-center rounded-xl border shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-105 hover:shadow-xl">
-          <i
-            data-lucide="shuffle"
-            class="text-text-secondary group-hover:text-text-header h-5 w-5 transition-colors duration-200"></i>
-        </button>
-      </div>
-
-      <div
-        class="border-border-default/30 bg-background-overlay/60 flex gap-2 rounded-xl border p-1 shadow-lg backdrop-blur-sm">
-        <button
-          data-view="grid"
-          class="bg-text-secondary/20 text-text-header hover:bg-text-secondary/30 flex h-10 w-10 items-center justify-center rounded-lg transition-all duration-200">
-          <i data-lucide="grid-3x3" class="h-5 w-5"></i>
-        </button>
-        <button
-          data-view="list"
-          class="text-text-secondary hover:bg-text-secondary/20 hover:text-text-header flex h-10 w-10 items-center justify-center rounded-lg transition-all duration-200">
-          <i data-lucide="list" class="h-5 w-5"></i>
-        </button>
-      </div>
-    </div>
-    <div data-container class="mx-auto grid max-w-7xl grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      {
-        list.map((game, i) => (
-          <a
-            data-href={game.url}
-            target="_blank"
-            data-bg={game.icon}
-            class="card card-glow card-loading shine group border-border-default/30 relative flex h-40 flex-col justify-between overflow-hidden rounded-2xl border transition-all duration-300"
-            style={`animation: fadeInUp 0.6s ease-out ${i * 0.1}s both;`}>
-            <div
-              class="absolute inset-0 z-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-              style="background-image: var(--bg-url);"
-            />
-            <div class="from-background/95 via-background/80 to-background/70 group-hover:from-background/90 group-hover:via-background/70 group-hover:to-background/60 absolute inset-0 z-10 bg-gradient-to-t backdrop-blur-[2px] transition-all duration-300" />
-            <div class="relative z-20 flex h-full flex-col items-center justify-center p-6 text-center">
-              <h2 class="group-hover:text-text-header text-lg font-bold drop-shadow-lg transition-colors duration-200">
-                {game.name}
-              </h2>
-              <p class="text-text-secondary group-hover:text-text-secondary/90 line-clamp-2 text-sm leading-relaxed drop-shadow-sm transition-colors duration-200">
-                {game.desc}
-              </p>
+      <div class="mb-8 animate-[fadeInUp_0.6s_ease-out]">
+        <div class="mb-6 flex flex-wrap items-center justify-between gap-6">
+          
+          <div class="flex items-center gap-4">
+            <h1 class="gradient-text text-3xl font-bold md:text-4xl">Asset Library</h1>
+            <div class="rounded-xl border border-[#6366f1]/20 bg-background-overlay px-4 py-2 text-sm text-text-secondary">
+              <span data-count>{list.length}</span> assets
             </div>
-            <div class="ring-text-secondary/30 pointer-events-none absolute inset-0 z-30 rounded-2xl opacity-0 ring-2 transition-all duration-300 group-hover:opacity-100" />
-          </a>
-        ))
-      }
-    </div>
-    {
-      list.length === 0 && (
-        <div class="flex flex-col items-center justify-center py-20 text-center">
-          <div class="border-border-default/30 bg-background-overlay/60 rounded-2xl border p-8 backdrop-blur-sm">
-            <i data-lucide="package-x" class="text-text-secondary/50 mx-auto mb-4 h-16 w-16" />
-            <h3 class="text-text-header mb-2 text-xl font-bold">No assets found</h3>
-            <p class="text-text-secondary">This page is broken...</p>
+          </div>
+
+          <div class="flex gap-2 rounded-xl border border-border-default/30 bg-background-overlay/60 p-1 shadow-lg backdrop-blur-sm">
+            <button
+              data-view="grid"
+              class="flex h-10 w-10 items-center justify-center rounded-lg bg-text-secondary/20 text-text-header transition-all duration-200 hover:bg-text-secondary/30">
+              <i data-lucide="grid-3x3" class="h-5 w-5"></i>
+            </button>
+            <button
+              data-view="list"
+              class="flex h-10 w-10 items-center justify-center rounded-lg text-text-secondary transition-all duration-200 hover:bg-text-secondary/20 hover:text-text-header">
+              <i data-lucide="list" class="h-5 w-5"></i>
+            </button>
+            <button
+              data-view="compact"
+              class="flex h-10 w-10 items-center justify-center rounded-lg text-text-secondary transition-all duration-200 hover:bg-text-secondary/20 hover:text-text-header">
+              <i data-lucide="layout-grid" class="h-5 w-5"></i>
+            </button>
           </div>
         </div>
-      )
-    }
+
+        <div class="mb-4 flex flex-wrap items-center gap-3">
+          <div class="relative flex-1 min-w-[280px] max-w-md">
+            <i data-lucide="search" class="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-text-secondary/60"></i>
+            <input
+              type="text"
+              data-input="search"
+              placeholder="Search games..."
+              class="h-12 w-full rounded-xl border border-border-default/30 bg-background-overlay/40 pl-12 pr-4 text-sm text-text-header placeholder-text-secondary/50 shadow-lg backdrop-blur-sm transition-all duration-200 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/30 focus:outline-none"
+            />
+          </div>
+
+          <button
+            data-random="random"
+            class="flex h-12 items-center gap-2 rounded-xl border border-border-default/30 bg-background-overlay/80 px-4 shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-105 hover:bg-[#6366f1]/10 hover:border-[#6366f1]/50">
+            <i data-lucide="shuffle" class="h-5 w-5 text-text-secondary transition-colors duration-200"></i>
+            <span class="text-sm text-text-secondary">Random</span>
+          </button>
+
+          <button
+            data-sort="sort"
+            class="flex h-12 items-center gap-2 rounded-xl border border-border-default/30 bg-background-overlay/80 px-4 shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-105 hover:bg-[#6366f1]/10 hover:border-[#6366f1]/50">
+            <i data-lucide="arrow-up-down" class="h-5 w-5 text-text-secondary transition-colors duration-200"></i>
+            <span class="text-sm text-text-secondary">Sort A-Z</span>
+          </button>
+
+          <button
+            data-clear="clear"
+            class="flex h-12 items-center gap-2 rounded-xl border border-border-default/30 bg-background-overlay/80 px-4 shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-105 hover:bg-red-500/10 hover:border-red-500/50">
+            <i data-lucide="x-circle" class="h-5 w-5 text-text-secondary transition-colors duration-200"></i>
+            <span class="text-sm text-text-secondary">Clear</span>
+          </button>
+        </div>
+
+        <div class="flex flex-wrap gap-3 text-sm">
+          <div class="flex items-center gap-2 rounded-lg border border-border-default/30 bg-background-overlay/60 px-3 py-2 backdrop-blur-sm">
+            <i data-lucide="eye" class="h-4 w-4 text-[#6366f1]"></i>
+            <span class="text-text-secondary">Visible: <span data-visible class="text-text-header font-medium">{list.length}</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div data-container class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {
+          list.map((game, i) => (
+            <div
+              data-href={game.url}
+              data-name={game.name}
+              data-bg={game.icon}
+              class="card card-glow card-loading shine group relative flex h-48 cursor-pointer flex-col justify-between overflow-hidden rounded-2xl border border-border-default/30 transition-all duration-300"
+              style={`animation: fadeInUp 0.6s ease-out ${i * 0.05}s both;`}>
+              <div
+                class="absolute inset-0 z-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
+                style="background-image: var(--bg-url);"
+              />
+              <div class="absolute inset-0 z-10 bg-gradient-to-t from-background/95 via-background/80 to-background/70 backdrop-blur-[2px] transition-all duration-300 group-hover:from-background/90 group-hover:via-background/70 group-hover:to-background/60" />
+              <div class="relative z-20 flex h-full flex-col items-center justify-center p-6 text-center">
+                <h2 class="mb-2 text-lg font-bold drop-shadow-lg transition-colors duration-200 group-hover:text-text-header">
+                  {game.name}
+                </h2>
+                <p class="line-clamp-2 text-sm leading-relaxed text-text-secondary drop-shadow-sm transition-colors duration-200 group-hover:text-text-secondary/90">
+                  {game.desc}
+                </p>
+              </div>
+              <div class="pointer-events-none absolute inset-0 z-30 rounded-2xl opacity-0 ring-2 ring-[#6366f1]/30 transition-all duration-300 group-hover:opacity-100" />
+            </div>
+          ))
+        }
+      </div>
+
+      {
+        list.length === 0 && (
+          <div class="flex flex-col items-center justify-center py-20 text-center">
+            <div class="rounded-2xl border border-border-default/30 bg-background-overlay/60 p-8 backdrop-blur-sm">
+              <i data-lucide="package-x" class="mx-auto mb-4 h-16 w-16 text-text-secondary/50" />
+              <h3 class="mb-2 text-xl font-bold text-text-header">No Assets found</h3>
+              <p class="text-text-secondary">Try adjusting your search or filters</p>
+            </div>
+          </div>
+        )
+      }
+    </div>
 
     <ImportLucide />
     <script src="../utils/assets"></script>
