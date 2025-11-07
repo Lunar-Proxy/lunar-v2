@@ -63,26 +63,42 @@ async function handleLoad(tab: Tab): Promise<void> {
 
     tab.title = doc.title?.trim() || 'New Tab';
 
-    const url = new URL(tab.iframe.src);
-    const decodedPath = decodeURIComponent(url.pathname.slice('/sj/'.length));
+    const src = tab.iframe.src;
+    const url = new URL(src, window.location.origin);
+    let decodedPath = '';
+
+    if (url.pathname.startsWith('/sj/')) {
+      decodedPath = decodeURIComponent(url.pathname.slice('/sj/'.length));
+    }
+
+    if (!decodedPath) {
+      tab.favicon = defaultFavicon;
+      renderTabs();
+      return;
+    }
 
     const response = await fetch(iconURL + decodedPath);
     if (!response.ok) throw new Error('Failed to fetch favicon');
 
     const blob = await response.blob();
-    const reader = new FileReader();
+    const favicon = await blobToDataURL(blob);
 
-    reader.onloadend = () => {
-      tab.favicon = (reader.result as string) || defaultFavicon;
-      renderTabs();
-    };
-
-    reader.readAsDataURL(blob);
+    tab.favicon = favicon || defaultFavicon;
   } catch (e) {
-    tab.favicon = defaultFavicon;
-    renderTabs();
     console.error('Failed to fetch favicon:', e);
+    tab.favicon = defaultFavicon;
+  } finally {
+    renderTabs();
   }
+}
+
+function blobToDataURL(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
 }
 
 function setActiveTab(id: number): void {
