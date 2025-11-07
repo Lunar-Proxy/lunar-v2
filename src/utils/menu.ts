@@ -5,29 +5,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const menu = document.querySelector<HTMLButtonElement>('#menubtn');
   const cmenu = document.querySelector<HTMLDivElement>('#menu');
   const menuItems = Array.from(document.querySelectorAll<HTMLButtonElement>('#menu .menu-item'));
-
   if (!menu || !cmenu || menuItems.length === 0) return;
 
-  const fullscreen = menuItems[1] ?? null;
-  const inspectElement = menuItems[2] ?? null;
-  const panic = menuItems[3] ?? null;
+  const [newTab, fullscreen, reload, inspectElement, panic, settings] = menuItems;
+
   const keybinds: Record<string, string> = {
-    //clock: "ctrl+alt+h", history is coming soon
+    plus: 'ctrl+alt+n',
     'maximize-2': 'ctrl+alt+f',
+    'refresh-cw': 'ctrl+alt+x',
     code: 'ctrl+alt+i',
+    settings: 'ctrl+alt+s',
     'log-out': '`',
   };
 
-  const hideMenu = (): void => cmenu.classList.add('hidden');
-
-  const toggleMenu = (e: MouseEvent): void => {
+  const hideMenu = () => cmenu.classList.add('hidden');
+  const toggleMenu = (e: MouseEvent) => {
     e.stopPropagation();
     cmenu.classList.toggle('hidden');
   };
 
   const getActiveFrame = (): HTMLIFrameElement | null => {
-    const id = `frame-${TabManager.activeTabId}`;
-    const frame = document.getElementById(id);
+    const frame = document.getElementById(`frame-${TabManager.activeTabId}`);
     return frame instanceof HTMLIFrameElement ? frame : null;
   };
 
@@ -35,46 +33,58 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.addEventListener('click', e => {
     const target = e.target as Node | null;
-    if (!target) return;
-    if (!menu.contains(target) && !cmenu.contains(target)) hideMenu();
+    if (target && !menu.contains(target) && !cmenu.contains(target)) hideMenu();
   });
 
   window.addEventListener('blur', () => {
     setTimeout(() => {
       if (document.activeElement instanceof HTMLIFrameElement) hideMenu();
-    }, 0);
+    });
   });
 
   cmenu.querySelectorAll<HTMLButtonElement>('.menu-item').forEach(item => {
     item.addEventListener('click', hideMenu);
   });
 
+  newTab?.addEventListener('click', () => {
+    TabManager.addTab();
+  });
+
+  reload?.addEventListener('click', () => {
+    const frame = getActiveFrame();
+    if (!frame) return;
+    frame.contentWindow?.location.reload();
+  });
+
+  settings?.addEventListener('click', () => {
+    const frame = getActiveFrame();
+    if (!frame) return;
+    frame.contentWindow!.location.href = './st';
+  });
+
   fullscreen?.addEventListener('click', () => {
     const doc = window.top?.document;
     if (!doc) return;
-
-    if (!doc.fullscreenElement) {
-      void doc.documentElement.requestFullscreen().catch(() => {});
-    } else {
-      void doc.exitFullscreen().catch(() => {});
-    }
+    const toggle = doc.fullscreenElement
+      ? doc.exitFullscreen()
+      : doc.documentElement.requestFullscreen();
+    void toggle.catch(() => {});
   });
 
   inspectElement?.addEventListener('click', () => {
     const frame = getActiveFrame();
-    if (!frame || !frame.contentWindow) return;
+    if (!frame?.contentWindow) return;
 
     try {
       const win = frame.contentWindow as any;
       const eruda = win.eruda;
 
-      if (eruda && eruda._isInit) {
-        eruda.destroy();
-        return;
-      }
-
-      if (eruda && !eruda._isInit) {
-        eruda.init();
+      if (eruda) {
+        if (eruda._isInit) {
+          eruda.destroy();
+        } else {
+          eruda.init();
+        }
         return;
       }
 
@@ -86,49 +96,46 @@ document.addEventListener('DOMContentLoaded', () => {
       script.onload = () => {
         try {
           win.eruda.init();
-        } catch (e) {
-          console.error('Could not start Eruda:', e);
+        } catch (err) {
+          console.error('Could not start Eruda:', err);
         }
       };
-      // @ts-ignore
-      frame.contentDocument.head.appendChild(script);
-    } catch (e) {
-      console.error('Failed to inject Eruda:', e);
+      frame.contentDocument?.head.appendChild(script);
+    } catch (err) {
+      console.error('Failed to inject Eruda:', err);
     }
   });
 
   panic?.addEventListener('click', async () => {
-    let panicLoc = 'https://google.com';
     try {
-      const ploc = await ConfigAPI.get('panicLoc');
+      const loc = (await ConfigAPI.get('panicLoc')) || 'https://google.com';
       // @ts-ignore
-      if (ploc) panicLoc = ploc;
-    } catch {}
-    window.top?.location.replace(panicLoc);
+      window.top?.location.replace(loc);
+    } catch {
+      window.top?.location.replace('https://google.com');
+    }
   });
 
   const keyMap = new Map<string, HTMLButtonElement>();
 
   for (const item of menuItems) {
-    const icon = item.querySelector<SVGElement>('svg[data-lucide]');
-    const iconName = icon?.getAttribute('data-lucide');
+    const iconName = item.querySelector<SVGElement>('svg[data-lucide]')?.dataset.lucide;
     if (!iconName) continue;
 
     const combo = keybinds[iconName];
     if (!combo) continue;
 
     const label = item.querySelector('span');
-    if (label) {
-      label.textContent = `${label.textContent} (${combo})`;
-    }
+    if (label) label.textContent = `${label.textContent} (${combo})`;
+
     keyMap.set(combo.toLowerCase(), item);
   }
 
   document.addEventListener('keydown', e => {
     const combo = [
-      e.ctrlKey ? 'ctrl' : '',
-      e.altKey ? 'alt' : '',
-      e.shiftKey ? 'shift' : '',
+      e.ctrlKey && 'ctrl',
+      e.altKey && 'alt',
+      e.shiftKey && 'shift',
       e.key.toLowerCase(),
     ]
       .filter(Boolean)

@@ -1,21 +1,21 @@
-import Fastify from 'fastify';
 import fastifyCompress from '@fastify/compress';
 import fastifyMiddie from '@fastify/middie';
 import fastifyStatic from '@fastify/static';
 import type { FastifyStaticOptions, SetHeadersResponse } from '@fastify/static';
 import { logging, server as wisp } from '@mercuryworkshop/wisp-js/server';
 import chalk from 'chalk';
+import Fastify from 'fastify';
 import { execSync } from 'node:child_process';
 import fs from 'node:fs';
+import { Stats } from 'node:fs';
 import { createServer } from 'node:http';
 import { Socket } from 'node:net';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { Stats } from 'node:fs';
 import { constants } from 'node:zlib';
 import { updateChecker } from 'serverlib/check';
 import { findProvider } from 'serverlib/provider';
-import { version } from './package.json' assert { type: 'json' };
+import { version } from './package.json' with { type: 'json' };
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const port = Number(process.env.PORT) || 6969;
@@ -77,7 +77,7 @@ const staticOptions: FastifyStaticOptions = {
     const cacheLong = /\.(js|css|jpg|jpeg|png|gif|ico|svg|webp|avif)$/i.test(filePath);
     res.setHeader(
       'Cache-Control',
-      cacheLong ? 'public, max-age=31536000, immutable' : 'public, max-age=604800'
+      cacheLong ? 'public, max-age=31536000, immutable' : 'public, max-age=604800',
     );
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'SAMEORIGIN');
@@ -126,7 +126,7 @@ try {
   console.log(
     chalk.hex('#8e44ad').bold('│ ') +
       chalk.hex('#f39c12').bold('🌙 Lunar v2 Server Started') +
-      '                │'
+      '                │',
   );
   console.log(chalk.hex('#8e44ad').bold('╰────────────────────────────────────────────╯'));
   console.log();
@@ -135,12 +135,12 @@ try {
   console.log(
     chalk.hex('#bdc3c7')('   ├─ ') +
       chalk.hex('#ecf0f1')('Version: ') +
-      chalk.hex('#f39c12')(`v${version}`)
+      chalk.hex('#f39c12')(`v${version}`),
   );
   console.log(
     chalk.hex('#bdc3c7')('   └─ ') +
       chalk.hex('#ecf0f1')('Up to date: ') +
-      chalk.hex(status.color)(`${status.icon} ${status.text}`)
+      chalk.hex(status.color)(`${status.icon} ${status.text}`),
   );
   if (status.extra) console.log('       ' + status.extra);
   console.log();
@@ -150,28 +150,28 @@ try {
     console.log(
       chalk.hex('#bdc3c7')('   ├─ ') +
         chalk.hex('#ecf0f1')('Deployment URL: ') +
-        chalk.hex('#0984e3').underline(deploymentURL)
+        chalk.hex('#0984e3').underline(deploymentURL),
     );
     console.log(
       chalk.hex('#bdc3c7')('   └─ ') +
         chalk.hex('#ecf0f1')('Hosting Method: ') +
-        chalk.hex('#95a5a6')('Cloud Hosting ☁️')
+        chalk.hex('#95a5a6')('Cloud Hosting ☁️'),
     );
   } else {
     console.log(
       chalk.hex('#bdc3c7')('   ├─ ') +
         chalk.hex('#ecf0f1')('Local: ') +
-        chalk.hex('#00cec9').underline(`http://localhost:${port}`)
+        chalk.hex('#00cec9').underline(`http://localhost:${port}`),
     );
     console.log(
       chalk.hex('#bdc3c7')('   ├─ ') +
         chalk.hex('#ecf0f1')('Network: ') +
-        chalk.hex('#00cec9').underline(`http://127.0.0.1:${port}`)
+        chalk.hex('#00cec9').underline(`http://127.0.0.1:${port}`),
     );
     console.log(
       chalk.hex('#bdc3c7')('   └─ ') +
         chalk.hex('#ecf0f1')('Hosting Method: ') +
-        chalk.hex('#95a5a6')('Self Hosting 💻')
+        chalk.hex('#95a5a6')('Self Hosting 💻'),
     );
   }
 

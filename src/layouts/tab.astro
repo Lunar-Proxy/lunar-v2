@@ -71,43 +71,51 @@ import ImportLucide from './lucide.astro';
             <div
               id="menu"
               class="font-linux absolute top-full right-0 z-30 mt-2 hidden w-64 overflow-hidden rounded-2xl border border-[#3a3758] bg-[#1f1f30] font-medium shadow-2xl backdrop-blur-md">
-              <button
-                class="menu-item flex w-full items-center justify-between px-4 py-3 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
-                <div class="flex items-center space-x-3">
-                  <i data-lucide="clock" class="h-4 w-4 flex-shrink-0"></i>
-                  <span>History [SOON]</span>
-                </div>
-              </button>
+              <div class="flex flex-col">
+                <button
+                  class="menu-item flex w-full items-center justify-start gap-3 px-4 py-2.5 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
+                  <i data-lucide="plus" class="h-5 w-5 flex-shrink-0"></i>
+                  <span class="text-sm leading-5">New Tab</span>
+                </button>
 
-              <button
-                class="menu-item flex w-full items-center justify-between px-4 py-3 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
-                <div class="flex items-center space-x-3">
-                  <i data-lucide="maximize-2" class="h-4 w-4 flex-shrink-0"></i>
-                  <span>Full Screen</span>
-                </div>
-              </button>
+                <button
+                  class="menu-item flex w-full items-center justify-start gap-3 px-4 py-2.5 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
+                  <i data-lucide="maximize-2" class="h-5 w-5 flex-shrink-0"></i>
+                  <span class="text-sm leading-5">Full Screen</span>
+                </button>
 
-              <button
-                class="menu-item flex w-full items-center justify-between px-4 py-3 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
-                <div class="flex items-center space-x-3">
-                  <i data-lucide="code" class="h-4 w-4 flex-shrink-0"></i>
-                  <span>Inspect Element</span>
-                </div>
-              </button>
-              <button
-                class="menu-item flex w-full items-center justify-between px-4 py-3 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
-                <div class="flex items-center space-x-3">
-                  <i data-lucide="log-out" class="h-4 w-4 flex-shrink-0"></i>
-                  <span>Panic</span>
-                </div>
-              </button>
+                <button
+                  class="menu-item flex w-full items-center justify-start gap-3 px-4 py-2.5 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
+                  <i data-lucide="refresh-cw" class="h-5 w-5 flex-shrink-0"></i>
+                  <span class="text-sm leading-5">Reload</span>
+                </button>
+              </div>
+              <div class="flex flex-col">
+                <button
+                  class="menu-item flex w-full items-center justify-start gap-3 px-4 py-2.5 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
+                  <i data-lucide="code" class="h-5 w-5 flex-shrink-0"></i>
+                  <span class="text-sm leading-5">Inspect Element</span>
+                </button>
+                <button
+                  class="menu-item flex w-full items-center justify-start gap-3 px-4 py-2.5 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
+                  <i data-lucide="log-out" class="h-5 w-5 flex-shrink-0"></i>
+                  <span class="text-sm leading-5">Panic</span>
+                </button>
+              </div>
+              <div class="flex flex-col">
+                <button
+                  class="menu-item flex w-full items-center justify-start gap-3 px-4 py-2.5 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
+                  <i data-lucide="settings" class="h-5 w-5 flex-shrink-0"></i>
+                  <span class="text-sm leading-5">Settings</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
+        <div id="fcontainer" class="absolute top-[6.4rem] right-0 bottom-0 left-0 w-full overflow-hidden rounded-b-lg">
+        </div>
+        <ImportLucide />
       </div>
-      <div id="fcontainer" class="absolute top-[6.4rem] right-0 bottom-0 left-0 w-full overflow-hidden rounded-b-lg">
-      </div>
-      <ImportLucide />
     </div>
   </body>
 </html>
