@@ -148,7 +148,7 @@ app.use('/api/query', async (req: any, res: any) => {
     res.end(JSON.stringify({ error: 'Internal server error.' }))
   }
 })
-
+// @ts-ignore nope
 const { handler } = await import('./dist/server/entry.mjs')
 app.use(handler)
 
