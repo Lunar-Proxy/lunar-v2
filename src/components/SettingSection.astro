@@ -1,0 +1,28 @@
+---
+interface Props {
+  title: string;
+  icon: string;
+  variant?: 'primary' | 'purple' | 'pink' | 'red' | 'green' | 'amber';
+}
+
+const { title, icon, variant = 'primary' } = Astro.props as Props;
+
+const iconColors: Record<string, string> = {
+  primary: 'bg-[#6366f1]/10 text-[#6366f1]',
+  purple: 'bg-[#8b5cf6]/10 text-[#8b5cf6]',
+  pink: 'bg-[#ec4899]/10 text-[#ec4899]',
+  red: 'bg-[#ef4444]/10 text-[#ef4444]',
+  green: 'bg-[#10b981]/10 text-[#10b981]',
+  amber: 'bg-amber-400/10 text-amber-400',
+};
+---
+
+<div class="mb-6">
+  <div class="mb-4 flex items-center gap-3">
+    <div class={`rounded-lg p-2 ${iconColors[variant] || iconColors.primary}`}>
+      <i data-lucide={icon} class="h-6 w-6"></i>
+    </div>
+    <h2 class="text-text-header text-xl font-bold">{title}</h2>
+  </div>
+  <slot />
+</div>

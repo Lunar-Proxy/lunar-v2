@@ -1,21 +1,22 @@
 import ConfigAPI from './config';
 import { TabManager } from './tb';
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   const menu = document.querySelector<HTMLButtonElement>('#menubtn');
   const cmenu = document.querySelector<HTMLDivElement>('#menu');
   const menuItems = Array.from(document.querySelectorAll<HTMLButtonElement>('#menu .menu-item'));
   if (!menu || !cmenu || menuItems.length === 0) return;
 
-  const [newTab, fullscreen, reload, inspectElement, panic, settings] = menuItems;
-
+  const [newTab, fullscreen, reload, inspectElement, cloak, panic, settings] = menuItems;
+  let panicKeybind = ((await ConfigAPI.get('panicKey')) as string) || '';
   const keybinds: Record<string, string> = {
-    plus: 'ctrl+alt+n',
-    'maximize-2': 'ctrl+alt+f',
-    'refresh-cw': 'ctrl+alt+x',
-    code: 'ctrl+alt+i',
-    settings: 'ctrl+alt+s',
-    'log-out': '`',
+    plus: 'Ctrl+Alt+N',
+    'maximize-2': 'Ctrl+Alt+F',
+    'refresh-cw': 'Ctrl+R',
+    code: 'Ctrl+Shift+I',
+    settings: 'Ctrl+Alt+S',
+    'log-out': panicKeybind,
+    'hat-glasses': 'Ctrl+Alt+L',
   };
 
   const hideMenu = () => cmenu.classList.add('hidden');
@@ -57,9 +58,25 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   settings?.addEventListener('click', () => {
-    const frame = getActiveFrame();
-    if (!frame) return;
-    frame.contentWindow!.location.href = './st';
+    TabManager.addTab('./st');
+  });
+
+  cloak?.addEventListener('click', () => {
+    const win = window.open();
+    if (!win) return;
+
+    const iframe = win.document.createElement('iframe');
+    iframe.style.width = '100%';
+    iframe.style.height = '100vh';
+    iframe.style.border = 'none';
+    iframe.style.margin = '0';
+    iframe.style.padding = '0';
+
+    win.document.body.style.margin = '0';
+    win.document.title = 'about:blank';
+
+    iframe.src = window.location.origin + '/';
+    win.document.body.appendChild(iframe);
   });
 
   fullscreen?.addEventListener('click', () => {
@@ -111,8 +128,21 @@ document.addEventListener('DOMContentLoaded', () => {
       const loc = (await ConfigAPI.get('panicLoc')) || 'https://google.com';
       // @ts-ignore
       window.top?.location.replace(loc);
+      setTimeout(() => {
+        try {
+          // @ts-ignore
+          window.top?.history.pushState(null, '', loc);
+          window.top?.history.go(1);
+        } catch {}
+      }, 100);
     } catch {
       window.top?.location.replace('https://google.com');
+      setTimeout(() => {
+        try {
+          window.top?.history.pushState(null, '', 'https://google.com');
+          window.top?.history.go(1);
+        } catch {}
+      }, 100);
     }
   });
 
@@ -126,22 +156,26 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!combo) continue;
 
     const label = item.querySelector('span');
-    if (label) label.textContent = `${label.textContent} (${combo})`;
+    if (label && combo) {
+      label.textContent = `${label.textContent} (${combo})`;
+    }
 
-    keyMap.set(combo.toLowerCase(), item);
+    const normalized = combo.toLowerCase();
+    if (normalized) {
+      keyMap.set(normalized, item);
+    }
   }
 
   document.addEventListener('keydown', e => {
-    const combo = [
-      e.ctrlKey && 'ctrl',
-      e.altKey && 'alt',
-      e.shiftKey && 'shift',
-      e.key.toLowerCase(),
-    ]
-      .filter(Boolean)
-      .join('+');
+    const parts = [];
+    if (e.ctrlKey) parts.push('ctrl');
+    if (e.altKey) parts.push('alt');
+    if (e.shiftKey) parts.push('shift');
+    parts.push(e.key.toLowerCase());
 
+    const combo = parts.join('+');
     const target = keyMap.get(combo);
+
     if (target) {
       e.preventDefault();
       target.click();

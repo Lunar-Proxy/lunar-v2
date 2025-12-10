@@ -34,13 +34,22 @@ function createFrame(id: number, url?: string): HTMLIFrameElement {
   iframe.className = 'w-full z-0 h-full hidden';
   iframe.setAttribute(
     'sandbox',
-    'allow-scripts allow-top-navigation allow-pointer-lock allow-same-origin allow-forms',
+    'allow-scripts allow-popups allow-top-navigation allow-pointer-lock allow-same-origin allow-forms',
   );
   return iframe;
 }
 
 function cutTitle(title: string, limit = 16): string {
   return title.length > limit ? `${title.slice(0, limit)}...` : title;
+}
+
+function handleError(tab: Tab): void {
+  tab.title = 'lunar://error';
+  tab.favicon = defaultFavicon;
+  tab.iframe.src = '/404';
+  renderTabs();
+  const urlbar = document.getElementById('urlbar') as HTMLInputElement | null;
+  if (urlbar) urlbar.value = 'lunar://error';
 }
 
 function addTab(url?: string): void {
@@ -52,6 +61,7 @@ function addTab(url?: string): void {
   renderTabs();
   setActiveTab(id);
   iframe.onload = () => handleLoad(tab);
+  iframe.onerror = () => handleError(tab);
   const urlbar = document.getElementById('urlbar') as HTMLInputElement | null;
   if (urlbar) urlbar.value = 'lunar://new';
 }
@@ -59,7 +69,10 @@ function addTab(url?: string): void {
 async function handleLoad(tab: Tab): Promise<void> {
   try {
     const doc = tab.iframe.contentDocument;
-    if (!doc) return;
+    if (!doc) {
+      handleError(tab);
+      return;
+    }
 
     tab.title = doc.title?.trim() || 'New Tab';
 
@@ -159,7 +172,7 @@ function renderTabs(): void {
   tabs.forEach(tab => {
     const tabElement = document.createElement('div');
     tabElement.className = `
-      tab flex items-center justify-between h-10 min-w-[220px] px-3 rounded-t-2xl cursor-pointer select-none
+      tab flex items-center justify-between h-10 min-w-[220px] px-3 py-2 rounded-t-2xl cursor-pointer select-none
       transition-all duration-200 bg-[#2a283e]
       hover:bg-[#323048] shadow-sm relative z-10
     `;
@@ -167,14 +180,14 @@ function renderTabs(): void {
     tabElement.dataset.id = tab.id.toString();
 
     const left = document.createElement('div');
-    left.className = 'flex items-center overflow-hidden';
+    left.className = 'flex items-center overflow-hidden gap-2';
     const favicon = document.createElement('img');
     favicon.src = tab.favicon;
     favicon.alt = 'favicon';
-    favicon.className = 'w-4 h-4 rounded-full mr-2 flex-shrink-0';
+    favicon.className = 'w-4 h-4 rounded-full flex-shrink-0';
     const title = document.createElement('span');
     title.textContent = cutTitle(tab.title, 20);
-    title.className = 'text-sm font-medium truncate leading-none';
+    title.className = 'text-sm font-medium truncate';
     left.append(favicon, title);
 
     const closeBtn = document.createElement('button');
@@ -186,7 +199,7 @@ function renderTabs(): void {
     closeBtn.className = `
       w-6 h-6 flex items-center justify-center
   text-gray-400 hover:text-white hover:bg-[#5a567a]
-  rounded-full transition duration-150 ml-2
+  rounded-full transition duration-150 ml-2 flex-shrink-0
     `;
     closeBtn.onclick = e => {
       e.stopPropagation();

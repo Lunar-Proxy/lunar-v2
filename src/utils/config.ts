@@ -23,10 +23,15 @@ const ConfigAPI = {
 
   async init() {
     const defaults = {
-      backend: 'sj',
       engine: 'https://duckduckgo.com/?q=',
       cloak: 'off',
-      wispUrl: `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/wisp/`,
+      cloakTitle: 'Google',
+      cloakFavicon: 'https://www.google.com/favicon.ico',
+      autoCloak: 'off',
+      beforeUnload: 'off',
+      panicLoc: 'https://google.com',
+      panicKey: '`',
+      wispUrl: `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/w/`,
       bm: [
         {
           name: 'Youtube',
@@ -57,6 +62,11 @@ const ConfigAPI = {
         await this.set(key, value);
       }
     }
+  },
+
+  async reset() {
+    await this.config.clear();
+    await this.init();
   },
 };
 

@@ -1,5 +1,4 @@
 import node from '@astrojs/node';
-
 import { baremuxPath } from '@mercuryworkshop/bare-mux/node';
 import { libcurlPath } from '@mercuryworkshop/libcurl-transport';
 import { server as wisp } from '@mercuryworkshop/wisp-js/server';
@@ -12,7 +11,6 @@ import { normalizePath } from 'vite';
 import type { Plugin } from 'vite';
 import obfuscatorPlugin from 'vite-plugin-javascript-obfuscator';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
-
 import { version } from './package.json';
 
 wisp.options.wisp_version = 2;
@@ -30,7 +28,7 @@ function WispServer(): Plugin {
     name: 'vite-wisp-server',
     configureServer(server) {
       server.httpServer?.on('upgrade', (req, socket, head) => {
-        if (req.url?.startsWith('/w')) wisp.routeRequest(req, socket, head);
+        if (req.url?.startsWith('/w/')) wisp.routeRequest(req, socket, head);
       });
     },
   };
@@ -156,6 +154,17 @@ export default defineConfig({
   vite: {
     build: {
       minify: 'esbuild',
+      chunkSizeWarningLimit: 1000,
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'vendor-wisp': ['@mercuryworkshop/wisp-js'],
+            'vendor-mux': ['@mercuryworkshop/bare-mux'],
+            'vendor-transport': ['@mercuryworkshop/libcurl-transport'],
+            'vendor-lucide': ['lucide'],
+          },
+        },
+      },
     },
     optimizeDeps: {
       include: ['lucide'],
@@ -172,31 +181,49 @@ export default defineConfig({
       searchBackend(),
       obfuscatorPlugin({
         include: ['**/*.js', '**/*.mjs', '**/*.cjs', '**/*.ts'],
+        exclude: ['node_modules/**', '**/node_modules/**'],
         apply: 'build',
         debugger: false,
         options: {
-          debugProtection: false,
           compact: true,
-          controlFlowFlattening: false,
-          deadCodeInjection: false,
-          disableConsoleOutput: true,
+          controlFlowFlattening: true,
+          controlFlowFlatteningThreshold: 0.75,
+          deadCodeInjection: true,
+          deadCodeInjectionThreshold: 0.4,
+          debugProtection: false,
+          disableConsoleOutput: false,
           identifierNamesGenerator: 'hexadecimal',
-          renameGlobals: false,
+          identifiersPrefix: '_0x',
+          ignoreImports: false,
+          log: false,
+          numbersToExpressions: true,
+          renameGlobals: true,
           renameProperties: false,
-          selfDefending: false,
+          renamePropertiesMode: 'safe',
+          selfDefending: true,
           simplify: true,
+          sourceMap: false,
           splitStrings: true,
           splitStringsChunkLength: 10,
           stringArray: true,
-          stringArrayThreshold: 0.75,
+          stringArrayCallsTransform: true,
+          stringArrayCallsTransformThreshold: 0.75,
+          stringArrayEncoding: ['rc4'],
+          stringArrayIndexesType: ['hexadecimal-number'],
+          stringArrayIndexShift: true,
           stringArrayRotate: true,
           stringArrayShuffle: true,
-          stringArrayEncoding: ['base64'],
-          stringArrayWrappersType: 'variable',
-          stringArrayWrappersCount: 1,
+          stringArrayWrappersCount: 3,
+          stringArrayWrappersChainedCalls: true,
+          stringArrayWrappersParametersMaxCount: 5,
+          stringArrayWrappersType: 'function',
+          stringArrayThreshold: 0.85,
           target: 'browser',
+          transformObjectKeys: true,
           unicodeEscapeSequence: false,
-          // ...  [See more options](https://github.com/javascript-obfuscator/javascript-obfuscator)
+          seed: 0,
+          rotateStringArray: true,
+          shuffleStringArray: true,
         },
       }),
       viteStaticCopy({

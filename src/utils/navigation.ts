@@ -25,8 +25,8 @@ const scramjet = new ScramjetController({
     sync: '/a/bundled/scram/sync.js',
   },
   flags: {
-    captureErrors: true,
-    cleanErrors: false,
+    captureErrors: false,
+    cleanErrors: true,
     rewriterLogs: false,
     scramitize: false,
     serviceworkers: false,
