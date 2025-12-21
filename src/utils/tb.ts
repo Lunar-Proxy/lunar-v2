@@ -14,7 +14,7 @@ const quickLinks: Record<string, string> = {
   'lunar://new': '/new',
   'lunar://games': '/math',
   'lunar://apps': '/sci',
-  'lunar://error': '/404'
+  'lunar://error': '/404',
 };
 
 const moonIcon = '/a/moon.svg';
@@ -97,10 +97,10 @@ async function onTabLoad(tab: Tab): Promise<void> {
     if (!doc) {
       return;
     }
-    
+
     await new Promise(resolve => setTimeout(resolve, 50));
-  
-    const newTitle = (doc.title?.trim() ?? 'New Tab');
+
+    const newTitle = doc.title?.trim() ?? 'New Tab';
     if (tab.title !== newTitle) {
       tab.title = newTitle;
       drawTabs();
@@ -111,11 +111,15 @@ async function onTabLoad(tab: Tab): Promise<void> {
     let decodedPath = '';
 
     if (url.pathname.startsWith(scramjetWrapper.getConfig().prefix)) {
-        decodedPath = decodeURIComponent(
-        scramjetWrapper.getConfig().codec.decode(url.pathname.slice(scramjetWrapper.getConfig().prefix.length) || '') || ''
+      decodedPath = decodeURIComponent(
+        scramjetWrapper
+          .getConfig()
+          .codec.decode(url.pathname.slice(scramjetWrapper.getConfig().prefix.length) || '') || '',
       );
     } else if (url.pathname.startsWith(vWrapper.getConfig().prefix)) {
-      decodedPath = vWrapper.getConfig().decodeUrl(url.pathname.slice(vWrapper.getConfig().prefix.length));
+      decodedPath = vWrapper
+        .getConfig()
+        .decodeUrl(url.pathname.slice(vWrapper.getConfig().prefix.length));
     }
 
     if (!decodedPath) {
@@ -138,7 +142,6 @@ async function onTabLoad(tab: Tab): Promise<void> {
     drawTabs();
   }
 }
-
 
 function blobToBase64(blob: Blob): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -172,13 +175,13 @@ function setActiveTab(id: number) {
       if (quickEntry) {
         input.value = quickEntry[0];
       } else if (framePath.startsWith(scramjetWrapper.getConfig().prefix)) {
-        input.value = scramjetWrapper
-          .getConfig()
-          .codec.decode(framePath.slice(scramjetWrapper.getConfig().prefix.length)) ?? '';
+        input.value =
+          scramjetWrapper
+            .getConfig()
+            .codec.decode(framePath.slice(scramjetWrapper.getConfig().prefix.length)) ?? '';
       } else if (framePath.startsWith(vWrapper.getConfig().prefix)) {
-        input.value = vWrapper
-          .getConfig()
-          .decodeUrl(framePath.slice(vWrapper.getConfig().prefix.length)) ?? '';
+        input.value =
+          vWrapper.getConfig().decodeUrl(framePath.slice(vWrapper.getConfig().prefix.length)) ?? '';
       } else {
         input.value = '';
       }
@@ -380,14 +383,14 @@ function switchTab(id: number) {
       if (quickEntry) {
         input.value = quickEntry[0];
       } else if (framePath.startsWith(scramjetWrapper.getConfig().prefix)) {
-        const decoded = scramjetWrapper
-          .getConfig()
-          .codec.decode(framePath.slice(scramjetWrapper.getConfig().prefix.length)) ?? '';
+        const decoded =
+          scramjetWrapper
+            .getConfig()
+            .codec.decode(framePath.slice(scramjetWrapper.getConfig().prefix.length)) ?? '';
         input.value = decoded;
       } else if (framePath.startsWith(vWrapper.getConfig().prefix)) {
-        const decoded = vWrapper
-          .getConfig()
-          .decodeUrl(framePath.slice(vWrapper.getConfig().prefix.length)) ?? '';
+        const decoded =
+          vWrapper.getConfig().decodeUrl(framePath.slice(vWrapper.getConfig().prefix.length)) ?? '';
         input.value = decoded;
       } else {
         input.value = '';

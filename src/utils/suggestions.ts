@@ -6,7 +6,6 @@ initIcons();
   document.addEventListener(evt, initIcons);
 });
 
-
 const bar = document.getElementById('urlbar') as HTMLInputElement | null;
 const links: Record<string, string> = {
   'lunar://settings': 'Settings',
@@ -15,13 +14,11 @@ const links: Record<string, string> = {
   'lunar://apps': 'Apps',
 };
 
-
 const isLunar = (x: string) => x.startsWith('lunar://');
 const matchLinks = (x: string) => {
   const q = x.toLowerCase();
   return Object.entries(links).filter(([k]) => k.toLowerCase().includes(q));
 };
-
 
 async function getSuggest(q: string): Promise<string[]> {
   if (!q) return [];
@@ -34,7 +31,6 @@ async function getSuggest(q: string): Promise<string[]> {
     return [];
   }
 }
-
 
 function isMathExpr(x: string): boolean {
   const v = x.trim();
@@ -50,7 +46,6 @@ function calcExpr(x: string): string | null {
     return null;
   }
 }
-
 
 function makeDrop(): HTMLDivElement {
   const d = document.createElement('div');
@@ -72,14 +67,11 @@ function hideDrop() {
   document.getElementById('suggestions')?.remove();
 }
 
-
 window.addEventListener('blur', () => {
   setTimeout(() => {
     if (document.activeElement instanceof HTMLIFrameElement) hideDrop();
   }, 0);
 });
-
-
 
 function pick(v: string) {
   if (!bar) return;
@@ -87,7 +79,6 @@ function pick(v: string) {
   hideDrop();
   bar.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
 }
-
 
 function drawDrop(
   results: string[],
@@ -117,21 +108,23 @@ function drawDrop(
         r => `
       <div class="flex items-center space-x-3 px-6 py-2 text-[var(--text-header)] cursor-pointer hover:bg-[#2a293f] hover:text-white rounded-md transition" data-value="${r}">
         <i data-lucide="search" class="h-4 w-4 text-[var(--text-secondary)]"></i><span>${r}</span>
-      </div>`
+      </div>`,
       ),
     );
   }
   if (showLunar && lunar.length) {
     html.push(
       `<div class="px-5 py-2 text-xs uppercase tracking-wider text-[var(--text-secondary)] border-t border-[var(--border)]">Lunar Links</div>`,
-      ...lunar.map(([k, l]) => `
+      ...lunar.map(
+        ([k, l]) => `
         <div class="flex items-center justify-between px-6 py-2 text-[var(--text-header)] cursor-pointer hover:bg-[#2a293f] hover:text-white rounded-md transition" data-value="${k}">
           <div class="flex items-center space-x-2">
             <i data-lucide="globe" class="h-5 w-5 text-purple-400"></i><span>${k}</span>
           </div>
           <span class="text-xs text-[var(--text-secondary)]">${l}</span>
         </div>
-      `)
+      `,
+      ),
     );
   }
   d.innerHTML = html.join('');
@@ -142,19 +135,14 @@ function drawDrop(
   showDrop(d);
 }
 
-
 async function updateDrop() {
   if (!bar) return;
   const v = bar.value.trim();
   if (!v) return hideDrop();
-  const [results, math] = await Promise.all([
-    getSuggest(v),
-    isMathExpr(v) ? calcExpr(v) : null,
-  ]);
+  const [results, math] = await Promise.all([getSuggest(v), isMathExpr(v) ? calcExpr(v) : null]);
   const lunar = isLunar(v) ? matchLinks(v) : [];
   drawDrop(results, lunar, math, v);
 }
-
 
 if (bar) {
   let timer: number | null = null;
@@ -170,7 +158,6 @@ if (bar) {
     if (e.key === 'Enter') hideDrop();
   });
 }
-
 
 window.addEventListener('resize', () => {
   const d = document.getElementById('suggestions') as HTMLDivElement | null;

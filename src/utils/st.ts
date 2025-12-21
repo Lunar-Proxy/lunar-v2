@@ -56,32 +56,33 @@ export interface SettingsConfig {
 }
 
 export class SettingsManager {
-    static initProxyBackend() {
-      const proxyButtons = document.querySelectorAll('[data-proxy]');
-      function updateProxyUI(val: string) {
-        proxyButtons.forEach(btn => {
-          const type = btn.getAttribute('data-proxy');
-          const isActive = (type === 'ultraviolet' && val === 'u') || (type === 'scramjet' && val === 'sc');
-          if (isActive) {
-            btn.classList.add('border-[#6366f1]', 'bg-[#6366f1]/10');
-          } else {
-            btn.classList.remove('border-[#6366f1]', 'bg-[#6366f1]/10');
-          }
-        });
-      }
+  static initProxyBackend() {
+    const proxyButtons = document.querySelectorAll('[data-proxy]');
+    function updateProxyUI(val: string) {
       proxyButtons.forEach(btn => {
-        btn.addEventListener('click', async () => {
-          const type = btn.getAttribute('data-proxy');
-          const val = type === 'ultraviolet' ? 'u' : 'sc';
-          await ConfigAPI.set('backend', val);
-          updateProxyUI(val);
-          SettingsManager.notify();
-        });
-      });
-      ConfigAPI.get('backend').then(val => {
-        updateProxyUI(val === 'u' ? 'u' : 'sc');
+        const type = btn.getAttribute('data-proxy');
+        const isActive =
+          (type === 'ultraviolet' && val === 'u') || (type === 'scramjet' && val === 'sc');
+        if (isActive) {
+          btn.classList.add('border-[#6366f1]', 'bg-[#6366f1]/10');
+        } else {
+          btn.classList.remove('border-[#6366f1]', 'bg-[#6366f1]/10');
+        }
       });
     }
+    proxyButtons.forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const type = btn.getAttribute('data-proxy');
+        const val = type === 'ultraviolet' ? 'u' : 'sc';
+        await ConfigAPI.set('backend', val);
+        updateProxyUI(val);
+        SettingsManager.notify();
+      });
+    });
+    ConfigAPI.get('backend').then(val => {
+      updateProxyUI(val === 'u' ? 'u' : 'sc');
+    });
+  }
   private static panicKeyHandler: (e: KeyboardEvent) => void = () => {};
   static async load() {
     return {
@@ -261,7 +262,10 @@ export class SettingsManager {
           }
 
           if (key === 'adBlock') {
-            if (navigator.serviceWorker && (navigator.serviceWorker.controller || navigator.serviceWorker.ready)) {
+            if (
+              navigator.serviceWorker &&
+              (navigator.serviceWorker.controller || navigator.serviceWorker.ready)
+            ) {
               const msg = { type: 'ADBLOCK', data: { enabled: on } };
               if (navigator.serviceWorker.controller) {
                 navigator.serviceWorker.controller.postMessage(msg);
@@ -275,8 +279,12 @@ export class SettingsManager {
 
           switch (key) {
             case 'cloak': {
-              const titleIn = document.querySelector('[data-input="cloakTitle"]') as HTMLInputElement;
-              const iconIn = document.querySelector('[data-input="cloakFavicon"]') as HTMLInputElement;
+              const titleIn = document.querySelector(
+                '[data-input="cloakTitle"]',
+              ) as HTMLInputElement;
+              const iconIn = document.querySelector(
+                '[data-input="cloakFavicon"]',
+              ) as HTMLInputElement;
               if (titleIn) titleIn.disabled = !on;
               if (iconIn) iconIn.disabled = !on;
               this.setCloak(on, titleIn?.value, iconIn?.value);
@@ -296,8 +304,12 @@ export class SettingsManager {
                 if (cloakToggle?.classList.contains('active')) {
                   cloakToggle.classList.remove('active');
                   await SettingsAPI.disable('cloak');
-                  const titleIn = document.querySelector('[data-input="cloakTitle"]') as HTMLInputElement;
-                  const iconIn = document.querySelector('[data-input="cloakFavicon"]') as HTMLInputElement;
+                  const titleIn = document.querySelector(
+                    '[data-input="cloakTitle"]',
+                  ) as HTMLInputElement;
+                  const iconIn = document.querySelector(
+                    '[data-input="cloakFavicon"]',
+                  ) as HTMLInputElement;
                   if (titleIn) titleIn.disabled = true;
                   if (iconIn) iconIn.disabled = true;
                   this.setCloak(false);
@@ -721,7 +733,10 @@ export class SettingsManager {
     const cfg = await this.load();
     await this.apply(cfg);
 
-    if (navigator.serviceWorker && (navigator.serviceWorker.controller || navigator.serviceWorker.ready)) {
+    if (
+      navigator.serviceWorker &&
+      (navigator.serviceWorker.controller || navigator.serviceWorker.ready)
+    ) {
       const msg = { type: 'ADBLOCK', data: { enabled: cfg.adBlock === 'on' } };
       if (navigator.serviceWorker.controller) {
         navigator.serviceWorker.controller.postMessage(msg);

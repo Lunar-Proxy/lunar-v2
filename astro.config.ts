@@ -1,4 +1,5 @@
 import node from '@astrojs/node';
+
 import { baremuxPath } from '@mercuryworkshop/bare-mux/node';
 import { libcurlPath } from '@mercuryworkshop/libcurl-transport';
 import { scramjetPath } from '@mercuryworkshop/scramjet/path';
@@ -13,6 +14,7 @@ import { normalizePath } from 'vite';
 import type { Plugin } from 'vite';
 import obfuscatorPlugin from 'vite-plugin-javascript-obfuscator';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
+
 import { version } from './package.json';
 
 wisp.options.wisp_version = 2;
@@ -124,25 +126,26 @@ export default defineConfig({
       CSS: true,
       HTML: {
         'html-minifier-terser': {
-                    caseSensitive: true,
-                    conservativeCollapse: false,
-                    customAttrAssign: [/\?=/],
-                    customAttrCollapse: /\s+/,                  customEventAttributes: [/^on[a-z]{3,}$/],
-                    html5: true,
-                    ignoreCustomComments: [/^!/, /^\s*ko/],
-                    ignoreCustomFragments: [/<%[\s\S]*?%>/, /<\?[\s\S]*?\?>/],
-                    maxLineLength: 0,
-                    preserveLineBreaks: false,
-                    preventAttributesEscaping: false,
-                    processScripts: ["text/html"],
-                    quoteCharacter: '"',
-                    removeAttributeQuotes: true,
-                    removeRedundantAttributes: true,
-                    removeStyleLinkTypeAttributes: true,
-                    sortAttributes: true,
-                    sortClassName: true,
-                    trimCustomFragments: true,
-                    useShortDoctype: true,
+          caseSensitive: true,
+          conservativeCollapse: false,
+          customAttrAssign: [/\?=/],
+          customAttrCollapse: /\s+/,
+          customEventAttributes: [/^on[a-z]{3,}$/],
+          html5: true,
+          ignoreCustomComments: [/^!/, /^\s*ko/],
+          ignoreCustomFragments: [/<%[\s\S]*?%>/, /<\?[\s\S]*?\?>/],
+          maxLineLength: 0,
+          preserveLineBreaks: false,
+          preventAttributesEscaping: false,
+          processScripts: ['text/html'],
+          quoteCharacter: '"',
+          removeAttributeQuotes: true,
+          removeRedundantAttributes: true,
+          removeStyleLinkTypeAttributes: true,
+          sortAttributes: true,
+          sortClassName: true,
+          trimCustomFragments: true,
+          useShortDoctype: true,
           collapseWhitespace: true,
           removeComments: true,
           removeEmptyAttributes: true,
@@ -190,21 +193,14 @@ export default defineConfig({
     define: {
       VERSION: JSON.stringify(version),
       UPDATE_DATE: JSON.stringify(getDate()),
-    },  
+    },
     plugins: [
       tailwindcss(),
       WispServer(),
       IconBackend(),
       searchBackend(),
       obfuscatorPlugin({
-        exclude: [
-          'tmp/**',
-          'data/**',
-          '**/tmp/**',
-          '**/data/**',
-          'node_modules/**',
-          '**/node_modules/**'
-        ],
+        exclude: ['tmp/**', 'data/**', '**/tmp/**', '**/data/**', 'node_modules/**', '**/node_modules/**'],
         apply: 'build',
         debugger: false,
         options: {
@@ -240,7 +236,7 @@ export default defineConfig({
           deadCodeInjection: true,
           deadCodeInjectionThreshold: 0.2,
           debugProtection: false,
-          disableConsoleOutput: false
+          disableConsoleOutput: false,
         },
       }),
       viteStaticCopy({
@@ -257,10 +253,7 @@ export default defineConfig({
             overwrite: false,
           },
           {
-            src: [
-              normalizePath(`${uvPath}/*.js`),
-              '!' + normalizePath(`${uvPath}/sw.js`),
-            ],
+            src: [normalizePath(`${uvPath}/*.js`), '!' + normalizePath(`${uvPath}/sw.js`)],
             dest: 'tmp',
             rename: (name: string) => {
               return `${name.replace(/^uv\./, '')}.js`;

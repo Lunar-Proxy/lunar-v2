@@ -1,13 +1,7 @@
-importScripts(
-  '/data/all.js',
-  '/tmp/config.js',
-  '/tmp/bundle.js',
-  '/tmp/sw.js'
-);
- 
+importScripts('/data/all.js', '/tmp/config.js', '/tmp/bundle.js', '/tmp/sw.js');
+
 let adblockEnabled = false;
 let playgroundData = null;
-
 
 const { ScramjetServiceWorker } = $scramjetLoadWorker();
 const scramjet = new ScramjetServiceWorker();
@@ -83,18 +77,20 @@ const BLOCK_RULES = [
   '**/*?*utm_*',
 ];
 
-
 function wildcardToRegex(pattern) {
-  return new RegExp('^' + pattern
-    .replace(/[.+?^${}()|[\]\\]/g, '\\$&')
-    .replace(/\*\*/g, '.*')
-    .replace(/\*/g, '[^/]*') + '$', 'i');
+  return new RegExp(
+    '^' +
+      pattern
+        .replace(/[.+?^${}()|[\]\\]/g, '\\$&')
+        .replace(/\*\*/g, '.*')
+        .replace(/\*/g, '[^/]*') +
+      '$',
+    'i'
+  );
 }
-
 
 const BLOCK_REGEX = BLOCK_RULES.map(wildcardToRegex);
 const isAdRequest = url => BLOCK_REGEX.some(rule => rule.test(url));
-
 
 async function handleFetch(event) {
   await scramjet.loadConfig();

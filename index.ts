@@ -13,8 +13,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { updateChecker } from 'serverlib/check';
 import { findProvider } from 'serverlib/provider';
-import { version } from './package.json' with { type: 'json' };
 
+import { version } from './package.json' with { type: 'json' };
 
 EventEmitter.defaultMaxListeners = 50;
 
@@ -72,7 +72,10 @@ const staticFileOptions: FastifyStaticOptions = {
   decorateReply: true,
   setHeaders(res: SetHeadersResponse, filePath: string) {
     const hashed = /\.[a-f0-9]{8,}\.(js|css|woff2?|png|jpe?g|svg|webp|gif)$/i.test(filePath);
-    res.setHeader('Cache-Control', hashed ? 'public, max-age=31536000, immutable' : 'public, max-age=3600');
+    res.setHeader(
+      'Cache-Control',
+      hashed ? 'public, max-age=31536000, immutable' : 'public, max-age=3600',
+    );
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'SAMEORIGIN');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
@@ -83,7 +86,8 @@ const staticFileOptions: FastifyStaticOptions = {
 await app.register(fastifyStatic, staticFileOptions);
 await app.register(fastifyMiddie);
 
-const FAVICON_API = 'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64';
+const FAVICON_API =
+  'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64';
 
 app.use('/api/icon', async (req: any, res: any) => {
   try {
@@ -121,8 +125,9 @@ app.use('/api/query', async (req: any, res: any) => {
     return;
   }
   try {
-    const response = await fetch(`https://duckduckgo.com/ac/?q=${encodeURIComponent(search)}`,
-      { headers: { 'User-Agent': 'Mozilla/5.0', Accept: 'application/json' } });
+    const response = await fetch(`https://duckduckgo.com/ac/?q=${encodeURIComponent(search)}`, {
+      headers: { 'User-Agent': 'Mozilla/5.0', Accept: 'application/json' },
+    });
     if (!response.ok) {
       res.statusCode = response.status;
       res.end(JSON.stringify({ error: 'Failed to fetch suggestions.' }));
@@ -170,7 +175,10 @@ app.listen({ host: '0.0.0.0', port }, err => {
 
   const updateStatus = updateChecker();
   type StatusKey = 'u' | 'n' | 'f';
-  const statusMap: Record<StatusKey, { icon: string; text: string; color: string; extra?: string }> = {
+  const statusMap: Record<
+    StatusKey,
+    { icon: string; text: string; color: string; extra?: string }
+  > = {
     u: { icon: '✅', text: 'Up to date', color: '#2ecc71' },
     n: {
       icon: '❌',
@@ -180,7 +188,9 @@ app.listen({ host: '0.0.0.0', port }, err => {
     },
     f: { icon: '❌', text: 'Failed to check for updates', color: '#e74c3c' },
   };
-  const statusKey = (['u', 'n', 'f'].includes(updateStatus.status) ? updateStatus.status : 'f') as StatusKey;
+  const statusKey = (
+    ['u', 'n', 'f'].includes(updateStatus.status) ? updateStatus.status : 'f'
+  ) as StatusKey;
   const status = statusMap[statusKey];
   const deploymentURL = findProvider(port);
 
@@ -239,4 +249,3 @@ app.listen({ host: '0.0.0.0', port }, err => {
   console.log(chalk.hex('#8e44ad').bold('──────────────────────────────────────────────'));
   console.log();
 });
- 
