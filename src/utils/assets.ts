@@ -1,28 +1,11 @@
 import ConfigAPI from './config';
+import { scramjetWrapper } from './pro';
+import { vWrapper } from './pro';
 
 document.addEventListener('DOMContentLoaded', async () => {
   // @ts-ignore
-  const { ScramjetController } = $scramjetLoadController();
-  const sc = new ScramjetController({
-    prefix: '/sj/',
-    files: {
-      wasm: '/a/bundled/scram/wasm.wasm',
-      all: '/a/bundled/scram/all.js',
-      sync: '/a/bundled/scram/sync.js',
-    },
-    flags: {
-      captureErrors: false,
-      cleanErrors: true,
-      rewriterLogs: false,
-      scramitize: false,
-      serviceworkers: false,
-      strictRewrites: true,
-      syncxhr: false,
-    },
-  });
-
-  await sc.init();
-
+  const scramjetInstance = scramjetWrapper.getConfig();
+  scramjetWrapper.init();
   const conn = new BareMux.BareMuxConnection('/bm/worker.js');
   const input = document.querySelector<HTMLInputElement>('[data-input]');
   const box = document.querySelector<HTMLDivElement>('[data-container]');
@@ -39,13 +22,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (!input || !box || !randBtn) return;
 
   const items = Array.from(box.querySelectorAll<HTMLDivElement>('.card'));
-  const data = items.map(el => ({
-    el,
-    n: el.querySelector('h2')?.textContent?.toLowerCase() ?? '',
-    d: el.querySelector('p')?.textContent?.toLowerCase() ?? '',
-    bg: el.dataset.bg,
-    sn: el.dataset.name?.toLowerCase() ?? '',
-  })).sort((a, b) => a.sn.localeCompare(b.sn));
+  const data = items
+    .map(el => ({
+      el,
+      n: el.querySelector('h2')?.textContent?.toLowerCase() ?? '',
+      d: el.querySelector('p')?.textContent?.toLowerCase() ?? '',
+      bg: el.dataset.bg,
+      sn: el.dataset.name?.toLowerCase() ?? '',
+    }))
+    .sort((a, b) => a.sn.localeCompare(b.sn));
 
   const frag = document.createDocumentFragment();
   data.forEach(({ el }) => frag.appendChild(el));
@@ -88,7 +73,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   sortBtn?.addEventListener('click', () => {
     rev = !rev;
-    const sorted = [...data].sort((a, b) => rev ? b.sn.localeCompare(a.sn) : a.sn.localeCompare(b.sn));
+    const sorted = [...data].sort((a, b) =>
+      rev ? b.sn.localeCompare(a.sn) : a.sn.localeCompare(b.sn),
+    );
     const txt = sortBtn.querySelector('span');
     if (txt) txt.textContent = rev ? 'Z-A' : 'A-Z';
     const f = document.createDocumentFragment();
@@ -154,10 +141,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       if ((await conn.getTransport()) !== '/lc/index.mjs') {
         await conn.setTransport('/lc/index.mjs', [{ wisp }]);
       }
-      window.location.href = sc.encodeUrl(url);
+
+      if ((await ConfigAPI.get('backend')) == 'sc') {
+        window.location.href = `${scramjetInstance.prefix}${scramjetInstance.codec.encode(url)}`;
+      } else if ((await ConfigAPI.get('backend')) == 'v') {
+        const config = vWrapper.getConfig();
+        window.location.href = `${config.prefix}${scramjetInstance.codec.encode(url)}`;
+      }
     });
   });
 
   upd();
 });
-

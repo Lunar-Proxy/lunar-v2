@@ -1,9 +1,11 @@
 import node from '@astrojs/node';
 import { baremuxPath } from '@mercuryworkshop/bare-mux/node';
 import { libcurlPath } from '@mercuryworkshop/libcurl-transport';
+import { scramjetPath } from '@mercuryworkshop/scramjet/path';
 import { server as wisp } from '@mercuryworkshop/wisp-js/server';
 import playformCompress from '@playform/compress';
 import tailwindcss from '@tailwindcss/vite';
+import { uvPath } from '@titaniumnetwork-dev/ultraviolet';
 import { defineConfig } from 'astro/config';
 import { execSync } from 'child_process';
 import type { IncomingMessage, ServerResponse } from 'http';
@@ -34,9 +36,8 @@ function WispServer(): Plugin {
   };
 }
 
-export function IconBackend(): Plugin {
+function IconBackend(): Plugin {
   const faviconApi = 'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64';
-
   return {
     name: 'vite-icon-middleware',
     configureServer({ middlewares }) {
@@ -44,27 +45,22 @@ export function IconBackend(): Plugin {
         try {
           const urlObj = new URL(req.url ?? '', 'http://localhost');
           const targetUrl = urlObj.searchParams.get('url');
-
           if (!targetUrl) {
             res.statusCode = 400;
             res.end('URL parameter is required.');
             return;
           }
-
           const response = await fetch(`${faviconApi}&url=${encodeURIComponent(targetUrl)}`);
           if (!response.ok) {
             res.statusCode = response.status;
             res.end('Failed to fetch favicon.');
             return;
           }
-
           const arrayBuffer = await response.arrayBuffer();
           const buffer = Buffer.from(arrayBuffer);
-
           const contentType = response.headers.get('content-type') || 'image/png';
           res.setHeader('Content-Type', contentType);
           res.setHeader('Cache-Control', 'public, max-age=3600');
-
           res.end(buffer);
         } catch (err) {
           console.error('Icon error:', err);
@@ -120,26 +116,47 @@ export function searchBackend(): Plugin {
   };
 }
 
+const OBFUSCATOR_SEED = Math.floor(Math.random() * 9999999);
+
 export default defineConfig({
   integrations: [
     playformCompress({
       CSS: true,
       HTML: {
         'html-minifier-terser': {
+                    caseSensitive: true,
+                    conservativeCollapse: false,
+                    customAttrAssign: [/\?=/],
+                    customAttrCollapse: /\s+/,                  customEventAttributes: [/^on[a-z]{3,}$/],
+                    html5: true,
+                    ignoreCustomComments: [/^!/, /^\s*ko/],
+                    ignoreCustomFragments: [/<%[\s\S]*?%>/, /<\?[\s\S]*?\?>/],
+                    maxLineLength: 0,
+                    preserveLineBreaks: false,
+                    preventAttributesEscaping: false,
+                    processScripts: ["text/html"],
+                    quoteCharacter: '"',
+                    removeAttributeQuotes: true,
+                    removeRedundantAttributes: true,
+                    removeStyleLinkTypeAttributes: true,
+                    sortAttributes: true,
+                    sortClassName: true,
+                    trimCustomFragments: true,
+                    useShortDoctype: true,
           collapseWhitespace: true,
           removeComments: true,
-          removeRedundantAttributes: true,
           removeEmptyAttributes: true,
-          removeScriptTypeAttributes: true,
-          removeStyleLinkTypeAttributes: true,
           keepClosingSlash: false,
           minifyJS: true,
           minifyCSS: true,
-          sortAttributes: true,
-          sortClassName: true,
           decodeEntities: true,
           collapseBooleanAttributes: true,
-          removeAttributeQuotes: true,
+          removeOptionalTags: true,
+          removeEmptyElements: true,
+          minifyURLs: true,
+          removeScriptTypeAttributes: true,
+          processConditionalComments: true,
+          removeTagWhitespace: true,
         },
       },
       Image: true,
@@ -173,69 +190,89 @@ export default defineConfig({
     define: {
       VERSION: JSON.stringify(version),
       UPDATE_DATE: JSON.stringify(getDate()),
-    },
+    },  
     plugins: [
       tailwindcss(),
       WispServer(),
       IconBackend(),
       searchBackend(),
       obfuscatorPlugin({
-        include: ['**/*.js', '**/*.mjs', '**/*.cjs', '**/*.ts'],
-        exclude: ['node_modules/**', '**/node_modules/**'],
+        exclude: [
+          'tmp/**',
+          'data/**',
+          '**/tmp/**',
+          '**/data/**',
+          'node_modules/**',
+          '**/node_modules/**'
+        ],
         apply: 'build',
         debugger: false,
         options: {
           compact: true,
-          controlFlowFlattening: true,
-          controlFlowFlatteningThreshold: 0.75,
-          deadCodeInjection: true,
-          deadCodeInjectionThreshold: 0.4,
-          debugProtection: false,
-          disableConsoleOutput: false,
-          identifierNamesGenerator: 'hexadecimal',
-          identifiersPrefix: '_0x',
-          ignoreImports: false,
-          log: false,
-          numbersToExpressions: true,
-          renameGlobals: true,
-          renameProperties: false,
-          renamePropertiesMode: 'safe',
-          selfDefending: true,
           simplify: true,
-          sourceMap: false,
-          splitStrings: true,
-          splitStringsChunkLength: 10,
           stringArray: true,
-          stringArrayCallsTransform: true,
-          stringArrayCallsTransformThreshold: 0.75,
-          stringArrayEncoding: ['rc4'],
-          stringArrayIndexesType: ['hexadecimal-number'],
+          splitStrings: true,
+          splitStringsChunkLength: 12,
+          stringArrayEncoding: [],
+          stringArrayThreshold: 0.5,
           stringArrayIndexShift: true,
           stringArrayRotate: true,
           stringArrayShuffle: true,
-          stringArrayWrappersCount: 3,
-          stringArrayWrappersChainedCalls: true,
-          stringArrayWrappersParametersMaxCount: 5,
-          stringArrayWrappersType: 'function',
-          stringArrayThreshold: 0.85,
+          stringArrayWrappersCount: 1,
+          stringArrayWrappersType: 'variable',
+          stringArrayWrappersChainedCalls: false,
+          stringArrayWrappersParametersMaxCount: 2,
+          stringArrayCallsTransform: false,
+          identifierNamesGenerator: 'hexadecimal',
+          ignoreImports: true,
+          log: false,
+          numbersToExpressions: false,
+          renameGlobals: false,
+          renameProperties: false,
+          selfDefending: true,
+          sourceMap: false,
           target: 'browser',
-          transformObjectKeys: true,
+          transformObjectKeys: false,
           unicodeEscapeSequence: false,
-          seed: 0,
-          rotateStringArray: true,
-          shuffleStringArray: true,
+          seed: OBFUSCATOR_SEED,
+          controlFlowFlattening: true,
+          controlFlowFlatteningThreshold: 0.3,
+          deadCodeInjection: true,
+          deadCodeInjectionThreshold: 0.2,
+          debugProtection: false,
+          disableConsoleOutput: false
         },
       }),
       viteStaticCopy({
         targets: [
           { src: normalizePath(`${libcurlPath}/**/*.mjs`), dest: 'lc', overwrite: false },
           { src: normalizePath(`${baremuxPath}/**/*.js`), dest: 'bm', overwrite: false },
+          {
+            src: [normalizePath(`${scramjetPath}/*.js`), normalizePath(`${scramjetPath}/*.wasm`)],
+            dest: 'data',
+            rename: (name: string) => {
+              const ending = name.endsWith('.wasm') ? '.wasm' : '.js';
+              return `${name.replace(/^scramjet\./, '')}${ending}`;
+            },
+            overwrite: false,
+          },
+          {
+            src: [
+              normalizePath(`${uvPath}/*.js`),
+              '!' + normalizePath(`${uvPath}/sw.js`),
+            ],
+            dest: 'tmp',
+            rename: (name: string) => {
+              return `${name.replace(/^uv\./, '')}.js`;
+            },
+            overwrite: false,
+          },
         ],
-      }) as any,
+      }) as any, // DO NOT REMOVE "AS ANY"
     ],
     server: {
       host: true,
-      allowedHosts: true,
+      allowedHosts: ['.localhost', '.trycloudflare.com'],
     },
   },
 });

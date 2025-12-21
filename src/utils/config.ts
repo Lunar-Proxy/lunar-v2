@@ -25,10 +25,12 @@ const ConfigAPI = {
     const defaults = {
       engine: 'https://duckduckgo.com/?q=',
       cloak: 'off',
+      adBlock: 'off',
       cloakTitle: 'Google',
       cloakFavicon: 'https://www.google.com/favicon.ico',
       autoCloak: 'off',
       beforeUnload: 'off',
+      backend: 'sc',
       panicLoc: 'https://google.com',
       panicKey: '`',
       wispUrl: `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/w/`,

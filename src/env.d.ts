@@ -4,6 +4,14 @@ declare const LAST_UPDATED: string;
 declare const VERSION: string;
 declare const BareMux: any;
 
+interface tmpConfig {
+  prefix: string;
+  encodeUrl: (str: string) => string;
+  decodeUrl: (encodedUrl: string) => string;
+}
+
+declare const tmpConfig: tmpConfig;
+
 interface ScramjetFiles {
   wasm: string;
   all: string;
@@ -31,3 +39,4 @@ declare module '@mercuryworkshop/epoxy-transport';
 declare module '@mercuryworkshop/wisp-js/server';
 declare module '@mercuryworkshop/bare-mux/node';
 declare module '@mercuryworkshop/libcurl-transport';
+declare module 'fs-extra';

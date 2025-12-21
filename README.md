@@ -1,16 +1,20 @@
 ![Lunar](./lunar.svg)
 
-# Lunar is one of the fastest web-proxies.
-
-Lunar v2 is designed to bypass censorship and provide the best user-experience.
+Lunar v2 is a modern, browser-inspired tabbed web proxy bypassing censorship
+while having a familiar, browser-like design.
 
 [![Join our Discord](https://skillicons.dev/icons?i=discord)](https://discord.gg/fuPtWjYuf8)
 [![View on GitHub](https://skillicons.dev/icons?i=github)](https://github.com/Lunar-proxy/lunar-v2)
 
 ## Features
 
-- 🚀 **Fast speeds**
-- 🪞 **Tabbed Proxy**
+- Browser like feel
+- Fast Speeds
+- About:blank cloaking
+- Ad Blocking
+- Tab System
+- Keyboard Shortcuts
+- So much more!
 
 ## Deployment Options
 
@@ -34,22 +38,22 @@ Lunar v2 is designed to bypass censorship and provide the best user-experience.
 
 #### Production
 
-1. Clone the Lunar repository:
+1. Clone the Lunar v2 repository:
 
    ```bash
-   git clone https://github.com/Lunar-Proxy/lunar-v2.git
+   git clone https://github.com/Lunar-Proxy/lunar-v2
    cd lunar-v2
    ```
 
-2. Install dependencies and start Lunar:
+2. Install dependencies and start Lunar v2:
    ```bash
    pnpm i && pnpm start
    ```
 
 #### Development
 
-If you’re making changes to Lunar, use the development setup to avoid rebuilding
-repeatedly:
+If you’re making changes to Lunar v2, use the development setup to avoid
+rebuilding repeatedly:
 
 ```bash
 pnpm install && pnpm dev
@@ -64,7 +68,7 @@ If you would like to make a change to Lunar, please read
 
 If you need help, please make a
 [GitHub Issue](https://github.com/Lunar-Proxy/lunar-v2/issues) or ask in
-[our Discord](https://discord.gg/fuPtWjYuf8).
+[Our Discord](https://discord.gg/fuPtWjYuf8).
 
 ## Credits
 

@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const keybinds: Record<string, string> = {
     plus: 'Ctrl+Alt+N',
     'maximize-2': 'Ctrl+Alt+F',
-    'refresh-cw': 'Ctrl+R',
+    'refresh-cw': 'Ctrl+Alt+R',
     code: 'Ctrl+Shift+I',
     settings: 'Ctrl+Alt+S',
     'log-out': panicKeybind,
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   newTab?.addEventListener('click', () => {
-    TabManager.addTab();
+    TabManager.openTab();
   });
 
   reload?.addEventListener('click', () => {
@@ -58,12 +58,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   settings?.addEventListener('click', () => {
-    TabManager.addTab('./st');
+    TabManager.openTab('./st');
   });
 
   cloak?.addEventListener('click', () => {
     const win = window.open();
     if (!win) return;
+    if (top?.location.href === 'about:blank') {
+      return;
+    }
 
     const iframe = win.document.createElement('iframe');
     iframe.style.width = '100%';

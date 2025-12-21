@@ -26,7 +26,7 @@ import ImportLucide from './lucide.astro';
         </div>
       </div>
       <div class="flex h-12 items-center border-t border-[#3a3758] bg-[#1c1a2b] px-4">
-        <div class="flex items-center space-x-2">
+        <div class="flex w-auto items-center space-x-2">
           <button
             id="back"
             class="flex h-8 w-8 items-center justify-center rounded-md text-gray-400 hover:bg-gray-700 hover:text-white">
@@ -48,12 +48,15 @@ import ImportLucide from './lucide.astro';
             <i data-lucide="house" class="h-4 w-4"></i>
           </button>
         </div>
-        <div class="relative ml-4 flex grow items-center space-x-2">
-          <div class="relative flex grow">
+        <div class="relative ml-4 flex w-auto grow flex-col">
+          <div class="relative w-full">
+            <span class="pointer-events-none absolute top-1/2 left-2 flex -translate-y-1/2 items-center">
+              <i data-lucide="lock" class="ml-1 h-4 w-4 text-green-500"></i>
+            </span>
             <input
               type="text"
               id="urlbar"
-              class="font-linux h-9 w-full rounded-full border border-[#3a3758] bg-[#29263c] px-4 pr-12 text-sm font-medium text-gray-300 transition-colors hover:text-white focus:ring-0 focus:outline-none"
+              class="font-linux h-9 w-full rounded-full border border-[#3a3758] bg-[#29263c] pr-12 pl-8 text-sm font-medium text-gray-300 transition-colors hover:text-white focus:ring-0 focus:outline-none"
               placeholder="Enter a URL or a query..."
             />
             <button
@@ -61,66 +64,85 @@ import ImportLucide from './lucide.astro';
               class="absolute top-1/2 right-2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-gray-400 transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] hover:scale-125 hover:text-yellow-400 hover:drop-shadow-[0_0_8px_rgba(255,255,0,0.6)] focus:outline-none active:scale-150 active:drop-shadow-[0_0_12px_rgba(255,255,0,0.9)]">
               <i data-lucide="star" class="h-4 w-4 transition-transform duration-300 ease-out"></i>
             </button>
-          </div>
-          <div class="relative">
-            <button
-              id="menubtn"
-              class="flex h-8 w-8 items-center justify-center rounded-md text-gray-400 transition hover:bg-gray-700 hover:text-white">
-              <i data-lucide="menu" class="h-5 w-5"></i>
-            </button>
             <div
-              id="menu"
-              class="font-linux absolute top-full right-0 z-30 mt-2 hidden w-64 overflow-hidden rounded-2xl border border-[#3a3758] bg-[#1f1f30] font-medium shadow-2xl backdrop-blur-md">
-              <div class="flex flex-col">
-                <button
-                  class="menu-item flex w-full items-center justify-start gap-3 px-4 py-2.5 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
-                  <i data-lucide="plus" class="h-5 w-5 flex-shrink-0"></i>
-                  <span class="text-sm leading-5">New Tab</span>
-                </button>
-
-                <button
-                  class="menu-item flex w-full items-center justify-start gap-3 px-4 py-2.5 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
-                  <i data-lucide="maximize-2" class="h-5 w-5 flex-shrink-0"></i>
-                  <span class="text-sm leading-5">Full Screen</span>
-                </button>
-
-                <button
-                  class="menu-item flex w-full items-center justify-start gap-3 px-4 py-2.5 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
-                  <i data-lucide="refresh-cw" class="h-5 w-5 flex-shrink-0"></i>
-                  <span class="text-sm leading-5">Reload</span>
-                </button>
-              </div>
-              <div class="flex flex-col">
-                <button
-                  class="menu-item flex w-full items-center justify-start gap-3 px-4 py-2.5 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
-                  <i data-lucide="code" class="h-5 w-5 flex-shrink-0"></i>
-                  <span class="text-sm leading-5">Inspect Element</span>
-                </button>
-                <button
-                  class="menu-item flex w-full items-center justify-start gap-3 px-4 py-2.5 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
-                  <i data-lucide="hat-glasses" class="h-5 w-5 flex-shrink-0"></i>
-                  <span class="text-sm leading-5">AB Cloak</span>
-                </button>
-                <button
-                  class="menu-item flex w-full items-center justify-start gap-3 px-4 py-2.5 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
-                  <i data-lucide="log-out" class="h-5 w-5 flex-shrink-0"></i>
-                  <span class="text-sm leading-5">Panic</span>
-                </button>
-              </div>
-              <div class="flex flex-col">
-                <button
-                  class="menu-item flex w-full items-center justify-start gap-3 px-4 py-2.5 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
-                  <i data-lucide="settings" class="h-5 w-5 flex-shrink-0"></i>
-                  <span class="text-sm leading-5">Settings</span>
-                </button>
-              </div>
+              id="loading-bar"
+              class="pointer-events-none fixed right-0 left-0"
+              style="height:3px;background:#5c59a5;border-radius:9999px;transition:all 0.2s;opacity:0;display:none;width:100vw;z-index:50;">
             </div>
           </div>
+          <script>
+            function alignLoadingBar() {
+              const input = document.getElementById('urlbar');
+              const bar = document.getElementById('loading-bar');
+              if (input && bar) {
+                const rect = input.getBoundingClientRect();
+                bar.style.top = `${rect.bottom + window.scrollY}px`;
+              }
+            }
+            window.addEventListener('DOMContentLoaded', alignLoadingBar);
+            window.addEventListener('resize', alignLoadingBar);
+            window.addEventListener('scroll', alignLoadingBar);
+          </script>
         </div>
-        <div id="fcontainer" class="absolute top-[6.4rem] right-0 bottom-0 left-0 w-full overflow-hidden rounded-b-lg">
+        <button
+          id="menubtn"
+          class="z-[110] ml-4 flex h-8 w-8 items-center justify-center rounded-md text-gray-400 transition hover:bg-gray-700 hover:text-white">
+          <i data-lucide="menu" class="h-5 w-5"></i>
+        </button>
+      </div>
+
+      <div class="relative">
+        <div
+          id="menu"
+          class="font-linux absolute top-full right-0 z-[1000] mt-2 hidden w-64 overflow-hidden rounded-2xl border border-[#3a3758] bg-[#1f1f30] font-medium shadow-2xl backdrop-blur-md">
+          <div class="flex flex-col">
+            <button
+              class="menu-item flex w-full items-center justify-start gap-3 px-4 py-2.5 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
+              <i data-lucide="plus" class="h-5 w-5 flex-shrink-0"></i>
+              <span class="text-sm leading-5">New Tab</span>
+            </button>
+
+            <button
+              class="menu-item flex w-full items-center justify-start gap-3 px-4 py-2.5 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
+              <i data-lucide="maximize-2" class="h-5 w-5 flex-shrink-0"></i>
+              <span class="text-sm leading-5">Full Screen</span>
+            </button>
+
+            <button
+              class="menu-item flex w-full items-center justify-start gap-3 px-4 py-2.5 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
+              <i data-lucide="refresh-cw" class="h-5 w-5 flex-shrink-0"></i>
+              <span class="text-sm leading-5">Reload</span>
+            </button>
+          </div>
+          <div class="flex flex-col">
+            <button
+              class="menu-item flex w-full items-center justify-start gap-3 px-4 py-2.5 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
+              <i data-lucide="code" class="h-5 w-5 flex-shrink-0"></i>
+              <span class="text-sm leading-5">Inspect Element</span>
+            </button>
+            <button
+              class="menu-item flex w-full items-center justify-start gap-3 px-4 py-2.5 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
+              <i data-lucide="hat-glasses" class="h-5 w-5 flex-shrink-0"></i>
+              <span class="text-sm leading-5">AB Cloak</span>
+            </button>
+            <button
+              class="menu-item flex w-full items-center justify-start gap-3 px-4 py-2.5 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
+              <i data-lucide="log-out" class="h-5 w-5 flex-shrink-0"></i>
+              <span class="text-sm leading-5">Panic</span>
+            </button>
+          </div>
+          <div class="flex flex-col">
+            <button
+              class="menu-item flex w-full items-center justify-start gap-3 px-4 py-2.5 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
+              <i data-lucide="settings" class="h-5 w-5 flex-shrink-0"></i>
+              <span class="text-sm leading-5">Settings</span>
+            </button>
+          </div>
         </div>
-        <ImportLucide />
       </div>
     </div>
+    <div id="fcontainer" class="absolute top-[6.4rem] right-0 bottom-0 left-0 w-full overflow-hidden rounded-b-lg">
+    </div>
+    <ImportLucide />
   </body>
 </html>

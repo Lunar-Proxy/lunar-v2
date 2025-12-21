@@ -4,6 +4,7 @@ import fastifyStatic from '@fastify/static';
 import type { FastifyStaticOptions, SetHeadersResponse } from '@fastify/static';
 import { logging, server as wisp } from '@mercuryworkshop/wisp-js/server';
 import chalk from 'chalk';
+import { EventEmitter } from 'events';
 import Fastify from 'fastify';
 import { execSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -14,27 +15,33 @@ import { updateChecker } from 'serverlib/check';
 import { findProvider } from 'serverlib/provider';
 import { version } from './package.json' with { type: 'json' };
 
+
+EventEmitter.defaultMaxListeners = 50;
+
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const port = Number(process.env.PORT) || 6969;
+const port = Number(process.env.PORT) || 6060;
 
 logging.set_level(logging.ERROR);
-wisp.options.dns_method = 'resolve';
-wisp.options.dns_servers = ['1.1.1.3', '1.0.0.3'];
-wisp.options.dns_result_order = 'ipv4first';
-wisp.options.wisp_version = 2;
-wisp.options.wisp_motd = 'wisp server';
+Object.assign(wisp.options, {
+  dns_method: 'resolve',
+  dns_servers: ['1.1.1.3', '1.0.0.3'],
+  dns_result_order: 'ipv4first',
+  wisp_version: 2,
+  wisp_motd: 'wisp server',
+});
 
-async function buildCode() {
+async function ensureBuild() {
   if (!fs.existsSync('dist')) {
     console.log(chalk.hex('#f39c12')('🚀 Building Lunar...'));
     try {
       execSync('npm run build', { stdio: 'inherit' });
       console.log(chalk.hex('#2ecc71')('✅ Build completed successfully!'));
     } catch (error) {
-      throw new Error(`Build failed: ${error instanceof Error ? error.message : String(error)}`);
+      console.error(chalk.red('Build failed:'), error);
+      process.exit(1);
     }
   } else {
-    console.log(chalk.hex('#3498db')('📦 Lunar is already built, skipping...'));
+    console.log(chalk.hex('#3498db')('Lunar is already built, skipping...'));
   }
 }
 
@@ -45,7 +52,7 @@ const app = Fastify({
     server.on('request', handler);
     server.on('upgrade', (req, socket, head) => {
       if (req.url?.endsWith('/w/')) {
-        wisp.routeRequest(req, socket as any, head);
+        wisp.routeRequest(req, socket, head);
       } else {
         socket.destroy();
       }
@@ -54,23 +61,18 @@ const app = Fastify({
   },
 });
 
-await buildCode();
+await ensureBuild();
+
 await app.register(fastifyCompress, {
   global: true,
   encodings: ['gzip', 'deflate', 'br'],
 });
 
-const staticOptions: FastifyStaticOptions = {
+const staticFileOptions: FastifyStaticOptions = {
   decorateReply: true,
   setHeaders(res: SetHeadersResponse, filePath: string) {
-    const hasHash = /\.[a-f0-9]{8,}\.(js|css|woff2?|png|jpe?g|svg|webp|gif)$/i.test(filePath);
-    
-    if (hasHash) {
-      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
-    } else {
-      res.setHeader('Cache-Control', 'public, max-age=3600');
-    }
-    
+    const hashed = /\.[a-f0-9]{8,}\.(js|css|woff2?|png|jpe?g|svg|webp|gif)$/i.test(filePath);
+    res.setHeader('Cache-Control', hashed ? 'public, max-age=31536000, immutable' : 'public, max-age=3600');
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'SAMEORIGIN');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
@@ -78,31 +80,28 @@ const staticOptions: FastifyStaticOptions = {
   root: path.join(__dirname, 'dist', 'client'),
 };
 
-await app.register(fastifyStatic, staticOptions);
+await app.register(fastifyStatic, staticFileOptions);
 await app.register(fastifyMiddie);
 
-const faviconApi =
-  'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64';
+const FAVICON_API = 'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64';
 
 app.use('/api/icon', async (req: any, res: any) => {
   try {
     const urlObj = new URL(req.url ?? '', 'http://localhost');
-    const targetUrl = urlObj.searchParams.get('url');
-    if (!targetUrl) {
+    const iconUrl = urlObj.searchParams.get('url');
+    if (!iconUrl) {
       res.statusCode = 400;
       res.end('URL parameter is required.');
       return;
     }
-    const response = await fetch(`${faviconApi}&url=${encodeURIComponent(targetUrl)}`);
+    const response = await fetch(`${FAVICON_API}&url=${encodeURIComponent(iconUrl)}`);
     if (!response.ok) {
       res.statusCode = response.status;
       res.end('Failed to fetch favicon.');
       return;
     }
-    const arrayBuffer = await response.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-    const contentType = response.headers.get('content-type') || 'image/png';
-    res.setHeader('Content-Type', contentType);
+    const buffer = Buffer.from(await response.arrayBuffer());
+    res.setHeader('Content-Type', response.headers.get('content-type') || 'image/png');
     res.setHeader('Cache-Control', 'public, max-age=3600');
     res.end(buffer);
   } catch (err) {
@@ -114,25 +113,23 @@ app.use('/api/icon', async (req: any, res: any) => {
 
 app.use('/api/query', async (req: any, res: any) => {
   const urlObj = new URL(req.url ?? '', 'http://localhost');
-  const query = urlObj.searchParams.get('q');
-  if (!query) {
+  const search = urlObj.searchParams.get('q');
+  if (!search) {
     res.statusCode = 400;
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify({ error: 'Query parameter "q" is required.' }));
     return;
   }
-
   try {
-    const response = await fetch(`https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}`, {
-      headers: { 'User-Agent': 'Mozilla/5.0', Accept: 'application/json' },
-    });
+    const response = await fetch(`https://duckduckgo.com/ac/?q=${encodeURIComponent(search)}`,
+      { headers: { 'User-Agent': 'Mozilla/5.0', Accept: 'application/json' } });
     if (!response.ok) {
       res.statusCode = response.status;
       res.end(JSON.stringify({ error: 'Failed to fetch suggestions.' }));
       return;
     }
-    const data = (await response.json()) as Array<{ phrase: string }>;
-    const suggestions = data.map(d => d.phrase).filter(Boolean);
+    const data = await response.json();
+    const suggestions = Array.isArray(data) ? data.map((d: any) => d.phrase).filter(Boolean) : [];
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify({ suggestions }));
   } catch (err) {
@@ -141,36 +138,33 @@ app.use('/api/query', async (req: any, res: any) => {
     res.end(JSON.stringify({ error: 'Internal server error.' }));
   }
 });
-// @ts-ignore nope
+
 const { handler } = await import('./dist/server/entry.mjs');
 
 app.use((req: any, res: any, next: any) => {
-  const isStaticFile = req.url?.match(/\.(js|css|svg|png|jpg|jpeg|gif|webp|woff2?|wasm|ico)$/);
-  
-  if (!isStaticFile) {
-    const originalSetHeader = res.setHeader.bind(res);
+  if (!/\.(js|css|svg|png|jpg|jpeg|gif|webp|woff2?|wasm|ico)$/.test(req.url ?? '')) {
+    const origSetHeader = res.setHeader.bind(res);
     res.setHeader = (name: string, value: any) => {
       if (name.toLowerCase() === 'cache-control') {
-        return originalSetHeader('Cache-Control', 'no-cache, must-revalidate');
+        return origSetHeader('Cache-Control', 'no-cache, must-revalidate');
       }
-      return originalSetHeader(name, value);
+      return origSetHeader(name, value);
     };
     res.setHeader('Cache-Control', 'no-cache, must-revalidate');
   }
-  
   next();
 });
 
 app.use(handler);
 
 app.setNotFoundHandler((_, reply) => {
-  const notFound = fs.existsSync('404') ? fs.readFileSync('404', 'utf8') : '404 Not Found';
-  reply.type('text/plain').send(notFound);
+  const notFoundText = fs.existsSync('404') ? fs.readFileSync('404', 'utf8') : '404 Not Found';
+  reply.type('text/plain').send(notFoundText);
 });
 
-app.listen({ host: '0.0.0.0', port }, (error) => {
-  if (error) {
-    console.error(chalk.red('Failed to start server:'), error);
+app.listen({ host: '0.0.0.0', port }, err => {
+  if (err) {
+    console.error(chalk.red('Failed to start server:'), err);
     process.exit(1);
   }
 
@@ -186,7 +180,8 @@ app.listen({ host: '0.0.0.0', port }, (error) => {
     },
     f: { icon: '❌', text: 'Failed to check for updates', color: '#e74c3c' },
   };
-  const status = statusMap[updateStatus.status as StatusKey] || statusMap.f;
+  const statusKey = (['u', 'n', 'f'].includes(updateStatus.status) ? updateStatus.status : 'f') as StatusKey;
+  const status = statusMap[statusKey];
   const deploymentURL = findProvider(port);
 
   console.log();
@@ -211,7 +206,7 @@ app.listen({ host: '0.0.0.0', port }, (error) => {
   );
   if (status.extra) console.log('       ' + status.extra);
   console.log();
-  console.log(chalk.hex('#00b894')('🌐 Access Information:'));
+  console.log(chalk.hex('#00b894')('Access Information:'));
   if (deploymentURL) {
     console.log(
       chalk.hex('#bdc3c7')('   ├─ ') +
@@ -221,7 +216,7 @@ app.listen({ host: '0.0.0.0', port }, (error) => {
     console.log(
       chalk.hex('#bdc3c7')('   └─ ') +
         chalk.hex('#ecf0f1')('Hosting Method: ') +
-        chalk.hex('#95a5a6')('Cloud Hosting ☁️'),
+        chalk.hex('#95a5a6')('Cloud Hosting'),
     );
   } else {
     console.log(
@@ -237,11 +232,11 @@ app.listen({ host: '0.0.0.0', port }, (error) => {
     console.log(
       chalk.hex('#bdc3c7')('   └─ ') +
         chalk.hex('#ecf0f1')('Hosting Method: ') +
-        chalk.hex('#95a5a6')('Self Hosting 💻'),
+        chalk.hex('#95a5a6')('Self Hosting'),
     );
   }
   console.log();
   console.log(chalk.hex('#8e44ad').bold('──────────────────────────────────────────────'));
   console.log();
 });
-
+ 

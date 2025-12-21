@@ -1,5 +1,45 @@
 import ConfigAPI from './config';
 
+export const SettingsAPI = {
+  async enable(key: string) {
+    await ConfigAPI.set(key, 'on');
+  },
+  async disable(key: string) {
+    await ConfigAPI.set(key, 'off');
+  },
+  async toggle(key: string) {
+    const value = await ConfigAPI.get(key);
+    const newValue = value === 'on' ? 'off' : 'on';
+    await ConfigAPI.set(key, newValue);
+    return newValue;
+  },
+  async isEnabled(key: string) {
+    const value = await ConfigAPI.get(key);
+    return value === 'on' || value === true || value === 1;
+  },
+  async loadAll() {
+    const keys = [
+      'cloak',
+      'cloakTitle',
+      'cloakFavicon',
+      'tabSwitchCloak',
+      'autoCloak',
+      'beforeUnload',
+      'backend',
+      'adBlock',
+      'engine',
+      'wispUrl',
+      'panicLoc',
+      'panicKey',
+    ];
+    const settings: Record<string, any> = {};
+    for (const key of keys) {
+      settings[key] = await ConfigAPI.get(key);
+    }
+    return settings;
+  },
+};
+
 export interface SettingsConfig {
   cloak?: string;
   cloakTitle?: string;
@@ -8,12 +48,40 @@ export interface SettingsConfig {
   autoCloak?: string;
   beforeUnload?: string;
   backend?: string;
+  adBlock?: string;
   engine?: string;
   wispUrl?: string;
   panicLoc?: string;
   panicKey?: string;
 }
+
 export class SettingsManager {
+    static initProxyBackend() {
+      const proxyButtons = document.querySelectorAll('[data-proxy]');
+      function updateProxyUI(val: string) {
+        proxyButtons.forEach(btn => {
+          const type = btn.getAttribute('data-proxy');
+          const isActive = (type === 'ultraviolet' && val === 'u') || (type === 'scramjet' && val === 'sc');
+          if (isActive) {
+            btn.classList.add('border-[#6366f1]', 'bg-[#6366f1]/10');
+          } else {
+            btn.classList.remove('border-[#6366f1]', 'bg-[#6366f1]/10');
+          }
+        });
+      }
+      proxyButtons.forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const type = btn.getAttribute('data-proxy');
+          const val = type === 'ultraviolet' ? 'u' : 'sc';
+          await ConfigAPI.set('backend', val);
+          updateProxyUI(val);
+          SettingsManager.notify();
+        });
+      });
+      ConfigAPI.get('backend').then(val => {
+        updateProxyUI(val === 'u' ? 'u' : 'sc');
+      });
+    }
   private static panicKeyHandler: (e: KeyboardEvent) => void = () => {};
   static async load() {
     return {
@@ -24,6 +92,7 @@ export class SettingsManager {
       autoCloak: (await ConfigAPI.get('autoCloak')) as string,
       beforeUnload: (await ConfigAPI.get('beforeUnload')) as string,
       backend: (await ConfigAPI.get('backend')) as string,
+      adBlock: (await ConfigAPI.get('adBlock')) as string,
       engine: (await ConfigAPI.get('engine')) as string,
       wispUrl: (await ConfigAPI.get('wispUrl')) as string,
       panicLoc: (await ConfigAPI.get('panicLoc')) as string,
@@ -72,11 +141,16 @@ export class SettingsManager {
     const search = document.querySelector('[data-filter-input]') as HTMLInputElement;
     const sections = document.querySelectorAll('[data-section]');
 
-    search?.addEventListener('input', e => {
+    if (!search) return;
+
+    search.addEventListener('input', e => {
       const q = (e.target as HTMLInputElement).value.toLowerCase().trim();
 
       if (!q) {
         sections.forEach(s => ((s as HTMLElement).style.display = 'block'));
+        document.querySelectorAll('[class*="rounded-xl"]').forEach(c => {
+          (c as HTMLElement).style.display = '';
+        });
         return;
       }
 
@@ -88,14 +162,13 @@ export class SettingsManager {
           const title = card.querySelector('h3')?.textContent?.toLowerCase() || '';
           const desc = card.querySelector('p')?.textContent?.toLowerCase() || '';
           const label = card.querySelector('label')?.textContent?.toLowerCase() || '';
-          const match = title.includes(q) || desc.includes(q) || label.includes(q);
+          const allText = card.textContent?.toLowerCase().replace(/\s+/g, ' ') || '';
 
-          if (match) {
-            found = true;
-            (card as HTMLElement).style.display = '';
-          } else {
-            (card as HTMLElement).style.display = 'none';
-          }
+          const match =
+            title.includes(q) || desc.includes(q) || label.includes(q) || allText.includes(q);
+
+          (card as HTMLElement).style.display = match ? '' : 'none';
+          if (match) found = true;
         });
 
         (section as HTMLElement).style.display = found ? 'block' : 'none';
@@ -181,57 +254,69 @@ export class SettingsManager {
         const on = toggle.classList.contains('active');
 
         if (key) {
-          await ConfigAPI.set(key, on ? 'on' : 'off');
+          if (on) {
+            await SettingsAPI.enable(key);
+          } else {
+            await SettingsAPI.disable(key);
+          }
 
-          if (key === 'cloak') {
-            const titleIn = document.querySelector('[data-input="cloakTitle"]') as HTMLInputElement;
-            const iconIn = document.querySelector(
-              '[data-input="cloakFavicon"]',
-            ) as HTMLInputElement;
-
-            if (titleIn) titleIn.disabled = !on;
-            if (iconIn) iconIn.disabled = !on;
-
-            this.setCloak(on, titleIn?.value, iconIn?.value);
-
-            if (on) {
-              const tabSwitchToggle = document.querySelector('[data-toggle="tabSwitchCloak"]');
-              if (tabSwitchToggle?.classList.contains('active')) {
-                tabSwitchToggle.classList.remove('active');
-                await ConfigAPI.set('tabSwitchCloak', 'off');
-                this.initAutoCloak(false);
+          if (key === 'adBlock') {
+            if (navigator.serviceWorker && (navigator.serviceWorker.controller || navigator.serviceWorker.ready)) {
+              const msg = { type: 'ADBLOCK', data: { enabled: on } };
+              if (navigator.serviceWorker.controller) {
+                navigator.serviceWorker.controller.postMessage(msg);
+              } else if (navigator.serviceWorker.ready) {
+                navigator.serviceWorker.ready.then(reg => {
+                  reg.active?.postMessage(msg);
+                });
               }
             }
           }
 
-          if (key === 'tabSwitchCloak') {
-            if (on) {
-              const cloakToggle = document.querySelector('[data-toggle="cloak"]');
-              if (cloakToggle?.classList.contains('active')) {
-                cloakToggle.classList.remove('active');
-                await ConfigAPI.set('cloak', 'off');
-
-                const titleIn = document.querySelector(
-                  '[data-input="cloakTitle"]',
-                ) as HTMLInputElement;
-                const iconIn = document.querySelector(
-                  '[data-input="cloakFavicon"]',
-                ) as HTMLInputElement;
-
-                if (titleIn) titleIn.disabled = true;
-                if (iconIn) iconIn.disabled = true;
-
-                this.setCloak(false);
+          switch (key) {
+            case 'cloak': {
+              const titleIn = document.querySelector('[data-input="cloakTitle"]') as HTMLInputElement;
+              const iconIn = document.querySelector('[data-input="cloakFavicon"]') as HTMLInputElement;
+              if (titleIn) titleIn.disabled = !on;
+              if (iconIn) iconIn.disabled = !on;
+              this.setCloak(on, titleIn?.value, iconIn?.value);
+              if (on) {
+                const tabSwitchToggle = document.querySelector('[data-toggle="tabSwitchCloak"]');
+                if (tabSwitchToggle?.classList.contains('active')) {
+                  tabSwitchToggle.classList.remove('active');
+                  await SettingsAPI.disable('tabSwitchCloak');
+                  this.initAutoCloak(false);
+                }
               }
+              break;
             }
-
-            this.initAutoCloak(on);
+            case 'tabSwitchCloak': {
+              if (on) {
+                const cloakToggle = document.querySelector('[data-toggle="cloak"]');
+                if (cloakToggle?.classList.contains('active')) {
+                  cloakToggle.classList.remove('active');
+                  await SettingsAPI.disable('cloak');
+                  const titleIn = document.querySelector('[data-input="cloakTitle"]') as HTMLInputElement;
+                  const iconIn = document.querySelector('[data-input="cloakFavicon"]') as HTMLInputElement;
+                  if (titleIn) titleIn.disabled = true;
+                  if (iconIn) iconIn.disabled = true;
+                  this.setCloak(false);
+                }
+              }
+              this.initAutoCloak(on);
+              break;
+            }
+            case 'beforeUnload': {
+              this.initExitPrompt(on);
+              break;
+            }
+            case 'autoCloak': {
+              this.initAutoCloak(on);
+              break;
+            }
+            default:
+              break;
           }
-
-          if (key === 'beforeUnload') {
-            this.initExitPrompt(on);
-          }
-
           this.notify();
         }
       });
@@ -561,7 +646,6 @@ export class SettingsManager {
     const autoCloakToggle = document.querySelector('[data-toggle="autoCloak"]') as HTMLElement;
     if (cfg.autoCloak === 'on') {
       autoCloakToggle?.classList.add('active');
-      // Apply cloak immediately if this is a fresh page load
       if (document.referrer === '') {
         const title = cfg.cloakTitle || 'Google';
         const favicon = cfg.cloakFavicon || 'https://www.google.com/favicon.ico';
@@ -597,7 +681,7 @@ export class SettingsManager {
     const panicKeyIn = document.querySelector('[data-input="panicKey"]') as HTMLInputElement;
     if (panicKeyIn && cfg.panicKey) {
       const parts = cfg.panicKey.split('+');
-      const display = parts.map(p => {
+      const display = parts.map((p: string) => {
         if (p === 'ctrl') return 'Ctrl';
         if (p === 'alt') return 'Alt';
         if (p === 'shift') return 'Shift';
@@ -637,6 +721,17 @@ export class SettingsManager {
     const cfg = await this.load();
     await this.apply(cfg);
 
+    if (navigator.serviceWorker && (navigator.serviceWorker.controller || navigator.serviceWorker.ready)) {
+      const msg = { type: 'ADBLOCK', data: { enabled: cfg.adBlock === 'on' } };
+      if (navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage(msg);
+      } else if (navigator.serviceWorker.ready) {
+        navigator.serviceWorker.ready.then(reg => {
+          reg.active?.postMessage(msg);
+        });
+      }
+    }
+
     this.initNav();
     this.initScrollSpy();
     this.initSearch();
@@ -645,6 +740,7 @@ export class SettingsManager {
     this.initDropdowns();
     this.initEngines();
     this.initPresets();
+    this.initProxyBackend();
     this.initPanicKey();
 
     const resetBtn = document.querySelector('[data-reset="reset"]');

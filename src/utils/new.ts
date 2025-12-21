@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
       fetch(url, { method: 'HEAD', cache: 'no-cache' })
         .then(() => resolve({ status: 'OK', latency: Math.round(performance.now() - start) }))
         .catch(() => resolve({ status: 'Fail', latency: 'N/A' }));
-      
+
       setTimeout(() => resolve({ status: 'Fail', latency: 'N/A' }), 3000);
     });
   }
