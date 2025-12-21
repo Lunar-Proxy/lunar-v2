@@ -81,18 +81,14 @@ function shortTitle(title: string, limit = 16): string {
 
 function openTab(url?: string): void {
   const id = getTabId();
+  const tabTitle = 'New Tab';
   const iframe = makeFrame(id, url);
   frameArea.appendChild(iframe);
-  const tab: Tab = { id, title: 'New Tab', favicon: moonIcon, iframe };
+  const tab: Tab = { id, title: tabTitle, favicon: moonIcon, iframe };
   allTabs.push(tab);
   drawTabs();
   switchTab(id);
   iframe.onload = () => onTabLoad(tab);
-  const urlbar = document.getElementById('urlbar') as HTMLInputElement | null;
-  if (urlbar) {
-    const friendly = Object.entries(quickLinks).find(([, path]) => path === url)?.[0];
-    urlbar.value = friendly ?? url ?? 'lunar://new';
-  }
 }
 
 async function onTabLoad(tab: Tab): Promise<void> {
@@ -104,7 +100,11 @@ async function onTabLoad(tab: Tab): Promise<void> {
     
     await new Promise(resolve => setTimeout(resolve, 50));
   
-    tab.title = (doc.title?.trim() ?? 'New Tab');
+    const newTitle = (doc.title?.trim() ?? 'New Tab');
+    if (tab.title !== newTitle) {
+      tab.title = newTitle;
+      drawTabs();
+    }
 
     const src = tab.iframe.src;
     const url = new URL(src, window.location.origin);
@@ -380,18 +380,21 @@ function switchTab(id: number) {
       if (quickEntry) {
         input.value = quickEntry[0];
       } else if (framePath.startsWith(scramjetWrapper.getConfig().prefix)) {
-        input.value = scramjetWrapper
+        const decoded = scramjetWrapper
           .getConfig()
           .codec.decode(framePath.slice(scramjetWrapper.getConfig().prefix.length)) ?? '';
+        input.value = decoded;
       } else if (framePath.startsWith(vWrapper.getConfig().prefix)) {
-        input.value = vWrapper
+        const decoded = vWrapper
           .getConfig()
           .decodeUrl(framePath.slice(vWrapper.getConfig().prefix.length)) ?? '';
+        input.value = decoded;
       } else {
         input.value = '';
       }
+      drawTabs();
     } catch {}
   };
-  urlUpdateTimer = setInterval(updateUrl, 400);
+  urlUpdateTimer = setInterval(updateUrl, 240);
   highlightTab();
 }

@@ -4,7 +4,7 @@
   "version": "2.0.0",
   "scripts": {
     "dev": "npx astro dev --host 0.0.0.0",
-    "start": "tsx index.ts",
+    "start": "tsx index.ts --trace-warnings",
     "build": "npx astro check && npx astro build",
     "format": "npx prettier . --write",
     "revert": "git reset HEAD --hard && git clean -fd",
