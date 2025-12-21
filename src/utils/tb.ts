@@ -79,15 +79,6 @@ function shortTitle(title: string, limit = 16): string {
   return title.length > limit ? `${title.slice(0, limit)}...` : title;
 }
 
-function showError(tab: Tab): void {
-  tab.title = 'lunar://error';
-  tab.favicon = moonIcon;
-  tab.iframe.src = '/404';
-  drawTabs();
-  const urlbar = document.getElementById('urlbar') as HTMLInputElement | null;
-  if (urlbar) urlbar.value = 'lunar://error';
-}
-
 function openTab(url?: string): void {
   const id = getTabId();
   const iframe = makeFrame(id, url);
@@ -98,7 +89,10 @@ function openTab(url?: string): void {
   switchTab(id);
   iframe.onload = () => onTabLoad(tab);
   const urlbar = document.getElementById('urlbar') as HTMLInputElement | null;
-  if (urlbar) urlbar.value = url ?? 'lunar://new';
+  if (urlbar) {
+    const friendly = Object.entries(quickLinks).find(([, path]) => path === url)?.[0];
+    urlbar.value = friendly ?? url ?? 'lunar://new';
+  }
 }
 
 async function onTabLoad(tab: Tab): Promise<void> {
@@ -190,7 +184,7 @@ function setActiveTab(id: number) {
       }
     } catch {}
   };
-  urlUpdateTimer = setInterval(updateUrl, 400);
+  urlUpdateTimer = setInterval(updateUrl, 240);
   highlightTab();
 }
 
