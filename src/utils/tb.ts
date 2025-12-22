@@ -14,7 +14,6 @@ const quickLinks: Record<string, string> = {
   'lunar://new': '/new',
   'lunar://games': '/math',
   'lunar://apps': '/sci',
-  'lunar://error': '/404',
 };
 
 const moonIcon = '/a/moon.svg';
@@ -290,9 +289,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const urlbar = document.getElementById('urlbar') as HTMLInputElement | null;
   const loadingBar = document.getElementById('loading-bar') as HTMLDivElement | null;
   let loadingTimeout: ReturnType<typeof setTimeout> | null = null;
-
+  let loadingActive = false;
   function showBar() {
     if (!loadingBar) return;
+    if (loadingActive) return;
+    loadingActive = true;
     loadingBar.style.display = 'block';
     loadingBar.style.opacity = '1';
     loadingBar.style.width = '0%';
@@ -305,48 +306,61 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function hideBar() {
     if (!loadingBar) return;
+    if (!loadingActive) return;
     loadingBar.style.transition = 'width 0.13s cubic-bezier(.4,0,.2,1)';
     loadingBar.style.width = '100%';
     setTimeout(() => {
       loadingBar.style.opacity = '0';
       loadingBar.style.display = 'none';
       loadingBar.style.width = '0%';
+      loadingActive = false;
     }, 140);
+  }
+
+  function resetLoadingBar() {
+    if (loadingTimeout) {
+      clearTimeout(loadingTimeout);
+      loadingTimeout = null;
+    }
+    hideBar();
   }
 
   if (urlbar) {
     urlbar.addEventListener('keydown', e => {
       if (e.key === 'Enter') {
         showBar();
-        if (loadingTimeout) clearTimeout(loadingTimeout);
-        loadingTimeout = setTimeout(hideBar, 10000);
       }
     });
   }
 
   const origOpenTab = openTab;
   (window as any).openTab = function (url?: string) {
+    showBar();
     origOpenTab(url);
     const tab = allTabs[allTabs.length - 1];
     if (!tab) return;
     tab.iframe.addEventListener('load', () => {
-      hideBar();
-      if (loadingTimeout) clearTimeout(loadingTimeout);
+      setTimeout(() => {
+        resetLoadingBar();
+      }, 300);
     });
     tab.iframe.addEventListener('error', () => {
-      hideBar();
-      if (loadingTimeout) clearTimeout(loadingTimeout);
+      setTimeout(() => {
+        resetLoadingBar();
+      }, 300);
     });
   };
 
   allTabs.forEach(tab => {
     tab.iframe.addEventListener('load', () => {
-      hideBar();
-      if (loadingTimeout) clearTimeout(loadingTimeout);
+      setTimeout(() => {
+        resetLoadingBar();
+      }, 300);
     });
     tab.iframe.addEventListener('error', () => {
-      hideBar();
-      if (loadingTimeout) clearTimeout(loadingTimeout);
+      setTimeout(() => {
+        resetLoadingBar();
+      }, 300);
     });
   });
 });
