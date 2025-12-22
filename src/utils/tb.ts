@@ -228,9 +228,11 @@ function drawTabs(): void {
     const left = document.createElement('div');
     left.className = 'flex items-center overflow-hidden gap-2';
     const favicon = document.createElement('img');
-    favicon.src = tab.favicon;
     favicon.alt = 'favicon';
     favicon.className = 'w-4 h-4 rounded-full flex-shrink-0';
+    if (favicon.src !== tab.favicon) {
+      favicon.src = tab.favicon;
+    }
     const title = document.createElement('span');
     title.textContent = shortTitle(tab.title ?? '', 20);
     title.className = 'text-sm font-medium truncate';
