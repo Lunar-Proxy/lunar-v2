@@ -187,16 +187,20 @@ function drawTabs(): void {
     tabElement.dataset.id = tab.id.toString();
 
     const left = document.createElement('div');
-    left.className = 'flex items-center overflow-hidden gap-2';
+    left.className = 'flex items-center overflow-hidden gap-3';
     const favicon = document.createElement('img');
     favicon.alt = 'favicon';
-    favicon.className = 'w-4 h-4 rounded-full flex-shrink-0';
+    favicon.className = 'w-4 h-4 rounded flex-shrink-0 align-middle';
+    favicon.style.width = '16px';
+    favicon.style.height = '16px';
+    favicon.style.display = 'inline-block';
+    favicon.style.verticalAlign = 'middle';
     if (favicon.src !== tab.favicon) {
       favicon.src = tab.favicon;
     }
     const title = document.createElement('span');
     title.textContent = shortTitle(tab.title ?? '', 20);
-    title.className = 'text-sm font-medium truncate';
+    title.className = 'text-sm font-medium truncate align-middle';
     left.append(favicon, title);
 
     const closeBtn = document.createElement('button');

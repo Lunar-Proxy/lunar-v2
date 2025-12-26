@@ -87,7 +87,7 @@ await app.register(fastifyStatic, staticFileOptions);
 await app.register(fastifyMiddie);
 
 const FAVICON_API =
-  'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64';
+  'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=16';
 
 app.use('/api/icon', async (req: any, res: any) => {
   try {
