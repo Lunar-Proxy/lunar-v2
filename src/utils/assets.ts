@@ -1,155 +1,141 @@
 import ConfigAPI from './config';
-import { scramjetWrapper } from './pro';
-import { vWrapper } from './pro';
+import { scramjetWrapper, vWrapper } from './pro';
+
+type CardItem = {
+  el: HTMLDivElement;
+  n: string;
+  d: string;
+  sn: string;
+};
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // @ts-ignore
-  const scramjetInstance = scramjetWrapper.getConfig();
   scramjetWrapper.init();
+  const sc = scramjetWrapper.getConfig();
   const conn = new BareMux.BareMuxConnection('/bm/worker.js');
   const input = document.querySelector<HTMLInputElement>('[data-input]');
   const box = document.querySelector<HTMLDivElement>('[data-container]');
   const empty = document.querySelector<HTMLDivElement>('[data-empty]');
-  const randBtn = document.querySelector<HTMLButtonElement>('[data-random]');
-  const sortBtn = document.querySelector<HTMLButtonElement>('[data-sort]');
-  const clrBtn = document.querySelector<HTMLButtonElement>('[data-clear]');
-  const grid = document.querySelector<HTMLButtonElement>('[data-view="grid"]');
-  const list = document.querySelector<HTMLButtonElement>('[data-view="list"]');
-  const compact = document.querySelector<HTMLButtonElement>('[data-view="compact"]');
   const count = document.querySelector<HTMLSpanElement>('[data-visible]');
   const wisp = await ConfigAPI.get('wispUrl');
 
-  if (!input || !box || !randBtn) return;
+  if (!input || !box) return;
 
-  const items = Array.from(box.querySelectorAll<HTMLDivElement>('.card'));
-  const data = items
-    .map(el => ({
-      el,
-      n: el.querySelector('h2')?.textContent?.toLowerCase() ?? '',
-      d: el.querySelector('p')?.textContent?.toLowerCase() ?? '',
-      bg: el.dataset.bg,
-      sn: el.dataset.name?.toLowerCase() ?? '',
-    }))
-    .sort((a, b) => a.sn.localeCompare(b.sn));
+  const items: CardItem[] = Array.from(box.querySelectorAll<HTMLDivElement>('.card')).map(el => ({
+    el,
+    n: el.querySelector('h2')?.textContent?.toLowerCase() || '',
+    d: el.querySelector('p')?.textContent?.toLowerCase() || '',
+    sn: el.dataset.name?.toLowerCase() || '',
+  }));
 
-  const frag = document.createDocumentFragment();
-  data.forEach(({ el }) => frag.appendChild(el));
-  box.appendChild(frag);
-
-  let rev = false;
-
-  data.forEach(({ el, bg }) => {
-    if (!bg) return;
+  for (const { el } of items) {
+    const bg = el.dataset.bg;
+    if (!bg) continue;
     const img = new Image();
     img.onload = () => {
       el.classList.remove('card-loading');
-      const div = el.querySelector('.card-bg') as HTMLElement;
+      const div = el.querySelector<HTMLElement>('.card-bg');
       if (div) div.style.backgroundImage = `url('${bg}')`;
     };
     img.onerror = () => el.classList.remove('card-loading');
     img.src = bg;
-  });
+  }
 
-  const upd = () => {
-    const vis = data.filter(({ el }) => el.style.display !== 'none').length;
-    if (count) count.textContent = vis.toString();
-    const show = vis === 0 && input.value.trim() !== '';
+  function update(): void {
+    const vis = items.filter(({ el }) => el.style.display !== 'none').length;
+    if (count) count.textContent = String(vis);
+    const show = vis === 0 && input && input.value.trim() !== '';
     empty?.classList.toggle('hidden', !show);
-    empty?.classList.toggle('flex', show);
-  };
+    empty?.classList.toggle('flex', !!show);
+  }
 
   input.addEventListener('input', () => {
     const q = input.value.toLowerCase().trim();
-    data.forEach(({ el, n, d }) => {
+    for (const { el, n, d } of items) {
       el.style.display = n.includes(q) || d.includes(q) ? '' : 'none';
-    });
-    upd();
+    }
+    update();
   });
 
-  randBtn.addEventListener('click', () => {
-    const vis = data.filter(({ el }) => el.style.display !== 'none');
+  document.querySelector<HTMLButtonElement>('[data-random]')?.addEventListener('click', () => {
+    const vis = items.filter(({ el }) => el.style.display !== 'none');
     if (vis.length) vis[Math.floor(Math.random() * vis.length)].el.click();
   });
 
-  sortBtn?.addEventListener('click', () => {
+  let rev = false;
+  document.querySelector<HTMLButtonElement>('[data-sort]')?.addEventListener('click', function () {
     rev = !rev;
-    const sorted = [...data].sort((a, b) =>
-      rev ? b.sn.localeCompare(a.sn) : a.sn.localeCompare(b.sn),
-    );
-    const txt = sortBtn.querySelector('span');
-    if (txt) txt.textContent = rev ? 'Z-A' : 'A-Z';
-    const f = document.createDocumentFragment();
-    sorted.forEach(({ el }) => f.appendChild(el));
-    box.appendChild(f);
+    items.sort((a, b) => rev ? b.sn.localeCompare(a.sn) : a.sn.localeCompare(b.sn));
+    this.querySelector('span')!.textContent = rev ? 'Z-A' : 'A-Z';
+    for (const { el } of items) box.appendChild(el);
   });
 
-  clrBtn?.addEventListener('click', () => {
+  document.querySelector<HTMLButtonElement>('[data-clear]')?.addEventListener('click', () => {
     input.value = '';
-    data.forEach(({ el }) => (el.style.display = ''));
-    upd();
+    for (const { el } of items) el.style.display = '';
+    update();
   });
 
-  const setBtn = (btn: HTMLButtonElement) => {
-    [grid, list, compact].forEach(b => {
+  const views = ['grid', 'list', 'compact'] as const;
+  const btns = views.map(v => document.querySelector<HTMLButtonElement>(`[data-view="${v}"]`));
+
+  function setActive(btn: HTMLButtonElement) {
+    for (const b of btns) {
       b?.classList.remove('bg-background', 'text-text-header');
       b?.classList.add('text-text-secondary');
-    });
+    }
     btn.classList.add('bg-background', 'text-text-header');
     btn.classList.remove('text-text-secondary');
-  };
+  }
 
-  const resetH = () => {
-    data.forEach(({ el }) => {
-      el.classList.remove('h-32', 'h-36', 'h-44');
-      const p = el.querySelector('p') as HTMLElement;
+  btns[0]?.addEventListener('click', function () {
+    for (const { el } of items) {
+      el.classList.remove('h-32', 'h-36');
+      el.classList.add('h-44');
+      const p = el.querySelector<HTMLElement>('p');
       if (p) p.style.display = '';
-    });
-  };
-
-  grid?.addEventListener('click', () => {
-    if (!box) return;
-    resetH();
+    }
     box.className = 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4';
-    data.forEach(({ el }) => el.classList.add('h-44'));
-    setBtn(grid);
+    setActive(this);
   });
 
-  list?.addEventListener('click', () => {
-    if (!box) return;
-    resetH();
+  btns[1]?.addEventListener('click', function () {
+    for (const { el } of items) {
+      el.classList.remove('h-32', 'h-44');
+      el.classList.add('h-36');
+      const p = el.querySelector<HTMLElement>('p');
+      if (p) p.style.display = '';
+    }
     box.className = 'flex flex-col gap-4';
-    data.forEach(({ el }) => el.classList.add('h-36'));
-    setBtn(list);
+    setActive(this);
   });
 
-  compact?.addEventListener('click', () => {
-    if (!box) return;
-    resetH();
-    box.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3';
-    data.forEach(({ el }) => {
+  btns[2]?.addEventListener('click', function () {
+    for (const { el } of items) {
+      el.classList.remove('h-36', 'h-44');
       el.classList.add('h-32');
-      const p = el.querySelector('p') as HTMLElement;
+      const p = el.querySelector<HTMLElement>('p');
       if (p) p.style.display = 'none';
-    });
-    setBtn(compact);
+    }
+    box.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3';
+    setActive(this);
   });
 
-  data.forEach(({ el }) => {
+  for (const { el } of items) {
     el.addEventListener('click', async () => {
-      const url = el.getAttribute('data-href');
+      const url = el.dataset.href;
       if (!url) return;
       if ((await conn.getTransport()) !== '/lc/index.mjs') {
-        await conn.setTransport('/lc/index.mjs', [{ wisp }]);
+        await conn.setTransport('/lc/index.mjs', [{ wisp: wisp }]);
       }
-
-      if ((await ConfigAPI.get('backend')) == 'sc') {
-        window.location.href = `${scramjetInstance.prefix}${scramjetInstance.codec.encode(url)}`;
-      } else if ((await ConfigAPI.get('backend')) == 'v') {
-        const config = vWrapper.getConfig();
-        window.location.href = `${config.prefix}${scramjetInstance.codec.encode(url)}`;
+      const backend = await ConfigAPI.get('backend');
+      const encoded = sc.codec.encode(url);
+      if (backend === 'v') {
+        window.location.href = vWrapper.getConfig().prefix + encoded;
+      } else {
+        window.location.href = sc.prefix + encoded;
       }
     });
-  });
+  }
 
-  upd();
+  update();
 });

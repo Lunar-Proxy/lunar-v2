@@ -148,7 +148,6 @@ if (bar) {
   let timer: number | null = null;
   bar.addEventListener('input', () => {
     if (timer) clearTimeout(timer);
-    // Show results faster: reduce debounce to 80ms
     timer = window.setTimeout(updateDrop, 80);
   });
   bar.addEventListener('focus', () => {
