@@ -625,7 +625,7 @@ export class SettingsManager {
 
   static handleExit = (e: BeforeUnloadEvent) => {
     e.preventDefault();
-    e.returnValue = '';
+    (e as any).returnValue = '';
     return '';
   };
 

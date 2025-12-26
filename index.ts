@@ -144,6 +144,7 @@ app.use('/api/query', async (req: any, res: any) => {
   }
 });
 
+// @ts-ignore
 const { handler } = await import('./dist/server/entry.mjs');
 
 app.use((req: any, res: any, next: any) => {

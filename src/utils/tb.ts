@@ -151,44 +151,6 @@ function blobToBase64(blob: Blob): Promise<string> {
   });
 }
 
-function setActiveTab(id: number) {
-  activeTabId = id;
-  allTabs.forEach(tab => {
-    tab.iframe.classList.toggle('hidden', tab.id !== id);
-  });
-  const input = document.getElementById('urlbar') as HTMLInputElement | null;
-  if (!input) return;
-  if (urlUpdateTimer !== null) {
-    clearInterval(urlUpdateTimer);
-    urlUpdateTimer = null;
-  }
-  let lastUrl = '';
-  const updateUrl = () => {
-    const frame = document.getElementById(`frame-${id}`) as HTMLIFrameElement;
-    try {
-      const currentSrc = frame.contentWindow?.location.href;
-      if (!currentSrc || currentSrc === lastUrl) return;
-      lastUrl = currentSrc;
-      const framePath = new URL(currentSrc, window.location.origin).pathname;
-      const quickEntry = Object.entries(quickLinks).find(([, path]) => path === framePath);
-      if (quickEntry) {
-        input.value = quickEntry[0];
-      } else if (framePath.startsWith(scramjetWrapper.getConfig().prefix)) {
-        input.value =
-          scramjetWrapper
-            .getConfig()
-            .codec.decode(framePath.slice(scramjetWrapper.getConfig().prefix.length)) ?? '';
-      } else if (framePath.startsWith(vWrapper.getConfig().prefix)) {
-        input.value =
-          vWrapper.getConfig().decodeUrl(framePath.slice(vWrapper.getConfig().prefix.length)) ?? '';
-      } else {
-        input.value = '';
-      }
-    } catch {}
-  };
-  urlUpdateTimer = setInterval(updateUrl, 240);
-  highlightTab();
-}
 
 function highlightTab(): void {
   document.querySelectorAll<HTMLElement>('.tab').forEach(el => {
@@ -293,13 +255,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const loadingBar = document.getElementById('loading-bar') as HTMLDivElement | null;
   let loadingTimeout: ReturnType<typeof setTimeout> | null = null;
   let loadingActive = false;
-  let loadingProgress = 0;
 
   function showBar() {
     if (!loadingBar) return;
     if (loadingActive) return;
     loadingActive = true;
-    loadingProgress = 0;
     loadingBar.style.display = 'block';
     loadingBar.style.opacity = '1';
     loadingBar.style.width = '0%';
@@ -307,13 +267,11 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
       loadingBar.style.transition = 'width 0.5s cubic-bezier(.4,0,.2,1)';
       loadingBar.style.width = '80%';
-      loadingProgress = 80;
     }, 10);
     loadingTimeout = setTimeout(() => {
       if (loadingActive) {
         loadingBar.style.transition = 'width 0.3s cubic-bezier(.4,0,.2,1)';
         loadingBar.style.width = '90%';
-        loadingProgress = 90;
       }
     }, 1200);
   }
@@ -323,13 +281,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!loadingActive) return;
     loadingBar.style.transition = 'width 0.2s cubic-bezier(.4,0,.2,1)';
     loadingBar.style.width = '100%';
-    loadingProgress = 100;
     setTimeout(() => {
       loadingBar.style.opacity = '0';
       loadingBar.style.display = 'none';
       loadingBar.style.width = '0%';
       loadingActive = false;
-      loadingProgress = 0;
     }, 180);
   }
 
@@ -349,7 +305,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Patch openTab to always show loading bar and handle load/error events
   const origOpenTab = openTab;
   (window as any).openTab = function (url?: string) {
     showBar();
@@ -364,7 +319,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
-  // Ensure all tabs have correct loading bar events
   allTabs.forEach(tab => {
     tab.iframe.addEventListener('load', () => {
       resetLoadingBar();
@@ -374,7 +328,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Listen for tab switches to reset loading bar if needed
   document.addEventListener('tab-switch', () => {
     resetLoadingBar();
   });
