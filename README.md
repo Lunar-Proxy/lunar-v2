@@ -1,6 +1,6 @@
 ![Lunar](./lunar.svg)
 
-Lunar v2 is a modern, browser-inspired tabbed web proxy bypassing censorship
+Lunar v2 is feature packed modern, browser-inspired tabbed web proxy bypassing censorship
 while having a familiar, browser-like design.
 
 [![Join our Discord](https://skillicons.dev/icons?i=discord)](https://discord.gg/fuPtWjYuf8)
