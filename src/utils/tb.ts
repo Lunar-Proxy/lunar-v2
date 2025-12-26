@@ -284,6 +284,7 @@ function drawTabs(): void {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+
   const addBtn = document.getElementById('add') as HTMLButtonElement | null;
   addBtn?.addEventListener('click', () => openTab());
   openTab();
@@ -292,31 +293,44 @@ document.addEventListener('DOMContentLoaded', () => {
   const loadingBar = document.getElementById('loading-bar') as HTMLDivElement | null;
   let loadingTimeout: ReturnType<typeof setTimeout> | null = null;
   let loadingActive = false;
+  let loadingProgress = 0;
+
   function showBar() {
     if (!loadingBar) return;
     if (loadingActive) return;
     loadingActive = true;
+    loadingProgress = 0;
     loadingBar.style.display = 'block';
     loadingBar.style.opacity = '1';
     loadingBar.style.width = '0%';
     loadingBar.style.transition = 'none';
     setTimeout(() => {
-      loadingBar.style.transition = 'width 0.22s cubic-bezier(.4,0,.2,1)';
+      loadingBar.style.transition = 'width 0.5s cubic-bezier(.4,0,.2,1)';
       loadingBar.style.width = '80%';
+      loadingProgress = 80;
     }, 10);
+    loadingTimeout = setTimeout(() => {
+      if (loadingActive) {
+        loadingBar.style.transition = 'width 0.3s cubic-bezier(.4,0,.2,1)';
+        loadingBar.style.width = '90%';
+        loadingProgress = 90;
+      }
+    }, 1200);
   }
 
-  function hideBar() {
+  function finishBar() {
     if (!loadingBar) return;
     if (!loadingActive) return;
-    loadingBar.style.transition = 'width 0.13s cubic-bezier(.4,0,.2,1)';
+    loadingBar.style.transition = 'width 0.2s cubic-bezier(.4,0,.2,1)';
     loadingBar.style.width = '100%';
+    loadingProgress = 100;
     setTimeout(() => {
       loadingBar.style.opacity = '0';
       loadingBar.style.display = 'none';
       loadingBar.style.width = '0%';
       loadingActive = false;
-    }, 140);
+      loadingProgress = 0;
+    }, 180);
   }
 
   function resetLoadingBar() {
@@ -324,7 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
       clearTimeout(loadingTimeout);
       loadingTimeout = null;
     }
-    hideBar();
+    finishBar();
   }
 
   if (urlbar) {
@@ -335,6 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Patch openTab to always show loading bar and handle load/error events
   const origOpenTab = openTab;
   (window as any).openTab = function (url?: string) {
     showBar();
@@ -342,28 +357,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const tab = allTabs[allTabs.length - 1];
     if (!tab) return;
     tab.iframe.addEventListener('load', () => {
-      setTimeout(() => {
-        resetLoadingBar();
-      }, 300);
+      resetLoadingBar();
     });
     tab.iframe.addEventListener('error', () => {
-      setTimeout(() => {
-        resetLoadingBar();
-      }, 300);
+      resetLoadingBar();
     });
   };
 
+  // Ensure all tabs have correct loading bar events
   allTabs.forEach(tab => {
     tab.iframe.addEventListener('load', () => {
-      setTimeout(() => {
-        resetLoadingBar();
-      }, 300);
+      resetLoadingBar();
     });
     tab.iframe.addEventListener('error', () => {
-      setTimeout(() => {
-        resetLoadingBar();
-      }, 300);
+      resetLoadingBar();
     });
+  });
+
+  // Listen for tab switches to reset loading bar if needed
+  document.addEventListener('tab-switch', () => {
+    resetLoadingBar();
   });
 });
 
