@@ -5,6 +5,9 @@ Thank you for your interest in contributing to Lunar.
 ### What you need
 
 - pnpm
+- nodejs
+
+Directions to install these are found in the readme
 
 ### Before creating a pull request
 
