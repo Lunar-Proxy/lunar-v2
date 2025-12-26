@@ -1,181 +1,155 @@
 import ConfigAPI from './config';
+import { scramjetWrapper } from './pro';
+import { vWrapper } from './pro';
 
 document.addEventListener('DOMContentLoaded', async () => {
   // @ts-ignore
-  const { ScramjetController } = $scramjetLoadController();
-  const scramjet = new ScramjetController({
-    prefix: '/sj/',
-    files: {
-      wasm: '/a/bundled/scram/wasm.wasm',
-      all: '/a/bundled/scram/all.js',
-      sync: '/a/bundled/scram/sync.js',
-    },
-    flags: {
-      captureErrors: true,
-      cleanErrors: false,
-      rewriterLogs: false,
-      scramitize: false,
-      serviceworkers: false,
-      strictRewrites: true,
-      syncxhr: false,
-    },
-  });
-
-  await scramjet.init();
-
-  const connection = new BareMux.BareMuxConnection('/bm/worker.js');
-  const search = document.querySelector<HTMLInputElement>('[data-input]');
-  const container = document.querySelector<HTMLDivElement>('[data-container]');
-  const randomBtn = document.querySelector<HTMLButtonElement>('[data-random]');
+  const scramjetInstance = scramjetWrapper.getConfig();
+  scramjetWrapper.init();
+  const conn = new BareMux.BareMuxConnection('/bm/worker.js');
+  const input = document.querySelector<HTMLInputElement>('[data-input]');
+  const box = document.querySelector<HTMLDivElement>('[data-container]');
+  const empty = document.querySelector<HTMLDivElement>('[data-empty]');
+  const randBtn = document.querySelector<HTMLButtonElement>('[data-random]');
   const sortBtn = document.querySelector<HTMLButtonElement>('[data-sort]');
-  const clearBtn = document.querySelector<HTMLButtonElement>('[data-clear]');
-  const gridView = document.querySelector<HTMLButtonElement>('[data-view="grid"]');
-  const listView = document.querySelector<HTMLButtonElement>('[data-view="list"]');
-  const compactView = document.querySelector<HTMLButtonElement>('[data-view="compact"]');
-  const visibleCount = document.querySelector<HTMLSpanElement>('[data-visible]');
-  
-  const cards = Array.from(container?.querySelectorAll<HTMLDivElement>('.card') ?? []);
-  const wispUrl = await ConfigAPI.get('wispUrl');
+  const clrBtn = document.querySelector<HTMLButtonElement>('[data-clear]');
+  const grid = document.querySelector<HTMLButtonElement>('[data-view="grid"]');
+  const list = document.querySelector<HTMLButtonElement>('[data-view="list"]');
+  const compact = document.querySelector<HTMLButtonElement>('[data-view="compact"]');
+  const count = document.querySelector<HTMLSpanElement>('[data-visible]');
+  const wisp = await ConfigAPI.get('wispUrl');
 
-  if (!search || !container || !randomBtn) return;
+  if (!input || !box || !randBtn) return;
 
-  let sortAscending = true;
+  const items = Array.from(box.querySelectorAll<HTMLDivElement>('.card'));
+  const data = items
+    .map(el => ({
+      el,
+      n: el.querySelector('h2')?.textContent?.toLowerCase() ?? '',
+      d: el.querySelector('p')?.textContent?.toLowerCase() ?? '',
+      bg: el.dataset.bg,
+      sn: el.dataset.name?.toLowerCase() ?? '',
+    }))
+    .sort((a, b) => a.sn.localeCompare(b.sn));
 
-  cards.forEach(card => {
-    const img = new Image();
-    const bg = card.dataset.bg;
+  const frag = document.createDocumentFragment();
+  data.forEach(({ el }) => frag.appendChild(el));
+  box.appendChild(frag);
+
+  let rev = false;
+
+  data.forEach(({ el, bg }) => {
     if (!bg) return;
-
-    img.src = bg;
+    const img = new Image();
     img.onload = () => {
-      card.classList.remove('card-loading', 'shine');
-      const bgDiv = card.querySelector('.absolute.inset-0.z-0') as HTMLElement;
-      if (bgDiv) {
-        bgDiv.style.backgroundImage = `url('${img.src}')`;
-      }
+      el.classList.remove('card-loading');
+      const div = el.querySelector('.card-bg') as HTMLElement;
+      if (div) div.style.backgroundImage = `url('${bg}')`;
     };
+    img.onerror = () => el.classList.remove('card-loading');
+    img.src = bg;
   });
 
-  const updateVisibleCount = () => {
-    const visible = cards.filter(card => card.style.display !== 'none').length;
-    if (visibleCount) visibleCount.textContent = visible.toString();
+  const upd = () => {
+    const vis = data.filter(({ el }) => el.style.display !== 'none').length;
+    if (count) count.textContent = vis.toString();
+    const show = vis === 0 && input.value.trim() !== '';
+    empty?.classList.toggle('hidden', !show);
+    empty?.classList.toggle('flex', show);
   };
 
-  search.addEventListener('input', () => {
-    const query = search.value.toLowerCase().trim();
-    cards.forEach(card => {
-      const name = card.querySelector('h2')?.textContent?.toLowerCase() ?? '';
-      const desc = card.querySelector('p')?.textContent?.toLowerCase() ?? '';
-      const matches = name.includes(query) || desc.includes(query);
-      card.style.display = matches ? '' : 'none';
+  input.addEventListener('input', () => {
+    const q = input.value.toLowerCase().trim();
+    data.forEach(({ el, n, d }) => {
+      el.style.display = n.includes(q) || d.includes(q) ? '' : 'none';
     });
-    updateVisibleCount();
+    upd();
   });
 
-  randomBtn.addEventListener('click', () => {
-    const visibleCards = cards.filter(card => card.style.display !== 'none');
-    if (!visibleCards.length) return;
-    const randomCard = visibleCards[Math.floor(Math.random() * visibleCards.length)];
-    randomCard.click();
+  randBtn.addEventListener('click', () => {
+    const vis = data.filter(({ el }) => el.style.display !== 'none');
+    if (vis.length) vis[Math.floor(Math.random() * vis.length)].el.click();
   });
 
   sortBtn?.addEventListener('click', () => {
-    sortAscending = !sortAscending;
-    const sortedCards = [...cards].sort((a, b) => {
-      const nameA = a.dataset.name?.toLowerCase() ?? '';
-      const nameB = b.dataset.name?.toLowerCase() ?? '';
-      return sortAscending ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
-    });
-
-    const btnText = sortBtn.querySelector('span');
-    if (btnText) {
-      btnText.textContent = sortAscending ? 'Sort Z-A' : 'Sort A-Z';
-    }
-
-    sortedCards.forEach(card => container.appendChild(card));
+    rev = !rev;
+    const sorted = [...data].sort((a, b) =>
+      rev ? b.sn.localeCompare(a.sn) : a.sn.localeCompare(b.sn),
+    );
+    const txt = sortBtn.querySelector('span');
+    if (txt) txt.textContent = rev ? 'Z-A' : 'A-Z';
+    const f = document.createDocumentFragment();
+    sorted.forEach(({ el }) => f.appendChild(el));
+    box.appendChild(f);
   });
 
-  clearBtn?.addEventListener('click', () => {
-    if (search) search.value = '';
-    cards.forEach(card => {
-      card.style.display = '';
-    });
-    updateVisibleCount();
+  clrBtn?.addEventListener('click', () => {
+    input.value = '';
+    data.forEach(({ el }) => (el.style.display = ''));
+    upd();
   });
 
-  const setActiveView = (activeBtn: HTMLButtonElement) => {
-    [gridView, listView, compactView].forEach(btn => {
-      btn?.classList.remove('bg-text-secondary/20', 'text-text-header');
-      btn?.classList.add('text-text-secondary');
+  const setBtn = (btn: HTMLButtonElement) => {
+    [grid, list, compact].forEach(b => {
+      b?.classList.remove('bg-background', 'text-text-header');
+      b?.classList.add('text-text-secondary');
     });
-    activeBtn.classList.add('bg-text-secondary/20', 'text-text-header');
-    activeBtn.classList.remove('text-text-secondary');
+    btn.classList.add('bg-background', 'text-text-header');
+    btn.classList.remove('text-text-secondary');
   };
 
-  const applyGridView = () => {
-    container?.classList.remove('flex', 'flex-col', 'space-y-6', 'grid-cols-2', 'sm:grid-cols-3', 'md:grid-cols-4', 'lg:grid-cols-6', 'gap-4');
-    container?.classList.add('grid', 'grid-cols-1', 'sm:grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-4', 'gap-6');
-    cards.forEach(card => {
-      card.className = card.className.split(' ').filter(c => !c.startsWith('h-')).join(' ') + ' h-48';
-      const content = card.querySelector('.z-20');
-      if (content) {
-        content.classList.remove('flex-row', 'justify-start', 'text-left', 'gap-6');
-        content.classList.add('items-center', 'justify-center', 'text-center');
-      }
-      const desc = card.querySelector('p');
-      if (desc) desc.style.display = '';
+  const resetH = () => {
+    data.forEach(({ el }) => {
+      el.classList.remove('h-32', 'h-36', 'h-44');
+      const p = el.querySelector('p') as HTMLElement;
+      if (p) p.style.display = '';
     });
   };
 
-  applyGridView();
-
-  gridView?.addEventListener('click', () => {
-    applyGridView();
-    setActiveView(gridView);
+  grid?.addEventListener('click', () => {
+    if (!box) return;
+    resetH();
+    box.className = 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4';
+    data.forEach(({ el }) => el.classList.add('h-44'));
+    setBtn(grid);
   });
 
-  listView?.addEventListener('click', () => {
-    container?.classList.remove('grid', 'grid-cols-1', 'sm:grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-4', 'gap-6');
-    container?.classList.add('flex', 'flex-col', 'space-y-6');
-    cards.forEach(card => {
-      card.classList.remove('h-48', 'h-32');
-      card.classList.add('h-36');
-      const content = card.querySelector('.z-20');
-      content?.classList.remove('items-center', 'justify-center', 'text-center');
-      content?.classList.add('flex-row', 'justify-start', 'text-left', 'gap-6');
-      const desc = card.querySelector('p');
-      if (desc) desc.style.display = '';
+  list?.addEventListener('click', () => {
+    if (!box) return;
+    resetH();
+    box.className = 'flex flex-col gap-4';
+    data.forEach(({ el }) => el.classList.add('h-36'));
+    setBtn(list);
+  });
+
+  compact?.addEventListener('click', () => {
+    if (!box) return;
+    resetH();
+    box.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3';
+    data.forEach(({ el }) => {
+      el.classList.add('h-32');
+      const p = el.querySelector('p') as HTMLElement;
+      if (p) p.style.display = 'none';
     });
-    setActiveView(listView);
+    setBtn(compact);
   });
 
-  compactView?.addEventListener('click', () => {
-    container?.classList.remove('flex', 'flex-col', 'space-y-6', 'gap-6');
-    container?.classList.add('grid', 'grid-cols-2', 'sm:grid-cols-3', 'md:grid-cols-4', 'lg:grid-cols-6', 'gap-4');
-    cards.forEach(card => {
-      card.classList.remove('h-48', 'h-36');
-      card.classList.add('h-32');
-      const content = card.querySelector('.z-20');
-      content?.classList.remove('flex-row', 'justify-start', 'text-left', 'gap-6');
-      content?.classList.add('items-center', 'justify-center', 'text-center');
-      const desc = card.querySelector('p');
-      if (desc) desc.style.display = 'none';
-    });
-    setActiveView(compactView);
-  });
-
-  cards.forEach(card => {
-    card.addEventListener('click', async () => {
-      const assetUrl = card.getAttribute('data-href');
-      if (!assetUrl) return;
-
-      if ((await connection.getTransport()) !== '/lc/index.mjs') {
-        await connection.setTransport('/lc/index.mjs', [{ wisp: wispUrl }]);
+  data.forEach(({ el }) => {
+    el.addEventListener('click', async () => {
+      const url = el.getAttribute('data-href');
+      if (!url) return;
+      if ((await conn.getTransport()) !== '/lc/index.mjs') {
+        await conn.setTransport('/lc/index.mjs', [{ wisp }]);
       }
 
-      window.location.href = scramjet.encodeUrl(assetUrl);
+      if ((await ConfigAPI.get('backend')) == 'sc') {
+        window.location.href = `${scramjetInstance.prefix}${scramjetInstance.codec.encode(url)}`;
+      } else if ((await ConfigAPI.get('backend')) == 'v') {
+        const config = vWrapper.getConfig();
+        window.location.href = `${config.prefix}${scramjetInstance.codec.encode(url)}`;
+      }
     });
   });
 
-  updateVisibleCount();
+  upd();
 });

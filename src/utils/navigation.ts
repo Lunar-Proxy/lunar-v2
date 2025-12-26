@@ -1,9 +1,9 @@
 import ConfigAPI from './config';
+import { scramjetWrapper } from './pro';
+import { vWrapper } from './pro';
 import { TabManager } from './tb';
-import { ValidateUrl } from './url';
+import { validateUrl } from './url';
 
-// @ts-ignore
-const { ScramjetController } = $scramjetLoadController();
 const reload = document.getElementById('refresh') as HTMLButtonElement | null;
 const back = document.getElementById('back') as HTMLButtonElement | null;
 const forward = document.getElementById('forward') as HTMLButtonElement | null;
@@ -17,27 +17,16 @@ const nativePaths: Record<string, string> = {
   'lunar://games': '/math',
   'lunar://apps': '/sci',
 };
-const scramjet = new ScramjetController({
-  prefix: '/sj/',
-  files: {
-    wasm: '/a/bundled/scram/wasm.wasm',
-    all: '/a/bundled/scram/all.js',
-    sync: '/a/bundled/scram/sync.js',
-  },
-  flags: {
-    captureErrors: true,
-    cleanErrors: false,
-    rewriterLogs: false,
-    scramitize: false,
-    serviceworkers: false,
-    strictRewrites: true,
-    syncxhr: false,
-  },
-});
 
-await scramjet.init();
+const scramjetInstance = scramjetWrapper.getConfig();
+const vInstance = vWrapper.getConfig();
+scramjetWrapper.init();
 await navigator.serviceWorker.register('./sw.js');
 const connection = new BareMux.BareMuxConnection('/bm/worker.js');
+
+if ((await connection.getTransport()) !== '/lc/index.mjs') {
+  await connection.setTransport('/lc/index.mjs', [{ wisp: wispUrl }]);
+}
 
 function getActiveFrame(): HTMLIFrameElement | null {
   return document.getElementById(`frame-${TabManager.activeTabId}`) as HTMLIFrameElement | null;
@@ -80,7 +69,7 @@ favorite?.addEventListener('click', async () => {
   const frame = getActiveFrame();
   if (!frame || nativePaths[urlbar.value]) return;
 
-  const url = scramjet.decodeUrl(frame.src);
+  const url = scramjetInstance.codec.decode(frame.src);
   const name = frame.contentDocument?.title || url;
 
   let domain: string;
@@ -89,6 +78,7 @@ favorite?.addEventListener('click', async () => {
   } catch {
     domain = url;
   }
+
   // @ts-ignore
   const currentBm: Array<{ name: string; logo: string; redir: string }> =
     (await ConfigAPI.get('bm')) ?? [];
@@ -123,27 +113,63 @@ urlbar?.addEventListener('keydown', async e => {
   }
 
   const input = (e.target as HTMLInputElement).value.trim();
-  const url = scramjet.encodeUrl(await ValidateUrl(input));
+  let url;
+  if ((await ConfigAPI.get('backend')) == 'sc') {
+    url = `${scramjetInstance.prefix}${scramjetInstance.codec.encode(await validateUrl(input))}`;
+  } else if ((await ConfigAPI.get('backend')) == 'u') {
+    url = `${vInstance.prefix}${vInstance.encodeUrl(await validateUrl(input))}`;
+  }
+
   loading();
+  // @ts-ignore
   frame.src = url;
 });
 
 // @ts-ignore
-window.top.document.querySelectorAll<HTMLElement>('aside button, aside img').forEach(el => {
-  el.addEventListener('click', async () => {
+let targetDoc: Document | null = null;
+
+function findTargetDoc(win: Window | null): Document | null {
+  while (win) {
+    try {
+      if (win.document?.querySelector('aside')) {
+        return win.document;
+      }
+    } catch {}
+
+    if (win === win.parent) break;
+    win = win.parent;
+  }
+
+  try {
+    const frames = window.top?.document.querySelectorAll('iframe') || [];
+    for (const iframe of frames) {
+      try {
+        const doc = iframe.contentDocument;
+        if (doc?.querySelector('aside')) return doc;
+      } catch {}
+    }
+  } catch {}
+
+  return null;
+}
+
+targetDoc = findTargetDoc(window);
+
+// @ts-ignore
+targetDoc.querySelectorAll<HTMLElement>('aside button, aside img').forEach(el => {
+  el.addEventListener('click', () => {
     const frame = getActiveFrame();
     if (!frame) return;
 
-    let targetUrl: string | undefined;
-    if (el.tagName.toLowerCase() === 'button') targetUrl = el.dataset.url;
-    else if (el.tagName.toLowerCase() === 'img') targetUrl = '/new';
+    const targetUrl = el.tagName === 'BUTTON' ? el.getAttribute('data-url') : '/new';
+
     if (!targetUrl) return;
 
     const nativeKey = Object.keys(nativePaths).find(key => nativePaths[key] === targetUrl);
-    if (nativeKey) {
-      if (urlbar) urlbar.value = nativeKey;
-      frame.src = nativePaths[nativeKey];
-      loading();
-    }
+    if (!nativeKey) return;
+
+    if (urlbar) urlbar.value = nativeKey;
+    frame.src = nativePaths[nativeKey];
+    loading();
   });
 });

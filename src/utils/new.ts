@@ -1,5 +1,3 @@
-import ConfigAPI from '../utils/config';
-
 document.addEventListener('DOMContentLoaded', () => {
   const hoursEl = document.getElementById('hours') as HTMLElement | null;
   const minutesEl = document.getElementById('minutes') as HTMLElement | null;
@@ -30,28 +28,16 @@ document.addEventListener('DOMContentLoaded', () => {
     latency: number | 'N/A';
   }
 
-  function pingWS(url: string): Promise<PingResult> {
+  function pingServer(url: string): Promise<PingResult> {
     return new Promise(resolve => {
-      const ws = new WebSocket(url);
-      const startTime = Date.now();
-      let resolved = false;
+      // doing wisp server ping was so inaccurate atp lets just do the actual server
+      const start = performance.now();
 
-      const finish = (status: 'OK' | 'Fail', latency: number | 'N/A') => {
-        if (resolved) return;
-        resolved = true;
-        try {
-          ws.close();
-        } catch {}
-        resolve({ status, latency });
-      };
+      fetch(url, { method: 'HEAD', cache: 'no-cache' })
+        .then(() => resolve({ status: 'OK', latency: Math.round(performance.now() - start) }))
+        .catch(() => resolve({ status: 'Fail', latency: 'N/A' }));
 
-      ws.addEventListener('open', () => {
-        finish('OK', Date.now() - startTime);
-      });
-
-      ws.addEventListener('error', () => finish('Fail', 'N/A'));
-
-      setTimeout(() => finish('Fail', 'N/A'), 3000);
+      setTimeout(() => resolve({ status: 'Fail', latency: 'N/A' }), 3000);
     });
   }
 
@@ -61,15 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     serverEl.className = 'text-md cursor-default font-medium text-white/70';
 
     try {
-      const wsUrlRaw = await ConfigAPI.get('wispUrl');
-      const wsUrl = typeof wsUrlRaw === 'string' ? wsUrlRaw : '';
-
-      if (!wsUrl.startsWith('ws') && !wsUrl.startsWith('wss')) {
-        serverEl.textContent = 'Invalid Wisp Server URL';
-        return;
-      }
-
-      const result = await pingWS(wsUrl);
+      const result = await pingServer(window.location.origin);
 
       if (result.status === 'OK') {
         let colorClass = 'text-green-400';
@@ -82,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         serverEl.textContent = 'Ping failed';
       }
     } catch (err) {
-      console.error('Failed to ping Wisp server:', err);
+      console.error('Failed to ping the server:', err);
       serverEl.textContent = 'Ping failed';
     }
   }

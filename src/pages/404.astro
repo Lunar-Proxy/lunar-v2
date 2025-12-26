@@ -1,0 +1,59 @@
+---
+import '@/main.css';
+const error = Astro.url.searchParams.get('error') || '';
+const url = Astro.url.searchParams.get('url') || '';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Page Not Found</title>
+  </head>
+  <body class="flex min-h-screen w-screen items-center justify-center bg-[#232136] font-sans text-white">
+    <div class="flex h-full w-full flex-col items-center px-4 py-12">
+      <div class="mb-12 flex w-full flex-col items-center">
+        <div class="mb-4 text-9xl font-extrabold text-[#e0def4] drop-shadow-lg">404</div>
+        <div class="mb-2 text-3xl font-bold text-[#e0def4]">Page Not Found</div>
+        <div class="mb-6 max-w-2xl text-center text-lg text-[#a19eb3]">The page you requested could not be found.</div>
+      </div>
+      <div class="mb-10 flex w-full flex-wrap items-center justify-center gap-4">
+        <button
+          class="rounded-lg border border-[#374151] bg-[#232136] px-7 py-3 text-lg font-semibold whitespace-nowrap text-[#e0def4] transition hover:bg-[#374151] hover:text-white"
+          onclick="window.location.reload()">Reload</button
+        >
+        <button
+          class="rounded-lg border border-[#374151] bg-[#232136] px-7 py-3 text-lg font-semibold whitespace-nowrap text-[#e0def4] transition hover:bg-[#374151] hover:text-white"
+          onclick="window.location.href='/'">Go Home</button
+        >
+      </div>
+      <div class="flex w-full max-w-4xl flex-col items-start justify-center gap-16 md:flex-row">
+        <div class="max-w-xl min-w-[260px] flex-1">
+          <div class="mb-2 text-lg font-semibold text-[#e0def4]">URL</div>
+          <div
+            class="mb-6 rounded-md border border-[#374151] bg-[#232136] px-4 py-3 font-mono text-base break-all text-[#a19eb3]">
+            {url ? url : 'Unknown'}
+          </div>
+          <div class="mb-2 text-lg font-semibold text-[#e0def4]">Error Details</div>
+          <textarea
+            id="error-stack"
+            readonly
+            placeholder="No error details provided"
+            class="mb-6 min-h-[80px] w-full resize-y rounded-md border border-[#374151] bg-[#232136] p-3 font-mono text-base text-[#e0def4]"
+            >{error}</textarea
+          >
+        </div>
+        <div class="max-w-xl min-w-[260px] flex-1">
+          <div class="mb-2 text-lg font-semibold text-[#e0def4]">Possible reasons:</div>
+          <ul class="ml-6 list-disc text-base text-[#a19eb3]">
+            <li>The address was mistyped or the page no longer exists.</li>
+            <li>The wisp server is blocked or broken.</li>
+            <li>There was a network or proxy error.</li>
+            <li>If you see a stack trace, the app or site may have crashed.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

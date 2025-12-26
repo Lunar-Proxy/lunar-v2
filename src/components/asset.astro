@@ -16,204 +16,130 @@ const { list = [] }: { list?: Game[] } = Astro.props;
   <head>
     <style>
       ::-webkit-scrollbar {
-        width: 10px;
+        width: 8px;
       }
 
       ::-webkit-scrollbar-track {
-        background: var(--background-overlay);
-        border-radius: 10px;
+        background: var(--background);
       }
 
       ::-webkit-scrollbar-thumb {
         background: var(--text-secondary);
-        border-radius: 10px;
-        border: 2px solid var(--background-overlay);
+        border-radius: 4px;
       }
 
       ::-webkit-scrollbar-thumb:hover {
         background: var(--text-header);
       }
 
-      * {
-        scrollbar-width: thin;
-        scrollbar-color: var(--text-secondary) var(--background-overlay);
-      }
-
-      @keyframes fadeInUp {
+      @keyframes fadeIn {
         from {
           opacity: 0;
-          transform: translateY(20px);
-          filter: blur(10px);
         }
         to {
           opacity: 1;
-          transform: translateY(0);
-          filter: blur(0);
         }
       }
 
-      @keyframes pulse {
-        0%, 100% { opacity: 0.8; }
-        50% { opacity: 1; }
-      }
-
-      @keyframes shine {
-        0% { transform: translateX(-100%) rotate(25deg); }
-        100% { transform: translateX(100%) rotate(25deg); }
-      }
-
-      .card-glow {
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-
-      .card-glow:hover {
-        box-shadow:
-          0 8px 24px rgba(99, 102, 241, 0.2),
-          0 16px 48px rgba(99, 102, 241, 0.15),
-          0 32px 80px rgba(99, 102, 241, 0.1);
-        transform: scale(1.03) translateY(-5px);
-      }
-
       .card-loading {
-        background: linear-gradient(135deg, var(--background-overlay), var(--background));
-        animation: pulse 1.5s infinite ease-in-out;
-        filter: blur(8px);
-      }
-
-      .shine::before {
-        content: '';
-        position: absolute;
-        top: -100%;
-        left: -100%;
-        width: 200%;
-        height: 200%;
-        background: linear-gradient(120deg, transparent, rgba(99, 102, 241, 0.08), transparent);
-        animation: shine 2.5s infinite;
-        pointer-events: none;
-        z-index: 1;
-      }
-
-      .gradient-text {
-        background: linear-gradient(135deg, #6366f1, #8b5cf6);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        background: var(--background-overlay);
+        opacity: 0.5;
       }
     </style>
   </head>
 
-  <body class="min-h-screen overflow-x-hidden bg-background font-linux text-text-header">
+  <body class="bg-background font-linux text-text-header min-h-screen">
     <div class="mx-auto max-w-7xl p-6">
-
-      <div class="mb-8 animate-[fadeInUp_0.6s_ease-out]">
-        <div class="mb-6 flex flex-wrap items-center justify-between gap-6">
-          
-          <div class="flex items-center gap-4">
-            <h1 class="gradient-text text-3xl font-bold md:text-4xl">Asset Library</h1>
-            <div class="rounded-xl border border-[#6366f1]/20 bg-background-overlay px-4 py-2 text-sm text-text-secondary">
-              <span data-count>{list.length}</span> assets
-            </div>
+      <div class="mb-6">
+        <div class="mb-4 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <h1 class="text-2xl font-bold">Assets</h1>
           </div>
 
-          <div class="flex gap-2 rounded-xl border border-border-default/30 bg-background-overlay/60 p-1 shadow-lg backdrop-blur-sm">
+          <div class="bg-background-overlay flex gap-1 rounded-lg p-1">
             <button
               data-view="grid"
-              class="flex h-10 w-10 items-center justify-center rounded-lg bg-text-secondary/20 text-text-header transition-all duration-200 hover:bg-text-secondary/30">
-              <i data-lucide="grid-3x3" class="h-5 w-5"></i>
+              class="bg-background text-text-header flex h-9 w-9 items-center justify-center rounded transition-colors">
+              <i data-lucide="grid-3x3" class="h-4 w-4"></i>
             </button>
             <button
               data-view="list"
-              class="flex h-10 w-10 items-center justify-center rounded-lg text-text-secondary transition-all duration-200 hover:bg-text-secondary/20 hover:text-text-header">
-              <i data-lucide="list" class="h-5 w-5"></i>
+              class="text-text-secondary hover:bg-background hover:text-text-header flex h-9 w-9 items-center justify-center rounded transition-colors">
+              <i data-lucide="list" class="h-4 w-4"></i>
             </button>
             <button
               data-view="compact"
-              class="flex h-10 w-10 items-center justify-center rounded-lg text-text-secondary transition-all duration-200 hover:bg-text-secondary/20 hover:text-text-header">
-              <i data-lucide="layout-grid" class="h-5 w-5"></i>
+              class="text-text-secondary hover:bg-background hover:text-text-header flex h-9 w-9 items-center justify-center rounded transition-colors">
+              <i data-lucide="layout-grid" class="h-4 w-4"></i>
             </button>
           </div>
         </div>
 
-        <div class="mb-4 flex flex-wrap items-center gap-3">
-          <div class="relative flex-1 min-w-[280px] max-w-md">
-            <i data-lucide="search" class="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-text-secondary/60"></i>
+        <div class="mb-3 flex flex-wrap items-center gap-2">
+          <div class="relative max-w-md min-w-[240px] flex-1">
+            <i data-lucide="search" class="text-text-secondary absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2"></i>
             <input
               type="text"
               data-input="search"
-              placeholder="Search games..."
-              class="h-12 w-full rounded-xl border border-border-default/30 bg-background-overlay/40 pl-12 pr-4 text-sm text-text-header placeholder-text-secondary/50 shadow-lg backdrop-blur-sm transition-all duration-200 focus:border-[#6366f1] focus:ring-2 focus:ring-[#6366f1]/30 focus:outline-none"
+              placeholder="Search assets..."
+              class="bg-background-overlay text-text-header placeholder-text-secondary/60 focus:ring-text-secondary/30 h-10 w-full rounded-lg pr-3 pl-10 text-sm transition-colors focus:ring-1 focus:outline-none"
             />
           </div>
 
           <button
             data-random="random"
-            class="flex h-12 items-center gap-2 rounded-xl border border-border-default/30 bg-background-overlay/80 px-4 shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-105 hover:bg-[#6366f1]/10 hover:border-[#6366f1]/50">
-            <i data-lucide="shuffle" class="h-5 w-5 text-text-secondary transition-colors duration-200"></i>
-            <span class="text-sm text-text-secondary">Random</span>
+            class="bg-background-overlay hover:bg-background-overlay/80 text-text-secondary flex h-10 items-center gap-2 rounded-lg px-3 text-sm transition-colors">
+            <i data-lucide="shuffle" class="h-4 w-4"></i>
+            Random
           </button>
 
           <button
             data-sort="sort"
-            class="flex h-12 items-center gap-2 rounded-xl border border-border-default/30 bg-background-overlay/80 px-4 shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-105 hover:bg-[#6366f1]/10 hover:border-[#6366f1]/50">
-            <i data-lucide="arrow-up-down" class="h-5 w-5 text-text-secondary transition-colors duration-200"></i>
-            <span class="text-sm text-text-secondary">Sort A-Z</span>
+            class="bg-background-overlay hover:bg-background-overlay/80 text-text-secondary flex h-10 items-center gap-2 rounded-lg px-3 text-sm transition-colors">
+            <i data-lucide="arrow-up-down" class="h-4 w-4"></i>
+            <span>A-Z</span>
           </button>
 
           <button
             data-clear="clear"
-            class="flex h-12 items-center gap-2 rounded-xl border border-border-default/30 bg-background-overlay/80 px-4 shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-105 hover:bg-red-500/10 hover:border-red-500/50">
-            <i data-lucide="x-circle" class="h-5 w-5 text-text-secondary transition-colors duration-200"></i>
-            <span class="text-sm text-text-secondary">Clear</span>
+            class="bg-background-overlay hover:bg-background-overlay/80 text-text-secondary flex h-10 items-center gap-2 rounded-lg px-3 text-sm transition-colors">
+            <i data-lucide="x" class="h-4 w-4"></i>
+            Clear
           </button>
         </div>
 
-        <div class="flex flex-wrap gap-3 text-sm">
-          <div class="flex items-center gap-2 rounded-lg border border-border-default/30 bg-background-overlay/60 px-3 py-2 backdrop-blur-sm">
-            <i data-lucide="eye" class="h-4 w-4 text-[#6366f1]"></i>
-            <span class="text-text-secondary">Visible: <span data-visible class="text-text-header font-medium">{list.length}</span></span>
-          </div>
+        <div class="text-text-secondary text-sm">
+          Showing <span data-visible class="text-text-header">{list.length}</span> of {list.length}
         </div>
       </div>
 
-      <div data-container class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div data-container class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {
-          list.map((game, i) => (
+          list.map(game => (
             <div
               data-href={game.url}
               data-name={game.name}
               data-bg={game.icon}
-              class="card card-glow card-loading shine group relative flex h-48 cursor-pointer flex-col justify-between overflow-hidden rounded-2xl border border-border-default/30 transition-all duration-300"
-              style={`animation: fadeInUp 0.6s ease-out ${i * 0.05}s both;`}>
-              <div
-                class="absolute inset-0 z-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110"
-                style="background-image: var(--bg-url);"
-              />
-              <div class="absolute inset-0 z-10 bg-gradient-to-t from-background/95 via-background/80 to-background/70 backdrop-blur-[2px] transition-all duration-300 group-hover:from-background/90 group-hover:via-background/70 group-hover:to-background/60" />
-              <div class="relative z-20 flex h-full flex-col items-center justify-center p-6 text-center">
-                <h2 class="mb-2 text-lg font-bold drop-shadow-lg transition-colors duration-200 group-hover:text-text-header">
-                  {game.name}
-                </h2>
-                <p class="line-clamp-2 text-sm leading-relaxed text-text-secondary drop-shadow-sm transition-colors duration-200 group-hover:text-text-secondary/90">
-                  {game.desc}
-                </p>
+              class="card card-loading group bg-background-overlay relative flex h-44 cursor-pointer flex-col justify-end overflow-hidden rounded-lg transition-transform hover:scale-[1.02]"
+              style="animation: fadeIn 0.3s ease-out;">
+              <div class="card-bg absolute inset-0 bg-cover bg-center opacity-70 transition-opacity group-hover:opacity-80" />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+              <div class="relative z-10 p-4">
+                <h2 class="mb-1 font-semibold text-white drop-shadow-lg">{game.name}</h2>
+                <p class="line-clamp-2 text-xs text-gray-300 drop-shadow-md">{game.desc}</p>
               </div>
-              <div class="pointer-events-none absolute inset-0 z-30 rounded-2xl opacity-0 ring-2 ring-[#6366f1]/30 transition-all duration-300 group-hover:opacity-100" />
             </div>
           ))
         }
       </div>
 
-      {
-        list.length === 0 && (
-          <div class="flex flex-col items-center justify-center py-20 text-center">
-            <div class="rounded-2xl border border-border-default/30 bg-background-overlay/60 p-8 backdrop-blur-sm">
-              <i data-lucide="package-x" class="mx-auto mb-4 h-16 w-16 text-text-secondary/50" />
-              <h3 class="mb-2 text-xl font-bold text-text-header">No Assets found</h3>
-              <p class="text-text-secondary">Try adjusting your search or filters</p>
-            </div>
-          </div>
-        )
-      }
+      <div data-empty class="hidden flex-col items-center justify-center py-16 text-center">
+        <div class="bg-background-overlay rounded-lg p-8">
+          <i data-lucide="inbox" class="text-text-secondary/50 mx-auto mb-3 h-12 w-12"></i>
+          <h3 class="text-text-header mb-1 text-lg font-semibold">No assets found</h3>
+          <p class="text-text-secondary text-sm">Try a different search</p>
+        </div>
+      </div>
     </div>
 
     <ImportLucide />

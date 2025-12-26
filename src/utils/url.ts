@@ -1,20 +1,19 @@
 import ConfigAPI from './config';
 
-export async function ValidateUrl(url: string) {
-  const hasProtocol = url.startsWith('http://') || url.startsWith('https://');
+export async function validateUrl(input: string): Promise<string> {
   const engine = await ConfigAPI.get('engine');
+  const value = input.trim();
 
-  const isUrl = (url: string) => {
-    try {
-      new URL(url);
-      return true;
-    } catch {
-      return false;
+  try {
+    const url = new URL(value);
+    if (url.protocol === 'http:' || url.protocol === 'https:') {
+      return url.toString();
     }
-  };
+  } catch {}
 
-  if (isUrl(url) && hasProtocol) return url;
-  if (url.includes('.') && !hasProtocol) return 'https://' + url;
+  if (/^[\w-]+(\.[\w-]+)+/.test(value)) {
+    return `https://${value}`;
+  }
 
-  return `${engine}${encodeURIComponent(url)}`;
+  return `${engine}${encodeURIComponent(value)}`;
 }
