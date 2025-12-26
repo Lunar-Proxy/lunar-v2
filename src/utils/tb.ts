@@ -151,7 +151,6 @@ function blobToBase64(blob: Blob): Promise<string> {
   });
 }
 
-
 function highlightTab(): void {
   document.querySelectorAll<HTMLElement>('.tab').forEach(el => {
     const id = parseInt(el.dataset.id || '', 10);
@@ -246,7 +245,6 @@ function drawTabs(): void {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-
   const addBtn = document.getElementById('add') as HTMLButtonElement | null;
   addBtn?.addEventListener('click', () => openTab());
   openTab();
