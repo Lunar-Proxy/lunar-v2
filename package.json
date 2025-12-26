@@ -31,7 +31,7 @@
     "fs-extra": "^11.3.2",
     "inline-source": "^8.0.3",
     "localforage": "^1.10.0",
-    "lucide": "^0.539.0",
+    "lucide": "^0.562.0",
     "node-fetch": "^3.3.2",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.6.14",
