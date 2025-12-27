@@ -350,6 +350,114 @@ document.addEventListener('DOMContentLoaded', () => {
   }, 500);
 });
 
+type SearchEngineKey = 'duckduckgo' | 'google' | 'bing' | 'brave';
+interface SearchEngine {
+  name: string;
+  icon: string;
+  url: string;
+}
+
+function setupBar() {
+  function moveBar() {
+    const input = document.getElementById('urlbar') as HTMLInputElement | null;
+    const bar = document.getElementById('loading-bar') as HTMLDivElement | null;
+    if (input && bar) {
+      const rect = input.getBoundingClientRect();
+      bar.style.top = `${rect.bottom + window.scrollY}px`;
+    }
+  }
+  window.addEventListener('DOMContentLoaded', moveBar);
+  window.addEventListener('resize', moveBar);
+  window.addEventListener('scroll', moveBar);
+
+  const engines: Record<SearchEngineKey, SearchEngine> = {
+    duckduckgo: {
+      name: 'DuckDuckGo',
+      icon: '/a/images/engines/ddg.ico',
+      url: 'https://duckduckgo.com/?q='
+    },
+    google: {
+      name: 'Google',
+      icon: '/a/images/co/go.ico',
+      url: 'https://www.google.com/search?q='
+    },
+    bing: {
+      name: 'Bing',
+      icon: '/a/images/engines/bi.ico',
+      url: 'https://www.bing.com/search?q='
+    },
+    brave: {
+      name: 'Brave Search',
+      icon: '/a/images/engines/br.jpeg',
+      url: 'https://search.brave.com/search?q='
+    },
+  };
+
+
+  let engine: SearchEngineKey = 'duckduckgo';
+
+  (async () => {
+    try {
+      const saved = await ConfigAPI.get('engine');
+      if (saved && typeof saved === 'string' && saved in engines) {
+        engine = saved as SearchEngineKey;
+        const icon = document.getElementById('search-engine-icon') as HTMLImageElement | null;
+        if (icon) {
+          icon.src = engines[engine].icon;
+          icon.alt = engines[engine].name;
+        }
+      }
+    } catch (e) {}
+  })();
+
+  const btn = document.getElementById('search-engine-btn') as HTMLButtonElement | null;
+  const icon = document.getElementById('search-engine-icon') as HTMLImageElement | null;
+  const dropdown = document.getElementById('search-engine-dropdown') as HTMLDivElement | null;
+  const chevron = btn?.querySelector('[data-lucide="chevron-down"]') as HTMLElement | null;
+
+  btn?.addEventListener('click', (e: MouseEvent) => {
+    e.stopPropagation();
+    const isHidden = dropdown?.classList.contains('hidden');
+    if (isHidden) {
+      dropdown?.classList.remove('hidden');
+      if (chevron) chevron.style.transform = 'rotate(180deg)';
+    } else {
+      dropdown?.classList.add('hidden');
+      if (chevron) chevron.style.transform = 'rotate(0deg)';
+    }
+  });
+
+  document.addEventListener('click', (e: MouseEvent) => {
+    if (!btn?.contains(e.target as Node) && !dropdown?.contains(e.target as Node)) {
+      dropdown?.classList.add('hidden');
+      if (chevron) chevron.style.transform = 'rotate(0deg)';
+    }
+  });
+
+  document.querySelectorAll<HTMLButtonElement>('.search-engine-option').forEach(opt => {
+    opt.addEventListener('click', async () => {
+      const val = opt.dataset.engine as SearchEngineKey | undefined;
+      if (!val || !(val in engines)) return;
+      engine = val;
+      if (icon) {
+        icon.src = engines[val].icon;
+        icon.alt = engines[val].name;
+        dropdown?.classList.add('hidden');
+        if (chevron) chevron.style.transform = 'rotate(0deg)';
+        icon.style.transform = 'scale(1.2)';
+        setTimeout(() => {
+          if (icon) icon.style.transform = 'scale(1)';
+        }, 200);
+      }
+      try {
+        await ConfigAPI.set('engine', engines[val].url);
+      } catch (e) {}
+    });
+  });
+}
+
+setupBar();
+
 export const TabManager = {
   get activeTabId() {
     return activeTabId;

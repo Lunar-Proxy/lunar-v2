@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const menuItems = Array.from(document.querySelectorAll<HTMLButtonElement>('#menu .menu-item'));
   if (!menu || !cmenu || menuItems.length === 0) return;
 
+
   const [newTab, fullscreen, reload, inspectElement, cloak, panic, settings] =
     menuItems.length >= 7 ? menuItems : [null, null, null, null, null, null, null];
   let panicKeybind = '';

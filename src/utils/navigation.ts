@@ -100,6 +100,7 @@ favorite?.addEventListener('click', async () => {
 
 urlbar?.addEventListener('keydown', async e => {
   if (e.key !== 'Enter') return;
+  document.getElementById('suggestions')?.remove();
   const frame = getActiveFrame();
   if (!frame) return;
 

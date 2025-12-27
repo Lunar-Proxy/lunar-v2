@@ -1,5 +1,6 @@
 ---
 import ImportLucide from './lucide.astro';
+import "@/main.css"
 ---
 
 <!doctype html>
@@ -47,17 +48,47 @@ import ImportLucide from './lucide.astro';
             class="flex h-8 w-8 items-center justify-center rounded-md text-gray-400 hover:bg-gray-700 hover:text-white">
             <i data-lucide="house" class="h-4 w-4"></i>
           </button>
-        </div>
-        <div class="relative ml-4 flex w-auto grow flex-col">
-          <div class="relative w-full">
-            <span class="pointer-events-none absolute top-1/2 left-2 flex -translate-y-1/2 items-center">
-              <i data-lucide="lock" class="ml-1 h-4 w-4 text-green-500"></i>
-            </span>
+          </div>
+          <div class="relative ml-4 flex w-auto grow flex-col">
+            <div class="relative w-full">
+              <div class="absolute top-1/2 left-3 z-20 flex -translate-y-1/2 items-center gap-2">
+                <span class="flex items-center">
+                  <i data-lucide="lock" class="h-4 w-4 text-green-500"></i>
+                </span>
+                <button
+                  id="search-engine-btn"
+                  class="flex items-center gap-1 rounded px-1 py-1 transition-colors hover:bg-[#23213a] focus:bg-[#23213a]">
+                  <img id="search-engine-icon" src="/a/images/engines/ddg.ico" alt="DuckDuckGo" class="h-4 w-4" />
+                  <i data-lucide="chevron-down" class="h-3 w-3 text-gray-400 transition-transform duration-200"></i>
+                </button>
+              </div>
+              <div
+                id="search-engine-dropdown"
+                class="absolute top-full left-3 z-[100] mt-1 hidden w-48 overflow-hidden rounded-lg border border-[#3a3758] bg-[#1f1f30] shadow-2xl">
+              <div class="flex flex-col py-1">
+                <button class="search-engine-option flex items-center gap-3 px-3 py-2 text-sm text-gray-200 transition hover:bg-[#2a293f]" data-engine="duckduckgo">
+                  <img src="/a/images/engines/ddg.ico" alt="DuckDuckGo" class="h-5 w-5" />
+                  <span>DuckDuckGo</span>
+                </button>
+                <button class="search-engine-option flex items-center gap-3 px-3 py-2 text-sm text-gray-200 transition hover:bg-[#2a293f]" data-engine="google">
+                  <img src="/a/images/co/go.ico" alt="Google" class="h-5 w-5" />
+                  <span>Google</span>
+                </button>
+                <button class="search-engine-option flex items-center gap-3 px-3 py-2 text-sm text-gray-200 transition hover:bg-[#2a293f]" data-engine="bing">
+                  <img src="/a/images/engines/bi.ico" alt="Bing" class="h-5 w-5" />
+                  <span>Bing</span>
+                </button>
+                <button class="search-engine-option flex items-center gap-3 px-3 py-2 text-sm text-gray-200 transition hover:bg-[#2a293f]" data-engine="brave">
+                  <img src="/a/images/engines/br.jpeg" alt="Brave Search" class="h-5 w-5" />
+                  <span>Brave Search</span>
+                </button>
+              </div>
+            </div>
             <input
               type="text"
               id="urlbar"
-              class="font-linux h-9 w-full rounded-full border border-[#3a3758] bg-[#29263c] pr-12 pl-8 text-sm font-medium text-gray-300 transition-colors hover:text-white focus:ring-0 focus:outline-none"
-              placeholder="Enter a URL or a query..."
+              class="font-linux h-9 w-full rounded-full border border-[#3a3758] bg-[#23213a] pr-12 pl-20 text-[15px] font-normal text-gray-200 transition-colors hover:text-white focus:ring-0 focus:outline-none shadow-sm"
+              placeholder="Search or enter address"
             />
             <button
               id="fav"
@@ -70,19 +101,6 @@ import ImportLucide from './lucide.astro';
               style="height:3px;background:#5c59a5;border-radius:9999px;transition:all 0.2s;opacity:0;display:none;width:100vw;z-index:50;">
             </div>
           </div>
-          <script>
-            function alignLoadingBar() {
-              const input = document.getElementById('urlbar');
-              const bar = document.getElementById('loading-bar');
-              if (input && bar) {
-                const rect = input.getBoundingClientRect();
-                bar.style.top = `${rect.bottom + window.scrollY}px`;
-              }
-            }
-            window.addEventListener('DOMContentLoaded', alignLoadingBar);
-            window.addEventListener('resize', alignLoadingBar);
-            window.addEventListener('scroll', alignLoadingBar);
-          </script>
         </div>
         <button
           id="menubtn"
