@@ -93,7 +93,7 @@
     {
       "name": "BlockBlast",
       "desc": "Puzzle-style block game.",
-      "icon": "/a/images/ga/bb.webp",
+      "icon": "/a/images/ga/bb.jpg",
       "url": "https://reunbozdo.github.io/"
     },
     {
@@ -153,7 +153,7 @@
     {
       "name": "Bitlife",
       "desc": "Live a digital life from birth to death.",
-      "icon": "/a/images/ga/bl.webp",
+      "icon": "/a/images/ga/bl.jpg",
       "url": "https://xlegends.github.io/bitlife/"
     },
     {
@@ -189,25 +189,25 @@
     {
       "name": "Geometry Dash",
       "desc": "Dodge obstacles in rhythm-based platformer.",
-      "icon": "/a/images/gd.png",
+      "icon": "/a/images/ga/gd.jpg",
       "url": "https://assets.3kh0.net/geodash/"
     },
     {
       "name": "Flappy Bird",
       "desc": "Classic bird-flying game in browser.",
-      "icon": "/a/images/fb.jpg",
+      "icon": "/a/images/ga/fb.jpg",
       "url": "https://ellisonleao.github.io/clumsy-bird/"
     },
     {
       "name": "Idle Dice",
       "desc": "Clicker game based on rolling dice.",
-      "icon": "/a/images/id.jpeg",
+      "icon": "/a/images/ga/id.jpg",
       "url": "https://ubg77.github.io/game131022/idle-dice/"
     },
     {
       "name": "Idle Miner",
       "desc": "Run your mining operation and grow!",
-      "icon": "/a/images/im.png",
+      "icon": "/a/images/ga/im.jpg",
       "url": "https://ubg77.github.io/game131022/idle-miner/"
     },
     {
@@ -219,13 +219,13 @@
     {
       "name": "Idle Startup Tycoon",
       "desc": "Grow your tech startup into a giant.",
-      "icon": "/a/images/ist.webp",
+      "icon": "/a/images/ga/ist.jpg",
       "url": "https://ubg77.github.io/game131022/idle-startup-tycoon/"
     },
     {
       "name": "Awesome Tanks 2",
       "desc": "Blow up enemy tanks and upgrade yours.",
-      "icon": "/a/images/at2.png",
+      "icon": "/a/images/ga/at2.jpg",
       "url": "https://ubg98.github.io/AwesomeTanks2/"
     },
     {
@@ -249,37 +249,37 @@
     {
       "name": "1v1.LOL",
       "desc": "Build and battle in this competitive shooter.",
-      "icon": "/a/images/ga/1v1.webp",
+      "icon": "/a/images/ga/1v1.jpg",
       "url": "https://1v1.lol/"
     },
     {
       "name": "Shell Shockers",
       "desc": "Egg-based first-person shooter.",
-      "icon": "/a/images/ga/shellshock.webp",
+      "icon": "/a/images/ga/shellshock.jpg",
       "url": "https://shellshock.io/"
     },
     {
       "name": "Slope",
       "desc": "Roll down the slope without falling off.",
-      "icon": "/a/images/ga/slope.webp",
+      "icon": "/a/images/ga/slope.jpg",
       "url": "https://slope-game.github.io/rune/slope/index.html"
     },
     {
       "name": "Tunnel Rush",
       "desc": "Dodge obstacles in a colorful tunnel.",
-      "icon": "/a/images/ga/tr.webp",
+      "icon": "/a/images/ga/tr.jpg",
       "url": "https://tunnel-rush.github.io/file/"
     },
     {
       "name": "Retro Bowl",
       "desc": "Manage and play American football team.",
-      "icon": "/a/images/ga/rb.webp",
+      "icon": "/a/images/ga/rb.jpg",
       "url": "https://retro-bowl.github.io/game/"
     },
     {
       "name": "Among Us",
       "desc": "Find the impostor among your crew.",
-      "icon": "/a/images/ga/au.webp",
+      "icon": "/a/images/ga/au.jpg",
       "url": "https://www.crazygames.com/game/among-us"
     },
     {
@@ -291,61 +291,61 @@
     {
       "name": "Basketball Stars",
       "desc": "1v1 basketball multiplayer game.",
-      "icon": "/a/images/ga/bstars.webp",
+      "icon": "/a/images/ga/bstars.jpg",
       "url": "https://basketball-stars.io/"
     },
     {
       "name": "Happy Wheels",
       "desc": "Ragdoll physics obstacle course game.",
-      "icon": "/a/images/ga/hw.webp",
+      "icon": "/a/images/ga/hw.jpg",
       "url": "https://ubg77.github.io/game131022/happy-wheels/"
     },
     {
       "name": "Temple Run 2",
       "desc": "Endless running through ancient temples.",
-      "icon": "/a/images/ga/tr2.webp",
+      "icon": "/a/images/ga/tr2.jpg",
       "url": "https://ubg77.github.io/game131022/temple-run-2/"
     },
     {
       "name": "Crossy Road",
       "desc": "Cross roads and rivers without dying.",
-      "icon": "/a/images/ga/cr.webp",
+      "icon": "/a/images/ga/cr.jpg",
       "url": "https://ubg77.github.io/game131022/crossy-road/"
     },
     {
       "name": "Bloons TD 5",
       "desc": "Tower defense with balloon-popping monkeys.",
-      "icon": "/a/images/ga/btd5.webp",
+      "icon": "/a/images/ga/btd5.jpg",
       "url": "https://www.coolmathgames.com/0-bloons-tower-defense-5/play"
     },
     {
       "name": "Bloons TD 6",
       "desc": "Advanced tower defense strategy game.",
-      "icon": "/a/images/ga/btd6.webp",
+      "icon": "/a/images/ga/btd6.jpg",
       "url": "https://www.crazygames.com/game/bloons-td-6"
     },
     {
       "name": "Duck Life",
       "desc": "Train your duck to race and win.",
-      "icon": "/a/images/ga/dl.webp",
+      "icon": "/a/images/ga/dl.jpg",
       "url": "https://www.coolmathgames.com/0-duck-life/play"
     },
     {
       "name": "Hill Climb Racing",
       "desc": "Physics-based racing game with upgrades.",
-      "icon": "/a/images/ga/hcr.webp",
+      "icon": "/a/images/ga/hcr.jpg",
       "url": "https://ubg77.github.io/game131022/hill-climb-racing/"
     },
     {
       "name": "Zombs Royale",
       "desc": "Battle royale with 100 players.",
-      "icon": "/a/images/ga/zr.webp",
+      "icon": "/a/images/ga/zr.jpg",
       "url": "https://zombsroyale.io/"
     },
     {
       "name": "Krunker",
       "desc": "Fast-paced browser FPS game.",
-      "icon": "/a/images/ga/krunker.webp",
+      "icon": "/a/images/ga/krunker.jpg",
       "url": "https://krunker.io/"
     },
     {
@@ -369,103 +369,103 @@
     {
       "name": "Paper.io 2",
       "desc": "Claim territory in this competitive game.",
-      "icon": "/a/images/ga/paper.webp",
+      "icon": "/a/images/ga/paper.jpg",
       "url": "https://paper-io.com/"
     },
     {
       "name": "Agar.io",
       "desc": "Grow your cell and eat others.",
-      "icon": "/a/images/ga/agar.webp",
+      "icon": "/a/images/ga/agar.jpg",
       "url": "https://agar.io/"
     },
     {
       "name": "Slither.io",
       "desc": "Snake game in multiplayer arena.",
-      "icon": "/a/images/ga/slither.webp",
+      "icon": "/a/images/ga/slither.jpg",
       "url": "https://slither.io/"
     },
     {
       "name": "Superhot",
       "desc": "Time moves only when you move shooter.",
-      "icon": "/a/images/ga/sh.webp",
+      "icon": "/a/images/ga/sh.jpg",
       "url": "https://ubg77.github.io/game131022/superhot/"
     },
     {
       "name": "Tetris",
       "desc": "Classic block-stacking puzzle game.",
-      "icon": "/a/images/ga/tetris.webp",
+      "icon": "/a/images/ga/tetris.jpg",
       "url": "https://tetris.com/play-tetris"
     },
     {
       "name": "Cut the Rope",
       "desc": "Feed candy to Om Nom by cutting ropes.",
-      "icon": "/a/images/ga/ctr.webp",
+      "icon": "/a/images/ga/ctr.jpg",
       "url": "https://www.crazygames.com/game/cut-the-rope"
     },
     {
       "name": "Bad Ice Cream",
       "desc": "Collect fruit while avoiding enemies.",
-      "icon": "/a/images/ga/bic.webp",
+      "icon": "/a/images/ga/bic.jpg",
       "url": "https://www.coolmathgames.com/0-bad-ice-cream/play"
     },
     {
       "name": "Fireboy Watergirl Forest",
       "desc": "First temple in the classic series.",
-      "icon": "/a/images/ga/fbwg1.webp",
+      "icon": "/a/images/ga/fbwg1.jpg",
       "url": "https://www.coolmathgames.com/0-fireboy-and-watergirl-in-the-forest-temple/play"
     },
     {
       "name": "Fireboy Watergirl Light",
       "desc": "Navigate using light mechanics.",
-      "icon": "/a/images/ga/fbwg2.webp",
+      "icon": "/a/images/ga/fbwg2.jpg",
       "url": "https://www.coolmathgames.com/0-fireboy-and-watergirl-in-the-light-temple/play"
     },
     {
       "name": "Bob the Robber",
       "desc": "Stealth game about robbing buildings.",
-      "icon": "/a/images/ga/btr.webp",
+      "icon": "/a/images/ga/btr.jpg",
       "url": "https://www.coolmathgames.com/0-bob-the-robber/play"
     },
     {
       "name": "Papa's Scooperia",
       "desc": "Serve custom ice cream sundaes.",
-      "icon": "/a/images/ga/pps.webp",
+      "icon": "/a/images/ga/pps.jpg",
       "url": "https://www.coolmathgames.com/0-papas-scooperia/play"
     },
     {
       "name": "Papa's Sushiria",
       "desc": "Make sushi rolls for customers.",
-      "icon": "/a/images/ga/ppsu.webp",
+      "icon": "/a/images/ga/ppsu.jpg",
       "url": "https://www.coolmathgames.com/0-papas-sushiria/play"
     },
     {
       "name": "Papa's Burgeria",
       "desc": "Cook and serve burgers to customers.",
-      "icon": "/a/images/ga/ppb.webp",
+      "icon": "/a/images/ga/ppb.jpg",
       "url": "https://www.coolmathgames.com/0-papas-burgeria/play"
     },
     {
       "name": "Papa's Cupcakeria",
       "desc": "Bake and decorate cupcakes.",
-      "icon": "/a/images/ga/ppc.webp",
+      "icon": "/a/images/ga/ppc.jpg",
       "url": "https://www.coolmathgames.com/0-papas-cupcakeria/play"
     },
     {
       "name": "Papa's Pastaria",
       "desc": "Cook pasta dishes in this restaurant.",
-      "icon": "/a/images/ga/pppa.webp",
+      "icon": "/a/images/ga/pppa.jpg",
       "url": "https://www.coolmathgames.com/0-papas-pastaria/play"
     },
     {
       "name": "Papa's Cheeseria",
       "desc": "Grill cheese sandwiches for customers.",
-      "icon": "/a/images/ga/ppch.webp",
+      "icon": "/a/images/ga/ppch.jpg",
       "url": "https://www.coolmathgames.com/0-papas-cheeseria/play"
     },
     {
       "name": "Moto X3M 2",
       "desc": "More bike stunts and obstacles.",
-      "icon": "/a/images/ga/mx3m2.webp",
+      "icon": "/a/images/ga/mx3m2.jpg",
       "url": "https://www.coolmathgames.com/0-moto-x3m-2/play"
     },
     {
@@ -477,19 +477,19 @@
     {
       "name": "Moto X3M Pool Party",
       "desc": "Summer-themed bike stunt game.",
-      "icon": "/a/images/ga/mx3mp.webp",
+      "icon": "/a/images/ga/mx3mp.jpg",
       "url": "https://www.coolmathgames.com/0-moto-x3m-pool-party/play"
     },
     {
       "name": "Clicker Heroes",
       "desc": "Idle RPG clicking adventure.",
-      "icon": "/a/images/ga/ch.webp",
+      "icon": "/a/images/ga/ch.jpg",
       "url": "https://www.clickerheroes.com/play.html"
     },
     {
       "name": "Earn to Die",
       "desc": "Drive through zombies to escape.",
-      "icon": "/a/images/ga/etd.webp",
+      "icon": "/a/images/ga/etd.jpg",
       "url": "https://ubg77.github.io/game131022/earn-to-die/"
     },
     {
@@ -501,13 +501,13 @@
     {
       "name": "Rolling Sky",
       "desc": "Music-based obstacle dodging game.",
-      "icon": "/a/images/ga/rs.webp",
+      "icon": "/a/images/ga/rs.jpg",
       "url": "https://ubg77.github.io/game131022/rolling-sky/"
     },
     {
       "name": "Bike Race",
       "desc": "Simple but addictive bike racing.",
-      "icon": "/a/images/ga/br.webp",
+      "icon": "/a/images/ga/br.jpg",
       "url": "https://ubg77.github.io/game131022/bike-race/"
     },
     {
@@ -519,7 +519,7 @@
     {
       "name": "Stickman Fighter",
       "desc": "Beat up enemies as a stickman.",
-      "icon": "/a/images/ga/sf.webp",
+      "icon": "/a/images/ga/sf.jpg",
       "url": "https://www.crazygames.com/game/stickman-fighter-mega-brawl"
     },
     {
@@ -537,7 +537,7 @@
     {
       "name": "Rooftop Snipers",
       "desc": "Two-button sniper duel game.",
-      "icon": "/a/images/ga/rts.webp",
+      "icon": "/a/images/ga/rts.jpg",
       "url": "https://rooftop-snipers.github.io/rooftop-snipers/"
     },
     {
@@ -561,43 +561,43 @@
     {
       "name": "Getaway Shootout",
       "desc": "Race and shoot to the extraction.",
-      "icon": "/a/images/ga/gs.webp",
+      "icon": "/a/images/ga/gs.jpg",
       "url": "https://ubg77.github.io/game131022/getaway-shootout/"
     },
     {
       "name": "Worlds Hardest Game",
       "desc": "Navigate through impossible obstacles.",
-      "icon": "/a/images/ga/whg.webp",
+      "icon": "/a/images/ga/whg.jpg",
       "url": "https://www.coolmathgames.com/0-worlds-hardest-game/play"
     },
     {
       "name": "Worlds Hardest Game 2",
       "desc": "Even harder obstacle navigation.",
-      "icon": "/a/images/ga/whg2.webp",
+      "icon": "/a/images/ga/whg2.jpg",
       "url": "https://www.coolmathgames.com/0-worlds-hardest-game-2/play"
     },
     {
       "name": "Idle Breakout",
       "desc": "Brick breaker meets idle game.",
-      "icon": "/a/images/ga/ib.webp",
+      "icon": "/a/images/ga/ib.jpg",
       "url": "https://www.coolmathgames.com/0-idle-breakout/play"
     },
     {
       "name": "Snake",
       "desc": "Classic snake game in browser.",
-      "icon": "/a/images/ga/snake.webp",
+      "icon": "/a/images/ga/snake.jpg",
       "url": "https://www.google.com/fbx?fbx=snake_arcade"
     },
     {
       "name": "Pac-Man",
       "desc": "Classic arcade maze game.",
-      "icon": "/a/images/ga/pacman.webp",
+      "icon": "/a/images/ga/pacman.jpg",
       "url": "https://www.google.com/logos/2010/pacman10-i.html"
     },
     {
       "name": "Space Invaders",
       "desc": "Retro alien shooting arcade.",
-      "icon": "/a/images/ga/si.webp",
+      "icon": "/a/images/ga/si.jpg",
       "url": "https://www.crazygames.com/game/space-invaders"
     },
     {
@@ -615,13 +615,13 @@
     {
       "name": "Baldi's Basics",
       "desc": "Horror education parody game.",
-      "icon": "/a/images/ga/baldi.webp",
+      "icon": "/a/images/ga/baldi.jpg",
       "url": "https://ubg77.github.io/game131022/baldis-basics/"
     },
     {
       "name": "Fancy Pants",
       "desc": "Stickman platformer with style.",
-      "icon": "/a/images/ga/fp.webp",
+      "icon": "/a/images/ga/fp.jpg",
       "url": "https://www.coolmathgames.com/0-fancy-pants-adventure/play"
     },
     {
@@ -633,13 +633,13 @@
     {
       "name": "Bottle Flip 3D",
       "desc": "Flip bottles onto platforms.",
-      "icon": "/a/images/ga/bf3d.webp",
+      "icon": "/a/images/ga/bf3d.jpg",
       "url": "https://ubg77.github.io/game131022/bottle-flip-3d/"
     },
     {
       "name": "Doodle Jump",
       "desc": "Jump up platforms endlessly.",
-      "icon": "/a/images/ga/dj.webp",
+      "icon": "/a/images/ga/dj.jpg",
       "url": "https://ubg77.github.io/game131022/doodle-jump/"
     },
     {
@@ -651,19 +651,19 @@
     {
       "name": "Roblox",
       "desc": "Play millions of user-created games.",
-      "icon": "/a/images/ga/roblox.webp",
+      "icon": "/a/images/ga/roblox.jpg",
       "url": "https://nowgg.fun"
     },
     {
       "name": "Fortnite",
       "desc": "Battle royale building game.",
-      "icon": "/a/images/ga/fn.webp",
+      "icon": "/a/images/ga/fn.jpg",
       "url": "https://play.geforcenow.com/mall/"
     },
     {
       "name": "Bonk.io",
       "desc": "Physics-based multiplayer battle.",
-      "icon": "/a/images/ga/bonk.webp",
+      "icon": "/a/images/ga/bonk.jpg",
       "url": "https://bonk.io/"
     },
     {
@@ -675,31 +675,31 @@
     {
       "name": "Stick War",
       "desc": "Strategy game with stick figures.",
-      "icon": "/a/images/ga/sw.webp",
+      "icon": "/a/images/ga/sw.jpg",
       "url": "https://www.crazygames.com/game/stick-war"
     },
     {
       "name": "Bloxorz",
       "desc": "Roll the block into the hole.",
-      "icon": "/a/images/ga/blox.webp",
+      "icon": "/a/images/ga/blox.jpg",
       "url": "https://www.coolmathgames.com/0-bloxorz/play"
     },
     {
       "name": "Red Ball 4",
       "desc": "Roll and jump through platformer.",
-      "icon": "/a/images/ga/rb4.webp",
+      "icon": "/a/images/ga/rb4.jpg",
       "url": "https://www.coolmathgames.com/0-red-ball-4/play"
     },
     {
       "name": "Fireboy Watergirl Ice",
       "desc": "Solve puzzles in ice temple.",
-      "icon": "/a/images/ga/fbwg3.webp",
+      "icon": "/a/images/ga/fbwg3.jpg",
       "url": "https://www.coolmathgames.com/0-fireboy-and-watergirl-in-the-ice-temple/play"
     },
     {
       "name": "Fireboy Watergirl Crystal",
       "desc": "Navigate the crystal temple.",
-      "icon": "/a/images/ga/fbwg4.webp",
+      "icon": "/a/images/ga/fbwg4.jpg",
       "url": "https://www.coolmathgames.com/0-fireboy-and-watergirl-in-the-crystal-temple/play"
     },
     {
@@ -717,13 +717,13 @@
     {
       "name": "Tomb of the Mask",
       "desc": "Fast-paced arcade maze game.",
-      "icon": "/a/images/ga/totm.webp",
+      "icon": "/a/images/ga/totm.jpg",
       "url": "https://ubg77.github.io/game131022/tomb-of-the-mask/"
     },
     {
       "name": "Stack",
       "desc": "Stack blocks as high as possible.",
-      "icon": "/a/images/ga/stack.webp",
+      "icon": "/a/images/ga/stack.jpg",
       "url": "https://ubg77.github.io/game131022/stack/"
     },
     {
@@ -735,79 +735,79 @@
     {
       "name": "Stick RPG",
       "desc": "Live life as a stick figure.",
-      "icon": "/a/images/ga/srpg.webp",
+      "icon": "/a/images/ga/srpg.jpg",
       "url": "https://www.coolmathgames.com/0-stick-rpg/play"
     },
     {
       "name": "Learn to Fly",
       "desc": "Help penguin learn to fly.",
-      "icon": "/a/images/ga/ltf.webp",
+      "icon": "/a/images/ga/ltf.jpg",
       "url": "https://www.coolmathgames.com/0-learn-to-fly/play"
     },
     {
       "name": "Learn to Fly 2",
       "desc": "More penguin flying adventures.",
-      "icon": "/a/images/ga/ltf2.webp",
+      "icon": "/a/images/ga/ltf2.jpg",
       "url": "https://www.coolmathgames.com/0-learn-to-fly-2/play"
     },
     {
       "name": "Learn to Fly 3",
       "desc": "Latest penguin flying game.",
-      "icon": "/a/images/ga/ltf3.webp",
+      "icon": "/a/images/ga/ltf3.jpg",
       "url": "https://www.coolmathgames.com/0-learn-to-fly-3/play"
     },
     {
       "name": "Run",
       "desc": "Run through space tunnels.",
-      "icon": "/a/images/ga/run.webp",
+      "icon": "/a/images/ga/run.jpg",
       "url": "https://www.coolmathgames.com/0-run/play"
     },
     {
       "name": "Run 2",
       "desc": "More space tunnel running.",
-      "icon": "/a/images/ga/run2.webp",
+      "icon": "/a/images/ga/run2.jpg",
       "url": "https://www.coolmathgames.com/0-run-2/play"
     },
     {
       "name": "There Is No Game",
       "desc": "Interactive anti-game experience.",
-      "icon": "/a/images/ga/ting.webp",
+      "icon": "/a/images/ga/ting.jpg",
       "url": "https://www.crazygames.com/game/there-is-no-game"
     },
     {
       "name": "Big Tower Tiny Square",
       "desc": "Precision platformer with tough jumps.",
-      "icon": "/a/images/ga/btts.webp",
+      "icon": "/a/images/ga/btts.jpg",
       "url": "https://www.coolmathgames.com/0-big-tower-tiny-square/play"
     },
     {
       "name": "Big Tower Tiny Square 2",
       "desc": "Sequel to precision platformer.",
-      "icon": "/a/images/ga/btts2.webp",
+      "icon": "/a/images/ga/btts2.jpg",
       "url": "https://www.coolmathgames.com/0-big-tower-tiny-square-2/play"
     },
     {
       "name": "A Dance of Fire and Ice",
       "desc": "Rhythm game with perfect timing.",
-      "icon": "/a/images/ga/adfi.webp",
+      "icon": "/a/images/ga/adfi.jpg",
       "url": "https://www.coolmathgames.com/0-a-dance-of-fire-and-ice/play"
     },
     {
       "name": "Raft Wars",
       "desc": "Defend your treasure with water balloons.",
-      "icon": "/a/images/ga/rw.webp",
+      "icon": "/a/images/ga/rw.jpg",
       "url": "https://www.coolmathgames.com/0-raft-wars/play"
     },
     {
       "name": "Raft Wars 2",
       "desc": "More water balloon battles.",
-      "icon": "/a/images/ga/rw2.webp",
+      "icon": "/a/images/ga/rw2.jpg",
       "url": "https://www.coolmathgames.com/0-raft-wars-2/play"
     },
     {
       "name": "Color Switch",
       "desc": "Match colors through obstacles.",
-      "icon": "/a/images/ga/cs.webp",
+      "icon": "/a/images/ga/cs.jpg",
       "url": "https://ubg77.github.io/game131022/color-switch/"
     },
     {
@@ -825,25 +825,25 @@
     {
       "name": "Minesweeper",
       "desc": "Classic mine detection puzzle.",
-      "icon": "/a/images/ga/ms.webp",
+      "icon": "/a/images/ga/ms.jpg",
       "url": "https://minesweeper.online/"
     },
     {
       "name": "Solitaire",
       "desc": "Classic card game in browser.",
-      "icon": "/a/images/ga/sol.webp",
+      "icon": "/a/images/ga/sol.jpg",
       "url": "https://www.google.com/search?q=solitaire"
     },
     {
       "name": "Mahjong",
       "desc": "Match tiles in this classic game.",
-      "icon": "/a/images/ga/mj.webp",
+      "icon": "/a/images/ga/mj.jpg",
       "url": "https://www.crazygames.com/game/mahjong"
     },
     {
       "name": "Spider Solitaire",
       "desc": "Advanced solitaire card game.",
-      "icon": "/a/images/ga/ss.webp",
+      "icon": "/a/images/ga/ss.jpg",
       "url": "https://www.google.com/search?q=spider+solitaire"
     },
     {
@@ -855,7 +855,7 @@
     {
       "name": "Connect 4",
       "desc": "Classic four-in-a-row game.",
-      "icon": "/a/images/ga/c4.webp",
+      "icon": "/a/images/ga/c4.jpg",
       "url": "https://www.coolmathgames.com/0-connect-4/play"
     },
     {
@@ -867,7 +867,7 @@
     {
       "name": "8 Ball Pool",
       "desc": "Online billiards game.",
-      "icon": "/a/images/ga/8ball.webp",
+      "icon": "/a/images/ga/8ball.jpg",
       "url": "https://www.crazygames.com/game/8-ball-pool"
     },
     {
@@ -885,13 +885,13 @@
     {
       "name": "Mini Golf World",
       "desc": "Play mini golf courses online.",
-      "icon": "/a/images/ga/mgw.webp",
+      "icon": "/a/images/ga/mgw.jpg",
       "url": "https://www.crazygames.com/game/mini-golf-world"
     },
     {
       "name": "Rocket League",
       "desc": "Soccer with rocket-powered cars.",
-      "icon": "/a/images/ga/rl.webp",
+      "icon": "/a/images/ga/rl.jpg",
       "url": "https://www.epicgames.com/store/en-US/p/rocket-league"
     },
     {
@@ -921,7 +921,7 @@
     {
       "name": "Stunt Bike Extreme",
       "desc": "Perform crazy bike stunts.",
-      "icon": "/a/images/ga/sbe.webp",
+      "icon": "/a/images/ga/sbe.jpg",
       "url": "https://www.crazygames.com/game/stunt-bike-extreme"
     },
     {
@@ -933,91 +933,91 @@
     {
       "name": "Football Legends",
       "desc": "Play soccer with legendary players.",
-      "icon": "/a/images/ga/fl.webp",
+      "icon": "/a/images/ga/fl.jpg",
       "url": "https://www.crazygames.com/game/football-legends-2021"
     },
     {
       "name": "Basketball Legends",
       "desc": "Arcade basketball with NBA stars.",
-      "icon": "/a/images/ga/bl.webp",
+      "icon": "/a/images/ga/bl.jpg",
       "url": "https://basketball-legends.io/"
     },
     {
       "name": "Unicycle Hero",
       "desc": "Balance on unicycle and fight.",
-      "icon": "/a/images/ga/uh.webp",
+      "icon": "/a/images/ga/uh.jpg",
       "url": "https://ubg77.github.io/game131022/unicycle-hero/"
     },
     {
       "name": "Stick Fight",
       "desc": "Multiplayer stick figure battles.",
-      "icon": "/a/images/ga/stickf.webp",
+      "icon": "/a/images/ga/stickf.jpg",
       "url": "https://www.crazygames.com/game/stick-fight"
     },
     {
       "name": "Riddle School",
       "desc": "Escape from school in this puzzle game.",
-      "icon": "/a/images/ga/rsch.webp",
+      "icon": "/a/images/ga/rsch.jpg",
       "url": "https://www.newgrounds.com/portal/view/259369"
     },
     {
       "name": "Duck Hunt",
       "desc": "Classic Nintendo duck shooting game.",
-      "icon": "/a/images/ga/dh.webp",
+      "icon": "/a/images/ga/dh.jpg",
       "url": "https://duckhuntjs.com/"
     },
     {
       "name": "Burger Shop",
       "desc": "Make burgers for hungry customers.",
-      "icon": "/a/images/ga/burgers.webp",
+      "icon": "/a/images/ga/burgers.jpg",
       "url": "https://www.crazygames.com/game/burger-shop"
     },
     {
       "name": "Cake Mania",
       "desc": "Bake cakes in this time management game.",
-      "icon": "/a/images/ga/cakeman.webp",
+      "icon": "/a/images/ga/cakeman.jpg",
       "url": "https://www.crazygames.com/game/cake-mania"
     },
     {
       "name": "Diner Dash",
       "desc": "Serve customers in your restaurant.",
-      "icon": "/a/images/ga/dinerd.webp",
+      "icon": "/a/images/ga/dinerd.jpg",
       "url": "https://www.crazygames.com/game/diner-dash"
     },
     {
       "name": "Pizza Tower",
       "desc": "Fast-paced platformer with pizza.",
-      "icon": "/a/images/ga/pzt.webp",
+      "icon": "/a/images/ga/pzt.jpg",
       "url": "https://www.newgrounds.com/portal/view/859173"
     },
     {
       "name": "Plants vs Zombies",
       "desc": "Defend your lawn from zombies.",
-      "icon": "/a/images/ga/pvz.webp",
+      "icon": "/a/images/ga/pvz.jpg",
       "url": "https://ubg77.github.io/game131022/plants-vs-zombies/"
     },
     {
       "name": "Age of War",
       "desc": "Evolve through ages and defeat enemies.",
-      "icon": "/a/images/ga/aow.webp",
+      "icon": "/a/images/ga/aow.jpg",
       "url": "https://www.crazygames.com/game/age-of-war"
     },
     {
       "name": "Territory War",
       "desc": "Turn-based strategy battle game.",
-      "icon": "/a/images/ga/terwar.webp",
+      "icon": "/a/images/ga/terwar.jpg",
       "url": "https://www.crazygames.com/game/territory-war"
     },
     {
       "name": "Strike Force Heroes",
       "desc": "Action-packed shooter with campaigns.",
-      "icon": "/a/images/ga/sfh.webp",
+      "icon": "/a/images/ga/sfh.jpg",
       "url": "https://www.crazygames.com/game/strike-force-heroes"
     },
     {
       "name": "Raze 2",
       "desc": "Futuristic platformer shooter.",
-      "icon": "/a/images/ga/raze2.webp",
+      "icon": "/a/images/ga/raze2.jpg",
       "url": "https://www.crazygames.com/game/raze-2"
     },
     {
@@ -1029,31 +1029,31 @@
     {
       "name": "Kingdom Rush",
       "desc": "Fantasy tower defense classic.",
-      "icon": "/a/images/ga/kr.webp",
+      "icon": "/a/images/ga/kr.jpg",
       "url": "https://www.crazygames.com/game/kingdom-rush"
     },
     {
       "name": "Kingdom Rush Frontiers",
       "desc": "Tower defense sequel with new towers.",
-      "icon": "/a/images/ga/krf.webp",
+      "icon": "/a/images/ga/krf.jpg",
       "url": "https://www.crazygames.com/game/kingdom-rush-frontiers"
     },
     {
       "name": "Impossible Quiz",
       "desc": "Tricky quiz with absurd questions.",
-      "icon": "/a/images/ga/iq.webp",
+      "icon": "/a/images/ga/iq.jpg",
       "url": "https://www.crazygames.com/game/the-impossible-quiz"
     },
     {
       "name": "Riddle Transfer",
       "desc": "Sequel to Riddle School series.",
-      "icon": "/a/images/ga/rtrans.webp",
+      "icon": "/a/images/ga/rtrans.jpg",
       "url": "https://www.newgrounds.com/portal/view/546117"
     },
     {
       "name": "Fleeing the Complex",
       "desc": "Choose-your-own-adventure escape game.",
-      "icon": "/a/images/ga/ftc.webp",
+      "icon": "/a/images/ga/ftc.jpg",
       "url": "https://www.crazygames.com/game/fleeing-the-complex"
     },
     {
@@ -1071,115 +1071,109 @@
     {
       "name": "Stealing the Diamond",
       "desc": "Steal the diamond in this adventure.",
-      "icon": "/a/images/ga/std.webp",
+      "icon": "/a/images/ga/std.jpg",
       "url": "https://www.newgrounds.com/portal/view/538707"
     },
     {
       "name": "Infiltrating the Airship",
       "desc": "Infiltrate airship with multiple endings.",
-      "icon": "/a/images/ga/ita.webp",
+      "icon": "/a/images/ga/ita.jpg",
       "url": "https://www.newgrounds.com/portal/view/524091"
     },
     {
       "name": "Completing the Mission",
       "desc": "Final Henry Stickmin adventure.",
-      "icon": "/a/images/ga/ctm.webp",
+      "icon": "/a/images/ga/ctm.jpg",
       "url": "https://www.newgrounds.com/portal/view/760076"
     },
     {
       "name": "Duck Life 2",
       "desc": "Train your duck in new events.",
-      "icon": "/a/images/ga/dl2.webp",
+      "icon": "/a/images/ga/dl2.jpg",
       "url": "https://www.coolmathgames.com/0-duck-life-2/play"
     },
     {
       "name": "Duck Life 3",
       "desc": "Evolution-based duck training.",
-      "icon": "/a/images/ga/dl3.webp",
+      "icon": "/a/images/ga/dl3.jpg",
       "url": "https://www.coolmathgames.com/0-duck-life-3-evolution/play"
     },
     {
       "name": "Duck Life 4",
       "desc": "Duck racing adventure continues.",
-      "icon": "/a/images/ga/dl4.webp",
+      "icon": "/a/images/ga/dl4.jpg",
       "url": "https://www.coolmathgames.com/0-duck-life-4/play"
-    },
-    {
-      "name": "Agar.io Clone",
-      "desc": "Open-source Agar.io alternative.",
-      "icon": "/a/images/ga/agarc.webp",
-      "url": "https://agar.io/"
     },
     {
       "name": "Wormate.io",
       "desc": "Snake game with power-ups.",
-      "icon": "/a/images/ga/wormate.webp",
+      "icon": "/a/images/ga/wormate.jpg",
       "url": "https://wormate.io/"
     },
     {
       "name": "Diep.io",
       "desc": "Tank shooter multiplayer game.",
-      "icon": "/a/images/ga/diep.webp",
+      "icon": "/a/images/ga/diep.jpg",
       "url": "https://diep.io/"
     },
     {
       "name": "Starve.io",
       "desc": "Survival game in cold wilderness.",
-      "icon": "/a/images/ga/starve.webp",
+      "icon": "/a/images/ga/starve.jpg",
       "url": "https://starve.io/"
     },
     {
       "name": "Mope.io",
       "desc": "Evolve animals in this io game.",
-      "icon": "/a/images/ga/mope.webp",
+      "icon": "/a/images/ga/mope.jpg",
       "url": "https://mope.io/"
     },
     {
       "name": "Surviv.io",
       "desc": "2D battle royale survival game.",
-      "icon": "/a/images/ga/surviv.webp",
+      "icon": "/a/images/ga/surviv.jpg",
       "url": "https://surviv.io/"
     },
     {
       "name": "Hexar.io",
       "desc": "Capture territory in hexagons.",
-      "icon": "/a/images/ga/hexar.webp",
+      "icon": "/a/images/ga/hexar.jpg",
       "url": "https://hexar.io/"
     },
     {
       "name": "Wings.io",
       "desc": "Airplane dogfighting multiplayer.",
-      "icon": "/a/images/ga/wings.webp",
+      "icon": "/a/images/ga/wings.jpg",
       "url": "https://wings.io/"
     },
     {
       "name": "Brutal.io",
       "desc": "Spinning mace battle royale.",
-      "icon": "/a/images/ga/brutal.webp",
+      "icon": "/a/images/ga/brutal.jpg",
       "url": "https://brutal.io/"
     },
     {
       "name": "Splix.io",
       "desc": "Claim territory with your line.",
-      "icon": "/a/images/ga/splix.webp",
+      "icon": "/a/images/ga/splix.jpg",
       "url": "https://splix.io/"
     },
     {
       "name": "Narwhale.io",
       "desc": "Underwater narwhal battles.",
-      "icon": "/a/images/ga/narw.webp",
+      "icon": "/a/images/ga/narw.jpg",
       "url": "https://narwhale.io/"
     },
     {
       "name": "Skribbl.io",
       "desc": "Drawing and guessing game.",
-      "icon": "/a/images/ga/skribbl.webp",
+      "icon": "/a/images/ga/skribbl.jpg",
       "url": "https://skribbl.io/"
     },
     {
       "name": "Gartic Phone",
       "desc": "Online drawing telephone game.",
-      "icon": "/a/images/ga/gartic.webp",
+      "icon": "/a/images/ga/gartic.jpg",
       "url": "https://garticphone.com/"
     },
     {
@@ -1191,7 +1185,7 @@
     {
       "name": "Geoguessr",
       "desc": "Guess locations from Street View.",
-      "icon": "/a/images/ga/geog.webp",
+      "icon": "/a/images/ga/geog.jpg",
       "url": "https://www.geoguessr.com/"
     },
     {
@@ -1203,7 +1197,7 @@
     {
       "name": "Kahoot",
       "desc": "Interactive quiz game platform.",
-      "icon": "/a/images/ga/kahoot.webp",
+      "icon": "/a/images/ga/kahoot.jpg",
       "url": "https://kahoot.com/"
     },
     {

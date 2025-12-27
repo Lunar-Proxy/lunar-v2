@@ -299,6 +299,8 @@ document.addEventListener('DOMContentLoaded', () => {
     finishBar();
   }
 
+
+
   if (urlbar) {
     urlbar.addEventListener('keydown', e => {
       if (e.key === 'Enter') {
@@ -313,6 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
     origOpenTab(url);
     const tab = allTabs[allTabs.length - 1];
     if (!tab) return;
+  
     tab.iframe.addEventListener('load', () => {
       resetLoadingBar();
     });
@@ -321,6 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
+  
   allTabs.forEach(tab => {
     tab.iframe.addEventListener('load', () => {
       resetLoadingBar();
@@ -333,6 +337,17 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('tab-switch', () => {
     resetLoadingBar();
   });
+
+  
+  setInterval(() => {
+    if (loadingActive) {
+      
+      const activeTab = allTabs.find(tab => tab.id === activeTabId);
+      if (activeTab && activeTab.iframe && activeTab.iframe.contentDocument?.readyState === 'complete') {
+        resetLoadingBar();
+      }
+    }
+  }, 500);
 });
 
 export const TabManager = {
