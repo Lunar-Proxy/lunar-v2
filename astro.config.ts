@@ -1,5 +1,4 @@
 import node from '@astrojs/node';
-
 import { baremuxPath } from '@mercuryworkshop/bare-mux/node';
 import { libcurlPath } from '@mercuryworkshop/libcurl-transport';
 import { scramjetPath } from '@mercuryworkshop/scramjet/path';
@@ -8,70 +7,28 @@ import playformCompress from '@playform/compress';
 import tailwindcss from '@tailwindcss/vite';
 import { uvPath } from '@titaniumnetwork-dev/ultraviolet';
 import { defineConfig } from 'astro/config';
-import { execSync } from 'child_process';
 import type { IncomingMessage, ServerResponse } from 'http';
 import { normalizePath } from 'vite';
 import type { Plugin } from 'vite';
 import obfuscatorPlugin from 'vite-plugin-javascript-obfuscator';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
-
 import { version } from './package.json';
 
 wisp.options.wisp_version = 2;
 
-function getDate(): string {
-  try {
-    return execSync('git log -1 --format=%cd', { stdio: 'pipe' }).toString().trim();
-  } catch {
-    return new Date().toISOString();
-  }
-}
-
 function WispServer(): Plugin {
   return {
     name: 'vite-wisp-server',
-    configureServer(server) {
-      server.httpServer?.on('upgrade', (req, socket, head) => {
-        if (req.url?.startsWith('/w/')) wisp.routeRequest(req, socket, head);
-      });
-    },
-  };
-}
-
-function IconBackend(): Plugin {
-  const faviconApi = 'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64';
-  return {
-    name: 'vite-icon-middleware',
-    configureServer({ middlewares }) {
-      middlewares.use('/api/icon', async (req: IncomingMessage, res: ServerResponse) => {
-        try {
-          const urlObj = new URL(req.url ?? '', 'http://localhost');
-          const targetUrl = urlObj.searchParams.get('url');
-          if (!targetUrl) {
-            res.statusCode = 400;
-            res.end('URL parameter is required.');
-            return;
-          }
-          const response = await fetch(`${faviconApi}&url=${encodeURIComponent(targetUrl)}`);
-          if (!response.ok) {
-            res.statusCode = response.status;
-            res.end('Failed to fetch favicon.');
-            return;
-          }
-          const arrayBuffer = await response.arrayBuffer();
-          const buffer = Buffer.from(arrayBuffer);
-          const contentType = response.headers.get('content-type') || 'image/png';
-          res.setHeader('Content-Type', contentType);
-          res.setHeader('Cache-Control', 'public, max-age=3600');
-          res.end(buffer);
-        } catch (err) {
-          console.error('Icon error:', err);
-          res.statusCode = 500;
-          res.end('Internal server error.');
+    configureServer(server: any) {
+      server.httpServer?.on('upgrade', (req: IncomingMessage, socket: any, head: any) => {
+        if (req.url?.endsWith('/w/')) {
+          wisp.routeRequest(req, socket, head);
+        } else {
+          undefined;
         }
       });
     },
-  };
+  }
 }
 
 export function searchBackend(): Plugin {
@@ -178,9 +135,6 @@ export default defineConfig({
       rollupOptions: {
         output: {
           manualChunks: {
-            'vendor-wisp': ['@mercuryworkshop/wisp-js'],
-            'vendor-mux': ['@mercuryworkshop/bare-mux'],
-            'vendor-transport': ['@mercuryworkshop/libcurl-transport'],
             'vendor-lucide': ['lucide'],
           },
         },
@@ -196,7 +150,6 @@ export default defineConfig({
     plugins: [
       tailwindcss(),
       WispServer(),
-      IconBackend(),
       searchBackend(),
       obfuscatorPlugin({
         exclude: ['tmp/**', 'data/**', '**/tmp/**', '**/data/**', 'node_modules/**', '**/node_modules/**'],

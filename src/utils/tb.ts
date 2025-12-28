@@ -1,6 +1,7 @@
 import ConfigAPI from './config';
 import { scramjetWrapper } from './pro';
 import { vWrapper } from './pro';
+import * as baremux from "@mercuryworkshop/bare-mux"
 
 type Tab = {
   id: number;
@@ -18,7 +19,11 @@ const links: Record<string, string> = {
 };
 
 const moonIcon = '/a/moon.svg';
-const iconApi = '/api/icon/?url=';
+const FAVICON_API =
+  'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64';
+const iconApi = FAVICON_API + '&url=';
+const connection = new baremux.BareMuxConnection("/bm/worker.js");
+const client = new baremux.BareClient();
 
 let tabs: Tab[] = [];
 let current: number | null = null;
@@ -103,15 +108,16 @@ function cut(text: string, max = 20): string {
 
 async function getIcon(url: string): Promise<string> {
   try {
-    const res = await fetch(iconApi + url);
+    if (await connection.getTransport() !== '/lc/index.mjs') {
+      await connection.setTransport('/lc/index.mjs', [{ wisp: await ConfigAPI.get('wispUrl') }]);
+    }
+    const res = await client.fetch(iconApi + encodeURIComponent(url));
     if (!res.ok) throw new Error('fail');
 
     const blob = await res.blob();
     const b64 = await toBase64(blob);
-    
     if (b64) return b64;
   } catch {}
-
   return moonIcon;
 }
 
@@ -192,18 +198,19 @@ function makeTab(tab: Tab): HTMLDivElement {
   el.draggable = true;
   el.dataset.id = tab.id.toString();
 
+
   const left = document.createElement('div');
-  left.className = 'flex items-center overflow-hidden gap-3';
-  
+  left.className = 'flex items-center gap-2 overflow-hidden h-full';
+
   const icon = document.createElement('img');
   icon.alt = 'favicon';
-  icon.className = 'tab-favicon w-4 h-4 rounded flex-shrink-0';
   icon.src = tab.favicon;
+  icon.className = 'tab-favicon w-4 h-4 min-w-4 min-h-4 max-w-4 max-h-4 rounded object-contain block box-border m-0 p-0';
 
   const title = document.createElement('span');
   title.textContent = cut(tab.title);
-  title.className = 'tab-title text-sm font-medium truncate';
-  
+  title.className = 'tab-title text-sm font-medium truncate align-middle';
+
   left.append(icon, title);
 
   const close = document.createElement('button');

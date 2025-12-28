@@ -1,10 +1,10 @@
 import fastifyCompress from '@fastify/compress';
 import fastifyMiddie from '@fastify/middie';
 import fastifyStatic from '@fastify/static';
+import fastifyHelmet from '@fastify/helmet';
 import type { FastifyStaticOptions, SetHeadersResponse } from '@fastify/static';
 import { logging, server as wisp } from '@mercuryworkshop/wisp-js/server';
 import chalk from 'chalk';
-import { EventEmitter } from 'events';
 import Fastify from 'fastify';
 import { execSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -12,11 +12,8 @@ import { createServer } from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { updateChecker } from 'serverlib/check';
-import { findProvider } from 'serverlib/provider';
-
+import { findProvider } from 'serverlib/provider'; 
 import { version } from './package.json' with { type: 'json' };
-
-EventEmitter.defaultMaxListeners = 50;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const port = Number(process.env.PORT) || 6060;
@@ -49,24 +46,34 @@ const app = Fastify({
   logger: false,
   serverFactory: handler => {
     const server = createServer();
-    server.on('request', handler);
-    server.on('upgrade', (req, socket, head) => {
+    const requestHandler = (req: any, res: any) => handler(req, res);
+    const upgradeHandler = (req: any, socket: any, head: any) => {
       if (req.url?.endsWith('/w/')) {
         wisp.routeRequest(req, socket, head);
       } else {
         socket.destroy();
       }
-    });
+    };
+    server.on('request', requestHandler);
+    server.on('upgrade', upgradeHandler);
     return server;
   },
 });
 
 await ensureBuild();
 
+await app.register(fastifyHelmet, {
+  xPoweredBy: false,
+  crossOriginEmbedderPolicy: true,
+  crossOriginOpenerPolicy: true,
+  contentSecurityPolicy: false,
+});
+
 await app.register(fastifyCompress, {
-  global: true,
   encodings: ['gzip', 'deflate', 'br'],
 });
+
+await app.register(fastifyMiddie);
 
 const staticFileOptions: FastifyStaticOptions = {
   decorateReply: true,
@@ -82,38 +89,7 @@ const staticFileOptions: FastifyStaticOptions = {
   },
   root: path.join(__dirname, 'dist', 'client'),
 };
-
 await app.register(fastifyStatic, staticFileOptions);
-await app.register(fastifyMiddie);
-
-const FAVICON_API =
-  'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=16';
-
-app.use('/api/icon', async (req: any, res: any) => {
-  try {
-    const urlObj = new URL(req.url ?? '', 'http://localhost');
-    const iconUrl = urlObj.searchParams.get('url');
-    if (!iconUrl) {
-      res.statusCode = 400;
-      res.end('URL parameter is required.');
-      return;
-    }
-    const response = await fetch(`${FAVICON_API}&url=${encodeURIComponent(iconUrl)}`);
-    if (!response.ok) {
-      res.statusCode = response.status;
-      res.end('Failed to fetch favicon.');
-      return;
-    }
-    const buffer = Buffer.from(await response.arrayBuffer());
-    res.setHeader('Content-Type', response.headers.get('content-type') || 'image/png');
-    res.setHeader('Cache-Control', 'public, max-age=3600');
-    res.end(buffer);
-  } catch (err) {
-    console.error('Icon error:', err);
-    res.statusCode = 500;
-    res.end('Internal server error.');
-  }
-});
 
 app.use('/api/query', async (req: any, res: any) => {
   const urlObj = new URL(req.url ?? '', 'http://localhost');
@@ -146,21 +122,6 @@ app.use('/api/query', async (req: any, res: any) => {
 
 // @ts-ignore
 const { handler } = await import('./dist/server/entry.mjs');
-
-app.use((req: any, res: any, next: any) => {
-  if (!/\.(js|css|svg|png|jpg|jpeg|gif|webp|woff2?|wasm|ico)$/.test(req.url ?? '')) {
-    const origSetHeader = res.setHeader.bind(res);
-    res.setHeader = (name: string, value: any) => {
-      if (name.toLowerCase() === 'cache-control') {
-        return origSetHeader('Cache-Control', 'no-cache, must-revalidate');
-      }
-      return origSetHeader(name, value);
-    };
-    res.setHeader('Cache-Control', 'no-cache, must-revalidate');
-  }
-  next();
-});
-
 app.use(handler);
 
 app.setNotFoundHandler((_, reply) => {

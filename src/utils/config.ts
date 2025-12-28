@@ -37,23 +37,23 @@ const ConfigAPI = {
       bm: [
         {
           name: 'Youtube',
-          logo: '/api/icon/?url=https://www.youtube.com/',
+          logo: 'https://www.youtube.com/',
           redir: 'https://www.youtube.com',
         },
         {
           name: 'Google',
-          logo: '/api/icon/?url=https://www.google.com/',
+          logo: 'https://www.google.com/',
           redir: 'https://www.google.com',
         },
-        { name: 'X', logo: '/api/icon/?url=https://www.x.com/', redir: 'https://www.x.com' },
+        { name: 'X', logo: 'https://www.x.com/', redir: 'https://www.x.com' },
         {
           name: 'Spotify',
-          logo: '/api/icon/?url=https://www.spotify.com/',
+          logo: 'https://www.spotify.com/',
           redir: 'https://www.spotify.com',
         },
         {
           name: 'Discord',
-          logo: '/api/icon/?url=https://www.discord.com/',
+          logo: 'https://www.discord.com/',
           redir: 'https://www.discord.com',
         },
       ],
