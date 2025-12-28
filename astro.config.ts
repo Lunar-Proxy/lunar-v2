@@ -192,7 +192,6 @@ export default defineConfig({
     },
     define: {
       VERSION: JSON.stringify(version),
-      UPDATE_DATE: JSON.stringify(getDate()),
     },
     plugins: [
       tailwindcss(),

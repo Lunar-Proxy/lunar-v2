@@ -1,6 +1,7 @@
 ---
 import '@/main.css';
 import Shortcuts from '../layouts/shortcuts.astro';
+import { version } from '../../package.json';
 ---
 
 <!doctype html>
@@ -46,6 +47,8 @@ import Shortcuts from '../layouts/shortcuts.astro';
     </div>
 
     <div class="fixed right-5 bottom-5 z-50 flex items-center gap-1">
+      <span class="px-3 py-1.5 text-[13px] font-medium text-white/50 transition-all duration-150 hover:text-white/90">v{version}</span>
+      <span class="h-3 w-px bg-white/20"></span>
       <a
         href="https://github.com/Lunar-Proxy/lunar-v2"
         target="_top"
