@@ -4,16 +4,19 @@ import { TabManager } from './tb';
 document.addEventListener('DOMContentLoaded', async () => {
   const menu = document.querySelector<HTMLButtonElement>('#menubtn');
   const cmenu = document.querySelector<HTMLDivElement>('#menu');
-  const menuItems = Array.from(document.querySelectorAll<HTMLButtonElement>('#menu .menu-item'));
+  const menuItems = Array.from(
+    document.querySelectorAll<HTMLButtonElement>('#menu .menu-item')
+  );
   if (!menu || !cmenu || menuItems.length === 0) return;
 
-
   const [newTab, fullscreen, reload, inspectElement, cloak, panic, settings] =
-    menuItems.length >= 7 ? menuItems : [null, null, null, null, null, null, null];
+    menuItems.length >= 7 ? menuItems : [];
+
   let panicKeybind = '';
   try {
-    panicKeybind = ((await ConfigAPI.get('panicKey')) as string) || '';
+    panicKeybind = String(await ConfigAPI.get('panicKey') ?? '');
   } catch {}
+
   const keybinds: Record<string, string> = {
     plus: 'Ctrl+Alt+N',
     'maximize-2': 'Ctrl+Alt+F',
@@ -25,25 +28,25 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   const hideMenu = () => {
-    if (cmenu) cmenu.classList.add('hidden');
+    cmenu.classList.add('hidden');
   };
+
   const toggleMenu = (e: MouseEvent) => {
     e.stopPropagation();
-    if (cmenu) cmenu.classList.toggle('hidden');
+    cmenu.classList.toggle('hidden');
   };
 
   const getActiveFrame = (): HTMLIFrameElement | null => {
-    if (!TabManager || !TabManager.activeTabId) return null;
+    if (!TabManager?.activeTabId) return null;
     const frame = document.getElementById(`frame-${TabManager.activeTabId}`);
     return frame instanceof HTMLIFrameElement ? frame : null;
   };
 
-  if (menu) menu.addEventListener('click', toggleMenu);
+  menu.addEventListener('click', toggleMenu);
 
   document.addEventListener('click', e => {
-    const target = e.target as Node | null;
-    if (target && (!menu || !menu.contains(target)) && (!cmenu || !cmenu.contains(target)))
-      hideMenu();
+    const t = e.target as Node;
+    if (!menu.contains(t) && !cmenu.contains(t)) hideMenu();
   });
 
   window.addEventListener('blur', () => {
@@ -52,134 +55,83 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
-  if (cmenu) {
-    cmenu.querySelectorAll<HTMLButtonElement>('.menu-item').forEach(item => {
-      item.addEventListener('click', hideMenu);
-      item.addEventListener('keydown', e => {
-        if (e.key === 'Enter') {
-          hideMenu();
-        }
-      });
+  cmenu.querySelectorAll<HTMLButtonElement>('.menu-item').forEach(item => {
+    item.addEventListener('click', hideMenu);
+    item.addEventListener('keydown', e => {
+      if (e.key === 'Enter') hideMenu();
     });
-  }
+  });
 
-  if (newTab) {
-    newTab.addEventListener('click', () => {
-      TabManager.openTab();
-    });
-  }
+  newTab?.addEventListener('click', () => {
+    TabManager.openTab();
+  });
 
-  if (reload) {
-    reload.addEventListener('click', () => {
-      const frame = getActiveFrame();
-      if (!frame || !frame.contentWindow) return;
-      frame.contentWindow.location.reload();
-    });
-  }
+  reload?.addEventListener('click', () => {
+    getActiveFrame()?.contentWindow?.location.reload();
+  });
 
-  if (settings) {
-    settings.addEventListener('click', () => {
-      TabManager.openTab('./st');
-    });
-  }
+  settings?.addEventListener('click', () => {
+    TabManager.openTab('./st');
+  });
 
-  if (cloak) {
-    cloak.addEventListener('click', () => {
-      const win = window.open();
-      if (!win) return;
-      if (top?.location.href === 'about:blank') {
+  cloak?.addEventListener('click', () => {
+    if (top?.location.href === 'about:blank') return;
+    const win = window.open();
+    if (!win) return;
+
+    const iframe = win.document.createElement('iframe');
+    iframe.style.cssText = 'width:100%;height:100vh;border:0;margin:0;padding:0';
+    iframe.src = location.origin + '/';
+
+    win.document.body.style.margin = '0';
+    win.document.title = 'about:blank';
+    win.document.body.appendChild(iframe);
+  });
+
+  fullscreen?.addEventListener('click', () => {
+    const doc = window.top?.document;
+    if (!doc) return;
+
+    const p = doc.fullscreenElement
+      ? doc.exitFullscreen()
+      : doc.documentElement.requestFullscreen();
+
+    p?.catch?.(() => {});
+  });
+
+  inspectElement?.addEventListener('click', () => {
+    const frame = getActiveFrame();
+    if (!frame?.contentWindow || !frame.contentDocument) return;
+
+    try {
+      const win = frame.contentWindow as any;
+
+      if (win.eruda) {
+        win.eruda._isInit ? win.eruda.destroy() : win.eruda.init();
         return;
       }
 
-      const iframe = win.document.createElement('iframe');
-      iframe.style.width = '100%';
-      iframe.style.height = '100vh';
-      iframe.style.border = 'none';
-      iframe.style.margin = '0';
-      iframe.style.padding = '0';
+      const script = frame.contentDocument.createElement('script');
+      script.src = 'https://cdn.jsdelivr.net/npm/eruda';
+      script.onload = () => win.eruda?.init?.();
+      frame.contentDocument.head.appendChild(script);
+    } catch {}
+  });
 
-      win.document.body.style.margin = '0';
-      win.document.title = 'about:blank';
+  panic?.addEventListener('click', async () => {
+    let loc = 'https://google.com';
+    try {
+      loc = String(await ConfigAPI.get('panicLoc') ?? loc);
+    } catch {}
 
-      iframe.src = window.location.origin + '/';
-      win.document.body.appendChild(iframe);
-    });
-  }
-
-  if (fullscreen) {
-    fullscreen.addEventListener('click', () => {
-      const doc = window.top?.document;
-      if (!doc) return;
-      const toggle = doc.fullscreenElement
-        ? doc.exitFullscreen()
-        : doc.documentElement.requestFullscreen();
-      if (toggle && typeof toggle.catch === 'function') {
-        void toggle.catch(() => {});
-      }
-    });
-  }
-
-  if (inspectElement) {
-    inspectElement.addEventListener('click', () => {
-      const frame = getActiveFrame();
-      if (!frame || !frame.contentWindow) return;
-
+    window.top?.location.replace(loc);
+    setTimeout(() => {
       try {
-        const win = frame.contentWindow as any;
-        const eruda = win.eruda;
-
-        if (eruda) {
-          if (eruda._isInit) {
-            eruda.destroy();
-          } else {
-            eruda.init();
-          }
-          return;
-        }
-
-        const script = frame.contentDocument?.createElement('script');
-        if (!script) return;
-
-        script.src = 'https://cdn.jsdelivr.net/npm/eruda';
-        script.async = true;
-        script.onload = () => {
-          try {
-            win.eruda.init();
-          } catch (err) {
-            console.error('Could not start Eruda:', err);
-          }
-        };
-        frame.contentDocument?.head.appendChild(script);
-      } catch (err) {
-        console.error('Failed to inject Eruda:', err);
-      }
-    });
-  }
-
-  if (panic) {
-    panic.addEventListener('click', async () => {
-      try {
-        const loc = (await ConfigAPI.get('panicLoc')) || 'https://google.com';
-        // @ts-ignore
-        window.top?.location.replace(loc);
-        setTimeout(() => {
-          try {
-            // @ts-ignore
-            window.top?.history.pushState(null, '', loc);
-            window.top?.history.go(1);
-          } catch {}
-        }, 100);
-      } catch {
-        window.top?.location.replace('https://google.com');
-        setTimeout(() => {
-          try {
-            window.top?.history.pushState(null, '', 'https://google.com');
-            window.top?.history.go(1);
-          } catch {}
-        }, 100);
-      }
-    });
-  }
+        window.top?.history.pushState(null, '', loc);
+        window.top?.history.go(1);
+      } catch {}
+    }, 100);
+  });
 
   const keyMap = new Map<string, HTMLButtonElement>();
 
@@ -191,40 +143,34 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!combo) continue;
 
     const label = item.querySelector('span');
-    if (label && combo) {
-      label.textContent = `${label.textContent} (${combo})`;
-    }
+    if (label) label.textContent = `${label.textContent} (${combo})`;
 
-    const normalized = combo.trim().toLowerCase();
-    if (normalized) {
-      keyMap.set(normalized, item);
-    }
+    const norm = combo.toLowerCase().replace(/\s+/g, '');
+    keyMap.set(norm, item);
   }
 
   document.addEventListener('keydown', e => {
-    if (
-      e.key === 'Enter' &&
-      document.activeElement &&
-      cmenu &&
-      cmenu.contains(document.activeElement)
-    ) {
+    if (e.repeat) return;
+
+    if (e.key === 'Enter' && cmenu.contains(document.activeElement)) {
       hideMenu();
       return;
     }
-    const parts = [];
+
+    const parts: string[] = [];
     if (e.ctrlKey) parts.push('ctrl');
     if (e.altKey) parts.push('alt');
     if (e.shiftKey) parts.push('shift');
+
     let key = e.key.toLowerCase();
     if (key === ' ') key = 'space';
     parts.push(key);
 
-    const combo = parts.join('+');
-    const target = keyMap.get(combo);
+    const hit = parts.join('+');
+    const target = keyMap.get(hit);
+    if (!target) return;
 
-    if (target) {
-      e.preventDefault();
-      target.click();
-    }
+    e.preventDefault();
+    target.click();
   });
 });

@@ -25,7 +25,7 @@ const ConfigAPI = {
     const defaults = {
       engine: 'https://duckduckgo.com/?q=',
       cloak: 'off',
-      adBlock: 'off',
+      adBlock: 'on',
       cloakTitle: 'Google',
       cloakFavicon: 'https://www.google.com/favicon.ico',
       autoCloak: 'off',

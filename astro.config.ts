@@ -23,8 +23,6 @@ function WispServer(): Plugin {
       server.httpServer?.on('upgrade', (req: IncomingMessage, socket: any, head: any) => {
         if (req.url?.endsWith('/w/')) {
           wisp.routeRequest(req, socket, head);
-        } else {
-          undefined;
         }
       });
     },

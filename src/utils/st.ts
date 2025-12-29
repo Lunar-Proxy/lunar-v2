@@ -685,7 +685,11 @@ export class SettingsManager {
     if (engineIn && cfg.engine) engineIn.value = cfg.engine;
 
     const wispIn = document.querySelector('[data-input="wispUrl"]') as HTMLInputElement;
-    if (wispIn && cfg.wispUrl) wispIn.value = cfg.wispUrl;
+
+    if (wispIn && cfg.wispUrl) {
+      wispIn.value = cfg.wispUrl;
+      wispIn.placeholder = cfg.wispUrl;
+    }
 
     const panicUrlIn = document.querySelector('[data-input="panicLoc"]') as HTMLInputElement;
     if (panicUrlIn && cfg.panicLoc) panicUrlIn.value = cfg.panicLoc;
