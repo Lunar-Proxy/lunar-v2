@@ -20,7 +20,7 @@
     "@mercuryworkshop/bare-mux": "^2.1.7",
     "@mercuryworkshop/libcurl-transport": "^1.5.1",
     "@mercuryworkshop/scramjet": "https://github.com/MercuryWorkshop/scramjet/releases/download/latest/mercuryworkshop-scramjet-2.0.0-alpha.tgz",
-    "@mercuryworkshop/wisp-js": "^0.4.0",
+    "@mercuryworkshop/wisp-js": "^0.4.1",
     "@playform/compress": "^0.2.0",
     "@tailwindcss/vite": "^4.1.18",
     "@titaniumnetwork-dev/ultraviolet": "^3.2.10",
