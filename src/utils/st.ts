@@ -745,20 +745,6 @@ export class SettingsManager {
     const cfg = await this.load();
     await this.apply(cfg);
 
-    if (
-      navigator.serviceWorker &&
-      (navigator.serviceWorker.controller || navigator.serviceWorker.ready)
-    ) {
-      const msg = { type: 'ADBLOCK', data: { enabled: cfg.adBlock === 'on' } };
-      if (navigator.serviceWorker.controller) {
-        navigator.serviceWorker.controller.postMessage(msg);
-      } else if (navigator.serviceWorker.ready) {
-        navigator.serviceWorker.ready.then(reg => {
-          reg.active?.postMessage(msg);
-        });
-      }
-    }
-
     this.initNav();
     this.initScrollSpy();
     this.initSearch();
