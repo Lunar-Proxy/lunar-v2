@@ -88,6 +88,7 @@ function makeFrame(id: number, url?: string): HTMLIFrameElement {
         target?: string,
         features?: string
       ): WindowProxy | null {
+        console.log('Intercepted window.open:', url, target, features);
         if (url) {
           const str = url.toString();
           getEncoded(str).then(encoded => open(encoded));

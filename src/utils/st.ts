@@ -341,35 +341,13 @@ export class SettingsManager {
         const el = e.target as HTMLInputElement;
         const key = el.getAttribute('data-input');
 
-        if (key && el.value) {
-          await ConfigAPI.set(key, el.value);
-          this.notify();
-
-          if (key === 'cloakTitle' || key === 'cloakFavicon') {
-            const toggle = document.querySelector('[data-toggle="cloak"]');
-            const on = toggle?.classList.contains('active');
-            if (on) {
-              const titleIn = document.querySelector(
-                '[data-input="cloakTitle"]',
-              ) as HTMLInputElement;
-              const iconIn = document.querySelector(
-                '[data-input="cloakFavicon"]',
-              ) as HTMLInputElement;
-              this.setCloak(true, titleIn?.value, iconIn?.value);
-            }
-          }
-        }
-      });
-
-      input.addEventListener('keydown', async e => {
-        if ((e as KeyboardEvent).key === 'Enter') {
-          const el = e.target as HTMLInputElement;
-          const key = el.getAttribute('data-input');
-
           if (key && el.value) {
             await ConfigAPI.set(key, el.value);
             this.notify();
-            el.blur();
+
+            if (key === 'wispUrl') {
+              el.placeholder = el.value;
+            }
 
             if (key === 'cloakTitle' || key === 'cloakFavicon') {
               const toggle = document.querySelector('[data-toggle="cloak"]');
@@ -385,6 +363,36 @@ export class SettingsManager {
               }
             }
           }
+      });
+
+      input.addEventListener('keydown', async e => {
+        if ((e as KeyboardEvent).key === 'Enter') {
+          const el = e.target as HTMLInputElement;
+          const key = el.getAttribute('data-input');
+
+            if (key && el.value) {
+              await ConfigAPI.set(key, el.value);
+              this.notify();
+              el.blur();
+
+              if (key === 'wispUrl') {
+                el.placeholder = el.value;
+              }
+
+              if (key === 'cloakTitle' || key === 'cloakFavicon') {
+                const toggle = document.querySelector('[data-toggle="cloak"]');
+                const on = toggle?.classList.contains('active');
+                if (on) {
+                  const titleIn = document.querySelector(
+                    '[data-input="cloakTitle"]',
+                  ) as HTMLInputElement;
+                  const iconIn = document.querySelector(
+                    '[data-input="cloakFavicon"]',
+                  ) as HTMLInputElement;
+                  this.setCloak(true, titleIn?.value, iconIn?.value);
+                }
+              }
+            }
         }
       });
     });

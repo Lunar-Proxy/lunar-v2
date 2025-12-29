@@ -12,7 +12,7 @@ class ScramjetWrapper {
 
   getConfig() {
     return {
-      prefix: '/data/v1/',
+      prefix: '/v1/data/',
       files: {
         wasm: '/data/wasm.wasm',
         all: '/data/all.js',
@@ -23,7 +23,7 @@ class ScramjetWrapper {
         cleanErrors: true,
         rewriterLogs: false,
         serviceworkers: false,
-        strictRewrites: true,
+        strictRewrites: false,
         syncxhr: false,
       },
       codec: {
