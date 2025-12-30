@@ -69,7 +69,16 @@ favorite?.addEventListener('click', async () => {
   const frame = getActiveFrame();
   if (!frame || nativePaths[urlbar.value]) return;
 
-  const url = scramjetInstance.codec.decode(frame.src);
+  let src = frame.src;
+  try {
+    const urlObj = new URL(src, window.location.origin);
+    let path = urlObj.pathname;
+    if (path.startsWith(scramjetInstance.prefix)) {
+      path = path.slice(scramjetInstance.prefix.length);
+    }
+    src = path;
+  } catch {}
+  const url = scramjetInstance.codec.decode(src);
   const name = frame.contentDocument?.title || url;
 
   let domain: string;
@@ -83,7 +92,16 @@ favorite?.addEventListener('click', async () => {
   const currentBm: Array<{ name: string; logo: string; redir: string }> =
     (await ConfigAPI.get('bm')) ?? [];
 
-  const existingIndex = currentBm.findIndex(b => b.redir === url);
+  function normalize(u: string) {
+    try {
+      return decodeURIComponent(u).replace(/\/$/, '');
+    } catch {
+      return u.replace(/\/$/, '');
+    }
+  }
+
+  const normUrl = normalize(url);
+  const existingIndex = currentBm.findIndex(b => normalize(b.redir) === normUrl);
 
   if (existingIndex !== -1) {
     currentBm.splice(existingIndex, 1);
