@@ -31,6 +31,12 @@
   async function getIcon(url: string): Promise<string> {
     if (!url) return moonIcon;
     try {
+      const res = await fetch(iconApi + encodeURIComponent(url));
+      if (res.ok) {
+        return await toBase64(await res.blob());
+      }
+    } catch {}
+    try {
       const res = await client.fetch(iconApi + encodeURIComponent(url));
       if (!res.ok) throw 0;
       return await toBase64(await res.blob());

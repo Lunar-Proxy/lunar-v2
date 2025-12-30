@@ -109,12 +109,19 @@ function cut(text: string, max = 20): string {
 
 async function getIcon(url: string): Promise<string> {
   try {
+    const res = await fetch(iconApi + encodeURIComponent(url));
+    if (res.ok) {
+      const blob = await res.blob();
+      const b64 = await toBase64(blob);
+      if (b64) return b64;
+    }
+  } catch {}
+  try {
     if (await connection.getTransport() !== '/lc/index.mjs') {
       await connection.setTransport('/lc/index.mjs', [{ wisp: await ConfigAPI.get('wispUrl') }]);
     }
     const res = await client.fetch(iconApi + encodeURIComponent(url));
     if (!res.ok) throw new Error('fail');
-
     const blob = await res.blob();
     const b64 = await toBase64(blob);
     if (b64) return b64;
@@ -160,6 +167,7 @@ async function loaded(tab: Tab): Promise<void> {
       tab.favicon = icon;
       refresh(tab, 'icon');
     }
+    
   } catch {
     if (tab.favicon !== moonIcon) {
       tab.favicon = moonIcon;
