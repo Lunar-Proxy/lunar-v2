@@ -10,6 +10,7 @@ interface Game {
 }
 
 const { list = [] }: { list?: Game[] } = Astro.props;
+const { type = '' }: { type?: string } = Astro.props;
 const sorted = [...list].sort((a, b) => a.name.localeCompare(b.name));
 ---
 
@@ -18,7 +19,7 @@ const sorted = [...list].sort((a, b) => a.name.localeCompare(b.name));
     <div class="mx-auto max-w-7xl p-6">
       <div class="mb-6">
         <div class="mb-4 flex items-center justify-between">
-          <h1 class="text-2xl font-bold">Assets</h1>
+          <h1 class="text-2xl font-bold">{type === 'games' ? 'Lunar Games' : type === 'app' ? 'Lunar Apps' : 'Assets'}</h1>
           <div class="bg-background-overlay flex gap-1 rounded-lg p-1">
             <button data-view="grid" class="bg-background text-text-header flex h-9 w-9 items-center justify-center rounded transition-colors">
               <i data-lucide="grid-3x3" class="h-4 w-4"></i>
