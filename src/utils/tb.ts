@@ -136,7 +136,7 @@ async function loaded(tab: Tab): Promise<void> {
     const doc = tab.iframe.contentDocument;
     if (!doc) return;
 
-    // Removed artificial delay for faster title update
+    
     const newTitle = doc.title?.trim() || 'New Tab';
     if (tab.title !== newTitle) {
       tab.title = newTitle;
@@ -284,14 +284,12 @@ function kill(id: number): void {
   
   const tab = tabs[idx];
   
-  // Clean up iframe event listeners
   tab.iframe.onload = null;
   tab.iframe.onerror = null;
   tab.iframe.remove();
   
   tabs.splice(idx, 1);
   
-  // Clean up URL timer if this was the active tab
   if (current === id && urlTimer !== null) {
     clearInterval(urlTimer);
     urlTimer = null;
@@ -333,7 +331,6 @@ function open(url?: string): void {
 }
 
 function swap(id: number) {
-  // Clean up previous timer
   if (urlTimer !== null) {
     clearInterval(urlTimer);
     urlTimer = null;
