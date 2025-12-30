@@ -305,10 +305,10 @@ function kill(id: number): void {
 }
 
 function draw(): void {
-  bar.innerHTML = '';
+  while (bar.firstChild) bar.removeChild(bar.firstChild);
   tabs.forEach(tab => {
-    const el = makeTab(tab);
-    bar.appendChild(el);
+    if (!tab.el) tab.el = makeTab(tab);
+    bar.appendChild(tab.el);
   });
 }
 
