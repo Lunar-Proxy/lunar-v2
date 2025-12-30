@@ -343,24 +343,45 @@ function swap(id: number) {
     clearInterval(urlTimer);
     urlTimer = null;
   }
-  
+
   current = id;
-  
+
   tabs.forEach(tab => {
     tab.iframe.classList.toggle('hidden', tab.id !== id);
   });
-  
+
   highlight();
 
   const tab = tabs.find(t => t.id === id);
   if (tab && tab.el) {
     refresh(tab, 'title');
+    refresh(tab, 'icon');
+  }
+
+  const input = document.getElementById('urlbar') as HTMLInputElement | null;
+  if (input && tab) {
+    let src = tab.iframe.src;
+    try {
+      const url = new URL(src, window.location.origin);
+      const path = url.pathname;
+      const quick = Object.entries(links).find(([, p]) => p === path);
+      if (quick) {
+        input.value = quick[0];
+      } else if (path.startsWith(scramjetWrapper.getConfig().prefix)) {
+        const decoded = scramjetWrapper.getConfig().codec.decode(path.slice(scramjetWrapper.getConfig().prefix.length)) ?? '';
+        input.value = decoded;
+      } else if (path.startsWith(vWrapper.getConfig().prefix)) {
+        const decoded = vWrapper.getConfig().decodeUrl(path.slice(vWrapper.getConfig().prefix.length)) ?? '';
+        input.value = decoded;
+      } else {
+        input.value = '';
+      }
+    } catch {
+      input.value = '';
+    }
   }
 
   document.dispatchEvent(new CustomEvent('tab-switch', { detail: { tabId: id } }));
-
-  const input = document.getElementById('urlbar') as HTMLInputElement | null;
-  if (!input) return;
 
   let last = '';
   const update = () => {
@@ -369,28 +390,23 @@ function swap(id: number) {
       const href = frame?.contentWindow?.location.href;
       if (!href || href === last) return;
       last = href;
-      
       const path = new URL(href, window.location.origin).pathname;
       const quick = Object.entries(links).find(([, p]) => p === path);
-      
-      if (quick) {
-        input.value = quick[0];
-      } else if (path.startsWith(scramjetWrapper.getConfig().prefix)) {
-        const decoded = scramjetWrapper
-          .getConfig()
-          .codec.decode(path.slice(scramjetWrapper.getConfig().prefix.length)) ?? '';
-        input.value = decoded;
-      } else if (path.startsWith(vWrapper.getConfig().prefix)) {
-        const decoded = vWrapper
-          .getConfig()
-          .decodeUrl(path.slice(vWrapper.getConfig().prefix.length)) ?? '';
-        input.value = decoded;
-      } else {
-        input.value = '';
+      if (input) {
+        if (quick) {
+          input.value = quick[0];
+        } else if (path.startsWith(scramjetWrapper.getConfig().prefix)) {
+          const decoded = scramjetWrapper.getConfig().codec.decode(path.slice(scramjetWrapper.getConfig().prefix.length)) ?? '';
+          input.value = decoded;
+        } else if (path.startsWith(vWrapper.getConfig().prefix)) {
+          const decoded = vWrapper.getConfig().decodeUrl(path.slice(vWrapper.getConfig().prefix.length)) ?? '';
+          input.value = decoded;
+        } else {
+          input.value = '';
+        }
       }
     } catch {}
   };
-  
   urlTimer = setInterval(update, 20);
   update();
 }
