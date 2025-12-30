@@ -190,8 +190,11 @@ if (input) {
   });
 
   input.addEventListener('keydown', e => {
-    if (e.key === 'Enter') closeMenu();
-  });
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    closeMenu();
+  }
+});
 
   window.addEventListener('resize', () => {
     const d = document.getElementById('suggestions') as HTMLDivElement | null;
