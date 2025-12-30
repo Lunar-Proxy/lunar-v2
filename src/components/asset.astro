@@ -14,17 +14,6 @@ const sorted = [...list].sort((a, b) => a.name.localeCompare(b.name));
 ---
 
 <html lang="en">
-  <head>
-    <style>
-      ::-webkit-scrollbar { width: 8px; }
-      ::-webkit-scrollbar-track { background: var(--background); }
-      ::-webkit-scrollbar-thumb { background: var(--text-secondary); border-radius: 4px; }
-      ::-webkit-scrollbar-thumb:hover { background: var(--text-header); }
-      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-      .card-loading { background: var(--background-overlay); opacity: 0.5; }
-    </style>
-  </head>
-
   <body class="bg-background font-linux text-text-header min-h-screen">
     <div class="mx-auto max-w-7xl p-6">
       <div class="mb-6">
