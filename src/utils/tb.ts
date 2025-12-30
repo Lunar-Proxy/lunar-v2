@@ -91,7 +91,7 @@ function makeFrame(id: number, url?: string): HTMLIFrameElement {
         console.log('Intercepted window.open:', url, target, features);
         if (url) {
           const str = url.toString();
-          getEncoded(str).then(encoded => open(encoded));
+          getEncoded(str).then(encoded => open(encoded)).catch(console.error);
           return null;
         }
         return origOpen.call(this, url, target, features);
@@ -136,8 +136,7 @@ async function loaded(tab: Tab): Promise<void> {
     const doc = tab.iframe.contentDocument;
     if (!doc) return;
 
-    await new Promise(resolve => setTimeout(resolve, 50));
-
+    // Removed artificial delay for faster title update
     const newTitle = doc.title?.trim() || 'New Tab';
     if (tab.title !== newTitle) {
       tab.title = newTitle;
@@ -283,8 +282,20 @@ function kill(id: number): void {
   const idx = tabs.findIndex(t => t.id === id);
   if (idx === -1) return;
   
-  tabs[idx].iframe.remove();
+  const tab = tabs[idx];
+  
+  // Clean up iframe event listeners
+  tab.iframe.onload = null;
+  tab.iframe.onerror = null;
+  tab.iframe.remove();
+  
   tabs.splice(idx, 1);
+  
+  // Clean up URL timer if this was the active tab
+  if (current === id && urlTimer !== null) {
+    clearInterval(urlTimer);
+    urlTimer = null;
+  }
   
   if (!tabs.length) {
     open();
@@ -322,6 +333,12 @@ function open(url?: string): void {
 }
 
 function swap(id: number) {
+  // Clean up previous timer
+  if (urlTimer !== null) {
+    clearInterval(urlTimer);
+    urlTimer = null;
+  }
+  
   current = id;
   
   tabs.forEach(tab => {
@@ -329,20 +346,22 @@ function swap(id: number) {
   });
   
   highlight();
-  
+
+  const tab = tabs.find(t => t.id === id);
+  if (tab && tab.el) {
+    refresh(tab, 'title');
+  }
+
+  document.dispatchEvent(new CustomEvent('tab-switch', { detail: { tabId: id } }));
+
   const input = document.getElementById('urlbar') as HTMLInputElement | null;
   if (!input) return;
-  
-  if (urlTimer !== null) {
-    clearInterval(urlTimer);
-    urlTimer = null;
-  }
-  
+
   let last = '';
   const update = () => {
     const frame = document.getElementById(`frame-${id}`) as HTMLIFrameElement;
     try {
-      const href = frame.contentWindow?.location.href;
+      const href = frame?.contentWindow?.location.href;
       if (!href || href === last) return;
       last = href;
       
@@ -367,7 +386,8 @@ function swap(id: number) {
     } catch {}
   };
   
-  urlTimer = setInterval(update, 60);
+  urlTimer = setInterval(update, 20);
+  update();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -388,11 +408,12 @@ document.addEventListener('DOMContentLoaded', () => {
     loader.style.width = '0%';
     loader.style.transition = 'none';
     setTimeout(() => {
+      if (!loading) return;
       loader.style.transition = 'width 0.5s cubic-bezier(.4,0,.2,1)';
       loader.style.width = '80%';
     }, 10);
     loadTimeout = setTimeout(() => {
-      if (loading) {
+      if (loading && loader) {
         loader.style.transition = 'width 0.3s cubic-bezier(.4,0,.2,1)';
         loader.style.width = '90%';
       }
@@ -404,6 +425,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loader.style.transition = 'width 0.2s cubic-bezier(.4,0,.2,1)';
     loader.style.width = '100%';
     setTimeout(() => {
+      if (!loader) return;
       loader.style.opacity = '0';
       loader.style.display = 'none';
       loader.style.width = '0%';
@@ -432,8 +454,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const tab = tabs[tabs.length - 1];
     if (!tab) return;
   
-    tab.iframe.addEventListener('load', resetLoad);
-    tab.iframe.addEventListener('error', resetLoad);
+    tab.iframe.addEventListener('load', resetLoad, { once: true });
+    tab.iframe.addEventListener('error', resetLoad, { once: true });
   };
 
   tabs.forEach(tab => {
@@ -506,7 +528,9 @@ function setupSearch() {
           icon.alt = engines[engine].name;
         }
       }
-    } catch {}
+    } catch (err) {
+      console.error('Error loading engine config:', err);
+    }
   })();
 
   const btn = document.getElementById('search-engine-btn') as HTMLButtonElement | null;
@@ -552,7 +576,9 @@ function setupSearch() {
       
       try {
         await ConfigAPI.set('engine', engines[val].url);
-      } catch {}
+      } catch (err) {
+        console.error('Error saving engine config:', err);
+      }
     });
   });
 }
