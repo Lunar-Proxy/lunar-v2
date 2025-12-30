@@ -1,5 +1,6 @@
 ![Lunar](./lunar.svg)
 
+# Lunar v2
 Lunar v2 is feature packed modern, browser-inspired tabbed web proxy bypassing censorship  
 while having a familiar, browser like design.
 
