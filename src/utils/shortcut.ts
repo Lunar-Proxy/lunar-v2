@@ -42,25 +42,19 @@
   async function render() {
     if (!container || rendering) return;
     rendering = true;
-
     container.innerHTML = '';
-
-    const wispRaw = await ConfigAPI.get('wispUrl');
-    const wisp = typeof wispRaw === 'string' ? wispRaw : '';
-
-    if (await connection.getTransport() !== '/lc/index.mjs') {
+    let wisp;
+    if (connection.getTransport && (await connection.getTransport()) !== '/lc/index.mjs') {
+      const wispRaw = await ConfigAPI.get('wispUrl');
+      wisp = typeof wispRaw === 'string' ? wispRaw : '';
       await connection.setTransport('/lc/index.mjs', [{ wisp }]);
     }
-
-    const iconsSrc = await Promise.all(
-      bookmarks.map(b => getIcon(b.redir))
-    );
-
-    bookmarks.forEach((bm, i) => {
+    const divs: HTMLDivElement[] = [];
+    for (let i = 0; i < bookmarks.length; ++i) {
+      const bm = bookmarks[i];
       const div = document.createElement('div');
       div.className =
         'shortcut-card relative flex flex-col items-center justify-center space-y-3 rounded-2xl bg-background-overlay/80 border border-border-default/20 p-5 min-w-[120px] max-w-[160px] transition-all duration-200 hover:scale-105 cursor-pointer group backdrop-blur-md shadow-lg';
-
       div.innerHTML = `
         <div class="absolute -top-2 -right-2 flex z-10 opacity-0 group-hover:opacity-100 transition-all">
           <button class="delete bg-red-500/70 hover:bg-red-600 rounded-full p-1.5">
@@ -68,31 +62,34 @@
           </button>
         </div>
         <div class="w-16 h-16 rounded-xl bg-background-overlay/90 border border-border-default/20 flex items-center justify-center overflow-hidden">
-          <img src="${iconsSrc[i]}" class="w-10 h-10 object-contain" />
+          <img src="${moonIcon}" class="w-10 h-10 object-contain shortcut-favicon" />
         </div>
         <p class="text-base font-semibold text-text-header max-w-[120px] break-words text-center">
           ${bm.name}
         </p>
       `;
-
       div.querySelector('.delete')?.addEventListener('click', async e => {
         e.stopPropagation();
         bookmarks.splice(i, 1);
         await ConfigAPI.set('bm', bookmarks);
         render();
       });
-
       div.addEventListener('click', () => {
         const input = window.parent.document.getElementById('urlbar') as HTMLInputElement | null;
         if (!input) return;
         input.value = bm.redir;
         input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
       });
-
-      container!.appendChild(div);
-    });
-
+      container.appendChild(div);
+      divs.push(div);
+    }
     createIcons({ icons });
+    for (let i = 0; i < bookmarks.length; ++i) {
+      getIcon(bookmarks[i].redir).then(iconUrl => {
+        const img = divs[i].querySelector('img.shortcut-favicon');
+        if (img && img instanceof HTMLImageElement) img.src = iconUrl;
+      });
+    }
     rendering = false;
   }
 
