@@ -63,10 +63,10 @@ const app = Fastify({
 await ensureBuild();
 
 await app.register(fastifyHelmet, {
-  xPoweredBy: false,
-  crossOriginEmbedderPolicy: true,
-  crossOriginOpenerPolicy: true,
+  crossOriginEmbedderPolicy: { policy: 'require-corp' },
+  crossOriginOpenerPolicy: { policy: 'same-origin' },
   contentSecurityPolicy: false,
+  xPoweredBy: false,
 });
 
 await app.register(fastifyCompress, {
