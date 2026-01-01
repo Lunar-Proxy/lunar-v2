@@ -1,16 +1,15 @@
 function encode(str) {
-  const bytes = new TextEncoder().encode(str);
-  return Array.from(bytes)
-    .map(b => b.toString(16).padStart(2, '0'))
-    .join('');
+  if (!str) return '';
+  const reversed = str.toString().split('').reverse().join('');
+  return encodeURIComponent(reversed).replace(/[a-zA-Z]/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase());
 }
 
 function decode(encoded) {
-  const bytes = new Uint8Array(encoded.length / 2);
-  for (let i = 0; i < bytes.length; i++) {
-    bytes[i] = parseInt(encoded.slice(i * 2, i * 2 + 2), 16);
-  }
-  return new TextDecoder().decode(bytes);
+  if (!encoded) return '';
+  const qIndex = encoded.indexOf('?');
+  const path = qIndex >= 0 ? encoded.slice(0, qIndex) : encoded;
+  const query = qIndex >= 0 ? encoded.slice(qIndex) : '';
+  return decodeURIComponent(path).split('').reverse().join('') + query;
 }
 
 tmpConfig = {

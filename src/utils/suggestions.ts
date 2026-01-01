@@ -91,7 +91,7 @@ function renderMenu(suggestions: string[], quick: [string, string][], math: stri
   const html: string[] = [];
   if (math) {
     html.push(`
-      <div class="flex items-center space-x-2 px-6 py-3 text-[var(--text-header)] font-semibold cursor-pointer hover:bg-[#2a293f] hover:text-white rounded-md" data-value="${math}">
+      <div class="flex items-center space-x-2 px-6 py-3 text-[var(--text-header)] font-semibold cursor-pointer hover:bg-[#2a293f]/60 hover:text-white rounded-md" data-value="${math}">
         <i data-lucide="calculator" class="h-5 w-5"></i><span>${math}</span>
       </div>
     `);
@@ -101,7 +101,7 @@ function renderMenu(suggestions: string[], quick: [string, string][], math: stri
       `<div class="px-5 py-2 text-xs uppercase tracking-wider text-[var(--text-secondary)]">Results for <span class="font-bold text-white">${query}</span></div>`,
       ...list.map(
         r => `
-      <div class="flex items-center space-x-3 px-6 py-2 text-[var(--text-header)] cursor-pointer hover:bg-[#2a293f] hover:text-white rounded-md transition" data-value="${r}">
+      <div class="flex items-center space-x-3 px-6 py-2 text-[var(--text-header)] cursor-pointer hover:bg-[#2a293f]/60 hover:text-white rounded-md transition" data-value="${r}">
         <i data-lucide="search" class="h-4 w-4 text-[var(--text-secondary)]"></i><span>${r}</span>
       </div>`,
       ),
@@ -112,7 +112,7 @@ function renderMenu(suggestions: string[], quick: [string, string][], math: stri
       `<div class="px-5 py-2 text-xs uppercase tracking-wider text-[var(--text-secondary)] border-t border-[var(--border)]">Lunar Links</div>`,
       ...quick.map(
         ([k, l]) => `
-        <div class="flex items-center justify-between px-6 py-2 text-[var(--text-header)] cursor-pointer hover:bg-[#2a293f] hover:text-white rounded-md transition" data-value="${k}">
+        <div class="flex items-center justify-between px-6 py-2 text-[var(--text-header)] cursor-pointer hover:bg-[#2a293f]/60 hover:text-white rounded-md transition" data-value="${k}">
           <div class="flex items-center space-x-2">
             <i data-lucide="globe" class="h-5 w-5 text-purple-400"></i><span>${k}</span>
           </div>
