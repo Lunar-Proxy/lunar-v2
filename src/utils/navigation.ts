@@ -40,27 +40,73 @@ function loading() {
   reload.style.animation = 'spin 0.5s linear';
 }
 
+async function updateBookmark() {
+  if (!favorite) return;
+  const frame = getActiveFrame();
+  if (!frame) return;
+
+  let src = frame.src;
+  try {
+    const urlObj = new URL(src, window.location.origin);
+    let path = urlObj.pathname;
+    if (path.startsWith(scramjetInstance.prefix)) {
+      path = path.slice(scramjetInstance.prefix.length);
+    }
+    src = path;
+  } catch {}
+
+  const url = scramjetInstance.codec.decode(src);
+
+  const currentBm = ((await ConfigAPI.get('bm')) ?? []) as Array<{ name: string; logo: string; redir: string }>;
+
+  function normalize(u: string) {
+    try {
+      return decodeURIComponent(u).replace(/\/$/, '');
+    } catch {
+      return u.replace(/\/$/, '');
+    }
+  }
+
+  const normUrl = normalize(url);
+  const isBookmarked = currentBm.some(b => normalize(b.redir) === normUrl);
+
+  const svg = favorite.querySelector('svg');
+  if (svg) {
+    if (isBookmarked) {
+      svg.style.fill = '#a8a3c7';
+      svg.style.stroke = '#a8a3c7';
+    } else {
+      svg.style.fill = 'none';
+      svg.style.stroke = '';
+    }
+  }
+}
+
 reload?.addEventListener('click', () => {
   const frame = getActiveFrame();
   if (!frame?.contentWindow) return;
   loading();
   frame.src = frame.contentWindow.location.href;
+  frame.addEventListener('load', updateBookmark, { once: true });
 });
 
 back?.addEventListener('click', () => {
   const frame = getActiveFrame();
   frame?.contentWindow?.history.back();
+  setTimeout(updateBookmark, 100);
 });
 
 forward?.addEventListener('click', () => {
   const frame = getActiveFrame();
   frame?.contentWindow?.history.forward();
+  setTimeout(updateBookmark, 100);
 });
 
 home?.addEventListener('click', () => {
   const frame = getActiveFrame();
   if (!frame) return;
   frame.src = './new';
+  frame.addEventListener('load', updateBookmark, { once: true });
 });
 
 favorite?.addEventListener('click', async () => {
@@ -88,9 +134,7 @@ favorite?.addEventListener('click', async () => {
     domain = url;
   }
 
-  // @ts-ignore
-  const currentBm: Array<{ name: string; logo: string; redir: string }> =
-    (await ConfigAPI.get('bm')) ?? [];
+  const currentBm = ((await ConfigAPI.get('bm')) ?? []) as Array<{ name: string; logo: string; redir: string }>;
 
   function normalize(u: string) {
     try {
@@ -105,12 +149,22 @@ favorite?.addEventListener('click', async () => {
 
   if (existingIndex !== -1) {
     currentBm.splice(existingIndex, 1);
+    const svg = favorite.querySelector('svg');
+    if (svg) {
+      svg.style.fill = 'none';
+      svg.style.stroke = '';
+    }
   } else {
     currentBm.push({
       name,
       logo: `/api/icon/?url=https://${domain}`,
       redir: url,
     });
+    const svg = favorite.querySelector('svg');
+    if (svg) {
+      svg.style.fill = '#a8a3c7';
+      svg.style.stroke = '#a8a3c7';
+    }
   }
 
   await ConfigAPI.set('bm', currentBm);
@@ -138,12 +192,12 @@ urlbar?.addEventListener('keydown', async e => {
     url = `${vInstance.prefix}${vInstance.encodeUrl(await validateUrl(input))}`;
   }
 
+  if (!url) return;
   loading();
-  // @ts-ignore
   frame.src = url;
+  frame.addEventListener('load', updateBookmark, { once: true });
 });
 
-// @ts-ignore
 let targetDoc: Document | null = null;
 
 function findTargetDoc(win: Window | null): Document | null {
@@ -173,8 +227,7 @@ function findTargetDoc(win: Window | null): Document | null {
 
 targetDoc = findTargetDoc(window);
 
-// @ts-ignore
-targetDoc.querySelectorAll<HTMLElement>('aside button, aside img').forEach(el => {
+targetDoc?.querySelectorAll<HTMLElement>('aside button, aside img').forEach(el => {
   el.addEventListener('click', () => {
     const frame = getActiveFrame();
     if (!frame) return;
@@ -189,5 +242,10 @@ targetDoc.querySelectorAll<HTMLElement>('aside button, aside img').forEach(el =>
     if (urlbar) urlbar.value = nativeKey;
     frame.src = nativePaths[nativeKey];
     loading();
+    frame.addEventListener('load', updateBookmark, { once: true });
   });
+});
+
+TabManager.onUrlChange(() => {
+  updateBookmark();
 });

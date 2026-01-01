@@ -31,6 +31,8 @@ let nextId = 1
 let urlTimer: ReturnType<typeof setInterval> | null = null
 let loadTimeout: ReturnType<typeof setTimeout> | null = null
 let loading = false
+let lastWatchedHref = ''
+let urlChangeCallback: ((href: string) => void) | null = null
 
 const bar = document.getElementById('tcontainer') as HTMLDivElement
 const frames = document.getElementById('fcontainer') as HTMLDivElement
@@ -170,6 +172,7 @@ function makeTab(tab: Tab) {
   titleSpan.textContent = cut(tab.title)
   left.append(img, titleSpan)
   const closeBtn = document.createElement('button')
+  closeBtn.className = 'text-lg hover:text-red-400 transition-colors'
   closeBtn.textContent = '✕'
   closeBtn.onclick = event => {
     event.stopPropagation()
@@ -199,13 +202,20 @@ function highlight() {
 }
 
 function kill(id: number) {
-  if (tabs.length <= 1) return
   const index = tabs.findIndex(tab => tab.id === id)
   if (index === -1) return
+  
+  if (tabs.length <= 1) {
+    open()
+  }
+  
   clearInterval(tabs[index].titleTimer)
   tabs[index].iframe.remove()
   tabs.splice(index, 1)
-  swap(tabs[Math.max(0, index - 1)].id)
+  
+  if (current === id && tabs.length > 0) {
+    swap(tabs[Math.max(0, index - 1)].id)
+  }
   draw()
 }
 
@@ -274,19 +284,23 @@ function swap(id: number) {
   tabs.forEach(tab => tab.iframe.classList.toggle('hidden', tab.id !== id))
   highlight()
   resetLoad()
+  lastWatchedHref = ''
   
   const input = document.getElementById('urlbar') as HTMLInputElement | null
-  let lastHref = ''
   urlTimer = setInterval(() => {
-    if (!input) return
     try {
       const tab = tabs.find(tab => tab.id === id)
       const href = tab?.iframe.contentWindow?.location.href
-      if (!href || href === lastHref) return
-      lastHref = href
-      const pathname = new URL(href, location.origin).pathname
-      const quickLink = Object.entries(links).find(([, value]) => value === pathname)
-      input.value = quickLink ? quickLink[0] : getDecoded(pathname)
+      if (!href || href === lastWatchedHref) return
+      lastWatchedHref = href
+      
+      if (input) {
+        const pathname = new URL(href, location.origin).pathname
+        const quickLink = Object.entries(links).find(([, value]) => value === pathname)
+        input.value = quickLink ? quickLink[0] : getDecoded(pathname)
+      }
+    
+      if (urlChangeCallback) urlChangeCallback(href)
     } catch {}
   }, 300)
 }
@@ -322,5 +336,8 @@ export const TabManager = {
   },
   openTab: (url?: string) => {
     open(url)
+  },
+  onUrlChange: (callback: (href: string) => void) => {
+    urlChangeCallback = callback
   },
 }
