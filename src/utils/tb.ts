@@ -20,8 +20,7 @@ const links: Record<string, string> = {
 }
 
 const moonIcon = '/a/moon.svg'
-const FAVICON_API = 'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64'
-const iconApi = FAVICON_API + '&url='
+const iconUrl = 'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64&url='
 const connection = new baremux.BareMuxConnection("/bm/worker.js")
 const client = new baremux.BareClient()
 
@@ -71,7 +70,7 @@ async function getIcon(url: string) {
     if (await connection.getTransport() !== '/lc/index.mjs') {
       await connection.setTransport('/lc/index.mjs', [{ wisp: await ConfigAPI.get('wispUrl') }])
     }
-    const response = await client.fetch(iconApi + encodeURIComponent(url))
+    const response = await client.fetch(iconUrl + encodeURIComponent(url))
     if (!response.ok) throw 0
     const blob = await response.blob()
     return await new Promise<string>(resolve => {
