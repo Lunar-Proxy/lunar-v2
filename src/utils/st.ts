@@ -111,7 +111,7 @@ export class SettingsManager {
   static async reset() {
     if (confirm('Are you sure you want to reset all settings to defaults?')) {
       await ConfigAPI.reset();
-      location.reload();
+      parent.location.reload();
     }
   }
 
@@ -670,6 +670,15 @@ export class SettingsManager {
         const title = cfg.cloakTitle || 'Google';
         const favicon = cfg.cloakFavicon || 'https://www.google.com/favicon.ico';
         this.setCloak(true, title, favicon);
+      }
+    }
+
+    const adBlockToggle = document.querySelector('[data-toggle="adBlock"]') as HTMLElement;
+    if (adBlockToggle) {
+      if (cfg.adBlock === 'on') {
+        adBlockToggle.classList.add('active');
+      } else {
+        adBlockToggle.classList.remove('active');
       }
     }
 

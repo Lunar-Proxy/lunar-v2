@@ -461,14 +461,6 @@ import SettingSection from '../components/SettingSection.astro';
         document.addEventListener('DOMContentLoaded', () => {
           import('../utils/st').then(({ SettingsManager }) => {
             SettingsManager.init();
-            const resetBtn = document.querySelector('[data-reset="reset"]');
-            if (resetBtn) {
-              resetBtn.addEventListener('click', e => {
-                e.preventDefault();
-                SettingsManager.reset();
-                parent?.window.location.reload();
-              });
-            }
           });
           import('../utils/config').then(({ default: ConfigAPI }) => {
             document.querySelector('[data-about-blank]')?.addEventListener('click', async () => {

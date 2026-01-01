@@ -23,7 +23,7 @@ class ScramjetWrapper {
         cleanErrors: true,
         rewriterLogs: false,
         serviceworkers: false,
-        strictRewrites: false,
+        strictRewrites: true,
         syncxhr: false,
       },
       codec: {
