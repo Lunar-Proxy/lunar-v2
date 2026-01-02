@@ -29,16 +29,12 @@ class ScramjetWrapper {
       codec: {
         encode: (data: string) => { 
           if (!data) return '';
-          const reversed = data.toString().split('').reverse().join('');
-          return encodeURIComponent(reversed);
+          return encodeURIComponent(data);
         },
         decode: (encoded: string) => {
           if (!encoded) return '';
           try {
-            const qIndex = encoded.indexOf('?');
-            const path = qIndex >= 0 ? encoded.slice(0, qIndex) : encoded;
-            const query = qIndex >= 0 ? encoded.slice(qIndex) : '';
-            return decodeURIComponent(path).split('').reverse().join('') + query;
+            return decodeURIComponent(encoded)
           } catch {
             return encoded;
           }
