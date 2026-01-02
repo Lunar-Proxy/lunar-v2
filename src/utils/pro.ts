@@ -28,16 +28,10 @@ class ScramjetWrapper {
       },
       codec: {
         encode: (data: string) => { 
-          if (!data) return '';
           return encodeURIComponent(data);
         },
         decode: (encoded: string) => {
-          if (!encoded) return '';
-          try {
-            return decodeURIComponent(encoded)
-          } catch {
-            return encoded;
-          }
+          return decodeURIComponent(encoded);
         },
       },
     };
