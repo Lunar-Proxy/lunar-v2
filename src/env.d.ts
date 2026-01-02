@@ -22,7 +22,7 @@ interface ScramjetFiles {
 
 interface ScramjetOptions {
   prefix: string;
-  files: ScramjetF iles;
+  files: ScramjetFiles;
 }
 
 declare class ScramjetController {
@@ -41,4 +41,3 @@ declare module '@mercuryworkshop/epoxy-transport';
 declare module '@mercuryworkshop/wisp-js/server';
 declare module '@mercuryworkshop/bare-mux/node';
 declare module '@mercuryworkshop/libcurl-transport';
-declare module 'fs-extra';
