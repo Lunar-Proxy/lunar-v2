@@ -61,14 +61,14 @@ async function getEncoded(url: string) {
   return url
 }
 
-function cut(text: string, max = 18) {
+function cut(text: string, max = 14) {
   return text.length > max ? text.slice(0, max) + '…' : text
 }
 
 async function getIcon(url: string) {
   try {
-    if (await connection.getTransport() !== '/lc/index.mjs') {
-      await connection.setTransport('/lc/index.mjs', [{ wisp: await ConfigAPI.get('wispUrl') }])
+    if (await connection.getTransport() !== `/${LC_NAME}/index.mjs`) {
+      await connection.setTransport(`/${LC_NAME}/index.mjs`, [{ wisp: await ConfigAPI.get('wispUrl') }])
     }
     const response = await client.fetch(iconUrl + encodeURIComponent(url))
     if (!response.ok) throw 0

@@ -24,8 +24,8 @@ scramjetWrapper.init();
 await navigator.serviceWorker.register('./sw.js');
 const connection = new BareMux.BareMuxConnection('/bm/worker.js');
 
-if ((await connection.getTransport()) !== '/lc/index.mjs') {
-  await connection.setTransport('/lc/index.mjs', [{ wisp: wispUrl }]);
+if ((await connection.getTransport()) !== `/${LC_NAME}/index.mjs`) {
+  await connection.setTransport(`/${LC_NAME}/index.mjs`, [{ wisp: wispUrl }]);
 }
 
 function getActiveFrame(): HTMLIFrameElement | null {
@@ -180,8 +180,8 @@ urlbar?.addEventListener('keydown', async e => {
     return;
   }
 
-  if ((await connection.getTransport()) !== '/lc/index.mjs') {
-    await connection.setTransport('/lc/index.mjs', [{ wisp: wispUrl }]);
+  if ((await connection.getTransport()) !== `/${LC_NAME}/index.mjs`) {
+    await connection.setTransport(`/${LC_NAME}/index.mjs`, [{ wisp: wispUrl }]);
   }
 
   const input = (e.target as HTMLInputElement).value.trim();

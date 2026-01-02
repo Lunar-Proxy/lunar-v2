@@ -73,6 +73,8 @@ export function searchBackend(): Plugin {
   };
 }
 
+const rand = () => Math.random().toString(36).slice(2, 6);
+const LC_NAME = rand();
 const OBFUSCATOR_SEED = Math.floor(Math.random() * 9999999);
 
 export default defineConfig({
@@ -144,7 +146,8 @@ export default defineConfig({
     },
     define: {
       VERSION: JSON.stringify(version),
-    },
+      LC_NAME: JSON.stringify(LC_NAME),
+     },
     plugins: [
       tailwindcss(),
       WispServer(),
@@ -191,11 +194,11 @@ export default defineConfig({
       }),
       viteStaticCopy({
         targets: [
-          { src: normalizePath(`${libcurlPath}/**/*.mjs`), dest: 'lc', overwrite: false },
-          { src: normalizePath(`${baremuxPath}/**/*.js`), dest: 'bm', overwrite: false },
+          { src: normalizePath(`${libcurlPath}/**/*.mjs`), dest: LC_NAME, overwrite: false },
+          { src: normalizePath(`${baremuxPath}/**/*.js`), dest: "bm", overwrite: false },
           {
             src: [normalizePath(`${scramjetPath}/*.js`), normalizePath(`${scramjetPath}/*.wasm`)],
-            dest: 'data',
+            dest: "data",
             rename: (name: string) => {
               const ending = name.endsWith('.wasm') ? '.wasm' : '.js';
               return `${name.replace(/^scramjet\./, '')}${ending}`;
