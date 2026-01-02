@@ -12,6 +12,7 @@ interface tmpConfig {
 
 declare const tmpConfig: tmpConfig;
 declare const LC_NAME: string;
+declare const BM_NAME: string;
 
 interface ScramjetFiles {
   wasm: string;

@@ -75,6 +75,7 @@ export function searchBackend(): Plugin {
 
 const rand = () => Math.random().toString(36).slice(2, 6);
 const LC_NAME = rand();
+const BM_NAME = rand();
 const OBFUSCATOR_SEED = Math.floor(Math.random() * 9999999);
 
 export default defineConfig({
@@ -147,6 +148,7 @@ export default defineConfig({
     define: {
       VERSION: JSON.stringify(version),
       LC_NAME: JSON.stringify(LC_NAME),
+      BM_NAME: JSON.stringify(BM_NAME),
      },
     plugins: [
       tailwindcss(),
@@ -195,7 +197,7 @@ export default defineConfig({
       viteStaticCopy({
         targets: [
           { src: normalizePath(`${libcurlPath}/**/*.mjs`), dest: LC_NAME, overwrite: false },
-          { src: normalizePath(`${baremuxPath}/**/*.js`), dest: "bm", overwrite: false },
+          { src: normalizePath(`${baremuxPath}/**/*.js`), dest: BM_NAME, overwrite: false },
           {
             src: [normalizePath(`${scramjetPath}/*.js`), normalizePath(`${scramjetPath}/*.wasm`)],
             dest: "data",

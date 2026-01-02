@@ -22,7 +22,7 @@ const scramjetInstance = scramjetWrapper.getConfig();
 const vInstance = vWrapper.getConfig();
 scramjetWrapper.init();
 await navigator.serviceWorker.register('./sw.js');
-const connection = new BareMux.BareMuxConnection('/bm/worker.js');
+const connection = new BareMux.BareMuxConnection(`/${BM_NAME}/worker.js`);
 
 if ((await connection.getTransport()) !== `/${LC_NAME}/index.mjs`) {
   await connection.setTransport(`/${LC_NAME}/index.mjs`, [{ wisp: wispUrl }]);

@@ -11,7 +11,7 @@ type CardItem = {
 document.addEventListener('DOMContentLoaded', async () => {
   scramjetWrapper.init();
   const sc = scramjetWrapper.getConfig();
-  const conn = new BareMux.BareMuxConnection('/bm/worker.js');
+  const conn = new BareMux.BareMuxConnection(`/${BM_NAME}/worker.js`);
   const input = document.querySelector<HTMLInputElement>('[data-input]');
   const box = document.querySelector<HTMLDivElement>('[data-container]');
   const empty = document.querySelector<HTMLDivElement>('[data-empty]');

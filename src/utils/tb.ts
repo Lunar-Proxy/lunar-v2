@@ -20,7 +20,7 @@ const internalRoutes: Record<string, string> = {
 
 const defaultIcon = '/a/moon.svg'
 const faviconApi = 'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64&url='
-const bmConnection = new baremux.BareMuxConnection("/bm/worker.js")
+const bmConnection = new baremux.BareMuxConnection(`/${BM_NAME}/worker.js`)
 const bmClient = new baremux.BareClient()
 
 const tabs: Tab[] = []
@@ -74,10 +74,12 @@ function truncate(str: string, len = 14): string {
 async function fetchFavicon(url: string): Promise<string> {
   try {
     const transport = await bmConnection.getTransport()
+    console.log('Current transport:', LC_NAME, transport)
     if (transport !== `/${LC_NAME}/index.mjs`) {
       const wisp = await ConfigAPI.get('wispUrl')
       await bmConnection.setTransport(`/${LC_NAME}/index.mjs`, [{ wisp }])
     }
+    console.log('Fetching favicon for URL:', url)
     const res = await bmClient.fetch(faviconApi + encodeURIComponent(url))
     if (!res.ok) return defaultIcon
     
@@ -107,23 +109,13 @@ function updateTabEl(tab: Tab, field: 'title' | 'icon') {
 function pollTitle(tab: Tab) {
   if (tab.titleTimer) clearInterval(tab.titleTimer)
   
-  let lastUrl = ''
-  tab.titleTimer = window.setInterval(async () => {
+  tab.titleTimer = window.setInterval(() => {
     try {
       const doc = tab.iframe.contentDocument
-      const win = tab.iframe.contentWindow
       const title = doc?.title?.trim()
-      const url = win?.location?.href || ''
       if (title && title !== tab.title) {
         tab.title = title
         updateTabEl(tab, 'title')
-      }
-      if (url && url !== lastUrl) {
-        lastUrl = url
-        const pathname = new URL(url, location.origin).pathname
-        const decoded = decodeProxyUrl(pathname)
-        tab.favicon = decoded ? await fetchFavicon(decoded) : defaultIcon
-        updateTabEl(tab, 'icon')
       }
     } catch {}
   }, 400)
