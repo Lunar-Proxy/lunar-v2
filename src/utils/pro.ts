@@ -27,12 +27,8 @@ class ScramjetWrapper {
         syncxhr: false,
       },
       codec: {
-        encode: (data: string) => { 
-          return encodeURIComponent(data);
-        },
-        decode: (encoded: string) => {
-          return decodeURIComponent(encoded);
-        },
+        encode: (data: string) => encodeURIComponent(data),
+        decode: (encoded: string) => decodeURIComponent(encoded)
       },
     };
   }
