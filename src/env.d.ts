@@ -22,7 +22,7 @@ interface ScramjetFiles {
 
 interface ScramjetOptions {
   prefix: string;
-  files: ScramjetFiles;
+  files: ScramjetF iles;
 }
 
 declare class ScramjetController {

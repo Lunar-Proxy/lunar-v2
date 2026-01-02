@@ -74,12 +74,10 @@ function truncate(str: string, len = 14): string {
 async function fetchFavicon(url: string): Promise<string> {
   try {
     const transport = await bmConnection.getTransport()
-    console.log('Current transport:', LC_NAME, transport)
     if (transport !== `/${LC_NAME}/index.mjs`) {
       const wisp = await ConfigAPI.get('wispUrl')
       await bmConnection.setTransport(`/${LC_NAME}/index.mjs`, [{ wisp }])
     }
-    console.log('Fetching favicon for URL:', url)
     const res = await bmClient.fetch(faviconApi + encodeURIComponent(url))
     if (!res.ok) return defaultIcon
     
