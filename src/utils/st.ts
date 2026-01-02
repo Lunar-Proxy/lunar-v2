@@ -125,11 +125,11 @@ export class SettingsManager {
 
         if (section) {
           items.forEach(n => {
-            n.classList.remove('bg-[#6366f1]/15', 'text-[#6366f1]');
+            n.classList.remove('bg-[#6366f1]/10', 'text-[#6366f1]');
             n.classList.add('text-text-secondary');
           });
           item.classList.remove('text-text-secondary');
-          item.classList.add('bg-[#6366f1]/15', 'text-[#6366f1]');
+          item.classList.add('bg-[#6366f1]/10', 'text-[#6366f1]');
 
           const y = section.getBoundingClientRect().top + window.pageYOffset - 20;
           window.scrollTo({ top: y, behavior: 'smooth' });
@@ -180,48 +180,39 @@ export class SettingsManager {
   static initScrollSpy() {
     const sections = document.querySelectorAll('[data-section]');
     const items = document.querySelectorAll('[data-nav]');
-    let scrolling = false;
-    const obs = new IntersectionObserver(
-      entries => {
-        if (scrolling) return;
+    let active = 'privacy';
+    let ticking = false;
 
-        let max = 0;
-        let top: IntersectionObserverEntry | undefined;
+    const update = () => {
+      let current = 'privacy';
+      sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= 120) {
+          current = section.getAttribute('data-section') || current;
+        }
+      });
 
-        entries.forEach(e => {
-          if (e.intersectionRatio > max) {
-            max = e.intersectionRatio;
-            top = e;
+      if (current !== active) {
+        active = current;
+        items.forEach(item => {
+          const nav = item.getAttribute('data-nav');
+          if (nav === active) {
+            item.classList.remove('text-text-secondary');
+            item.classList.add('bg-[#6366f1]/10', 'text-[#6366f1]');
+          } else {
+            item.classList.remove('bg-[#6366f1]/10', 'text-[#6366f1]');
+            item.classList.add('text-text-secondary');
           }
         });
+      }
+      ticking = false;
+    };
 
-        if (top && top.isIntersecting) {
-          const id = top.target.getAttribute('data-section');
-          items.forEach(item => {
-            if (item.getAttribute('data-nav') === id) {
-              items.forEach(n => {
-                n.classList.remove('bg-[#6366f1]/15', 'text-[#6366f1]');
-                n.classList.add('text-text-secondary');
-              });
-              item.classList.remove('text-text-secondary');
-              item.classList.add('bg-[#6366f1]/15', 'text-[#6366f1]');
-            }
-          });
-        }
-      },
-      {
-        threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
-        rootMargin: '-80px 0px -40% 0px',
-      },
-    );
-
-    sections.forEach(s => obs.observe(s));
-
-    items.forEach(item => {
-      item.addEventListener('click', () => {
-        scrolling = true;
-        setTimeout(() => (scrolling = false), 1000);
-      });
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(update);
+        ticking = true;
+      }
     });
   }
 
@@ -248,7 +239,7 @@ export class SettingsManager {
   }
 
   static initToggles() {
-    document.querySelectorAll('.toggle-switch').forEach(toggle => {
+    document.querySelectorAll('.toggle').forEach(toggle => {
       toggle.addEventListener('click', async () => {
         toggle.classList.toggle('active');
         const key = toggle.getAttribute('data-toggle');

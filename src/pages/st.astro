@@ -1,479 +1,292 @@
 ---
 import '@/main.css';
 import ImportLucide from '../layouts/lucide.astro';
-import SettingSection from '../components/SettingSection.astro';
 ---
 
 <html lang="en">
   <head>
-    <title>Lunar Settings</title>
+    <title>Settings</title>
     <style>
-      .toggle-switch {
-        position: relative;
-        width: 44px;
-        height: 24px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        transition: all 0.2s ease;
+      .toggle {
+        width: 40px;
+        height: 22px;
+        background: var(--background-overlay);
+        border-radius: 11px;
         cursor: pointer;
-        flex-shrink: 0;
+        position: relative;
+        border: 1px solid rgba(255,255,255,0.08);
       }
-
-      .toggle-switch::after {
+      .toggle::after {
         content: '';
         position: absolute;
-        top: 3px;
-        left: 3px;
-        width: 18px;
-        height: 18px;
+        top: 2px;
+        left: 2px;
+        width: 16px;
+        height: 16px;
         background: var(--text-secondary);
         border-radius: 50%;
-        transition: all 0.2s ease;
+        transition: 0.15s;
       }
-
-      .toggle-switch.active {
+      .toggle.active {
         background: #6366f1;
+        border-color: #6366f1;
       }
-
-      .toggle-switch.active::after {
-        left: 23px;
-        background: white;
+      .toggle.active::after {
+        left: 20px;
+        background: #fff;
       }
-
-      [data-notification]:not(.hidden) {
-        animation: slideIn 0.3s ease forwards;
+      .toast {
+        animation: toast 0.2s ease;
       }
-
-      @keyframes slideIn {
-        from {
-          opacity: 0;
-          transform: translateY(8px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
+      @keyframes toast {
+        from { opacity: 0; transform: translateY(6px); }
+        to { opacity: 1; transform: translateY(0); }
       }
     </style>
   </head>
 
-  <body class="bg-background font-linux text-text-header min-h-screen">
-    <div class="mx-auto max-w-7xl p-6">
-      <div class="grid grid-cols-1 gap-8 lg:grid-cols-[280px_1fr]">
-        <aside class="sticky top-6 h-fit">
-          <div class="space-y-6">
-            <div class="border-border-default/30 border-b pb-4">
-              <h1 class="text-text-header mb-1 text-2xl font-bold">Settings</h1>
-              <p class="text-text-secondary text-sm">Customize Lunar</p>
-            </div>
+  <body class="bg-background font-linux text-text-header min-h-screen p-6 md:p-8">
+    <div class="mx-auto max-w-5xl">
+      <header class="mb-8">
+        <h1 class="text-2xl font-bold mb-1">Settings</h1>
+        <p class="text-text-secondary text-sm">Customize Lunar</p>
+      </header>
 
-            <div class="space-y-1">
-              <div class="mb-4">
+      <div class="flex gap-8">
+        <nav class="hidden lg:block w-48 shrink-0">
+          <div class="sticky top-6 space-y-1">
+            <a href="#privacy" class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-[#6366f1] bg-[#6366f1]/10" data-nav="privacy">
+              <i data-lucide="shield" class="w-4 h-4"></i>Privacy
+            </a>
+            <a href="#browsing" class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-text-secondary hover:text-text-header hover:bg-white/5" data-nav="browsing">
+              <i data-lucide="globe" class="w-4 h-4"></i>Browsing
+            </a>
+            <a href="#advanced" class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-text-secondary hover:text-text-header hover:bg-white/5" data-nav="advanced">
+              <i data-lucide="wrench" class="w-4 h-4"></i>Advanced
+            </a>
+            <a href="#about" class="nav-item flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-text-secondary hover:text-text-header hover:bg-white/5" data-nav="about">
+              <i data-lucide="info" class="w-4 h-4"></i>About
+            </a>
+          </div>
+        </nav>
+
+        <main class="flex-1 space-y-10">
+          <section id="privacy" data-section="privacy">
+            <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
+              <i data-lucide="shield" class="w-5 h-5 text-[#6366f1]"></i>
+              Privacy & Cloaking
+            </h2>
+            
+            <div class="space-y-3">
+              <div class="bg-background-overlay/60 rounded-xl p-5 border border-white/[0.06]">
+                <h3 class="font-medium mb-2">About:Blank</h3>
+                <p class="text-text-secondary text-sm mb-3">Opens Lunar in a blank tab to hide from history</p>
                 <input
                   type="text"
-                  placeholder="Filter settings"
-                  data-filter-input
-                  class="bg-background-overlay/50 border-border-default/30 text-text-header placeholder-text-secondary/50 w-full rounded-lg border px-4 py-2 text-sm transition-colors focus:border-[#6366f1]/50 focus:outline-none"
+                  data-input="aboutBlankUrl"
+                  placeholder="Redirect URL (e.g. https://classroom.google.com)"
+                  class="w-full bg-background/80 border border-white/[0.06] rounded-lg px-4 py-2.5 text-sm mb-3 focus:outline-none focus:border-[#6366f1]/40"
                 />
+                <button data-about-blank class="bg-[#6366f1]/15 hover:bg-[#6366f1]/25 border border-[#6366f1]/30 text-sm px-4 py-2 rounded-lg flex items-center gap-2">
+                  <i data-lucide="external-link" class="w-4 h-4"></i>Open in About:Blank
+                </button>
               </div>
 
-              <div
-                class="nav-item hover:text-text-header flex cursor-pointer items-center gap-3 rounded-lg bg-[#6366f1]/15 px-4 py-3 text-[#6366f1] transition-all hover:bg-white/5"
-                data-nav="privacy">
-                <i data-lucide="shield" class="h-5 w-5"></i>
-                <span class="text-sm font-medium">Privacy & Cloaking</span>
+              <div class="bg-background-overlay/60 rounded-xl p-5 border border-white/[0.06]" data-cloak-container>
+                <div class="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 class="font-medium">Tab Cloak</h3>
+                    <p class="text-text-secondary text-sm">Change tab title and icon</p>
+                  </div>
+                  <div class="toggle" data-toggle="cloak"></div>
+                </div>
+                
+                <div data-cloak-inputs class="pt-4 border-t border-white/[0.06] space-y-3">
+                  <div class="flex gap-2">
+                    <button data-cloak-preset="google" data-preset-title="Google" data-preset-favicon="/a/images/co/go.ico" class="cloak-preset flex-1 flex items-center justify-center gap-2 bg-background/60 hover:bg-background/80 border border-white/[0.06] rounded-lg px-3 py-2 text-sm">
+                      <img src="/a/images/co/go.ico" class="w-4 h-4" alt="" />Google
+                    </button>
+                    <button data-cloak-preset="drive" data-preset-title="Google Drive" data-preset-favicon="/a/images/co/drei.png" class="cloak-preset flex-1 flex items-center justify-center gap-2 bg-background/60 hover:bg-background/80 border border-white/[0.06] rounded-lg px-3 py-2 text-sm">
+                      <img src="/a/images/co/drei.png" class="w-4 h-4" alt="" />Drive
+                    </button>
+                    <button data-cloak-preset="classroom" data-preset-title="Home" data-preset-favicon="/a/images/co/class.png" class="cloak-preset flex-1 flex items-center justify-center gap-2 bg-background/60 hover:bg-background/80 border border-white/[0.06] rounded-lg px-3 py-2 text-sm">
+                      <img src="/a/images/co/class.png" class="w-4 h-4" alt="" />Classroom
+                    </button>
+                  </div>
+                  <input type="text" data-input="cloakTitle" placeholder="Tab title" disabled class="cloak-input w-full bg-background/80 border border-white/[0.06] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#6366f1]/40 disabled:opacity-50" />
+                  <input type="text" data-input="cloakFavicon" placeholder="Favicon URL" disabled class="cloak-input w-full bg-background/80 border border-white/[0.06] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#6366f1]/40 disabled:opacity-50" />
+                </div>
               </div>
 
-              <div
-                class="nav-item text-text-secondary hover:text-text-header flex cursor-pointer items-center gap-3 rounded-lg px-4 py-3 transition-all hover:bg-white/5"
-                data-nav="browsing">
-                <i data-lucide="globe" class="h-5 w-5"></i>
-                <span class="text-sm font-medium">Browsing</span>
+              <div class="bg-background-overlay/60 rounded-xl p-5 border border-white/[0.06] flex items-center justify-between">
+                <div>
+                  <h3 class="font-medium">Tab Switch Cloak</h3>
+                  <p class="text-text-secondary text-sm">Auto-cloak when you switch tabs</p>
+                </div>
+                <div class="toggle" data-toggle="tabSwitchCloak"></div>
               </div>
 
-              <div
-                class="nav-item text-text-secondary hover:text-text-header flex cursor-pointer items-center gap-3 rounded-lg px-4 py-3 transition-all hover:bg-white/5"
-                data-nav="advanced">
-                <i data-lucide="wrench" class="h-5 w-5"></i>
-                <span class="text-sm font-medium">Advanced</span>
+              <div class="bg-background-overlay/60 rounded-xl p-5 border border-white/[0.06] flex items-center justify-between">
+                <div>
+                  <h3 class="font-medium">Anti-close</h3>
+                  <p class="text-text-secondary text-sm">Confirm before closing the tab</p>
+                </div>
+                <div class="toggle" data-toggle="beforeUnload"></div>
               </div>
 
-              <div
-                class="nav-item text-text-secondary hover:text-text-header flex cursor-pointer items-center gap-3 rounded-lg px-4 py-3 transition-all hover:bg-white/5"
-                data-nav="about">
-                <i data-lucide="info" class="h-5 w-5"></i>
-                <span class="text-sm font-medium">About</span>
+              <div class="bg-background-overlay/60 rounded-xl p-5 border border-white/[0.06]">
+                <h3 class="font-medium mb-2">Panic Key</h3>
+                <p class="text-text-secondary text-sm mb-3">Quickly redirect with a keybind</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <input type="text" data-input="panicLoc" placeholder="URL to redirect to" class="w-full bg-background/80 border border-white/[0.06] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#6366f1]/40" />
+                  <input type="text" data-input="panicKey" placeholder="Click to set keybind" readonly class="w-full bg-background/80 border border-white/[0.06] rounded-lg px-4 py-2.5 text-sm cursor-pointer focus:outline-none focus:border-[#6366f1]/40" />
+                </div>
               </div>
             </div>
-          </div>
-        </aside>
-
-        <main class="space-y-12">
-          <section data-section="privacy" id="privacy">
-            <SettingSection title="Privacy & Cloaking" icon="shield" variant="primary">
-              <div class="space-y-4">
-                <div
-                  class="bg-background-overlay/40 border-border-default/30 hover:bg-background-overlay/50 rounded-xl border p-5 transition-colors">
-                  <h3 class="text-text-header mb-3 font-semibold">Open in About:Blank</h3>
-                  <p class="text-text-secondary mb-4 text-sm">
-                    Open Lunar in an about:blank page to hide from browser history.
-                  </p>
-                  <div class="bg-background-overlay/60 space-y-5 rounded-xl border border-[#6366f1]/20 p-5 shadow-sm">
-                    <div class="mb-2">
-                      <label class="text-text-header mb-2 block text-sm font-medium">Redirect URL:</label>
-                      <input
-                        type="text"
-                        data-input="aboutBlankUrl"
-                        placeholder="https://classroom.google.com"
-                        class="text-text-header placeholder-text-secondary/50 w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-sm transition-all hover:bg-white/[0.05] focus:border-[#6366f1]/50 focus:bg-white/[0.05] focus:ring-2 focus:ring-[#6366f1]/10 focus:outline-none"
-                      />
-                      <p class="text-text-secondary mt-2 text-xs">The URL to go to after opening about:blank</p>
-                    </div>
-                    <button
-                      data-about-blank
-                      class="text-text-header flex w-full items-center justify-center gap-2 rounded-lg border border-[#6366f1]/30 bg-[#6366f1]/10 px-4 py-2.5 text-sm font-medium shadow-sm transition-all hover:border-[#6366f1]/50 hover:bg-[#6366f1]/20"
-                      ><i data-lucide="external-link" class="h-4 w-4"></i>Open in About:Blank</button
-                    >
-                  </div>
-                </div>
-                <div
-                  class="bg-background-overlay/40 border-border-default/30 hover:bg-background-overlay/50 rounded-xl border p-5 transition-colors"
-                  data-cloak-container>
-                  <div class="mb-4 flex items-start justify-between gap-4">
-                    <div class="flex-1">
-                      <h3 class="text-text-header mb-1 font-semibold">Tab Cloak</h3>
-                      <p class="text-text-secondary text-sm">Disguise this tab with a custom title and icon.</p>
-                    </div>
-                    <div class="toggle-switch" data-toggle="cloak"></div>
-                  </div>
-                  <div class="border-border-default/30 space-y-3 border-t pt-3" data-cloak-inputs>
-                    <div>
-                      <label class="text-text-header mb-2 block text-sm font-medium">Presets</label>
-                      <div class="mb-3 grid grid-cols-2 gap-2">
-                        <button
-                          data-cloak-preset="google"
-                          data-preset-title="Google"
-                          data-preset-favicon="/a/images/co/go.ico"
-                          class="cloak-preset text-text-secondary flex items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-sm transition-all hover:border-[#6366f1]/30 hover:bg-white/[0.05]"
-                          ><img src="/a/images/co/go.ico" class="h-4 w-4" alt="" /><span>Google</span></button
-                        >
-                        <button
-                          data-cloak-preset="outlook"
-                          data-preset-title="Outlook"
-                          data-preset-favicon="/a/images/co/outbox.ico"
-                          class="cloak-preset text-text-secondary flex items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-sm transition-all hover:border-[#6366f1]/30 hover:bg-white/[0.05]"
-                          ><img src="/a/images/co/outbox.ico" class="h-4 w-4" alt="" /><span>Outlook</span></button
-                        >
-                        <button
-                          data-cloak-preset="drive"
-                          data-preset-title="Google Drive"
-                          data-preset-favicon="/a/images/co/drei.png"
-                          class="cloak-preset text-text-secondary flex items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-sm transition-all hover:border-[#6366f1]/30 hover:bg-white/[0.05]"
-                          ><img src="/a/images/co/drei.png" class="h-4 w-4" alt="" /><span>Drive</span></button
-                        >
-                        <button
-                          data-cloak-preset="classroom"
-                          data-preset-title="Home"
-                          data-preset-favicon="/a/images/co/class.png"
-                          class="cloak-preset text-text-secondary flex items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-sm transition-all hover:border-[#6366f1]/30 hover:bg-white/[0.05]"
-                          ><img src="/a/images/co/class.png" class="h-4 w-4" alt="" /><span>Classroom</span></button
-                        >
-                      </div>
-                    </div>
-                    <div>
-                      <label class="text-text-header mb-2 block text-sm font-medium">Tab Title</label>
-                      <input
-                        type="text"
-                        data-input="cloakTitle"
-                        placeholder="Google"
-                        disabled
-                        class="cloak-input text-text-header placeholder-text-secondary/50 w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-sm transition-all hover:bg-white/[0.05] focus:border-[#6366f1]/50 focus:bg-white/[0.05] focus:ring-2 focus:ring-[#6366f1]/10 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-white/[0.03]"
-                      />
-                    </div>
-                    <div>
-                      <label class="text-text-header mb-2 block text-sm font-medium">Favicon URL</label>
-                      <input
-                        type="text"
-                        data-input="cloakFavicon"
-                        placeholder="https://www.google.com/favicon.ico"
-                        disabled
-                        class="cloak-input text-text-header placeholder-text-secondary/50 w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-sm transition-all hover:bg-white/[0.05] focus:border-[#6366f1]/50 focus:bg-white/[0.05] focus:ring-2 focus:ring-[#6366f1]/10 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-white/[0.03]"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="bg-background-overlay/40 border-border-default/30 hover:bg-background-overlay/50 rounded-xl border p-5 transition-colors">
-                  <div class="flex items-start justify-between gap-4">
-                    <div class="flex-1">
-                      <h3 class="text-text-header mb-1 font-semibold">Tab Switch Cloak</h3>
-                      <p class="text-text-secondary text-sm">
-                        Cloak the tab automatically when switching away, restore on return.
-                      </p>
-                    </div>
-                    <div class="toggle-switch" data-toggle="tabSwitchCloak"></div>
-                  </div>
-                </div>
-                <div
-                  class="bg-background-overlay/40 border-border-default/30 hover:bg-background-overlay/50 rounded-xl border p-5 transition-colors">
-                  <div class="flex items-start justify-between gap-4">
-                    <div class="flex-1">
-                      <h3 class="text-text-header mb-1 font-semibold">Anti close</h3>
-                      <p class="text-text-secondary text-sm">Ask before closing Lunar to prevent accidental exits.</p>
-                    </div>
-                    <div class="toggle-switch" data-toggle="beforeUnload"></div>
-                  </div>
-                </div>
-                <div
-                  class="bg-background-overlay/40 border-border-default/30 hover:bg-background-overlay/50 rounded-xl border p-5 transition-colors">
-                  <h3 class="text-text-header mb-3 font-semibold">Panic Redirect</h3>
-                  <p class="text-text-secondary mb-4 text-sm">Quickly redirect to a safe URL with a keybind.</p>
-                  <div class="space-y-3">
-                    <div>
-                      <label class="text-text-header mb-2 block text-sm font-medium">Redirect URL</label>
-                      <input
-                        type="text"
-                        data-input="panicLoc"
-                        placeholder="https://google.com"
-                        class="text-text-header placeholder-text-secondary/50 w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-sm transition-all hover:bg-white/[0.05] focus:border-[#6366f1]/50 focus:bg-white/[0.05] focus:ring-2 focus:ring-[#6366f1]/10 focus:outline-none"
-                      />
-                    </div>
-                    <div>
-                      <label class="text-text-header mb-2 block text-sm font-medium">Keybind</label>
-                      <input
-                        type="text"
-                        data-input="panicKey"
-                        placeholder="Click to record keybind..."
-                        readonly
-                        class="text-text-header placeholder-text-secondary/50 w-full cursor-pointer rounded-lg border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-sm transition-all hover:bg-white/[0.05] focus:border-[#6366f1]/50 focus:bg-white/[0.05] focus:outline-none"
-                      />
-                      <p class="text-text-secondary mt-2 text-xs">
-                        Click and press key combinations. Each press updates the keybind. Click away when done.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </SettingSection>
           </section>
 
-          <section data-section="browsing" id="browsing">
-            <SettingSection title="Browsing Experience" icon="globe" variant="pink">
-              <div class="space-y-4">
-                <div
-                  class="bg-background-overlay/40 border-border-default/30 hover:bg-background-overlay/50 rounded-xl border p-5 transition-colors">
-                  <h3 class="text-text-header mb-3 font-semibold">Proxy Backend</h3>
-                  <p class="text-text-secondary mb-4 text-sm">Choose your proxy backend.</p>
-                  <div class="mb-2 grid grid-cols-2 gap-3">
-                    <button
-                      data-proxy="scramjet"
-                      class="proxy-button relative flex cursor-pointer flex-col items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.03] p-4 transition-all hover:-translate-y-0.5 hover:border-[#6366f1]/30 hover:bg-[#6366f1]/10">
-                      <i data-lucide="zap" class="proxy-icon h-6 w-6 text-[#6366f1] transition-colors"></i>
-                      <span class="proxy-text text-text-header text-xs font-semibold">Scramjet</span>
-                      <span class="text-text-secondary text-xs">Faster, some sites may break</span>
-                      <div class="proxy-check absolute top-2 right-2 hidden">
-                        <i data-lucide="check-circle" class="h-4 w-4 text-[#6366f1]"></i>
-                      </div>
-                    </button>
-                    <button
-                      data-proxy="ultraviolet"
-                      class="proxy-button relative flex cursor-pointer flex-col items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.03] p-4 transition-all hover:-translate-y-0.5 hover:border-pink-400/30 hover:bg-pink-400/10">
-                      <i data-lucide="shield" class="proxy-icon h-6 w-6 text-pink-400 transition-colors"></i>
-                      <span class="proxy-text text-text-header text-xs font-semibold">Ultraviolet</span>
-                      <span class="text-text-secondary text-xs">More stable, slower</span>
-                      <div class="proxy-check absolute top-2 right-2 hidden">
-                        <i data-lucide="check-circle" class="h-4 w-4 text-pink-400"></i>
-                      </div>
-                    </button>
-                  </div>
-                </div>
-                <div
-                  class="bg-background-overlay/40 border-border-default/30 hover:bg-background-overlay/50 rounded-xl border p-5 transition-colors">
-                  <h3 class="text-text-header mb-3 font-semibold">Search Engine</h3>
-                  <p class="text-text-secondary mb-4 text-sm">Set your preferred search engine</p>
-                  <div class="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                    <button
-                      data-engine="https://duckduckgo.com/?q="
-                      class="engine-button relative flex cursor-pointer flex-col items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.03] p-4 transition-all hover:-translate-y-0.5 hover:border-[#6366f1]/30 hover:bg-[#6366f1]/10"
-                      ><i data-lucide="search" class="engine-icon text-text-secondary h-6 w-6 transition-colors"
-                      ></i><span class="engine-text text-text-secondary text-xs transition-colors">DuckDuckGo</span><div
-                        class="engine-check absolute top-2 right-2 hidden">
-                        <i data-lucide="check-circle" class="h-4 w-4 text-[#6366f1]"></i>
-                      </div></button
-                    >
-                    <button
-                      data-engine="https://www.google.com/search?q="
-                      class="engine-button relative flex cursor-pointer flex-col items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.03] p-4 transition-all hover:-translate-y-0.5 hover:border-[#6366f1]/30 hover:bg-[#6366f1]/10"
-                      ><i data-lucide="globe" class="engine-icon text-text-secondary h-6 w-6 transition-colors"
-                      ></i><span class="engine-text text-text-secondary text-xs transition-colors">Google</span><div
-                        class="engine-check absolute top-2 right-2 hidden">
-                        <i data-lucide="check-circle" class="h-4 w-4 text-[#6366f1]"></i>
-                      </div></button
-                    >
-                    <button
-                      data-engine="https://www.bing.com/search?q="
-                      class="engine-button relative flex cursor-pointer flex-col items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.03] p-4 transition-all hover:-translate-y-0.5 hover:border-[#6366f1]/30 hover:bg-[#6366f1]/10"
-                      ><i data-lucide="compass" class="engine-icon text-text-secondary h-6 w-6 transition-colors"
-                      ></i><span class="engine-text text-text-secondary text-xs transition-colors">Bing</span><div
-                        class="engine-check absolute top-2 right-2 hidden">
-                        <i data-lucide="check-circle" class="h-4 w-4 text-[#6366f1]"></i>
-                      </div></button
-                    >
-                    <button
-                      data-engine="https://search.brave.com/search?q="
-                      class="engine-button relative flex cursor-pointer flex-col items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.03] p-4 transition-all hover:-translate-y-0.5 hover:border-[#6366f1]/30 hover:bg-[#6366f1]/10"
-                      ><i data-lucide="shield-check" class="engine-icon text-text-secondary h-6 w-6 transition-colors"
-                      ></i><span class="engine-text text-text-secondary text-xs transition-colors">Brave</span><div
-                        class="engine-check absolute top-2 right-2 hidden">
-                        <i data-lucide="check-circle" class="h-4 w-4 text-[#6366f1]"></i>
-                      </div></button
-                    >
-                  </div>
-                  <div class="border-border-default/30 border-t pt-4">
-                    <label class="text-text-header mb-2 block text-sm font-medium">Custom Search URL</label>
-                    <input
-                      type="text"
-                      data-input="engine"
-                      placeholder="https://duckduckgo.com/?q="
-                      class="text-text-header placeholder-text-secondary/50 w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-sm transition-all hover:bg-white/[0.05] focus:border-[#6366f1]/50 focus:bg-white/[0.05] focus:ring-2 focus:ring-[#6366f1]/10 focus:outline-none"
-                    />
-                    <p class="text-text-secondary mt-2 text-xs">Url must end with ?q= or &q=</p>
-                  </div>
-                </div>
-                <div
-                  class="bg-background-overlay/40 hover:bg-background-overlay/50 mt-6 flex items-center justify-between rounded-xl border border-white/[0.08] p-5 transition-colors">
-                  <div>
-                    <h3 class="text-text-header mb-1 font-semibold">Ad Block (experimental)</h3>
-                    <p class="text-text-secondary text-sm">Block ads and trackers while browsing.</p>
-                  </div>
-                  <div class="toggle-switch" data-toggle="adBlock"></div>
+          <section id="browsing" data-section="browsing">
+            <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
+              <i data-lucide="globe" class="w-5 h-5 text-pink-400"></i>
+              Browsing
+            </h2>
+
+            <div class="space-y-3">
+              <div class="bg-background-overlay/60 rounded-xl p-5 border border-white/[0.06]">
+                <h3 class="font-medium mb-3">Proxy Backend</h3>
+                <div class="grid grid-cols-2 gap-3">
+                  <button data-proxy="scramjet" class="proxy-button bg-background/60 hover:bg-[#6366f1]/10 border border-white/[0.06] hover:border-[#6366f1]/30 rounded-lg p-4 text-left relative">
+                    <div class="font-medium text-sm">Scramjet</div>
+                    <div class="text-text-secondary text-xs">Faster, some sites may break</div>
+                    <div class="proxy-check absolute top-2 right-2 hidden">
+                      <i data-lucide="check" class="w-4 h-4 text-[#6366f1]"></i>
+                    </div>
+                  </button>
+                  <button data-proxy="ultraviolet" class="proxy-button bg-background/60 hover:bg-pink-400/10 border border-white/[0.06] hover:border-pink-400/30 rounded-lg p-4 text-left relative">
+                    <div class="font-medium text-sm">Ultraviolet</div>
+                    <div class="text-text-secondary text-xs">More stable, slower</div>
+                    <div class="proxy-check absolute top-2 right-2 hidden">
+                      <i data-lucide="check" class="w-4 h-4 text-pink-400"></i>
+                    </div>
+                  </button>
                 </div>
               </div>
-            </SettingSection>
 
-            <section data-section="advanced" id="advanced">
-              <SettingSection title="Advanced Settings" icon="wrench" variant="amber">
-                <div class="space-y-4">
-                  <div
-                    class="bg-background-overlay/40 border-border-default/30 hover:bg-background-overlay/50 rounded-xl border p-5 transition-colors">
-                    <h3 class="text-text-header mb-3 font-semibold">Wisp Server</h3>
-                    <p class="text-text-secondary mb-4 text-sm">Change the websocket server URL</p>
-                    <input
-                      type="text"
-                      data-input="wispUrl"
-                      placeholder="ws://localhost:3000/wisp/"
-                      class="text-text-header placeholder-text-secondary/50 w-full rounded-lg border border-white/[0.08] bg-white/[0.03] px-4 py-3 text-sm transition-all hover:bg-white/[0.05] focus:border-[#6366f1]/50 focus:bg-white/[0.05] focus:ring-2 focus:ring-[#6366f1]/10 focus:outline-none"
-                    />
-                  </div>
-
-                  <div
-                    class="bg-background-overlay/40 rounded-xl border border-red-500/20 p-5 transition-colors hover:bg-red-500/5">
-                    <div class="mb-3 flex items-center gap-3 text-amber-400">
-                      <i data-lucide="alert-triangle" class="h-5 w-5"></i>
-                      <h3 class="font-semibold">Clear All Data</h3>
-                    </div>
-                    <p class="text-text-secondary mb-4 text-sm">
-                      These actions cannot be undone and all your data will be deleted
-                    </p>
-                    <button
-                      data-reset="reset"
-                      class="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-2.5 text-sm text-red-400 transition-all hover:border-red-500/50 hover:bg-red-500/20">
-                      Clear All Data
-                    </button>
-                  </div>
+              <div class="bg-background-overlay/60 rounded-xl p-5 border border-white/[0.06]">
+                <h3 class="font-medium mb-3">Search Engine</h3>
+                <div class="grid grid-cols-4 gap-2 mb-4">
+                  <button data-engine="https://duckduckgo.com/?q=" class="engine-button bg-background/60 hover:bg-[#6366f1]/10 border border-white/[0.06] rounded-lg py-2.5 text-xs relative">
+                    DuckDuckGo
+                    <div class="engine-check absolute -top-1 -right-1 hidden"><i data-lucide="check-circle" class="w-3.5 h-3.5 text-[#6366f1]"></i></div>
+                  </button>
+                  <button data-engine="https://www.google.com/search?q=" class="engine-button bg-background/60 hover:bg-[#6366f1]/10 border border-white/[0.06] rounded-lg py-2.5 text-xs relative">
+                    Google
+                    <div class="engine-check absolute -top-1 -right-1 hidden"><i data-lucide="check-circle" class="w-3.5 h-3.5 text-[#6366f1]"></i></div>
+                  </button>
+                  <button data-engine="https://www.bing.com/search?q=" class="engine-button bg-background/60 hover:bg-[#6366f1]/10 border border-white/[0.06] rounded-lg py-2.5 text-xs relative">
+                    Bing
+                    <div class="engine-check absolute -top-1 -right-1 hidden"><i data-lucide="check-circle" class="w-3.5 h-3.5 text-[#6366f1]"></i></div>
+                  </button>
+                  <button data-engine="https://search.brave.com/search?q=" class="engine-button bg-background/60 hover:bg-[#6366f1]/10 border border-white/[0.06] rounded-lg py-2.5 text-xs relative">
+                    Brave
+                    <div class="engine-check absolute -top-1 -right-1 hidden"><i data-lucide="check-circle" class="w-3.5 h-3.5 text-[#6366f1]"></i></div>
+                  </button>
                 </div>
-              </SettingSection>
-            </section>
+                <input type="text" data-input="engine" placeholder="Custom search URL (ends with ?q= or &q=)" class="w-full bg-background/80 border border-white/[0.06] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#6366f1]/40" />
+              </div>
 
-            <section data-section="about" id="about">
-              <SettingSection title="About Lunar" icon="info" variant="primary">
-                <div class="space-y-4">
-                  <div class="bg-background-overlay/40 border-border-default/30 rounded-xl border p-6 text-center">
-                    <div class="mb-4 inline-block rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 p-4">
-                      <i data-lucide="moon" class="h-12 w-12 text-purple-400"></i>
-                    </div>
-                    <h2 class="text-text-header mb-2 text-2xl font-bold">Lunar v2</h2>
-                    <p class="text-text-secondary mb-4 text-sm">A modern tabbed web pr-xxy that mocks a browser</p>
-                    <div class="flex items-center justify-center gap-4 text-sm">
-                      <span class="text-text-secondary"
-                        >Version: <span class="text-text-header font-linx">2.0.0</span></span
-                      >
-                    </div>
-                  </div>
-
-                  <div
-                    class="bg-background-overlay/40 border-border-default/30 hover:bg-background-overlay/50 rounded-xl border p-5 transition-colors">
-                    <h3 class="text-text-header mb-3 font-semibold">Credits</h3>
-                    <div class="space-y-2 text-sm">
-                      <div class="flex items-center justify-between">
-                        <span class="text-text-secondary">Developed by</span>
-                        <span class="text-text-header font-medium">Bearcattt</span>
-                      </div>
-                      <div class="flex items-center justify-between">
-                        <span class="text-text-secondary">Built with</span>
-                        <span class="text-text-header font-medium">Astro, TypeScript, Tailwindcss</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div
-                    class="bg-background-overlay/40 border-border-default/30 hover:bg-background-overlay/50 rounded-xl border p-5 transition-colors">
-                    <h3 class="text-text-header mb-3 font-semibold">Links</h3>
-                    <div class="flex flex-wrap gap-2">
-                      <a
-                        href="https://github.com/lunar-proxy/lunar-v2"
-                        target="_blank"
-                        class="flex items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-sm transition-all hover:border-[#6366f1]/30 hover:bg-white/[0.05]">
-                        <i data-lucide="github" class="h-4 w-4"></i>
-                        <span class="text-text-secondary">GitHub</span>
-                      </a>
-                      <a
-                        href="https://discord.gg/lunar"
-                        target="_blank"
-                        class="flex items-center gap-2 rounded-lg border border-white/[0.08] bg-white/[0.03] px-3 py-2 text-sm transition-all hover:border-[#6366f1]/30 hover:bg-white/[0.05]">
-                        <i data-lucide="message-circle" class="h-4 w-4"></i>
-                        <span class="text-text-secondary">Discord</span>
-                      </a>
-                    </div>
-                  </div>
+              <div class="bg-background-overlay/60 rounded-xl p-5 border border-white/[0.06] flex items-center justify-between">
+                <div>
+                  <h3 class="font-medium">Ad Block (experimental)</h3>
+                  <p class="text-text-secondary text-sm">Block ads and trackers while browsing</p>
                 </div>
-              </SettingSection>
-            </section>
+                <div class="toggle" data-toggle="adBlock"></div>
+              </div>
+            </div>
+          </section>
+
+          <section id="advanced" data-section="advanced">
+            <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
+              <i data-lucide="wrench" class="w-5 h-5 text-amber-400"></i>
+              Advanced
+            </h2>
+
+            <div class="space-y-3">
+              <div class="bg-background-overlay/60 rounded-xl p-5 border border-white/[0.06]">
+                <h3 class="font-medium mb-2">Wisp Server</h3>
+                <p class="text-text-secondary text-sm mb-3">Change the websocket server URL</p>
+                <input type="text" data-input="wispUrl" placeholder="ws://localhost:3000/wisp/" class="w-full bg-background/80 border border-white/[0.06] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-[#6366f1]/40" />
+              </div>
+
+              <div class="bg-background-overlay/60 rounded-xl p-5 border border-red-500/20">
+                <h3 class="font-medium mb-2 text-amber-400 flex items-center gap-2">
+                  <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+                  Clear All Data
+                </h3>
+                <p class="text-text-secondary text-sm mb-3">This action cannot be undone</p>
+                <button data-reset="reset" class="bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 text-sm px-4 py-2 rounded-lg">
+                  Clear All Data
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <section id="about" data-section="about">
+            <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
+              <i data-lucide="info" class="w-5 h-5 text-[#6366f1]"></i>
+              About
+            </h2>
+
+            <div class="bg-background-overlay/60 rounded-xl p-5 border border-white/[0.06]">
+              <div class="flex items-center gap-4 mb-4">
+                <div class="w-12 h-12 rounded-xl bg-[#6366f1]/20 flex items-center justify-center">
+                  <i data-lucide="moon" class="w-6 h-6 text-[#6366f1]"></i>
+                </div>
+                <div>
+                  <h3 class="font-semibold text-lg">Lunar v2</h3>
+                  <p class="text-text-secondary text-sm">v2.0.0</p>
+                </div>
+              </div>
+              
+              <div class="text-sm space-y-2 mb-4">
+                <div class="flex justify-between"><span class="text-text-secondary">Developed by</span><span>Bearcattt</span></div>
+                <div class="flex justify-between"><span class="text-text-secondary">Built with</span><span>Astro, TypeScript, Tailwind</span></div>
+              </div>
+
+              <div class="flex gap-2">
+                <a href="https://github.com/lunar-proxy/lunar-v2" target="_blank" class="flex items-center gap-2 bg-background/60 hover:bg-background/80 border border-white/[0.06] rounded-lg px-3 py-2 text-sm">
+                  <i data-lucide="github" class="w-4 h-4"></i>GitHub
+                </a>
+                <a href="https://discord.gg/lunar" target="_blank" class="flex items-center gap-2 bg-background/60 hover:bg-background/80 border border-white/[0.06] rounded-lg px-3 py-2 text-sm">
+                  <i data-lucide="message-circle" class="w-4 h-4"></i>Discord
+                </a>
+              </div>
+            </div>
           </section>
         </main>
-
-        <div data-notification class="fixed right-6 bottom-6 hidden">
-          <div
-            class="flex items-center gap-3 rounded-xl border-2 border-[#10b981]/50 bg-gradient-to-r from-[#10b981]/20 to-[#059669]/20 px-6 py-4 shadow-2xl backdrop-blur-md">
-            <div class="flex h-8 w-8 items-center justify-center rounded-full bg-[#10b981]">
-              <i data-lucide="check" class="h-5 w-5 text-white"></i>
-            </div>
-            <div>
-              <div class="text-text-header text-sm font-semibold">Settings Saved</div>
-              <div class="text-text-secondary text-xs">Changes applied successfully</div>
-            </div>
-          </div>
-        </div>
       </div>
 
-      <ImportLucide />
-      <script>
-        document.addEventListener('DOMContentLoaded', () => {
-          import('../utils/st').then(({ SettingsManager }) => {
-            SettingsManager.init();
-          });
-          import('../utils/config').then(({ default: ConfigAPI }) => {
-            document.querySelector('[data-about-blank]')?.addEventListener('click', async () => {
-              const redirectUrl = ((await ConfigAPI.get('aboutBlankUrl')) as string) || 'https://classroom.google.com';
-              const win = window.open('about:blank', '_blank');
-              if (win) {
-                win.location = 'about:blank';
-                window.location.href = redirectUrl;
-              }
-            });
-          });
-        });
-      </script>
+      <div data-notification class="fixed bottom-6 right-6 hidden toast">
+        <div class="bg-[#10b981]/20 border border-[#10b981]/40 rounded-lg px-4 py-3 flex items-center gap-2 text-sm">
+          <i data-lucide="check" class="w-4 h-4 text-[#10b981]"></i>
+          <span>Settings saved</span>
+        </div>
+      </div>
     </div>
+
+    <ImportLucide />
+    <script>
+      import('../utils/st').then(({ SettingsManager }) => SettingsManager.init());
+      import('../utils/config').then(({ default: ConfigAPI }) => {
+        document.querySelector('[data-about-blank]')?.addEventListener('click', async () => {
+          const url = (await ConfigAPI.get('aboutBlankUrl') as string) || 'https://classroom.google.com';
+          const win = window.open('about:blank', '_blank');
+          if (win) {
+            win.location = 'about:blank';
+            window.location.href = url;
+          }
+        });
+      });
+    </script>
   </body>
 </html>

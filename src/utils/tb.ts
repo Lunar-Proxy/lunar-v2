@@ -1,9 +1,8 @@
 import ConfigAPI from './config'
-import { scramjetWrapper } from './pro'
-import { vWrapper } from './pro'
+import { scramjetWrapper, vWrapper } from './pro'
 import * as baremux from "@mercuryworkshop/bare-mux"
 
-type Tab = {
+interface Tab {
   id: number
   title: string
   favicon: string
@@ -12,331 +11,346 @@ type Tab = {
   titleTimer?: number
 }
 
-const links: Record<string, string> = {
+const internalRoutes: Record<string, string> = {
   'lunar://settings': '/st',
   'lunar://new': '/new',
   'lunar://games': '/math',
   'lunar://apps': '/sci',
 }
 
-const moonIcon = '/a/moon.svg'
-const iconUrl = 'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64&url='
-const connection = new baremux.BareMuxConnection("/bm/worker.js")
-const client = new baremux.BareClient()
+const defaultIcon = '/a/moon.svg'
+const faviconApi = 'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64&url='
+const bmConnection = new baremux.BareMuxConnection("/bm/worker.js")
+const bmClient = new baremux.BareClient()
 
-let tabs: Tab[] = []
-let current: number | null = null
-let nextId = 1
-let urlTimer: ReturnType<typeof setInterval> | null = null
-let loadTimeout: ReturnType<typeof setTimeout> | null = null
-let loading = false
-let lastWatchedHref = ''
-let urlChangeCallback: ((href: string) => void) | null = null
+const tabs: Tab[] = []
+let activeId: number | null = null
+let idCounter = 1
+let urlWatcher: ReturnType<typeof setInterval> | null = null
+let loadTimer: ReturnType<typeof setTimeout> | null = null
+let isLoading = false
+let prevHref = ''
+let onUrlChange: ((href: string) => void) | null = null
 
-const bar = document.getElementById('tcontainer') as HTMLDivElement
-const frames = document.getElementById('fcontainer') as HTMLDivElement
+let tabBar: HTMLDivElement
+let frameContainer: HTMLDivElement
 
-function getId() {
-  return nextId++
+function nextId() {
+  return idCounter++
 }
 
-function getDecoded(path: string) {
-  const scramjetPrefix = scramjetWrapper.getConfig().prefix
-  const vrapperPrefix = vWrapper.getConfig().prefix
-  if (path.startsWith(scramjetPrefix)) return decodeURIComponent(scramjetWrapper.getConfig().codec.decode(path.slice(scramjetPrefix.length)) || '')
-  if (path.startsWith(vrapperPrefix)) return vWrapper.getConfig().decodeUrl(path.slice(vrapperPrefix.length))
+function decodeProxyUrl(path: string): string {
+  const scPrefix = scramjetWrapper.getConfig().prefix
+  const uvPrefix = vWrapper.getConfig().prefix
+  
+  if (path.startsWith(scPrefix)) {
+    const encoded = path.slice(scPrefix.length)
+    return decodeURIComponent(scramjetWrapper.getConfig().codec.decode(encoded) || '')
+  }
+  if (path.startsWith(uvPrefix)) {
+    return vWrapper.getConfig().decodeUrl(path.slice(uvPrefix.length))
+  }
   return ''
 }
 
-async function getEncoded(url: string) {
+async function encodeProxyUrl(url: string): Promise<string> {
   const backend = await ConfigAPI.get('backend')
+  
   if (backend === 'sc') {
-    const config = scramjetWrapper.getConfig()
-    return config.prefix + config.codec.encode(url)
+    const cfg = scramjetWrapper.getConfig()
+    return cfg.prefix + cfg.codec.encode(url)
   }
   if (backend === 'u') {
-    const config = vWrapper.getConfig()
-    return config.prefix + config.encodeUrl(url)
+    const cfg = vWrapper.getConfig()
+    return cfg.prefix + cfg.encodeUrl(url)
   }
   return url
 }
 
-function cut(text: string, max = 14) {
-  return text.length > max ? text.slice(0, max) + '…' : text
+function truncate(str: string, len = 14): string {
+  return str.length > len ? str.slice(0, len) + '…' : str
 }
 
-async function getIcon(url: string) {
+async function fetchFavicon(url: string): Promise<string> {
   try {
-    if (await connection.getTransport() !== `/${LC_NAME}/index.mjs`) {
-      await connection.setTransport(`/${LC_NAME}/index.mjs`, [{ wisp: await ConfigAPI.get('wispUrl') }])
+    const transport = await bmConnection.getTransport()
+    if (transport !== `/${LC_NAME}/index.mjs`) {
+      const wisp = await ConfigAPI.get('wispUrl')
+      await bmConnection.setTransport(`/${LC_NAME}/index.mjs`, [{ wisp }])
     }
-    const response = await client.fetch(iconUrl + encodeURIComponent(url))
-    if (!response.ok) throw 0
-    const blob = await response.blob()
-    return await new Promise<string>(resolve => {
-      const fileReader = new FileReader()
-      fileReader.onloadend = () => resolve(fileReader.result as string)
-      fileReader.readAsDataURL(blob)
+    const res = await bmClient.fetch(faviconApi + encodeURIComponent(url))
+    if (!res.ok) return defaultIcon
+    
+    const blob = await res.blob()
+    return new Promise(resolve => {
+      const reader = new FileReader()
+      reader.onloadend = () => resolve(reader.result as string)
+      reader.readAsDataURL(blob)
     })
   } catch {
-    return moonIcon
+    return defaultIcon
   }
 }
 
-function refresh(tab: Tab, what: 'title' | 'icon') {
+function updateTabEl(tab: Tab, field: 'title' | 'icon') {
   if (!tab.el) return
-  if (what === 'title') {
-    const span = tab.el.querySelector('.tab-title') as HTMLSpanElement
-    if (span) span.textContent = cut(tab.title)
+  
+  if (field === 'title') {
+    const span = tab.el.querySelector<HTMLSpanElement>('.tab-title')
+    if (span) span.textContent = truncate(tab.title)
   } else {
-    const img = tab.el.querySelector('.tab-favicon') as HTMLImageElement
+    const img = tab.el.querySelector<HTMLImageElement>('.tab-favicon')
     if (img && img.src !== tab.favicon) img.src = tab.favicon
   }
 }
 
-function watchTitle(tab: Tab) {
-  clearInterval(tab.titleTimer)
-  tab.titleTimer = window.setInterval(() => {
+function pollTitle(tab: Tab) {
+  if (tab.titleTimer) clearInterval(tab.titleTimer)
+  
+  let lastUrl = ''
+  tab.titleTimer = window.setInterval(async () => {
     try {
       const doc = tab.iframe.contentDocument
-      if (!doc) return
-      const title = doc.title?.trim()
+      const win = tab.iframe.contentWindow
+      const title = doc?.title?.trim()
+      const url = win?.location?.href || ''
       if (title && title !== tab.title) {
         tab.title = title
-        refresh(tab, 'title')
+        updateTabEl(tab, 'title')
+      }
+      if (url && url !== lastUrl) {
+        lastUrl = url
+        const pathname = new URL(url, location.origin).pathname
+        const decoded = decodeProxyUrl(pathname)
+        tab.favicon = decoded ? await fetchFavicon(decoded) : defaultIcon
+        updateTabEl(tab, 'icon')
       }
     } catch {}
-  }, 500)
+  }, 400)
 }
 
-async function loaded(tab: Tab) {
+async function handleFrameLoad(tab: Tab) {
   try {
     const doc = tab.iframe.contentDocument
-    if (!doc) return
-    tab.title = doc.title?.trim() || 'New Tab'
-    refresh(tab, 'title')
-    watchTitle(tab)
+    tab.title = doc?.title?.trim() || 'New Tab'
+    updateTabEl(tab, 'title')
+    pollTitle(tab)
+    
     const pathname = new URL(tab.iframe.src, location.origin).pathname
-    const decoded = getDecoded(pathname)
-    if (!decoded) {
-      tab.favicon = moonIcon
-      refresh(tab, 'icon')
-      return
-    }
-    const icon = await getIcon(decoded)
-    tab.favicon = icon
-    refresh(tab, 'icon')
+    const decoded = decodeProxyUrl(pathname)
+    
+    tab.favicon = decoded ? await fetchFavicon(decoded) : defaultIcon
+    updateTabEl(tab, 'icon')
   } catch {
-    tab.favicon = moonIcon
-    refresh(tab, 'icon')
+    tab.favicon = defaultIcon
+    updateTabEl(tab, 'icon')
   }
 }
 
-function makeFrame(id: number, url?: string) {
+function createFrame(id: number, src?: string): HTMLIFrameElement {
   const frame = document.createElement('iframe')
   frame.id = `frame-${id}`
-  frame.src = url ?? 'new'
+  frame.src = src ?? 'new'
   frame.className = 'w-full z-0 h-full hidden'
   frame.setAttribute('sandbox', 'allow-scripts allow-popups allow-modals allow-top-navigation allow-pointer-lock allow-same-origin allow-forms')
+  
   frame.addEventListener('load', () => {
     try {
       const win = frame.contentWindow
       if (!win) return
+      
       win.open = (openUrl?: string | URL) => {
         if (!openUrl) return null
-        console.log("opening" + openUrl + "in new tab")
-        getEncoded(openUrl.toString()).then(open)
+        encodeProxyUrl(openUrl.toString()).then(openTab)
         return null
       }
     } catch {}
   })
+  
   return frame
 }
 
-function makeTab(tab: Tab) {
-  const element = document.createElement('div')
-  const active = tab.id === current
-  element.className = `
-    tab flex items-center justify-between h-10 min-w-[220px] px-3 py-2 rounded-t-2xl cursor-pointer select-none
-    transition-all duration-200 shadow-sm relative z-10
-    ${active ? 'bg-[#34324d] shadow-[0_0_8px_#5c59a5] border-t-2 border-[#5c59a5]' : 'bg-[#2a283e] hover:bg-[#323048]'}
-  `
+function getTabClass(active: boolean): string {
+  const base = 'tab flex items-center justify-between h-10 min-w-[220px] px-3 py-2 rounded-t-2xl cursor-pointer select-none transition-all duration-200 shadow-sm relative z-10'
+  return active
+    ? `${base} bg-[#34324d] shadow-[0_0_8px_#5c59a5] border-t-2 border-[#5c59a5]`
+    : `${base} bg-[#2a283e] hover:bg-[#323048]`
+}
+
+function createTabEl(tab: Tab): HTMLDivElement {
+  const el = document.createElement('div')
+  el.className = getTabClass(tab.id === activeId)
+  
   const left = document.createElement('div')
   left.className = 'flex items-center gap-2 overflow-hidden h-full'
-  const img = document.createElement('img')
-  img.className = 'tab-favicon w-4 h-4'
-  img.src = tab.favicon
-  const titleSpan = document.createElement('span')
-  titleSpan.className = 'tab-title truncate'
-  titleSpan.textContent = cut(tab.title)
-  left.append(img, titleSpan)
+  
+  const icon = document.createElement('img')
+  icon.className = 'tab-favicon w-4 h-4'
+  icon.src = tab.favicon
+  
+  const title = document.createElement('span')
+  title.className = 'tab-title truncate'
+  title.textContent = truncate(tab.title)
+  
+  left.append(icon, title)
+  
   const closeBtn = document.createElement('button')
   closeBtn.className = 'text-lg hover:text-red-400 transition-colors'
   closeBtn.textContent = '✕'
-  closeBtn.onclick = event => {
-    event.stopPropagation()
-    kill(tab.id)
+  closeBtn.onclick = e => {
+    e.stopPropagation()
+    closeTab(tab.id)
   }
-  element.append(left, closeBtn)
-  element.onclick = () => swap(tab.id)
-  tab.el = element
-  return element
+  
+  el.append(left, closeBtn)
+  el.onclick = () => switchTab(tab.id)
+  tab.el = el
+  
+  return el
 }
 
-function draw() {
-  bar.innerHTML = ''
-  tabs.forEach(tab => bar.appendChild(tab.el ?? makeTab(tab)))
+function renderTabs() {
+  tabBar.innerHTML = ''
+  for (const tab of tabs) {
+    tabBar.appendChild(tab.el ?? createTabEl(tab))
+  }
 }
 
-function highlight() {
-  tabs.forEach(tab => {
-    if (!tab.el) return
-    const active = tab.id === current
-    tab.el.className = `
-      tab flex items-center justify-between h-10 min-w-[220px] px-3 py-2 rounded-t-2xl cursor-pointer select-none
-      transition-all duration-200 shadow-sm relative z-10
-      ${active ? 'bg-[#34324d] shadow-[0_0_8px_#5c59a5] border-t-2 border-[#5c59a5]' : 'bg-[#2a283e] hover:bg-[#323048]'}
-    `
+function updateActiveStyles() {
+  for (const tab of tabs) {
+    if (tab.el) tab.el.className = getTabClass(tab.id === activeId)
+  }
+}
+
+function closeTab(id: number) {
+  const idx = tabs.findIndex(t => t.id === id)
+  if (idx === -1) return
+  
+  if (tabs.length <= 1) openTab()
+  
+  const [removed] = tabs.splice(idx, 1)
+  if (removed.titleTimer) clearInterval(removed.titleTimer)
+  removed.iframe.remove()
+  
+  if (activeId === id && tabs.length) {
+    switchTab(tabs[Math.max(0, idx - 1)].id)
+  }
+  renderTabs()
+}
+
+function showLoader() {
+  const bar = document.getElementById('loading-bar') as HTMLDivElement | null
+  if (!bar || isLoading) return
+  
+  isLoading = true
+  bar.style.cssText = 'display:block;opacity:1;width:0%;transition:none'
+  
+  requestAnimationFrame(() => {
+    if (!isLoading) return
+    bar.style.cssText = 'display:block;opacity:1;width:80%;transition:width .5s cubic-bezier(.4,0,.2,1)'
   })
-}
-
-function kill(id: number) {
-  const index = tabs.findIndex(tab => tab.id === id)
-  if (index === -1) return
   
-  if (tabs.length <= 1) {
-    open()
-  }
-  
-  clearInterval(tabs[index].titleTimer)
-  tabs[index].iframe.remove()
-  tabs.splice(index, 1)
-  
-  if (current === id && tabs.length > 0) {
-    swap(tabs[Math.max(0, index - 1)].id)
-  }
-  draw()
-}
-
-function showLoad() {
-  const loader = document.getElementById('loading-bar') as HTMLDivElement | null
-  if (!loader || loading) return
-  loading = true
-  loader.style.display = 'block'
-  loader.style.opacity = '1'
-  loader.style.width = '0%'
-  loader.style.transition = 'none'
-  setTimeout(() => {
-    if (!loading) return
-    loader.style.transition = 'width 0.5s cubic-bezier(.4,0,.2,1)'
-    loader.style.width = '80%'
-  }, 10)
-  loadTimeout = setTimeout(() => {
-    if (loading && loader) {
-      loader.style.transition = 'width 0.3s cubic-bezier(.4,0,.2,1)'
-      loader.style.width = '90%'
+  loadTimer = setTimeout(() => {
+    if (isLoading && bar) {
+      bar.style.transition = 'width .3s cubic-bezier(.4,0,.2,1)'
+      bar.style.width = '90%'
     }
   }, 1200)
 }
 
-function doneLoad() {
-  const loader = document.getElementById('loading-bar') as HTMLDivElement | null
-  if (!loader || !loading) return
-  loader.style.transition = 'width 0.2s cubic-bezier(.4,0,.2,1)'
-  loader.style.width = '100%'
+function hideLoader() {
+  const bar = document.getElementById('loading-bar') as HTMLDivElement | null
+  if (!bar || !isLoading) return
+  
+  bar.style.cssText = 'display:block;opacity:1;width:100%;transition:width .2s cubic-bezier(.4,0,.2,1)'
+  
   setTimeout(() => {
-    if (!loader) return
-    loader.style.opacity = '0'
-    loader.style.display = 'none'
-    loader.style.width = '0%'
-    loading = false
+    bar.style.cssText = 'display:none;opacity:0;width:0%'
+    isLoading = false
   }, 180)
 }
 
-function resetLoad() {
-  if (loadTimeout) {
-    clearTimeout(loadTimeout)
-    loadTimeout = null
+function resetLoader() {
+  if (loadTimer) {
+    clearTimeout(loadTimer)
+    loadTimer = null
   }
-  doneLoad()
+  hideLoader()
 }
 
-function open(url?: string) {
-  const id = getId()
-  const frame = makeFrame(id, url)
-  frames.appendChild(frame)
-  const tab: Tab = { id, title: 'New Tab', favicon: moonIcon, iframe: frame }
+function openTab(src?: string) {
+  const id = nextId()
+  const frame = createFrame(id, src)
+  frameContainer.appendChild(frame)
+  
+  const tab: Tab = { id, title: 'New Tab', favicon: defaultIcon, iframe: frame }
   tabs.push(tab)
-  draw()
-  swap(id)
+  renderTabs()
+  switchTab(id)
   
-  frame.addEventListener('load', () => {
-    loaded(tab)
-    resetLoad()
-  })
-  frame.addEventListener('error', () => resetLoad())
+  frame.onload = () => {
+    handleFrameLoad(tab)
+    resetLoader()
+  }
+  frame.onerror = resetLoader
 }
 
-function swap(id: number) {
-  clearInterval(urlTimer!)
-  current = id
-  tabs.forEach(tab => tab.iframe.classList.toggle('hidden', tab.id !== id))
-  highlight()
-  resetLoad()
-  lastWatchedHref = ''
+function switchTab(id: number) {
+  if (urlWatcher) clearInterval(urlWatcher)
   
-  const input = document.getElementById('urlbar') as HTMLInputElement | null
-  urlTimer = setInterval(() => {
+  activeId = id
+  prevHref = ''
+  
+  for (const tab of tabs) {
+    tab.iframe.classList.toggle('hidden', tab.id !== id)
+  }
+  updateActiveStyles()
+  resetLoader()
+  
+  const urlInput = document.getElementById('urlbar') as HTMLInputElement | null
+  
+  urlWatcher = setInterval(() => {
     try {
-      const tab = tabs.find(tab => tab.id === id)
+      const tab = tabs.find(t => t.id === id)
       const href = tab?.iframe.contentWindow?.location.href
-      if (!href || href === lastWatchedHref) return
-      lastWatchedHref = href
+      if (!href || href === prevHref) return
       
-      if (input) {
+      prevHref = href
+      
+      if (urlInput) {
         const pathname = new URL(href, location.origin).pathname
-        const quickLink = Object.entries(links).find(([, value]) => value === pathname)
-        input.value = quickLink ? quickLink[0] : getDecoded(pathname)
+        const route = Object.entries(internalRoutes).find(([, v]) => v === pathname)
+        urlInput.value = route ? route[0] : decodeProxyUrl(pathname)
       }
-    
-      if (urlChangeCallback) urlChangeCallback(href)
+      
+      if (onUrlChange) onUrlChange(href)
     } catch {}
-  }, 300)
+  }, 250)
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('add')?.addEventListener('click', () => {
-    open()
-  })
+  tabBar = document.getElementById('tcontainer') as HTMLDivElement
+  frameContainer = document.getElementById('fcontainer') as HTMLDivElement
+  
+  document.getElementById('add')?.addEventListener('click', () => openTab())
   
   const urlbar = document.getElementById('urlbar') as HTMLInputElement | null
-  urlbar?.addEventListener('keydown', event => {
-    if (event.key === 'Enter') showLoad()
+  urlbar?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') showLoader()
   })
   
   setInterval(() => {
-    if (loading) {
-      const tab = tabs.find(tab => tab.id === current)
-      if (tab?.iframe?.contentDocument?.readyState === 'complete') {
-        resetLoad()
-      }
-    }
-  }, 500)
+    if (!isLoading) return
+    const tab = tabs.find(t => t.id === activeId)
+    if (tab?.iframe.contentDocument?.readyState === 'complete') resetLoader()
+  }, 400)
   
-  open()
+  openTab()
 })
 
 export const TabManager = {
-  get activeTabId() {
-    return current
-  },
-  set activeTabId(id: number | null) {
-    if (id !== null) swap(id)
-  },
-  openTab: (url?: string) => {
-    open(url)
-  },
-  onUrlChange: (callback: (href: string) => void) => {
-    urlChangeCallback = callback
-  },
+  get activeTabId() { return activeId },
+  set activeTabId(id: number | null) { if (id !== null) switchTab(id) },
+  openTab,
+  onUrlChange: (cb: (href: string) => void) => { onUrlChange = cb },
 }

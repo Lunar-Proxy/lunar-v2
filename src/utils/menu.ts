@@ -7,25 +7,33 @@ document.addEventListener('DOMContentLoaded', async () => {
   const menuItems = Array.from(
     document.querySelectorAll<HTMLButtonElement>('#menu .menu-item')
   );
-  if (!menu || !cmenu || menuItems.length === 0) return;
+  if (!menu || !cmenu || menuItems.length < 7) return;
 
-  const [newTab, fullscreen, reload, inspectElement, cloak, panic, settings] =
-    menuItems.length >= 7 ? menuItems : [];
+  const [newTab, fullscreen, reload, inspectElement, cloak, panic, settings] = menuItems;
 
   let panicKeybind = '';
   try {
     panicKeybind = String(await ConfigAPI.get('panicKey') ?? '');
   } catch {}
 
-  const keybinds: Record<string, string> = {
-    plus: 'Ctrl+Alt+N',
-    'maximize-2': 'Ctrl+Alt+F',
-    'refresh-cw': 'Ctrl+Alt+R',
-    code: 'Ctrl+Shift+I',
-    settings: 'Ctrl+Alt+S',
-    'log-out': panicKeybind,
-    'hat-glasses': 'Ctrl+Alt+L',
-  };
+  const keybindMap: [HTMLButtonElement, string][] = [
+    [newTab, 'Ctrl+T'],
+    [fullscreen, 'F11'],
+    [reload, 'Ctrl+R'],
+    [inspectElement, 'Ctrl+Shift+I'],
+    [cloak, 'Ctrl+Shift+B'],
+    [panic, panicKeybind],
+    [settings, 'Ctrl+,'],
+  ];
+
+  const keyMap = new Map<string, HTMLButtonElement>();
+
+  for (const [item, combo] of keybindMap) {
+    if (!combo) continue;
+    const label = item.querySelector('span');
+    if (label) label.textContent = `${label.textContent} (${combo})`;
+    keyMap.set(combo.toLowerCase().replace(/\s+/g, ''), item);
+  }
 
   const hideMenu = () => {
     cmenu.classList.add('hidden');
@@ -62,19 +70,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
-  newTab?.addEventListener('click', () => {
+  newTab.addEventListener('click', () => {
     TabManager.openTab();
   });
 
-  reload?.addEventListener('click', () => {
+  reload.addEventListener('click', () => {
     getActiveFrame()?.contentWindow?.location.reload();
   });
 
-  settings?.addEventListener('click', () => {
+  settings.addEventListener('click', () => {
     TabManager.openTab('./st');
   });
 
-  cloak?.addEventListener('click', () => {
+  cloak.addEventListener('click', () => {
     if (top?.location.href === 'about:blank') return;
     const win = window.open();
     if (!win) return;
@@ -88,7 +96,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     win.document.body.appendChild(iframe);
   });
 
-  fullscreen?.addEventListener('click', () => {
+  fullscreen.addEventListener('click', () => {
     const doc = window.top?.document;
     if (!doc) return;
 
@@ -99,7 +107,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     p?.catch?.(() => {});
   });
 
-  inspectElement?.addEventListener('click', () => {
+  inspectElement.addEventListener('click', () => {
     const frame = getActiveFrame();
     if (!frame?.contentWindow || !frame.contentDocument) return;
 
@@ -118,38 +126,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch {}
   });
 
-  panic?.addEventListener('click', async () => {
+  panic.addEventListener('click', async () => {
     let loc = 'https://google.com';
     try {
       loc = String(await ConfigAPI.get('panicLoc') ?? loc);
     } catch {}
 
-    window.top?.location.replace(loc);
-    setTimeout(() => {
-      try {
-        window.top?.history.pushState(null, '', loc);
-        window.top?.history.go(1);
-      } catch {}
-    }, 100);
+    const top = window.top || window;;
+    top.location.href = loc;
   });
 
-  const keyMap = new Map<string, HTMLButtonElement>();
-
-  for (const item of menuItems) {
-    const iconName = item.querySelector<SVGElement>('svg[data-lucide]')?.dataset.lucide;
-    if (!iconName) continue;
-
-    const combo = keybinds[iconName];
-    if (!combo) continue;
-
-    const label = item.querySelector('span');
-    if (label) label.textContent = `${label.textContent} (${combo})`;
-
-    const norm = combo.toLowerCase().replace(/\s+/g, '');
-    keyMap.set(norm, item);
-  }
-
-  document.addEventListener('keydown', e => {
+  const handleKeydown = (e: KeyboardEvent) => {
     if (e.repeat) return;
 
     if (e.key === 'Enter' && cmenu.contains(document.activeElement)) {
@@ -171,6 +158,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!target) return;
 
     e.preventDefault();
+    e.stopPropagation();
     target.click();
-  });
+  };
+
+  window.addEventListener('keydown', handleKeydown, true);
+  document.addEventListener('keydown', handleKeydown, true);
 });

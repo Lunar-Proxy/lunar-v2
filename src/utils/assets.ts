@@ -124,16 +124,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     el.addEventListener('click', async () => {
       const url = el.dataset.href;
       if (!url) return;
-      if ((await conn.getTransport()) !== '/lc/index.mjs') {
-        await conn.setTransport('/lc/index.mjs', [{ wisp: wisp }]);
+      
+      if ((await conn.getTransport()) !== `/${LC_NAME}/index.mjs`) {
+        await conn.setTransport(`/${LC_NAME}/index.mjs`, [{ wisp }]);
       }
+      
       const backend = await ConfigAPI.get('backend');
       const encoded = sc.codec.encode(url);
-      if (backend === 'v') {
-        window.location.href = vWrapper.getConfig().prefix + encoded;
-      } else {
-        window.location.href = sc.prefix + encoded;
-      }
+      const targetUrl = backend === 'v' 
+        ? vWrapper.getConfig().prefix + encoded 
+        : sc.prefix + encoded;
+      
+      window.location.href = targetUrl;
     });
   }
 
