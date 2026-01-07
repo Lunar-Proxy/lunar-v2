@@ -11,7 +11,7 @@ type CardItem = {
 document.addEventListener('DOMContentLoaded', async () => {
   scramjetWrapper.init();
   const sc = scramjetWrapper.getConfig();
-  const conn = new BareMux.BareMuxConnection(`/${BM_NAME}/worker.js`);
+  const conn = new BareMux.BareMuxConnection(`/bm/worker.js`);
   const input = document.querySelector<HTMLInputElement>('[data-input]');
   const box = document.querySelector<HTMLDivElement>('[data-container]');
   const empty = document.querySelector<HTMLDivElement>('[data-empty]');
@@ -124,9 +124,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     el.addEventListener('click', async () => {
       const url = el.dataset.href;
       if (!url) return;
-      
-      if ((await conn.getTransport()) !== `/${LC_NAME}/index.mjs`) {
-        await conn.setTransport(`/${LC_NAME}/index.mjs`, [{ wisp }]);
+
+      if ((await conn.getTransport()) !== `/lc/index.mjs`) {
+        await conn.setTransport(`/lc/index.mjs`, [{ wisp }]);
       }
       
       const backend = await ConfigAPI.get('backend');

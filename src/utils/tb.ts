@@ -20,7 +20,7 @@ const internalRoutes: Record<string, string> = {
 
 const defaultIcon = '/a/moon.svg'
 const faviconApi = 'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64&url='
-const bmConnection = new baremux.BareMuxConnection(`/${BM_NAME}/worker.js`)
+const bmConnection = new baremux.BareMuxConnection(`/bm/worker.js`)
 const bmClient = new baremux.BareClient()
 
 const tabs: Tab[] = []
@@ -76,7 +76,7 @@ async function fetchFavicon(url: string): Promise<string> {
     const transport = await bmConnection.getTransport()
     if (transport !== `/${LC_NAME}/index.mjs`) {
       const wisp = await ConfigAPI.get('wispUrl')
-      await bmConnection.setTransport(`/${LC_NAME}/index.mjs`, [{ wisp }])
+      await bmConnection.setTransport(`/lc/index.mjs`, [{ wisp }])
     }
     const res = await bmClient.fetch(faviconApi + encodeURIComponent(url))
     if (!res.ok) return defaultIcon
