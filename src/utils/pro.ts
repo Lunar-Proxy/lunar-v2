@@ -28,7 +28,7 @@ class ScramjetWrapper {
       },
       codec: {
         encode: (data: string) => encodeURIComponent(data),
-        decode: (encoded: string) => decodeURIComponent(encoded)
+        decode: (encoded: string) => decodeURIComponent(encoded),
       },
     };
   }

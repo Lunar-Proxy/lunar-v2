@@ -4,16 +4,14 @@ import { TabManager } from './tb';
 document.addEventListener('DOMContentLoaded', async () => {
   const menu = document.querySelector<HTMLButtonElement>('#menubtn');
   const cmenu = document.querySelector<HTMLDivElement>('#menu');
-  const menuItems = Array.from(
-    document.querySelectorAll<HTMLButtonElement>('#menu .menu-item')
-  );
+  const menuItems = Array.from(document.querySelectorAll<HTMLButtonElement>('#menu .menu-item'));
   if (!menu || !cmenu || menuItems.length < 7) return;
 
   const [newTab, fullscreen, reload, inspectElement, cloak, panic, settings] = menuItems;
 
   let panicKeybind = '';
   try {
-    panicKeybind = String(await ConfigAPI.get('panicKey') ?? '');
+    panicKeybind = String((await ConfigAPI.get('panicKey')) ?? '');
   } catch {}
 
   const keybindMap: [HTMLButtonElement, string][] = [
@@ -129,10 +127,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   panic.addEventListener('click', async () => {
     let loc = 'https://google.com';
     try {
-      loc = String(await ConfigAPI.get('panicLoc') ?? loc);
+      loc = String((await ConfigAPI.get('panicLoc')) ?? loc);
     } catch {}
 
-    const top = window.top || window;;
+    const top = window.top || window;
     top.location.href = loc;
   });
 

@@ -42,7 +42,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const result = await pingServer(window.location.origin);
 
     if (result.ok) {
-      const color = result.latency >= 300 ? 'text-red-500' : result.latency >= 100 ? 'text-yellow-400' : 'text-green-400';
+      const color =
+        result.latency >= 300
+          ? 'text-red-500'
+          : result.latency >= 100
+            ? 'text-yellow-400'
+            : 'text-green-400';
       serverEl.innerHTML = `Server: <span class="${color} ml-1">${result.latency}ms</span>`;
     } else {
       serverEl.textContent = 'Offline';

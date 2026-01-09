@@ -1,7 +1,7 @@
 import fastifyCompress from '@fastify/compress';
+import fastifyHelmet from '@fastify/helmet';
 import fastifyMiddie from '@fastify/middie';
 import fastifyStatic from '@fastify/static';
-import fastifyHelmet from '@fastify/helmet';
 import type { FastifyStaticOptions, SetHeadersResponse } from '@fastify/static';
 import { logging, server as wisp } from '@mercuryworkshop/wisp-js/server';
 import chalk from 'chalk';
@@ -12,7 +12,8 @@ import { createServer } from 'node:http';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { updateChecker } from 'serverlib/check';
-import { findProvider } from 'serverlib/provider'; 
+import { findProvider } from 'serverlib/provider';
+
 import { version } from './package.json' with { type: 'json' };
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

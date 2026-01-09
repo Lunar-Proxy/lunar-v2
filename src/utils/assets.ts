@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   let rev = false;
   document.querySelector<HTMLButtonElement>('[data-sort]')?.addEventListener('click', function () {
     rev = !rev;
-    items.sort((a, b) => rev ? b.sn.localeCompare(a.sn) : a.sn.localeCompare(b.sn));
+    items.sort((a, b) => (rev ? b.sn.localeCompare(a.sn) : a.sn.localeCompare(b.sn)));
     this.querySelector('span')!.textContent = rev ? 'Z-A' : 'A-Z';
     for (const { el } of items) box.appendChild(el);
   });
@@ -128,13 +128,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       if ((await conn.getTransport()) !== `/lc/index.mjs`) {
         await conn.setTransport(`/lc/index.mjs`, [{ wisp }]);
       }
-      
+
       const backend = await ConfigAPI.get('backend');
       const encoded = sc.codec.encode(url);
-      const targetUrl = backend === 'v' 
-        ? vWrapper.getConfig().prefix + encoded 
-        : sc.prefix + encoded;
-      
+      const targetUrl =
+        backend === 'v' ? vWrapper.getConfig().prefix + encoded : sc.prefix + encoded;
+
       window.location.href = targetUrl;
     });
   }

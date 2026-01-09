@@ -1,4 +1,5 @@
 import node from '@astrojs/node';
+
 import { baremuxPath } from '@mercuryworkshop/bare-mux/node';
 import { libcurlPath } from '@mercuryworkshop/libcurl-transport';
 import { scramjetPath } from '@mercuryworkshop/scramjet/path';
@@ -12,6 +13,7 @@ import { normalizePath } from 'vite';
 import type { Plugin } from 'vite';
 import obfuscatorPlugin from 'vite-plugin-javascript-obfuscator';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
+
 import { version } from './package.json';
 
 wisp.options.wisp_version = 2;
@@ -26,7 +28,7 @@ function WispServer(): Plugin {
         }
       });
     },
-  }
+  };
 }
 
 export function searchBackend(): Plugin {
@@ -144,7 +146,7 @@ export default defineConfig({
     },
     define: {
       VERSION: JSON.stringify(version),
-     },
+    },
     plugins: [
       tailwindcss(),
       WispServer(),
@@ -156,11 +158,20 @@ export default defineConfig({
         options: {
           compact: true,
           simplify: true,
+          target: 'browser',
+          sourceMap: false,
+          seed: OBFUSCATOR_SEED,
+          log: false,
+          identifierNamesGenerator: 'hexadecimal',
+          renameGlobals: false,
+          renameProperties: false,
+          transformObjectKeys: false,
+          ignoreImports: true,
           stringArray: true,
+          stringArrayThreshold: 0.6,
           splitStrings: true,
-          splitStringsChunkLength: 12,
+          splitStringsChunkLength: 14,
           stringArrayEncoding: [],
-          stringArrayThreshold: 0.5,
           stringArrayIndexShift: true,
           stringArrayRotate: true,
           stringArrayShuffle: true,
@@ -169,33 +180,24 @@ export default defineConfig({
           stringArrayWrappersChainedCalls: false,
           stringArrayWrappersParametersMaxCount: 2,
           stringArrayCallsTransform: false,
-          identifierNamesGenerator: 'hexadecimal',
-          ignoreImports: true,
-          log: false,
-          numbersToExpressions: false,
-          renameGlobals: false,
-          renameProperties: false,
-          selfDefending: true,
-          sourceMap: false,
-          target: 'browser',
-          transformObjectKeys: false,
-          unicodeEscapeSequence: false,
-          seed: OBFUSCATOR_SEED,
           controlFlowFlattening: true,
           controlFlowFlatteningThreshold: 0.3,
           deadCodeInjection: true,
-          deadCodeInjectionThreshold: 0.2,
+          deadCodeInjectionThreshold: 0.3,
+          selfDefending: true,
           debugProtection: false,
           disableConsoleOutput: false,
+          numbersToExpressions: false,
+          unicodeEscapeSequence: false,
         },
       }),
       viteStaticCopy({
         targets: [
-          { src: normalizePath(`${libcurlPath}/**/*.mjs`), dest: "lc", overwrite: false },
-          { src: normalizePath(`${baremuxPath}/**/*.js`), dest: "bm", overwrite: false },
+          { src: normalizePath(`${libcurlPath}/**/*.mjs`), dest: 'lc', overwrite: false },
+          { src: normalizePath(`${baremuxPath}/**/*.js`), dest: 'bm', overwrite: false },
           {
             src: [normalizePath(`${scramjetPath}/*.js`), normalizePath(`${scramjetPath}/*.wasm`)],
-            dest: "data",
+            dest: 'data',
             rename: (name: string) => {
               const ending = name.endsWith('.wasm') ? '.wasm' : '.js';
               return `${name.replace(/^scramjet\./, '')}${ending}`;

@@ -4,12 +4,12 @@
   "version": "2.0.0-alpha",
   "scripts": {
     "dev": "npx astro dev --host 0.0.0.0",
-  "start": "node --trace-warnings --enable-source-maps --import tsx index.ts",
-  "build": "npx astro check && npx astro build",
-  "format": "npx prettier . --write",
-  "revert": "git reset HEAD --hard && git clean -fd",
-  "precommit": "npx astro check && npm run format"
-},
+    "start": "node --trace-warnings --enable-source-maps --import tsx index.ts",
+    "build": "npx astro check && npx astro build",
+    "format": "npx prettier . --write",
+    "revert": "git reset HEAD --hard && git clean -fd",
+    "precommit": "npx astro check && npm run format"
+  },
   "dependencies": {
     "@astrojs/check": "^0.9.6",
     "@astrojs/node": "^9.5.1",

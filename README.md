@@ -1,10 +1,12 @@
 ![Lunar](./lunar.svg)
 
-
 [![Join our Discord](https://skillicons.dev/icons?i=discord)](https://discord.gg/fuPtWjYuf8)
 [![View on GitHub](https://skillicons.dev/icons?i=github)](https://github.com/lunar-proxy/lunar-v2)
-#  
-Lunar v2 is feature packed modern, browser-inspired tabbed web proxy bypassing censorship  
+
+#
+
+Lunar v2 is feature packed modern, browser-inspired tabbed web proxy bypassing
+censorship  
 while having a familiar, browser like design.
 
 ## Features
@@ -43,12 +45,11 @@ while having a familiar, browser like design.
 
 1. Clone the Lunar v2 repository:
 
-       git clone https://github.com/lunar-proxy/lunar-v2
-       cd lunar-v2
+   git clone https://github.com/lunar-proxy/lunar-v2 cd lunar-v2
 
 2. Install dependencies and start Lunar v2:
 
-       pnpm i && pnpm start
+   pnpm i && pnpm start
 
 #### Development
 

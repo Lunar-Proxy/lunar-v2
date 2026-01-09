@@ -1,7 +1,7 @@
 import ConfigAPI from './config';
 
 export async function validateUrl(input: string): Promise<string> {
-  const engine = (await ConfigAPI.get('engine')) as string || 'https://duckduckgo.com/?q=';
+  const engine = ((await ConfigAPI.get('engine')) as string) || 'https://duckduckgo.com/?q=';
   const value = input.trim();
 
   if (!value) return engine;
@@ -11,9 +11,7 @@ export async function validateUrl(input: string): Promise<string> {
     if (url.protocol === 'http:' || url.protocol === 'https:') {
       return url.toString();
     }
-  } catch {
-    
-  }
+  } catch {}
 
   if (/^[\w-]+(\.[\w-]+)+/.test(value)) {
     return `https://${value}`;

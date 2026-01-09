@@ -1,6 +1,5 @@
 import ConfigAPI from './config';
-import { scramjetWrapper } from './pro';
-import { vWrapper } from './pro';
+import { scramjetWrapper, vWrapper } from './pro';
 import { TabManager } from './tb';
 import { validateUrl } from './url';
 
@@ -44,20 +43,33 @@ async function updateBookmark() {
   if (!favorite) return;
   const frame = getActiveFrame();
   if (!frame) return;
-
-  let src = frame.src;
+  let src = frame.contentWindow?.location.href ?? frame.src;
   try {
     const urlObj = new URL(src, window.location.origin);
-    let path = urlObj.pathname;
+    let path = urlObj.pathname + urlObj.search;
     if (path.startsWith(scramjetInstance.prefix)) {
       path = path.slice(scramjetInstance.prefix.length);
+    } else if (path.startsWith(vInstance.prefix)) {
+      path = path.slice(vInstance.prefix.length);
     }
     src = path;
   } catch {}
 
-  const url = scramjetInstance.codec.decode(src);
+  const backend = (await ConfigAPI.get('backend')) as string;
+  let url: string;
+  if (backend === 'u' && typeof vInstance.decodeUrl === 'function') {
+    url = vInstance.decodeUrl(src);
+  } else if (scramjetInstance?.codec?.decode) {
+    url = scramjetInstance.codec.decode(src);
+  } else {
+    url = src;
+  }
 
-  const currentBm = ((await ConfigAPI.get('bm')) ?? []) as Array<{ name: string; logo: string; redir: string }>;
+  const currentBm = ((await ConfigAPI.get('bm')) ?? []) as Array<{
+    name: string;
+    logo: string;
+    redir: string;
+  }>;
 
   function normalize(u: string) {
     try {
@@ -114,17 +126,23 @@ favorite?.addEventListener('click', async () => {
 
   const frame = getActiveFrame();
   if (!frame || nativePaths[urlbar.value]) return;
-
-  let src = frame.src;
+  let src = frame.contentWindow?.location.href ?? frame.src;
   try {
     const urlObj = new URL(src, window.location.origin);
-    let path = urlObj.pathname;
+    let path = urlObj.pathname + urlObj.search;
     if (path.startsWith(scramjetInstance.prefix)) {
       path = path.slice(scramjetInstance.prefix.length);
+    } else if (path.startsWith(vInstance.prefix)) {
+      path = path.slice(vInstance.prefix.length);
     }
     src = path;
   } catch {}
-  const url = scramjetInstance.codec.decode(src);
+
+  const backend = (await ConfigAPI.get('backend')) as string;
+  const url =
+    backend === 'u' && typeof vInstance.decodeUrl === 'function'
+      ? vInstance.decodeUrl(src)
+      : scramjetInstance.codec.decode(src);
   const name = frame.contentDocument?.title || url;
 
   let domain: string;
@@ -134,7 +152,11 @@ favorite?.addEventListener('click', async () => {
     domain = url;
   }
 
-  const currentBm = ((await ConfigAPI.get('bm')) ?? []) as Array<{ name: string; logo: string; redir: string }>;
+  const currentBm = ((await ConfigAPI.get('bm')) ?? []) as Array<{
+    name: string;
+    logo: string;
+    redir: string;
+  }>;
 
   function normalize(u: string) {
     try {
@@ -221,28 +243,33 @@ function findTargetDoc(win: Window | null): Document | null {
       } catch {}
     }
   } catch {}
-
   return null;
 }
 
 targetDoc = findTargetDoc(window);
 
-targetDoc?.querySelectorAll<HTMLElement>('aside button, aside img').forEach(el => {
-  el.addEventListener('click', () => {
+targetDoc?.querySelectorAll<HTMLElement>('aside button').forEach(el => {
+  el.addEventListener('click', (ev: Event) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+
     const frame = getActiveFrame();
     if (!frame) return;
 
-    const targetUrl = el.tagName === 'BUTTON' ? el.getAttribute('data-url') : '/new';
-
+    const targetUrl = el.getAttribute('data-url');
     if (!targetUrl) return;
 
-    const nativeKey = Object.keys(nativePaths).find(key => nativePaths[key] === targetUrl);
-    if (!nativeKey) return;
+    let nativeKey = Object.keys(nativePaths).find(key => nativePaths[key] === targetUrl);
+    if (!nativeKey && targetUrl === '/') {
+      nativeKey = 'lunar://new';
+    }
 
-    if (urlbar) urlbar.value = nativeKey;
-    frame.src = nativePaths[nativeKey];
-    loading();
-    frame.addEventListener('load', updateBookmark, { once: true });
+    if (nativeKey) {
+      if (urlbar) urlbar.value = nativeKey;
+      loading();
+      frame.src = nativePaths[nativeKey];
+      frame.addEventListener('load', updateBookmark, { once: true });
+    }
   });
 });
 
