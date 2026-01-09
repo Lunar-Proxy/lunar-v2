@@ -48,14 +48,15 @@ export default {
       },
     },
     {
-      files: ['*.md', '*.mdx'],
-      options: {
-        parser: 'markdown',
-        printWidth: 80,
-        proseWrap: 'always',
-        singleQuote: false,
-      },
-    },
+  files: ['*.md', '*.mdx'],
+  options: {
+    parser: 'markdown',
+    printWidth: 80,
+    proseWrap: 'preserve',
+    singleQuote: false,
+    plugins: [],
+  },
+},
     {
       files: ['*.json', '.prettierrc', 'tsconfig*.json'],
       options: {
@@ -100,13 +101,14 @@ export default {
       },
     },
     {
-      files: '*.svg',
-      options: {
-        parser: 'html',
-        printWidth: 120,
-        htmlWhitespaceSensitivity: 'ignore',
-      },
-    },
+  files: '*.svg',
+  options: {
+    parser: 'html',
+    printWidth: 120,
+    htmlWhitespaceSensitivity: 'ignore',
+    plugins: [],
+  },
+},
     {
       files: ['*.config.ts', 'astro.config.*'],
       options: {
