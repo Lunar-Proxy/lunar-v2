@@ -3,3 +3,4 @@ public/lib/
 dist
 .astro
 node_modules
+lunar.svg
