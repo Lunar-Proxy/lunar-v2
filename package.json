@@ -15,7 +15,7 @@
     "@astrojs/node": "^9.5.1",
     "@fastify/compress": "^8.3.0",
     "@fastify/helmet": "^13.0.2",
-    "@fastify/middie": "^9.0.3",
+    "@fastify/middie": "^9.1.0",
     "@fastify/static": "^9.0.0",
     "@mercuryworkshop/bare-mux": "^2.1.8",
     "@mercuryworkshop/libcurl-transport": "^1.5.1",
