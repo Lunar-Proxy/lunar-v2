@@ -4,6 +4,13 @@ declare const LAST_UPDATED: string;
 declare const VERSION: string;
 declare const BareMux: any;
 
+
+interface Bookmark {
+  name: string;
+  logo: string;
+  redir: string;
+}
+
 interface tmpConfig {
   prefix: string;
   encodeUrl: (str: string) => string;

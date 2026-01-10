@@ -1,11 +1,5 @@
 import localForage from 'localforage';
 
-interface Bookmark {
-  name: string;
-  logo: string;
-  redir: string;
-}
-
 interface ConfigDefaults {
   engine: string;
   cloak: 'on' | 'off';
@@ -19,9 +13,10 @@ interface ConfigDefaults {
   panicKey: string;
   wispUrl: string;
   bm: Bookmark[];
+  [key: string]: any;
 }
 
-type ConfigKey = keyof ConfigDefaults;
+type ConfigKey = string;
 
 const ConfigAPI = {
   config: localForage.createInstance({
@@ -29,12 +24,12 @@ const ConfigAPI = {
     storeName: 'Settings',
   }),
 
-  async get<K extends ConfigKey>(key: K): Promise<ConfigDefaults[K] | null> {
-    return this.config.getItem(key);
+  async get(key: ConfigKey): Promise<any | null> {
+    return this.config.getItem(key as string);
   },
 
-  async set<K extends ConfigKey>(key: K, value: ConfigDefaults[K]): Promise<ConfigDefaults[K]> {
-    return this.config.setItem(key, value);
+  async set(key: ConfigKey, value: any): Promise<any> {
+    return this.config.setItem(key as string, value);
   },
 
   async init(): Promise<void> {
@@ -104,19 +99,19 @@ const ConfigAPI = {
     await this.init();
   },
 
-  async getAll(): Promise<Partial<ConfigDefaults>> {
-    const keys = (await this.config.keys()) as ConfigKey[];
+  async getAll(): Promise<Record<string, any>> {
+    const keys = (await this.config.keys()) as string[];
     const values = await Promise.all(
       keys.map(async key => ({
         key,
-        value: (await this.config.getItem(key)) as ConfigDefaults[ConfigKey] | undefined,
+        value: await this.config.getItem(key),
       })),
     );
 
     return values.reduce((acc, { key, value }) => {
-      (acc as any)[key] = value;
+      acc[key] = value;
       return acc;
-    }, {} as Partial<ConfigDefaults>);
+    }, {} as Record<string, any>);
   },
 };
 
