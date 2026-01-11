@@ -134,7 +134,6 @@ export class SettingsManager {
 
           const y = section.getBoundingClientRect().top + window.pageYOffset - 20;
           window.scrollTo({ top: y, behavior: 'smooth' });
-          // update the location hash without jumping
           try {
             history.replaceState(null, '', `#${target}`);
           } catch (err) {
@@ -144,7 +143,6 @@ export class SettingsManager {
       });
     });
 
-    // If the page was opened with a hash, activate that nav item and scroll to it.
     const initialHash = (window.location.hash || '').replace('#', '');
     if (initialHash) {
       const initialItem = Array.from(items).find(
@@ -595,6 +593,8 @@ export class SettingsManager {
 
       this.notify();
       this.setPanicKey(combo);
+
+      parent.location.reload();
     });
 
     input.addEventListener('blur', () => {

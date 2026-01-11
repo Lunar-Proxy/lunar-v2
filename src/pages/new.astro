@@ -1,6 +1,7 @@
 ---
 import '@/main.css';
 import { version } from '../../package.json';
+import Shortcuts from '../layouts/shortcuts.astro';
 ---
 
 <!doctype html>
@@ -42,7 +43,7 @@ import { version } from '../../package.json';
         >
       </div>
     </div>
-
+    <Shortcuts />
     <div class="fixed right-5 bottom-5 z-50 flex items-center gap-1">
       <span class="px-3 py-1.5 text-[13px] font-medium text-white/50 transition-all duration-150 hover:text-white/90"
         >v{version}</span

@@ -1,11 +1,54 @@
 ---
 import '@/main.css';
 import ImportLucide from './lucide.astro';
+const shortcuts = [
+	{
+		name: 'YouTube',
+		url: 'https://youtube.com',
+		icon: '/a/images/bm/yt.png',
+	},
+	{
+		name: 'X',
+		url: 'https://x.com',
+		icon: 'https://abs.twimg.com/favicons/twitter.2.ico',
+	},
+	{
+		name: 'GitHub',
+		url: 'https://github.com',
+		icon: '/a/images/bm/gh.ico',
+	},
+	{
+		name: 'Discord',
+		url: 'https://discord.com',
+		icon: '/a/images/bm/disc.ico',
+	},
+	{
+		name: 'Google',
+		url: 'https://google.com',
+		icon: '/a/images/bm/goo.ico',
+	},
+	{
+		name: 'Wikipedia',
+		url: 'https://wikipedia.org',
+		icon: '/a/images/bm/wiki.png',
+	},
+];
 ---
 
 <div class="relative mt-10 flex w-full max-w-4xl flex-row flex-wrap items-center justify-center gap-7 px-2">
-  <div id="shortcuts" class="flex w-full flex-row flex-wrap items-start justify-center gap-7"></div>
+	{shortcuts.map(shortcut => (
+		<a
+			data-short={shortcut.url}
+			class="shortcut-card relative flex flex-col items-center justify-center space-y-3 rounded-2xl bg-background-overlay/80 border border-border-default/20 p-5 min-w-30 max-w-40 transition-all duration-200 hover:scale-105 cursor-pointer group backdrop-blur-md shadow-lg"
+		>
+			<div class="w-16 h-16 rounded-xl bg-background-overlay/90 border border-border-default/20 flex items-center justify-center overflow-hidden">
+				<img src={shortcut.icon} class="w-10 h-10 object-contain shortcut-favicon" alt={shortcut.name + ' icon'} />
+			</div>
+			<p class="text-base font-semibold text-text-header max-w-30 wrap-break-word text-center">
+				{shortcut.name}
+			</p>
+		</a>
+	))}
 </div>
-
+<script src="@scripts/shortcuts.ts"></script>
 <ImportLucide />
-<script src="@scripts/shortcut"></script>

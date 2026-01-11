@@ -1,12 +1,10 @@
-const $ = (id: string) => document.getElementById(id);
-
 document.addEventListener('DOMContentLoaded', () => {
-  const hoursEl = $('hours');
-  const minutesEl = $('minutes');
-  const secondsEl = $('seconds');
-  const ampmEl = $('ampm');
-  const serverEl = $('sl');
-  const refreshBtn = $('refresh');
+  const hoursEl = document.getElementById('hours');
+  const minutesEl = document.getElementById('minutes');
+  const secondsEl = document.getElementById('seconds');
+  const ampmEl = document.getElementById('ampm');
+  const serverEl = document.getElementById('sl');
+  const refreshBtn = document.getElementById('refresh');
 
   function updateClock() {
     const now = new Date();

@@ -15,11 +15,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   } catch {}
 
   const keybindMap: [HTMLButtonElement, string][] = [
-    [newTab, 'Ctrl+T'],
-    [fullscreen, 'F11'],
-    [reload, 'Ctrl+R'],
-    [inspectElement, 'Ctrl+Shift+I'],
-    [cloak, 'Ctrl+Shift+B'],
+    [newTab, 'Ctrl+Alt+N'],
+    [fullscreen, 'Ctrl+Alt+Z'],
+    [reload, 'Ctrl+Alt+R'],
+    [inspectElement, 'Ctrl+Alt+I'],
+    [cloak, 'Ctrl+Alt+C'],
     [panic, panicKeybind],
     [settings, 'Ctrl+,'],
   ];

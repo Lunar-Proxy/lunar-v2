@@ -1,4 +1,11 @@
+
 import localForage from 'localforage';
+
+interface Bookmark {
+  name: string;
+  logo: string;
+  redir: string;
+}
 
 interface ConfigDefaults {
   engine: string;
