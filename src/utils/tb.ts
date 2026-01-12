@@ -1,4 +1,3 @@
-
 import * as baremux from '@mercuryworkshop/bare-mux';
 import ConfigAPI from './config';
 import { scramjetWrapper, vWrapper } from './pro';
@@ -18,11 +17,8 @@ const internalRoutes: Record<string, string> = {
   'lunar://games': '/math',
   'lunar://apps': '/sci',
 };
-
-
 const defaultIcon = '/a/moon.svg';
 const faviconApi = 'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64&url=';
-
 const bmConnection = new baremux.BareMuxConnection(`/bm/worker.js`);
 const bmClient = new baremux.BareClient();
 
@@ -36,6 +32,7 @@ let prevHref = '';
 let onUrlChange: ((href: string) => void) | null = null;
 let tabBar: HTMLDivElement | null = null;
 let frameContainer: HTMLDivElement | null = null;
+const faviconCache = new Map<string, string>();
 
 function nextId() {
   return idCounter++;
@@ -44,32 +41,26 @@ function nextId() {
 function decodeProxyUrl(path: string): string {
   const scPrefix = scramjetWrapper.getConfig().prefix;
   const uvPrefix = vWrapper.getConfig().prefix;
-
   if (path.startsWith(scPrefix)) {
     const encoded = path.slice(scPrefix.length);
     return decodeURIComponent(scramjetWrapper.getConfig().codec.decode(encoded) || '');
   }
-
   if (path.startsWith(uvPrefix)) {
     return vWrapper.getConfig().decodeUrl(path.slice(uvPrefix.length));
   }
-
   return '';
 }
 
 async function encodeProxyUrl(url: string): Promise<string> {
   const backend = await ConfigAPI.get('backend');
-
   if (backend === 'sc') {
     const cfg = scramjetWrapper.getConfig();
     return cfg.prefix + cfg.codec.encode(url);
   }
-
   if (backend === 'u') {
     const cfg = vWrapper.getConfig();
     return cfg.prefix + cfg.encodeUrl(url);
   }
-
   return url;
 }
 
@@ -78,21 +69,30 @@ function truncate(str: string, len = 18): string {
 }
 
 async function fetchFavicon(url: string): Promise<string> {
+  if (faviconCache.has(url)) return faviconCache.get(url)!;
   try {
     const transport = await bmConnection.getTransport();
     if (transport !== `/lc/index.mjs`) {
       const wisp = await ConfigAPI.get('wispUrl');
       await bmConnection.setTransport(`/lc/index.mjs`, [{ wisp }]);
     }
-    const res = await bmClient.fetch(faviconApi + encodeURIComponent(url));
-    if (!res.ok) return defaultIcon;
+    const cleanUrl = decodeURIComponent(url);
+    const res = await bmClient.fetch(faviconApi + encodeURIComponent(cleanUrl));
+    if (!res.ok) {
+      faviconCache.set(url, defaultIcon);
+      return defaultIcon;
+    }
     const blob = await res.blob();
-    return new Promise(r => {
+    return await new Promise(r => {
       const reader = new FileReader();
-      reader.onloadend = () => r(reader.result as string);
+      reader.onloadend = () => {
+        faviconCache.set(url, reader.result as string);
+        r(reader.result as string);
+      };
       reader.readAsDataURL(blob);
     });
   } catch {
+    faviconCache.set(url, defaultIcon);
     return defaultIcon;
   }
 }
@@ -104,43 +104,52 @@ function updateTabEl(tab: Tab, field: 'title' | 'icon') {
     if (span) span.textContent = truncate(tab.title);
   } else {
     const img = tab.el.querySelector('.tab-favicon') as HTMLImageElement | null;
-    if (img) {
-      if (img.src !== tab.favicon) img.src = tab.favicon;
-      img.width = 18;
-      img.height = 18;
-      img.style.width = '18px';
-      img.style.height = '18px';
-      img.style.objectFit = 'contain';
+    if (img && img.src !== tab.favicon) {
+      img.src = tab.favicon;
     }
   }
 }
 
 function pollTitle(tab: Tab) {
   if (tab.titleTimer) clearInterval(tab.titleTimer);
-
+  let lastTitle = tab.title;
   tab.titleTimer = window.setInterval(() => {
     try {
       const doc = tab.iframe.contentDocument;
-      const title = doc?.title?.trim();
-      if (title && title !== tab.title) {
+      if (!doc) return;
+      let title = doc.title || '';
+      try { title = decodeURIComponent(title); } catch {}
+      title = title.trim();
+      if (title && title !== lastTitle) {
+        lastTitle = title;
         tab.title = title;
         updateTabEl(tab, 'title');
       }
     } catch {}
-  }, 400);
+  }, 1000);
 }
 
 async function handleFrameLoad(tab: Tab) {
   try {
     const doc = tab.iframe.contentDocument;
-    tab.title = doc?.title?.trim() || 'New Tab';
+    // Fix: decode page title if encoded
+    let pageTitle = doc?.title || '';
+    try { pageTitle = decodeURIComponent(pageTitle); } catch {}
+    tab.title = pageTitle.trim() || 'New Tab';
     updateTabEl(tab, 'title');
     pollTitle(tab);
 
     const pathname = new URL(doc?.location.href || '', location.origin).pathname;
     const decoded = decodeProxyUrl(pathname);
-    tab.favicon = decoded ? await fetchFavicon(decoded) : defaultIcon;
-    updateTabEl(tab, 'icon');
+    if (decoded) {
+      fetchFavicon(decoded).then(icon => {
+        tab.favicon = icon;
+        updateTabEl(tab, 'icon');
+      });
+    } else {
+      tab.favicon = defaultIcon;
+      updateTabEl(tab, 'icon');
+    }
   } catch {
     tab.favicon = defaultIcon;
     updateTabEl(tab, 'icon');
@@ -156,12 +165,10 @@ function createFrame(id: number, src?: string): HTMLIFrameElement {
     'sandbox',
     'allow-scripts allow-popups allow-modals allow-top-navigation allow-pointer-lock allow-same-origin allow-forms',
   );
-
   frame.addEventListener('load', () => {
     try {
       const win = frame.contentWindow;
       if (!win) return;
-
       win.open = (openUrl?: string | URL) => {
         if (!openUrl) return null;
         encodeProxyUrl(openUrl.toString()).then(openTab);
@@ -169,7 +176,6 @@ function createFrame(id: number, src?: string): HTMLIFrameElement {
       };
     } catch {}
   });
-
   return frame;
 }
 
@@ -212,17 +218,13 @@ function createTabEl(tab: Tab): HTMLDivElement {
 function renderTabs() {
   if (!tabBar) return;
   tabBar.innerHTML = '';
-  
   const wrapper = document.createElement('div');
   wrapper.className = 'flex items-center justify-center w-full';
-  
   const tabsContainer = document.createElement('div');
   tabsContainer.className = 'flex items-center gap-0';
-  
   for (const tab of tabs) {
     tabsContainer.appendChild(tab.el ?? createTabEl(tab));
   }
-  
   wrapper.appendChild(tabsContainer);
   tabBar.appendChild(wrapper);
 }
@@ -236,33 +238,26 @@ function updateActiveStyles() {
 function closeTab(id: number) {
   const idx = tabs.findIndex(t => t.id === id);
   if (idx === -1) return;
-
   if (tabs.length <= 1) openTab();
-
   const [removed] = tabs.splice(idx, 1);
   if (removed.titleTimer) clearInterval(removed.titleTimer);
   removed.iframe.remove();
-
   if (activeId === id && tabs.length) {
     switchTab(tabs[Math.max(0, idx - 1)].id);
   }
-
   renderTabs();
 }
 
 function showLoader() {
   const bar = document.getElementById('loading-bar') as HTMLDivElement | null;
   if (!bar || isLoading) return;
-
   isLoading = true;
   bar.style.cssText = 'display:block;opacity:1;width:0%;transition:none';
-
   requestAnimationFrame(() => {
     if (!isLoading) return;
     bar.style.cssText =
       'display:block;opacity:1;width:80%;transition:width .5s cubic-bezier(.4,0,.2,1)';
   });
-
   loadTimer = setTimeout(() => {
     if (isLoading && bar) {
       bar.style.transition = 'width .3s cubic-bezier(.4,0,.2,1)';
@@ -274,10 +269,8 @@ function showLoader() {
 function hideLoader() {
   const bar = document.getElementById('loading-bar') as HTMLDivElement | null;
   if (!bar || !isLoading) return;
-
   bar.style.cssText =
     'display:block;opacity:1;width:100%;transition:width .2s cubic-bezier(.4,0,.2,1)';
-
   setTimeout(() => {
     bar.style.cssText = 'display:none;opacity:0;width:0%';
     isLoading = false;
@@ -295,62 +288,78 @@ function resetLoader() {
 function openTab(src?: string) {
   const id = nextId();
   const frame = createFrame(id, src);
-
   if (!frameContainer) {
     document.addEventListener('DOMContentLoaded', () => openTab(src), { once: true });
     return;
   }
-
   frameContainer.appendChild(frame);
-
   const tab: Tab = {
     id,
     title: 'New Tab',
     favicon: defaultIcon,
     iframe: frame,
   };
-
   tabs.push(tab);
   renderTabs();
   switchTab(id);
-
   frame.onload = () => {
     handleFrameLoad(tab);
     resetLoader();
   };
-
   frame.onerror = resetLoader;
 }
 
 function switchTab(id: number) {
   if (urlWatcher) clearInterval(urlWatcher);
-
   activeId = id;
   prevHref = '';
-
   for (const tab of tabs) {
     tab.iframe.classList.toggle('hidden', tab.id !== id);
   }
-
   updateActiveStyles();
   resetLoader();
 
-  const urlInput = document.getElementById('urlbar') as HTMLInputElement | null;
+  const activeTab = tabs.find(t => t.id === id);
+  if (activeTab) {
+    try {
+      const doc = activeTab.iframe.contentDocument;
+      if (doc) {
+        let title = doc.title || '';
+        try { title = decodeURIComponent(title); } catch {}
+        title = title.trim();
+        if (title) {
+          activeTab.title = title;
+          updateTabEl(activeTab, 'title');
+        }
+      }
+    } catch {}
+  }
 
+  const urlInput = document.getElementById('urlbar') as HTMLInputElement | null;
   urlWatcher = setInterval(() => {
     try {
       const tab = tabs.find(t => t.id === id);
       const href = tab?.iframe.contentWindow?.location.href;
       if (!href || href === prevHref) return;
-
       prevHref = href;
-
       if (urlInput) {
         const pathname = new URL(href, location.origin).pathname;
         const route = Object.entries(internalRoutes).find(([, v]) => v === pathname);
         urlInput.value = route ? route[0] : decodeProxyUrl(pathname);
       }
-
+      if (tab) {
+        // Also update title immediately on URL change
+        const doc = tab.iframe.contentDocument;
+        if (doc) {
+          let title = doc.title || '';
+          try { title = decodeURIComponent(title); } catch {}
+          title = title.trim();
+          if (title && title !== tab.title) {
+            tab.title = title;
+            updateTabEl(tab, 'title');
+          }
+        }
+      }
       if (onUrlChange) onUrlChange(href);
     } catch {}
   }, 250);
@@ -359,20 +368,16 @@ function switchTab(id: number) {
 document.addEventListener('DOMContentLoaded', () => {
   tabBar = document.getElementById('tcontainer') as HTMLDivElement | null;
   frameContainer = document.getElementById('fcontainer') as HTMLDivElement | null;
-
   document.getElementById('add')?.addEventListener('click', () => openTab());
-
   const urlbar = document.getElementById('urlbar') as HTMLInputElement | null;
   urlbar?.addEventListener('keydown', e => {
     if (e.key === 'Enter') showLoader();
   });
-
   setInterval(() => {
     if (!isLoading) return;
     const tab = tabs.find(t => t.id === activeId);
     if (tab?.iframe.contentDocument?.readyState === 'complete') resetLoader();
   }, 400);
-
   openTab();
 });
 
@@ -381,12 +386,10 @@ function cleanup() {
     clearInterval(urlWatcher);
     urlWatcher = null;
   }
-
   if (loadTimer) {
     clearTimeout(loadTimer);
     loadTimer = null;
   }
-
   for (const tab of tabs) {
     if (tab.titleTimer) clearInterval(tab.titleTimer);
   }
