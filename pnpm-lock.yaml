@@ -30,8 +30,8 @@ importers:
         specifier: ^2.1.8
         version: 2.1.8
       '@mercuryworkshop/libcurl-transport':
-        specifier: ^1.5.1
-        version: 1.5.1
+        specifier: ^2.0.5
+        version: 2.0.5
       '@mercuryworkshop/scramjet':
         specifier: https://github.com/MercuryWorkshop/scramjet/releases/download/latest/mercuryworkshop-scramjet-2.0.0-alpha.tgz
         version: https://github.com/MercuryWorkshop/scramjet/releases/download/latest/mercuryworkshop-scramjet-2.0.0-alpha.tgz
@@ -758,8 +758,8 @@ packages:
   '@mercuryworkshop/bare-mux@2.1.8':
     resolution: {integrity: sha512-rI3S7Osyr2ZWmG6J6v3MLS1ZT269lx1DrAjM47q0aoBYnfgUZTRvZqY0Globb8ipTi02d5x6dTJBeUBt6dZsag==}
 
-  '@mercuryworkshop/libcurl-transport@1.5.1':
-    resolution: {integrity: sha512-tNyH1HuQIJRQ2sBVeFmHcIPf15Mv5v6Zq/qrOp3ReE5oBswT13MKLSybzu2VbVRo/QNud18nbKvVz3JeSre79g==}
+  '@mercuryworkshop/libcurl-transport@2.0.5':
+    resolution: {integrity: sha512-YkAPEAWTEUZZkEOejmRQJxNHw90+kNQnoiSqa5H2sExHBXXdGSXEtg7/35A53U8MDVaznpAwjVbXRONSsfatzw==}
 
   '@mercuryworkshop/scramjet@https://github.com/MercuryWorkshop/scramjet/releases/download/latest/mercuryworkshop-scramjet-2.0.0-alpha.tgz':
     resolution: {tarball: https://github.com/MercuryWorkshop/scramjet/releases/download/latest/mercuryworkshop-scramjet-2.0.0-alpha.tgz}
@@ -2166,8 +2166,8 @@ packages:
     resolution: {integrity: sha512-0OO4y2iOHix2W6ujICbKIaEQXvFQHue65vUG3pb5EUomzPI90z9hsA1VsO/dbIIpC53J8gxM9Q4Oho0jrCM/yA==}
     engines: {node: '>= 0.8.0'}
 
-  libcurl.js@0.7.3:
-    resolution: {integrity: sha512-svlEs42mmKocPKVsl+EViVPb/DuNRUecO+Fs7I3LOmu6YHfoBAfhTSmyCRg57H7QEFHgafZOf/TkA24s/i2AKg==}
+  libcurl.js@0.7.4:
+    resolution: {integrity: sha512-UpvVirvATP7fD0t4rnsxVRuUpPVIo2QvWj4+5JrMsd1KSEvYkON36+COOPAl88hPlGJddk+DfZRvyF7KG7YcSA==}
 
   libphonenumber-js@1.12.12:
     resolution: {integrity: sha512-aWVR6xXYYRvnK0v/uIwkf5Lthq9Jpn0N8TISW/oDTWlYB2sOimuiLn9Q26aUw4KxkJoiT8ACdiw44Y8VwKFIfQ==}
@@ -4113,9 +4113,9 @@ snapshots:
 
   '@mercuryworkshop/bare-mux@2.1.8': {}
 
-  '@mercuryworkshop/libcurl-transport@1.5.1':
+  '@mercuryworkshop/libcurl-transport@2.0.5':
     dependencies:
-      libcurl.js: 0.7.3
+      libcurl.js: 0.7.4
 
   '@mercuryworkshop/scramjet@https://github.com/MercuryWorkshop/scramjet/releases/download/latest/mercuryworkshop-scramjet-2.0.0-alpha.tgz':
     dependencies:
@@ -5670,7 +5670,7 @@ snapshots:
       prelude-ls: 1.1.2
       type-check: 0.3.2
 
-  libcurl.js@0.7.3: {}
+  libcurl.js@0.7.4: {}
 
   libphonenumber-js@1.12.12: {}
 
