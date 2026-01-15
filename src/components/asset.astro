@@ -25,17 +25,20 @@ const sorted = [...list].sort((a, b) => a.name.localeCompare(b.name));
           <div class="bg-background-overlay flex gap-1 rounded-lg p-1">
             <button
               data-view="grid"
-              class="bg-background text-text-header flex h-9 w-9 items-center justify-center rounded transition-colors">
+              class="bg-background text-text-header flex h-9 w-9 items-center justify-center rounded transition-colors"
+            >
               <i data-lucide="grid-3x3" class="h-4 w-4"></i>
             </button>
             <button
               data-view="compact"
-              class="text-text-secondary flex h-9 w-9 items-center justify-center rounded transition-colors">
+              class="text-text-secondary flex h-9 w-9 items-center justify-center rounded transition-colors"
+            >
               <i data-lucide="layout-grid" class="h-4 w-4"></i>
             </button>
             <button
               data-view="list"
-              class="text-text-secondary flex h-9 w-9 items-center justify-center rounded transition-colors">
+              class="text-text-secondary flex h-9 w-9 items-center justify-center rounded transition-colors"
+            >
               <i data-lucide="list" class="h-4 w-4"></i>
             </button>
           </div>
@@ -53,19 +56,22 @@ const sorted = [...list].sort((a, b) => a.name.localeCompare(b.name));
           </div>
           <button
             data-random
-            class="bg-background-overlay text-text-secondary flex h-10 items-center gap-2 rounded-lg px-3 text-sm">
+            class="bg-background-overlay text-text-secondary flex h-10 items-center gap-2 rounded-lg px-3 text-sm"
+          >
             <i data-lucide="shuffle" class="h-4 w-4"></i>
             Random
           </button>
           <button
             data-sort
-            class="bg-background-overlay text-text-secondary flex h-10 items-center gap-2 rounded-lg px-3 text-sm">
+            class="bg-background-overlay text-text-secondary flex h-10 items-center gap-2 rounded-lg px-3 text-sm"
+          >
             <i data-lucide="arrow-up-down" class="h-4 w-4"></i>
             <span>A-Z</span>
           </button>
           <button
             data-clear
-            class="bg-background-overlay text-text-secondary flex h-10 items-center gap-2 rounded-lg px-3 text-sm">
+            class="bg-background-overlay text-text-secondary flex h-10 items-center gap-2 rounded-lg px-3 text-sm"
+          >
             <i data-lucide="x" class="h-4 w-4"></i>
             Clear
           </button>
@@ -84,7 +90,8 @@ const sorted = [...list].sort((a, b) => a.name.localeCompare(b.name));
               data-name={g.name}
               data-bg={g.icon}
               class="card card-loading group bg-background-overlay relative flex h-44 cursor-pointer flex-col justify-end overflow-hidden rounded-lg transition-transform hover:scale-[1.02]"
-              style="animation: fadeIn 0.3s ease-out">
+              style="animation: fadeIn 0.3s ease-out"
+            >
               <div class="card-bg absolute inset-0 bg-cover bg-center opacity-70 transition-opacity group-hover:opacity-80" />
               <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
               <div class="relative z-10 p-4">

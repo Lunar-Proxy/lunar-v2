@@ -1,4 +1,3 @@
-
 import localForage from 'localforage';
 
 interface Bookmark {
@@ -115,10 +114,13 @@ const ConfigAPI = {
       })),
     );
 
-    return values.reduce((acc, { key, value }) => {
-      acc[key] = value;
-      return acc;
-    }, {} as Record<string, any>);
+    return values.reduce(
+      (acc, { key, value }) => {
+        acc[key] = value;
+        return acc;
+      },
+      {} as Record<string, any>,
+    );
   },
 };
 

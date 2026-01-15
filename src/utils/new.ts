@@ -6,6 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const serverEl = document.getElementById('sl');
   const refreshBtn = document.getElementById('refresh');
 
+  let clockInterval: ReturnType<typeof setInterval> | null = null;
+  let spinTimeout: ReturnType<typeof setTimeout> | null = null;
+
   function updateClock() {
     const now = new Date();
     let hours = now.getHours();
@@ -14,14 +17,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const ampm = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12 || 12;
 
-    if (hoursEl) hoursEl.textContent = hours.toString().padStart(2, '0');
-    if (minutesEl) minutesEl.textContent = minutes.toString().padStart(2, '0');
-    if (secondsEl) secondsEl.textContent = seconds.toString().padStart(2, '0');
-    if (ampmEl) ampmEl.textContent = ampm;
+    hoursEl && (hoursEl.textContent = hours.toString().padStart(2, '0'));
+    minutesEl && (minutesEl.textContent = minutes.toString().padStart(2, '0'));
+    secondsEl && (secondsEl.textContent = seconds.toString().padStart(2, '0'));
+    ampmEl && (ampmEl.textContent = ampm);
   }
-
-  setInterval(updateClock, 1000);
-  updateClock();
 
   async function pingServer(url: string) {
     const start = performance.now();
@@ -36,9 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
   async function updatePing() {
     if (!serverEl) return;
     serverEl.textContent = 'Pinging...';
-
     const result = await pingServer(window.location.origin);
-
     if (result.ok) {
       const color =
         result.latency >= 300
@@ -52,12 +50,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  refreshBtn?.addEventListener('click', () => {
+  function handleRefreshClick() {
+    if (!refreshBtn) return;
     refreshBtn.classList.add('animate-spin');
     updatePing().finally(() => {
-      setTimeout(() => refreshBtn.classList.remove('animate-spin'), 800);
+      if (spinTimeout) clearTimeout(spinTimeout);
+      spinTimeout = setTimeout(() => refreshBtn.classList.remove('animate-spin'), 800);
     });
-  });
+  }
 
+  function cleanup() {
+    if (clockInterval) clearInterval(clockInterval);
+    if (spinTimeout) clearTimeout(spinTimeout);
+    refreshBtn?.removeEventListener('click', handleRefreshClick);
+  }
+
+  // Start clock
+  clockInterval = setInterval(updateClock, 1000);
+  updateClock();
+
+  // Setup refresh button
+  refreshBtn?.addEventListener('click', handleRefreshClick);
+
+  // Initial ping
   updatePing();
+
+  // Cleanup on unload
+  window.addEventListener('unload', cleanup);
 });

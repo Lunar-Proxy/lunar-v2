@@ -5,7 +5,6 @@ createIcons({ icons });
   document.addEventListener(evt, () => createIcons({ icons }));
 });
 
-
 const input = document.getElementById('urlbar') as HTMLInputElement | null;
 const quickLinks: Record<string, string> = {
   'lunar://settings': 'Settings',
@@ -36,13 +35,13 @@ async function getSuggestions(query: string): Promise<string[]> {
 }
 
 function isMathExpr(str: string): boolean {
-  const v = str.trim();
+  const v = str.trim().replace(/x/g, '*');
   return /^[0-9+\-*/().%^√\s]+$/.test(v) && !/^[0-9.]+$/.test(v) && /[+\-*/%^√()]/.test(v);
 }
 
 function calcExpr(str: string): string | null {
   try {
-    const expr = str.replace(/√/g, 'Math.sqrt').replace(/\^/g, '**');
+    const expr = str.replace(/x/g, '*').replace(/√/g, 'Math.sqrt').replace(/\^/g, '**');
     const out = Function('"use strict";return(' + expr + ')')();
     return typeof out === 'number' && isFinite(out) ? out.toString() : null;
   } catch {
@@ -80,7 +79,12 @@ function setInputValue(val: string) {
   input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
 }
 
-function renderMenu(suggestions: string[], quick: [string, string][], math: string | null, query: string) {
+function renderMenu(
+  suggestions: string[],
+  quick: [string, string][],
+  math: string | null,
+  query: string,
+) {
   hideMenu();
   if (!input || !input.value.trim()) return;
   const max = 7;
@@ -91,32 +95,32 @@ function renderMenu(suggestions: string[], quick: [string, string][], math: stri
   const html: string[] = [];
   if (math) {
     html.push(`
-      <div class="flex items-center space-x-2 px-6 py-3 text-(--text-header) font-semibold cursor-pointer hover:bg-[#2a293f] hover:text-white rounded-md" data-value="${math}">
+      <div class="flex items-center space-x-2 px-6 py-3 text-[color:var(--text-header)] font-semibold cursor-pointer hover:bg-[#2a293f] hover:text-white rounded-md" data-value="${math}">
         <i data-lucide="calculator" class="h-5 w-5"></i><span>${math}</span>
       </div>
     `);
   }
   if (list.length) {
     html.push(
-      `<div class="px-5 py-2 text-xs uppercase tracking-wider text-(--text-secondary)">Results for <span class="font-bold text-white">${query}</span></div>`,
+      `<div class="px-5 py-2 text-xs uppercase tracking-wider text-[color:var(--text-secondary)]">Results for <span class="font-bold text-white">${query}</span></div>`,
       ...list.map(
         r => `
-      <div class="flex items-center space-x-3 px-6 py-2 text-(--text-header) cursor-pointer hover:bg-[#2a293f] hover:text-white rounded-md transition" data-value="${r}">
-        <i data-lucide="search" class="h-4 w-4 text-(--text-secondary)"></i><span>${r}</span>
+      <div class="flex items-center space-x-3 px-6 py-2 text-[color:var(--text-header)] cursor-pointer hover:bg-[#2a293f] hover:text-white rounded-md transition" data-value="${r}">
+        <i data-lucide="search" class="h-4 w-4 text-[color:var(--text-secondary)]"></i><span>${r}</span>
       </div>`,
       ),
     );
   }
   if (showQuick && quick.length) {
     html.push(
-      `<div class="px-5 py-2 text-xs uppercase tracking-wider text-(--text-secondary) border-t border-(--border)">Lunar Links</div>`,
+      `<div class="px-5 py-2 text-xs uppercase tracking-wider text-[color:var(--text-secondary)] border-t border-[color:var(--border)]">Lunar Links</div>`,
       ...quick.map(
         ([k, l]) => `
-        <div class="flex items-center justify-between px-6 py-2 text-(--text-header) cursor-pointer hover:bg-[#2a293f] hover:text-white rounded-md transition" data-value="${k}">
+        <div class="flex items-center justify-between px-6 py-2 text-[color:var(--text-header)] cursor-pointer hover:bg-[#2a293f] hover:text-white rounded-md transition" data-value="${k}">
           <div class="flex items-center space-x-2">
             <i data-lucide="globe" class="h-5 w-5 text-purple-400"></i><span>${k}</span>
           </div>
-          <span class="text-xs text-(--text-secondary)">${l}</span>
+          <span class="text-xs text-[color:var(--text-secondary)]">${l}</span>
         </div>
       `,
       ),
@@ -190,11 +194,11 @@ if (input) {
   });
 
   input.addEventListener('keydown', e => {
-  if (e.key === 'Enter') {
-    e.preventDefault();
-    closeMenu();
-  }
-});
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      closeMenu();
+    }
+  });
 
   window.addEventListener('resize', () => {
     const d = document.getElementById('suggestions') as HTMLDivElement | null;

@@ -220,7 +220,7 @@ export class SettingsManager {
         lastSection = section;
       });
 
-      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 2) {
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 2) {
         current = (lastSection as Element | null)?.getAttribute('data-section') || current;
       }
       if (current !== active) {

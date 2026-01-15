@@ -1,30 +1,22 @@
-/** @type {import("prettier").Config} */
+/** @type {import('prettier').Config} */
 export default {
   printWidth: 100,
   tabWidth: 2,
   useTabs: false,
   semi: true,
   singleQuote: true,
-  quoteProps: 'as-needed',
   trailingComma: 'es5',
   bracketSpacing: true,
-  bracketSameLine: false,
   arrowParens: 'avoid',
   endOfLine: 'lf',
-  embeddedLanguageFormatting: 'auto',
-
-  plugins: [
-    'prettier-plugin-astro',
-    'prettier-plugin-tailwindcss',
-  ],
-
+  plugins: ['prettier-plugin-astro', 'prettier-plugin-tailwindcss'],
   overrides: [
     {
       files: '*.astro',
       options: {
         parser: 'astro',
         printWidth: 120,
-        bracketSameLine: true,
+        bracketSpacing: true,
       },
     },
     {
@@ -43,16 +35,6 @@ export default {
       },
     },
     {
-  files: ['*.md', '*.mdx'],
-  options: {
-    parser: 'markdown',
-    printWidth: 80,
-    proseWrap: 'preserve',
-    singleQuote: false,
-    plugins: [],
-  },
-},
-    {
       files: ['*.json', '.prettierrc', 'tsconfig*.json'],
       options: {
         parser: 'json',
@@ -70,12 +52,12 @@ export default {
       },
     },
     {
-      files: ['*.yaml', '*.yml'],
+      files: ['*.md', '*.mdx'],
       options: {
-        parser: 'yaml',
-        singleQuote: false,
-        bracketSpacing: true,
+        parser: 'markdown',
         printWidth: 80,
+        proseWrap: 'preserve',
+        singleQuote: false,
       },
     },
     {
@@ -96,20 +78,12 @@ export default {
       },
     },
     {
-  files: '*.svg',
-  options: {
-    parser: 'html',
-    printWidth: 120,
-    htmlWhitespaceSensitivity: 'ignore',
-    plugins: [],
-  },
-},
-    {
-      files: ['*.config.ts', 'astro.config.*'],
+      files: ['*.yaml', '*.yml'],
       options: {
-        parser: 'typescript',
-        printWidth: 120,
-        trailingComma: 'es5',
+        parser: 'yaml',
+        singleQuote: false,
+        bracketSpacing: true,
+        printWidth: 80,
       },
     },
   ],

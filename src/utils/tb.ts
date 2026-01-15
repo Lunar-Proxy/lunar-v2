@@ -18,7 +18,8 @@ const internalRoutes: Record<string, string> = {
   'lunar://apps': '/sci',
 };
 const defaultIcon = '/a/moon.svg';
-const faviconApi = 'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64&url=';
+const faviconApi =
+  'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64&url=';
 const bmConnection = new baremux.BareMuxConnection(`/bm/worker.js`);
 const bmClient = new baremux.BareClient();
 
@@ -64,7 +65,7 @@ async function encodeProxyUrl(url: string): Promise<string> {
   return url;
 }
 
-function truncate(str: string, len = 18): string {
+function truncate(str: string, len = 12): string {
   return str.length > len ? str.slice(0, len) + '…' : str;
 }
 
@@ -118,7 +119,9 @@ function pollTitle(tab: Tab) {
       const doc = tab.iframe.contentDocument;
       if (!doc) return;
       let title = doc.title || '';
-      try { title = decodeURIComponent(title); } catch {}
+      try {
+        title = decodeURIComponent(title);
+      } catch {}
       title = title.trim();
       if (title && title !== lastTitle) {
         lastTitle = title;
@@ -133,7 +136,9 @@ async function handleFrameLoad(tab: Tab) {
   try {
     const doc = tab.iframe.contentDocument;
     let pageTitle = doc?.title || '';
-    try { pageTitle = decodeURIComponent(pageTitle); } catch {}
+    try {
+      pageTitle = decodeURIComponent(pageTitle);
+    } catch {}
     tab.title = pageTitle.trim() || 'New Tab';
     updateTabEl(tab, 'title');
     pollTitle(tab);
@@ -167,7 +172,8 @@ function createFrame(id: number, src?: string): HTMLIFrameElement {
   frame.addEventListener('load', () => {
     try {
       const win = frame.contentWindow;
-      if (!win) return;
+      const doc = frame.contentDocument;
+      if (!win || !doc) return;
       win.open = (openUrl?: string | URL) => {
         if (!openUrl) return null;
         console.log('opening in new tab:', openUrl.toString());
@@ -183,17 +189,17 @@ function createFrame(id: number, src?: string): HTMLIFrameElement {
 
 function getTabClass(active: boolean): string {
   const base =
-    'tab flex items-center justify-between h-10 min-w-[220px] px-3 py-2 rounded-t-2xl cursor-pointer select-none transition-all duration-200 shadow-sm relative z-10 mx-1';
+    'tab flex items-center justify-between h-10 min-w-[180px] px-4 py-2 rounded-t-xl cursor-pointer select-none transition-all duration-200 relative z-10 mx-0.5 border border-b-0 border-[color:var(--border)]';
   return active
-    ? `${base} bg-[#34324d] shadow-[0_0_8px_#5c59a5] border-t-2 border-[#5c59a5]`
-    : `${base} bg-[#2a283e] hover:bg-[#323048]`;
+    ? `${base} bg-[color:var(--background)] shadow-[0_4px_16px_#23213660] text-[color:var(--text-header)] font-bold`
+    : `${base} bg-[color:var(--background-overlay)] hover:bg-[color:var(--background)] text-[color:var(--text-secondary)] opacity-70`;
 }
 
 function createTabEl(tab: Tab): HTMLDivElement {
   const el = document.createElement('div');
-  el.className = getTabClass(tab.id === activeId);
+  el.className = getTabClass(tab.id === activeId) + ' flex items-center justify-between';
   const left = document.createElement('div');
-  left.className = 'flex items-center gap-2 overflow-hidden h-full';
+  left.className = 'flex items-center gap-2 overflow-hidden h-full items-center';
   const icon = document.createElement('img');
   icon.className = 'tab-favicon';
   icon.src = tab.favicon;
@@ -202,15 +208,23 @@ function createTabEl(tab: Tab): HTMLDivElement {
   icon.style.width = '18px';
   icon.style.height = '18px';
   icon.style.objectFit = 'contain';
+  icon.style.marginRight = '4px';
   const title = document.createElement('span');
-  title.className = 'tab-title truncate';
+  title.className = 'tab-title truncate text-sm font-medium text-[color:var(--text-header)]';
+  title.style.maxWidth = '90px';
+  title.style.overflow = 'hidden';
+  title.style.textOverflow = 'ellipsis';
+  title.style.whiteSpace = 'nowrap';
   title.textContent = truncate(tab.title);
   left.append(icon, title);
   const closeBtn = document.createElement('button');
-  closeBtn.className = 'flex items-center justify-center w-7 h-7 rounded-md bg-transparent hover:bg-red-500/20 text-gray-400 hover:text-red-400 transition-all duration-200 text-xl font-bold ml-2';
-  closeBtn.style.marginTop = '4px';
+  closeBtn.className =
+    'flex items-center justify-center w-6 h-6 rounded-full bg-transparent hover:bg-[color:var(--background-disabled)] text-[color:var(--text-secondary)] hover:text-red-400 transition-all duration-200 text-base font-bold';
   closeBtn.textContent = '×';
-  closeBtn.onclick = e => { e.stopPropagation(); closeTab(tab.id); };
+  closeBtn.onclick = e => {
+    e.stopPropagation();
+    closeTab(tab.id);
+  };
   el.append(left, closeBtn);
   el.onclick = () => switchTab(tab.id);
   tab.el = el;
@@ -327,7 +341,9 @@ function switchTab(id: number) {
       const doc = activeTab.iframe.contentDocument;
       if (doc) {
         let title = doc.title || '';
-        try { title = decodeURIComponent(title); } catch {}
+        try {
+          title = decodeURIComponent(title);
+        } catch {}
         title = title.trim();
         activeTab.title = title || 'New Tab';
         updateTabEl(activeTab, 'title');
@@ -372,7 +388,9 @@ function switchTab(id: number) {
         const doc = tab.iframe.contentDocument;
         if (doc) {
           let title = doc.title || '';
-          try { title = decodeURIComponent(title); } catch {}
+          try {
+            title = decodeURIComponent(title);
+          } catch {}
           title = title.trim();
           if (title && title !== tab.title) {
             tab.title = title;

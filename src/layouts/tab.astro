@@ -43,13 +43,15 @@ const menuSections = [
     <div class="w-full">
       <div
         id="tab-wrapper"
-        class="relative isolate flex h-14 items-end overflow-hidden rounded-t-2xl bg-[#1c1a2b] px-2">
+        class="relative isolate flex h-14 items-end overflow-hidden rounded-t-2xl bg-[#1c1a2b] px-2"
+      >
         <div class="flex w-full items-center gap-2">
           <div id="tcontainer" class="flex max-w-full flex-nowrap gap-2 overflow-x-auto"></div>
           <button
             id="add"
             class="relative -top-1/2 flex h-8 w-8 items-center justify-center rounded-md text-gray-400 transition hover:bg-gray-700 hover:text-white"
-            aria-label="Add new tab">
+            aria-label="Add new tab"
+          >
             <i data-lucide="plus" class="h-4 w-4"></i>
           </button>
         </div>
@@ -65,8 +67,12 @@ const menuSections = [
                   'flex h-8 w-8 items-center justify-center rounded-md text-gray-400 transition hover:bg-gray-700 hover:text-white',
                   btnClass,
                 ]}
-                aria-label={id}>
-                <i data-lucide={icon} class:list={[ 'h-4 w-4', iconClass, id === 'refresh' ? 'group-hover:animate-spin' : '' ]} />
+                aria-label={id}
+              >
+                <i
+                  data-lucide={icon}
+                  class:list={['h-4 w-4', iconClass, id === 'refresh' ? 'group-hover:animate-spin' : '']}
+                />
               </button>
             ))
           }
@@ -86,13 +92,15 @@ const menuSections = [
             <button
               id="fav"
               class="absolute top-1/2 right-1 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-md text-gray-400 transition hover:bg-gray-700 hover:text-white"
-              aria-label="Bookmark this page">
+              aria-label="Bookmark this page"
+            >
               <i data-lucide="bookmark" class="h-[18px] w-[18px] transition-transform duration-300 ease-out"></i>
             </button>
 
             <div
               id="loading-bar"
-              class="pointer-events-none fixed inset-x-0 z-50 hidden h-[3px] w-screen rounded-full bg-[#5c59a5] opacity-0 transition-all duration-200">
+              class="pointer-events-none fixed inset-x-0 z-50 hidden h-[3px] w-screen rounded-full bg-[#5c59a5] opacity-0 transition-all duration-200"
+            >
             </div>
           </div>
         </div>
@@ -100,7 +108,8 @@ const menuSections = [
         <button
           id="menubtn"
           class="z-[110] flex h-8 w-8 items-center justify-center rounded-md text-gray-400 transition hover:bg-gray-700 hover:text-white"
-          aria-label="Open menu">
+          aria-label="Open menu"
+        >
           <i data-lucide="menu" class="h-5 w-5"></i>
         </button>
       </div>
@@ -108,7 +117,8 @@ const menuSections = [
       <div class="relative">
         <div
           id="menu"
-          class="absolute top-full right-0 z-[1000] mt-2 hidden w-64 divide-y divide-[#3a3758] overflow-hidden rounded-2xl border border-[#3a3758] bg-[#1f1f30] font-medium shadow-2xl backdrop-blur-md">
+          class="absolute top-full right-0 z-[1000] mt-2 hidden w-64 divide-y divide-[#3a3758] overflow-hidden rounded-2xl border border-[#3a3758] bg-[#1f1f30] font-medium shadow-2xl backdrop-blur-md"
+        >
           {
             menuSections.map(section => (
               <div class="flex flex-col py-1">

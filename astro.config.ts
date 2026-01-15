@@ -47,12 +47,15 @@ export function searchBackend(): Plugin {
         }
 
         try {
-          const response = await fetch(`https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}`, {
-            headers: {
-              'User-Agent': 'Mozilla/5.0',
-              Accept: 'application/json',
+          const response = await fetch(
+            `https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}`,
+            {
+              headers: {
+                'User-Agent': 'Mozilla/5.0',
+                Accept: 'application/json',
+              },
             },
-          });
+          );
 
           if (!response.ok) {
             res.statusCode = response.status;
@@ -152,7 +155,14 @@ export default defineConfig({
       WispServer(),
       searchBackend(),
       obfuscatorPlugin({
-        exclude: ['tmp/**', 'data/**', '**/tmp/**', '**/data/**', 'node_modules/**', '**/node_modules/**'],
+        exclude: [
+          'tmp/**',
+          'data/**',
+          '**/tmp/**',
+          '**/data/**',
+          'node_modules/**',
+          '**/node_modules/**',
+        ],
         apply: 'build',
         debugger: false,
         options: {
