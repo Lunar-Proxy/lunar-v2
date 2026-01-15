@@ -211,13 +211,18 @@ export class SettingsManager {
 
     const update = () => {
       let current = 'privacy';
+      let lastSection: Element | null = null;
       sections.forEach(section => {
         const rect = section.getBoundingClientRect();
         if (rect.top <= 120) {
           current = section.getAttribute('data-section') || current;
         }
+        lastSection = section;
       });
 
+      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 2) {
+        current = (lastSection as Element | null)?.getAttribute('data-section') || current;
+      }
       if (current !== active) {
         active = current;
         items.forEach(item => {

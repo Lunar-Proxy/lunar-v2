@@ -329,14 +329,32 @@ function switchTab(id: number) {
         let title = doc.title || '';
         try { title = decodeURIComponent(title); } catch {}
         title = title.trim();
-        if (title) {
-          activeTab.title = title;
-          updateTabEl(activeTab, 'title');
+        activeTab.title = title || 'New Tab';
+        updateTabEl(activeTab, 'title');
+
+        const pathname = new URL(doc.location.href || '', location.origin).pathname;
+        const decoded = decodeProxyUrl(pathname);
+        if (decoded) {
+          fetchFavicon(decoded).then(icon => {
+            activeTab.favicon = icon;
+            updateTabEl(activeTab, 'icon');
+          });
+        } else {
+          activeTab.favicon = defaultIcon;
+          updateTabEl(activeTab, 'icon');
+        }
+
+        // Update urlbar immediately
+        const urlInput = document.getElementById('urlbar') as HTMLInputElement | null;
+        if (urlInput) {
+          const route = Object.entries(internalRoutes).find(([, v]) => v === pathname);
+          urlInput.value = route ? route[0] : decodeProxyUrl(pathname);
         }
       }
     } catch {}
   }
 
+  // Continue to watch for URL changes as before
   const urlInput = document.getElementById('urlbar') as HTMLInputElement | null;
   urlWatcher = setInterval(() => {
     try {
@@ -359,6 +377,18 @@ function switchTab(id: number) {
           if (title && title !== tab.title) {
             tab.title = title;
             updateTabEl(tab, 'title');
+          }
+
+          const pathname = new URL(doc.location.href || '', location.origin).pathname;
+          const decoded = decodeProxyUrl(pathname);
+          if (decoded) {
+            fetchFavicon(decoded).then(icon => {
+              tab.favicon = icon;
+              updateTabEl(tab, 'icon');
+            });
+          } else {
+            tab.favicon = defaultIcon;
+            updateTabEl(tab, 'icon');
           }
         }
       }
