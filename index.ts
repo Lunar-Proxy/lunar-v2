@@ -79,11 +79,15 @@ await app.register(fastifyMiddie);
 const staticFileOptions: FastifyStaticOptions = {
   decorateReply: true,
   setHeaders(res: SetHeadersResponse, filePath: string) {
-    const hashed = /\.[a-f0-9]{8,}\.(js|css|woff2?|png|jpe?g|svg|webp|gif)$/i.test(filePath);
-    res.setHeader(
-      'Cache-Control',
-      hashed ? 'public, max-age=31536000, immutable' : 'public, max-age=3600',
-    );
+    if (/\.(html?|astro)$/i.test(filePath)) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    } else {
+      const hashed = /[.\-_][a-f0-9]{8,}\.(js|css|woff2?|png|jpe?g|svg|webp|gif)$/i.test(filePath);
+      res.setHeader(
+        'Cache-Control',
+        hashed ? 'public, max-age=31536000, immutable' : 'public, max-age=3600',
+      );
+    }
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'SAMEORIGIN');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');

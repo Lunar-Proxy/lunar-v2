@@ -80,9 +80,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     TabManager.openTab('./st');
   });
 
-  cloak.addEventListener('click', () => {
+  cloak.addEventListener('click', async () => {
     if (top?.location.href === 'about:blank') return;
     const win = window.open();
+    if (top && top.window) {
+      top.window.location.href = (await ConfigAPI.get('panicLoc')) || 'https://google.com';
+    }
     if (!win) return;
 
     const iframe = win.document.createElement('iframe');

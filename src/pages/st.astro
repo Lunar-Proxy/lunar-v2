@@ -398,12 +398,20 @@ import ImportLucide from '../layouts/lucide.astro';
       import('../utils/st').then(({ SettingsManager }) => SettingsManager.init());
       import('../utils/config').then(({ default: ConfigAPI }) => {
         document.querySelector('[data-about-blank]')?.addEventListener('click', async () => {
-          const url = ((await ConfigAPI.get('aboutBlankUrl')) as string) || 'https://classroom.google.com';
-          const win = window.open('about:blank', '_blank');
-          if (win) {
-            win.location = 'about:blank';
-            window.location.href = url;
+          if (top?.location.href === 'about:blank') return;
+          const win = top?.window.open();
+          if (top && top.window) {
+            top.window.location.href = (await ConfigAPI.get('panicLoc')) || 'https://google.com';
           }
+          if (!win) return;
+
+          const iframe = win.document.createElement('iframe');
+          iframe.style.cssText = 'width:100%;height:100vh;border:0;margin:0;padding:0';
+          iframe.src = location.origin + '/';
+
+          win.document.body.style.margin = '0';
+          win.document.title = 'about:blank';
+          win.document.body.appendChild(iframe);
         });
       });
     </script>
