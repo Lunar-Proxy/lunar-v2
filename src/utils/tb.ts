@@ -132,7 +132,6 @@ function pollTitle(tab: Tab) {
 async function handleFrameLoad(tab: Tab) {
   try {
     const doc = tab.iframe.contentDocument;
-    // Fix: decode page title if encoded
     let pageTitle = doc?.title || '';
     try { pageTitle = decodeURIComponent(pageTitle); } catch {}
     tab.title = pageTitle.trim() || 'New Tab';
@@ -171,7 +170,10 @@ function createFrame(id: number, src?: string): HTMLIFrameElement {
       if (!win) return;
       win.open = (openUrl?: string | URL) => {
         if (!openUrl) return null;
-        encodeProxyUrl(openUrl.toString()).then(openTab);
+        console.log('opening in new tab:', openUrl.toString());
+        encodeProxyUrl(openUrl.toString()).then(proxyUrl => {
+          openTab(proxyUrl);
+        });
         return null;
       };
     } catch {}
