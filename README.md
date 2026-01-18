@@ -1,78 +1,109 @@
 ![Lunar](./lunar.svg)
 
-[![Join our Discord](https://skillicons.dev/icons?i=discord)](https://discord.gg/fuPtWjYuf8)
-[![View on GitHub](https://skillicons.dev/icons?i=github)](https://github.com/lunar-proxy/lunar-v2)
+<p align="center">
+  <a href="https://discord.gg/fuPtWjYuf8">
+    <img src="https://skillicons.dev/icons?i=discord" alt="Join our Discord">
+  </a>
+  &nbsp;
+  <a href="https://github.com/lunar-proxy/lunar-v2">
+    <img src="https://skillicons.dev/icons?i=github" alt="View on GitHub">
+  </a>
+</p>
 
 #
 
-Lunar v2 is feature packed modern, browser-inspired tabbed web proxy bypassing
-censorship  
-while having a familiar, browser like design.
+**Lunar v2** is a feature-packed, modern, browser-inspired tabbed web proxy designed to bypass censorship while maintaining a familiar, browser-like experience.
+
+---
 
 ## Features
 
-- Browser like feel
-- Fast Speeds
-- About:blank cloaking
-- Ad Blocking
-- Tab System
-- Keyboard Shortcuts
-- So much more!
+- Browser like UI and navigation
+- Fast performance
+- `about:blank` cloaking
+- Built in ad blocking
+- Tab system
+- Keyboard shortcuts
+- And much more
+
+---
 
 ## Deployment Options
 
-> [!NOTE]  
-> Lunar cannot be deployed to Netlify, Vercel, GitHub Pages, or any  
-> other static hosting platform.
+> **Note**  
+> Lunar **cannot** be deployed to Netlify, Vercel, GitHub Pages, or any other static hosting platform.
 
-<div>
+<p>
   <a href="https://render.com/deploy?repo=https://github.com/lunar-proxy/lunar-v2">
     <img src="https://raw.githubusercontent.com/BinBashBanana/deploy-buttons/main/buttons/remade/render.svg" alt="Deploy to Render">
   </a>
+  &nbsp;
   <a href="https://app.koyeb.com/services/deploy?type=git&repository=github.com/lunar-proxy/lunar-v2&builder=dockerfile&instance_type=free&regions=was&ports=8080%3Bhttp%3B%2F">
     <img src="https://binbashbanana.github.io/deploy-buttons/buttons/remade/koyeb.svg" alt="Deploy to Koyeb">
   </a>
-</div>
+</p>
 
-### Deployment via Terminal
+---
 
-> [!NOTE]  
-> Before deploying, install [git](https://git-scm.com/downloads) and  
-> [node.js](https://nodejs.org/en/download/prebuilt-installer). Then, install  
-> pnpm with `npm install -g pnpm`.
+## Deployment via Terminal
 
-#### Production
+> **Note**  
+> Before deploying, install:
+> - [Git](https://git-scm.com/downloads)
+> - [Node.js](https://nodejs.org/en/download/prebuilt-installer)
+>
+> Then install **pnpm**:
+> ```bash
+> npm install -g pnpm
+> ```
 
-1. Clone the Lunar v2 repository:
+### Production
 
-   git clone https://github.com/lunar-proxy/lunar-v2 cd lunar-v2
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/lunar-proxy/lunar-v2
+   cd lunar-v2
+   ```
 
-2. Install dependencies and start Lunar v2:
+2. Install dependencies and start the server:
+   ```bash
+   pnpm install
+   pnpm start
+   ```
 
-   pnpm i && pnpm start
+### Development
 
-#### Development
+If you are actively developing Lunar v2, use the development server to avoid constant rebuilds:
 
-If you’re making changes to Lunar v2, use the development setup to avoid  
-rebuilding repeatedly:
+```bash
+pnpm install
+pnpm dev
+```
 
-       pnpm install && pnpm dev
+---
 
 ## Contributing
 
-If you would like to make a change to Lunar, please read  
-[the contributing guide](CONTRIBUTING.md) before committing.
+Interested in contributing?  
+Please read the [Contributing Guide](CONTRIBUTING.md) before submitting changes.
+
+---
 
 ## Support
 
-If you need help, please make a  
-[GitHub Issue](https://github.com/lunar-proxy/lunar-v2/issues) or ask in  
-[Our Discord](https://discord.gg/fuPtWjYuf8).
+Need help or ran into an issue?
+
+- Open a [GitHub Issue](https://github.com/lunar-proxy/lunar-v2/issues)
+- Ask for help in our [Discord server](https://discord.gg/fuPtWjYuf8)
+
+---
 
 ## Credits
 
-Thanks to everybody who has contributed to Lunar! ❤️
+Huge thanks to everyone who has contributed to Lunar.
 
-<a href="https://github.com/lunar-proxy/lunar-v2/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=lunar-proxy/lunar-v2" />
-</a>
+<p>
+  <a href="https://github.com/lunar-proxy/lunar-v2/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=lunar-proxy/lunar-v2" alt="Contributors">
+  </a>
+</p>
