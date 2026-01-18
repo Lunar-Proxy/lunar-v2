@@ -56,33 +56,7 @@ const ConfigAPI = {
       panicLoc: 'https://google.com',
       panicKey: '`',
       wispUrl: wispUrlDefault,
-      bm: [
-        {
-          name: 'Youtube',
-          logo: 'https://www.youtube.com/favicon.ico',
-          redir: 'https://www.youtube.com',
-        },
-        {
-          name: 'Google',
-          logo: 'https://www.google.com/favicon.ico',
-          redir: 'https://www.google.com',
-        },
-        {
-          name: 'X',
-          logo: 'https://www.x.com/favicon.ico',
-          redir: 'https://www.x.com',
-        },
-        {
-          name: 'Spotify',
-          logo: 'https://www.spotify.com/favicon.ico',
-          redir: 'https://www.spotify.com',
-        },
-        {
-          name: 'Discord',
-          logo: 'https://www.discord.com/favicon.ico',
-          redir: 'https://www.discord.com',
-        },
-      ],
+      bm: [],
     };
 
     const keys = Object.keys(defaults) as ConfigKey[];

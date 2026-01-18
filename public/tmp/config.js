@@ -1,20 +1,19 @@
-function encode(str) {
-  if (!str) return '';
-  const reversed = str.toString().split('').reverse().join('');
-  return encodeURIComponent(reversed);
-}
+const encode = (data) => {
+  const idx = data.indexOf('?');
+  let path = idx === -1 ? data : data.slice(0, idx);
+  let query = idx === -1 ? '' : data.slice(idx);
+  let encPath = encodeURIComponent(path).replace(/%([0-9A-Fa-f]{2})/g, (_, hex) => `~${hex}`).split('').reverse().join('');
+  return encPath + query;
+};
 
-function decode(encoded) {
-  if (!encoded) return '';
-  try {
-    const qIndex = encoded.indexOf('?');
-    const path = qIndex >= 0 ? encoded.slice(0, qIndex) : encoded;
-    const query = qIndex >= 0 ? encoded.slice(qIndex) : '';
-    return decodeURIComponent(path).split('').reverse().join('') + query;
-  } catch {
-    return encoded;
-  }
-}
+const decode = (encoded) => {
+  const idx = encoded.indexOf('?');
+  let encPath = idx === -1 ? encoded : encoded.slice(0, idx);
+  let query = idx === -1 ? '' : encoded.slice(idx);
+  let path = decodeURIComponent(encPath.split('').reverse().join('').replace(/~([0-9A-Fa-f]{2})/g, '%$1'));
+  return path + query;
+};
+
 
 tmpConfig = {
   prefix: '/v1/tmp/',
