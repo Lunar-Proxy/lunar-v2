@@ -360,7 +360,6 @@ function switchTab(id: number) {
           updateTabEl(activeTab, 'icon');
         }
 
-        // Update urlbar immediately
         const urlInput = document.getElementById('urlbar') as HTMLInputElement | null;
         if (urlInput) {
           const route = Object.entries(internalRoutes).find(([, v]) => v === pathname);
@@ -370,7 +369,6 @@ function switchTab(id: number) {
     } catch {}
   }
 
-  // Continue to watch for URL changes as before
   const urlInput = document.getElementById('urlbar') as HTMLInputElement | null;
   urlWatcher = setInterval(() => {
     try {
@@ -384,7 +382,6 @@ function switchTab(id: number) {
         urlInput.value = route ? route[0] : decodeProxyUrl(pathname);
       }
       if (tab) {
-        // Also update title immediately on URL change
         const doc = tab.iframe.contentDocument;
         if (doc) {
           let title = doc.title || '';

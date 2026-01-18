@@ -14,90 +14,123 @@ self.addEventListener('message', event => {
 });
 
 const BLOCK_RULES = [
+  '**://pagead2.googlesyndication.com/**',
+  '**://pagead2.googleadservices.com/**',
+  '**://afs.googlesyndication.com/**',
+  '**://stats.g.doubleclick.net/**',
   '**://*.doubleclick.net/**',
   '**://*.googlesyndication.com/**',
-  '**://*.google-analytics.com/**',
-  '**://*.googletagmanager.com/**',
-  '**://*.googletagservices.com/**',
   '**://adservice.google.com/**',
-  '**://pagead2.googlesyndication.com/**',
-  '**://youtube.com/api/stats/**',
-  '**://*.facebook.net/**',
-  '**://connect.facebook.net/**',
-  '**://graph.facebook.com/**',
+  '**://*.media.net/**',
+  '**://adservetx.media.net/**',
   '**://*.amazon-adsystem.com/**',
-  '**://ads.twitter.com/**',
-  '**://analytics.twitter.com/**',
-  '**://bat.bing.com/**',
-  '**://clarity.ms/**',
-  '**://*.adnxs.com/**',
-  '**://*.openx.net/**',
-  '**://*.rubiconproject.com/**',
-  '**://*.criteo.com/**',
-  '**://*.taboola.com/**',
-  '**://*.outbrain.com/**',
-  '**://*.pubmatic.com/**',
-  '**://*.moatads.com/**',
-  '**://*.smartadserver.com/**',
-  '**://*.scorecardresearch.com/**',
-  '**://*.quantserve.com/**',
-  '**://*.chartbeat.net/**',
+  '**://*.adcolony.com/**',
+  '**://*.unityads.unity3d.com/**',
+  '**://*.facebook.com/**',
+  '**://*.facebook.net/**',
+  '**://*.ads-twitter.com/**',
+  '**://ads-api.twitter.com/**',
+  '**://*.linkedin.com/**',
+  '**://*.pinterest.com/**',
+  '**://*.reddit.com/**',
+  '**://*.redditmedia.com/**',
+  '**://*.tiktok.com/**',
+  '**://*.byteoversea.com/**',
+  '**://*.yahoo.com/**',
+  '**://*.yahooinc.com/**',
+  '**://*.yandex.ru/**',
+  '**://*.yandex.net/**',
   '**://*.hotjar.com/**',
-  '**://*.mixpanel.com/**',
-  '**://*.segment.io/**',
-  '**://*.amplitude.com/**',
-  '**/ads/**',
-  '**/ad/**',
-  '**/advert/**',
-  '**/advertising/**',
-  '**/analytics/**',
-  '**/track/**',
-  '**/tracking/**',
-  '**/pixel/**',
-  '**/beacon/**',
-  '**/events/**',
-  '**/sponsored/**',
-  '**/sponsered/**',
-  '**/sponsor/**',
-  '**/sponsorship/**',
-  '**/promoted/**',
-  '**/promotion/**',
-  '**/promo/**',
-  '**/paid/**',
-  '**/partner/**',
-  '**/partners/**',
-  '**/brand/**',
-  '**/branded/**',
-  '**/native/**',
-  '**/*?*sponsored*',
-  '**/*?*promoted*',
-  '**/*?*promo*',
-  '**/*?*ad=*',
-  '**/*?*ads=*',
-  '**/*?*utm_*',
+  '**://*.hotjar.io/**',
+  '**://*.mouseflow.com/**',
+  '**://*.freshmarketer.com/**',
+  '**://*.luckyorange.com/**',
+  '**://stats.wp.com/**',
+  '**://*.bugsnag.com/**',
+  '**://*.sentry.io/**',
+  '**://*.sentry-cdn.com/**',
+  '**://*.realme.com/**',
+  '**://*.realmemobile.com/**',
+  '**://*.xiaomi.com/**',
+  '**://*.miui.com/**',
+  '**://*.oppomobile.com/**',
+  '**://*.hicloud.com/**',
+  '**://*.oneplus.net/**',
+  '**://*.oneplus.cn/**',
+  '**://*.samsung.com/**',
+  '**://*.2o7.net/**',
+  '**://*.apple.com/**',
+  '**://*.icloud.com/**',
+  '**://*.mzstatic.com/**',
+  '**://*.google-analytics.com/**',
+  '**://analytics.google.com/**',
+  '**://ssl.google-analytics.com/**',
+  '**://click.googleanalytics.com/**',
+  '**/ads.js',
+  '**/ad.js',
+  '**/analytics.js',
+  '**/ga.js',
+  '**/gtag.js',
+  '**/gtm.js',
+  '**/fbevents.js',
+  '**/pixel.js'
 ];
 
-function wildcardToRegex(pattern) {
+function wildcardToRegex(p) {
   return new RegExp(
     '^' +
-      pattern
-        .replace(/[.+?^${}()|[\]\\]/g, '\\$&')
-        .replace(/\*\*/g, '.*')
-        .replace(/\*/g, '[^/]*') +
-      '$',
+      p.replace(/[.+?^${}()|[\]\\]/g, '\\$&')
+       .replace(/\*\*/g, '.*')
+       .replace(/\*/g, '[^/]*') +
+    '$',
     'i'
   );
 }
 
 const BLOCK_REGEX = BLOCK_RULES.map(wildcardToRegex);
-const isAdRequest = url => BLOCK_REGEX.some(rule => rule.test(url));
+
+function isAdRequest(url, request) {
+  const u = url.toLowerCase();
+
+  if (BLOCK_REGEX.some(r => r.test(url))) return true;
+
+  try {
+    const p = new URL(url);
+
+    if (
+      p.hostname === 'pagead2.googlesyndication.com' ||
+      p.hostname.endsWith('.googlesyndication.com') ||
+      p.hostname.endsWith('.doubleclick.net') ||
+      p.hostname.endsWith('.media.net')
+    ) return true;
+
+    if (request?.destination === 'script') {
+      if (
+        /ads|adservice|pagead|doubleclick|googlesyndication|analytics/i.test(p.pathname)
+      ) return true;
+    }
+
+    if (request?.destination === 'ping') return true;
+
+    if (p.search && /(utm_|gclid|fbclid|ad|ads|tracking|pixel)/i.test(p.search)) {
+      return true;
+    }
+  } catch {}
+
+  return false;
+}
 
 async function handleFetch(event) {
   await scramjet.loadConfig();
   const url = event.request.url;
-  if (adblockEnabled && isAdRequest(url)) return new Response(null, { status: 204 });
+
+  if (adblockEnabled && isAdRequest(url, event.request)) {
+    return new Response(null, { status: 204 });
+  }
+
   if (scramjet.route(event)) return scramjet.fetch(event);
   if (v.route(event)) return v.fetch(event);
+
   return fetch(event.request);
 }
 

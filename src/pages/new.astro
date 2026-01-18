@@ -1,7 +1,10 @@
 ---
 import '@/main.css';
-import { version } from '../../package.json';
 import Shortcuts from '../layouts/shortcuts.astro';
+import quotes from '../../public/a/json/quotes.json';
+
+const randomIndex = Math.floor(Math.random() * quotes.length);
+const randomQuote = quotes[randomIndex]?.quote || '';
 ---
 
 <!doctype html>
@@ -44,11 +47,14 @@ import Shortcuts from '../layouts/shortcuts.astro';
           >AM</span
         >
       </div>
+      <div class="mt-4 flex flex-col items-center justify-center text-center">
+        <span class="text-lg font-medium text-white/80 max-w-2xl mx-auto">{randomQuote}</span>
+      </div>
     </div>
     <Shortcuts />
     <div class="fixed right-5 bottom-5 z-50 flex items-center gap-1">
       <span class="px-3 py-1.5 text-[13px] font-medium text-white/50 transition-all duration-150 hover:text-white/90"
-        >v{version}</span
+        >v{VERSION}</span
       >
       <span class="h-3 w-px bg-white/20"></span>
       <a
