@@ -1,17 +1,22 @@
-const encode = (data) => {
-  const idx = data.indexOf('?');
-  let path = idx === -1 ? data : data.slice(0, idx);
-  let query = idx === -1 ? '' : data.slice(idx);
-  let encPath = encodeURIComponent(path).replace(/%([0-9A-Fa-f]{2})/g, (_, hex) => `~${hex}`).split('').reverse().join('');
-  return encPath + query;
+
+const encode = (url) => {
+  if (!url) return url;
+  let r = '';
+  for (let i = 0; i < url.length; i++) {
+    r += i % 2 ? String.fromCharCode(url.charCodeAt(i) ^ 7) : url[i];
+  }
+  return encodeURIComponent(r);
 };
 
-const decode = (encoded) => {
-  const idx = encoded.indexOf('?');
-  let encPath = idx === -1 ? encoded : encoded.slice(0, idx);
-  let query = idx === -1 ? '' : encoded.slice(idx);
-  let path = decodeURIComponent(encPath.split('').reverse().join('').replace(/~([0-9A-Fa-f]{2})/g, '%$1'));
-  return path + query;
+const decode = (url) => {
+  if (!url) return url;
+  const [input, ...search] = url.split('?');
+  let r = '';
+  const d = decodeURIComponent(input);
+  for (let i = 0; i < d.length; i++) {
+    r += i % 2 ? String.fromCharCode(d.charCodeAt(i) ^ 7) : d[i];
+  }
+  return r + (search.length ? '?' + search.join('?') : '');
 };
 
 
