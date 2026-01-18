@@ -61,6 +61,7 @@ const BLOCK_RULES = [
   '**://*.2o7.net/**',
   '**://*.apple.com/**',
   '**://*.icloud.com/**',
+  '**/cdn-cgi/**',
   '**://*.mzstatic.com/**',
   '**://*.google-analytics.com/**',
   '**://analytics.google.com/**',
@@ -90,8 +91,6 @@ function wildcardToRegex(p) {
 const BLOCK_REGEX = BLOCK_RULES.map(wildcardToRegex);
 
 function isAdRequest(url, request) {
-  const u = url.toLowerCase();
-
   if (BLOCK_REGEX.some(r => r.test(url))) return true;
 
   try {
@@ -123,8 +122,8 @@ function isAdRequest(url, request) {
 async function handleFetch(event) {
   await scramjet.loadConfig();
   const url = event.request.url;
-
-  if (adblockEnabled && isAdRequest(url, event.request)) {
+  const cdnCgiRegex = /\/cdn-cgi\//i;
+  if ((adblockEnabled && isAdRequest(url, event.request)) || cdnCgiRegex.test(url)) {
     return new Response(null, { status: 204 });
   }
 
