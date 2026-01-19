@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.6",
-    "@astrojs/node": "^9.5.1",
+    "@astrojs/node": "^9.5.2",
     "@fastify/compress": "^8.3.0",
     "@fastify/helmet": "^13.0.2",
     "@fastify/middie": "^9.1.0",
