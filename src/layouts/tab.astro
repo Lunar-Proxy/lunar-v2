@@ -114,26 +114,25 @@ const menuSections = [
         </button>
       </div>
 
-      <div class="relative">
-        <div
-          id="menu"
-          class="absolute top-full right-0 z-[1000] mt-2 hidden w-64 divide-y divide-[#3a3758] overflow-hidden rounded-2xl border border-[#3a3758] bg-[#1f1f30] font-medium shadow-2xl backdrop-blur-md"
-        >
-          {
-            menuSections.map(section => (
-              <div class="flex flex-col py-1">
-                {section.map(({ icon, label }) => (
-                  <button class="menu-item flex w-full items-center gap-3 px-4 py-2.5 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
-                    <i data-lucide={icon} class="h-5 w-5 shrink-0" />
-                    <span class="text-sm whitespace-nowrap">{label}</span>
-                  </button>
-                ))}
-              </div>
-            ))
-          }
+    <div class="relative">
+  <div
+    id="menu"
+    class="absolute top-full right-0 z-[1000] mt-2 hidden w-64 divide-y divide-[#3a3758] overflow-hidden rounded-2xl border border-[#3a3758] bg-[#1f1f30] font-medium shadow-2xl backdrop-blur-md"
+  >
+    {
+      menuSections.map(section => (
+        <div class="flex flex-col">
+          {section.map(({ icon, label }) => (
+            <button class="menu-item flex w-full items-center gap-3 px-4 py-2.5 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
+              <i data-lucide={icon} class="h-5 w-5 shrink-0" />
+              <span class="text-sm whitespace-nowrap">{label}</span>
+            </button>
+          ))}
         </div>
-      </div>
-    </div>
+      ))
+    }
+  </div>
+</div>
 
     <div id="fcontainer" class="absolute inset-x-0 top-[6.4rem] bottom-0 w-full overflow-hidden rounded-b-lg"></div>
 

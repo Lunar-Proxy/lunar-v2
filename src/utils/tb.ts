@@ -259,7 +259,8 @@ function closeTab(id: number) {
   if (removed.titleTimer) clearInterval(removed.titleTimer);
   removed.iframe.remove();
   if (activeId === id && tabs.length) {
-    switchTab(tabs[Math.max(0, idx - 1)].id);
+    const newActiveId = tabs[Math.max(0, idx - 1)].id;
+    switchTab(newActiveId);
   }
   renderTabs();
 }
@@ -326,12 +327,24 @@ function openTab(src?: string) {
 }
 
 function switchTab(id: number) {
-  if (urlWatcher) clearInterval(urlWatcher);
+  const oldActiveId = activeId;
   activeId = id;
-  prevHref = '';
-  for (const tab of tabs) {
-    tab.iframe.classList.toggle('hidden', tab.id !== id);
+  
+  if (urlWatcher) {
+    clearInterval(urlWatcher);
+    urlWatcher = null;
   }
+  
+  prevHref = '';
+  
+  for (const tab of tabs) {
+    if (tab.id === id) {
+      tab.iframe.classList.remove('hidden');
+    } else {
+      tab.iframe.classList.add('hidden');
+    }
+  }
+  
   updateActiveStyles();
   resetLoader();
 
@@ -371,6 +384,8 @@ function switchTab(id: number) {
 
   const urlInput = document.getElementById('urlbar') as HTMLInputElement | null;
   urlWatcher = setInterval(() => {
+    if (activeId !== id) return;
+    
     try {
       const tab = tabs.find(t => t.id === id);
       const href = tab?.iframe.contentWindow?.location.href;

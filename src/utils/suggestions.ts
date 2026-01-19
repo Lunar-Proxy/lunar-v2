@@ -62,7 +62,7 @@ function makeDropdown(): HTMLDivElement {
   hideMenu();
   const dropdown = document.createElement('div');
   dropdown.id = 'suggestions';
-  dropdown.className = 'absolute top-full z-50 mt-1 w-full rounded-xl border border-[#3a3758] bg-[#1f1f30]/95 shadow-2xl backdrop-blur-xl transition-all duration-200 overflow-y-auto opacity-0 hidden';
+  dropdown.className = 'absolute top-full z-50 mt-0 w-full rounded-b-xl border-x border-b border-[#3a3758] bg-[#1f1f30]/95 shadow-2xl backdrop-blur-xl transition-all duration-200 overflow-y-auto opacity-0 hidden';
   input?.parentElement?.appendChild(dropdown);
   return dropdown;
 }
@@ -114,20 +114,20 @@ function renderMenu(suggestions: string[], quick: [string, string][], math: stri
   const html: string[] = [];
   
   if (math) {
-    html.push(`<div class="flex items-center space-x-3 px-6 py-3 text-(--text-header)old cursor-pointer hover:bg-[#2a293f] hover:text-white rounded-lg transition-colors" data-value="${escapeHtml(math)}"><i data-lucide="calculator" class="h-5 w-5 text-green-400"></i><span>${escapeHtml(math)}</span></div>`);
+    html.push(`<div class="flex items-center space-x-3 px-4 py-3 text-(--text-header) cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${escapeHtml(math)}"><i data-lucide="calculator" class="h-5 w-5 text-green-400"></i><span>${escapeHtml(math)}</span></div>`);
   }
   
   if (list.length) {
-    html.push(`<div class="px-6 py-2 text-xs uppercase tracking-wider text-(--text-secondary)">Suggestions for <span class="font-bold text-white">"${escapeHtml(query)}"</span></div>`);
+    html.push(`<div class="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-(--text-secondary)">Suggestions for <span class="text-white">"${escapeHtml(query)}"</span></div>`);
     list.forEach(suggestion => {
-      html.push(`<div class="flex items-center space-x-3 px-6 py-2.5 text-(--text-header) cursor-pointer hover:bg-[#2a293f] hover:text-white rounded-lg transition-colors" data-value="${escapeHtml(suggestion)}"><i data-lucide="search" class="h-4 w-4 text-(--text-secondary)"></i><span>${escapeHtml(suggestion)}</span></div>`);
+      html.push(`<div class="flex items-center space-x-3 px-4 py-3 text-(--text-header) cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${escapeHtml(suggestion)}"><i data-lucide="search" class="h-4 w-4 text-(--text-secondary)"></i><span>${escapeHtml(suggestion)}</span></div>`);
     });
   }
   
   if (showQuick && quick.length) {
-    html.push(`<div class="px-6 py-2 mt-2 text-xs uppercase tracking-wider text-(--text-secondary) border-t border-[#3a3758]">Lunar Links</div>`);
+    html.push(`<div class="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-(--text-secondary) border-t border-[#3a3758]">Lunar Links</div>`);
     quick.forEach(([link, label]) => {
-      html.push(`<div class="flex items-center justify-between px-6 py-2.5 text-(--text-header) cursor-pointer hover:bg-[#2a293f] hover:text-white rounded-lg transition-colors" data-value="${escapeHtml(link)}"><div class="flex items-center space-x-3"><i data-lucide="globe" class="h-5 w-5 text-purple-400"></i><span>${escapeHtml(link)}</span></div><span class="text-xs text-(--text-secondary)">${escapeHtml(label)}</span></div>`);
+      html.push(`<div class="flex items-center justify-between px-4 py-3 text-(--text-header) cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${escapeHtml(link)}"><div class="flex items-center space-x-3"><i data-lucide="globe" class="h-5 w-5 text-purple-400"></i><span>${escapeHtml(link)}</span></div><span class="text-xs text-(--text-secondary)">${escapeHtml(label)}</span></div>`);
     });
   }
   
