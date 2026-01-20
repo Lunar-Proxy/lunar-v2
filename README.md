@@ -1,6 +1,6 @@
 ![Lunar](./lunar.svg)
 
-<p align="center">
+<p align="left">
   <a href="https://discord.gg/fuPtWjYuf8">
     <img src="https://skillicons.dev/icons?i=discord" alt="Join our Discord">
   </a>
