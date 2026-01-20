@@ -309,7 +309,7 @@ function openTab(src?: string) {
     document.addEventListener('DOMContentLoaded', () => openTab(src), { once: true });
     return;
   }
-  frameContainer.appendChild(frame);
+  
   const tab: Tab = {
     id,
     title: 'New Tab',
@@ -317,8 +317,11 @@ function openTab(src?: string) {
     iframe: frame,
   };
   tabs.push(tab);
+  
+  frameContainer.appendChild(frame);
   renderTabs();
   switchTab(id);
+  
   frame.onload = () => {
     handleFrameLoad(tab);
     resetLoader();
@@ -327,7 +330,6 @@ function openTab(src?: string) {
 }
 
 function switchTab(id: number) {
-  const oldActiveId = activeId;
   activeId = id;
   
   if (urlWatcher) {
@@ -338,11 +340,7 @@ function switchTab(id: number) {
   prevHref = '';
   
   for (const tab of tabs) {
-    if (tab.id === id) {
-      tab.iframe.classList.remove('hidden');
-    } else {
-      tab.iframe.classList.add('hidden');
-    }
+    tab.iframe.classList.toggle('hidden', tab.id !== id);
   }
   
   updateActiveStyles();
