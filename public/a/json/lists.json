@@ -1,0 +1,1938 @@
+{
+  "gms": [
+    {
+      "name": "Parking Fury",
+      "desc": "Together we are... Parking Fury.",
+      "icon": "/a/images/ga/pf.webp",
+      "url": "https://www.coolmathgames.com/0-parking-fury/play"
+    },
+    {
+      "name": "Parking Fury 2",
+      "desc": "Together we are... Parking Fury 2.",
+      "icon": "/a/images/ga/pf2.webp",
+      "url": "https://www.coolmathgames.com/0-parking-fury-2/play"
+    },
+    {
+      "name": "Parking Fury 3",
+      "desc": "Together we are... Parking Fury 3.",
+      "icon": "/a/images/ga/pf3.webp",
+      "url": "https://www.coolmathgames.com/0-parking-fury-3/play"
+    },
+    {
+      "name": "Run 3",
+      "desc": "Run through space tunnels in this endless runner.",
+      "icon": "/a/images/ga/r3.webp",
+      "url": "https://www.coolmathgames.com/0-run-3/play"
+    },
+    {
+      "name": "Moto X3M",
+      "desc": "Experience thrilling bike stunts and challenges.",
+      "icon": "/a/images/ga/mx3m.webp",
+      "url": "https://www.coolmathgames.com/0-moto-x3m/play"
+    },
+    {
+      "name": "Fireboy and Watergirl",
+      "desc": "Control Fireboy and Watergirl to solve puzzles together.",
+      "icon": "/a/images/ga/fbwg.webp",
+      "url": "https://www.coolmathgames.com/sites/default/files/public_games/40034"
+    },
+    {
+      "name": "Papa's Pizzeria",
+      "desc": "Manage your own pizzeria and serve delicious pizzas.",
+      "icon": "/a/images/ga/pp.webp",
+      "url": "https://www.coolmathgames.com/0-papas-pizzeria/play"
+    },
+    {
+      "name": "Papa's Freezeria",
+      "desc": "Run your own ice cream shop and create tasty treats.",
+      "icon": "/a/images/ga/ppf.webp",
+      "url": "https://www.coolmathgames.com/0-papas-freezeria/play"
+    },
+    {
+      "name": "Slice Master",
+      "desc": "Test your slicing skills in this fun arcade game.",
+      "icon": "/a/images/ga/sm.webp",
+      "url": "https://www.coolmathgames.com/0-slice-master/play"
+    },
+    {
+      "name": "Tiny Fishing",
+      "desc": "Catch fish and upgrade your gear in Tiny Fishing.",
+      "icon": "/a/images/ga/tf.webp",
+      "url": "https://www.coolmathgames.com/0-tiny-fishing/play"
+    },
+    {
+      "name": "Suika Watermelon Game",
+      "desc": "Combine fruits to create larger ones in this addictive game.",
+      "icon": "/a/images/ga/suika.webp",
+      "url": "https://www.coolmathgames.com/0-suika-watermelon-game/play"
+    },
+    {
+      "name": "Chess",
+      "desc": "Play chess against the computer or a friend.",
+      "icon": "/a/images/ga/chess.webp",
+      "url": "https://www.coolmathgames.com/0-chess/play"
+    },
+    {
+      "name": "Cookie Clicker",
+      "desc": "Bake cookies and unlock upgrades in this idle game.",
+      "icon": "/a/images/ga/cc.webp",
+      "url": "https://orteil.dashnet.org/cookieclicker/"
+    },
+    {
+      "name": "Wordle",
+      "desc": "Guess the daily word in 6 tries.",
+      "icon": "/a/images/ga/word.webp",
+      "url": "https://www.nytimes.com/games/wordle/index.html"
+    },
+    {
+      "name": "SmashKarts",
+      "desc": "Battle against others in kart-style combat.",
+      "icon": "/a/images/ga/sk.webp",
+      "url": "https://smashkarts.io/"
+    },
+    {
+      "name": "BlockBlast",
+      "desc": "Puzzle-style block game.",
+      "icon": "/a/images/ga/bb.jpg",
+      "url": "https://reunbozdo.github.io/"
+    },
+    {
+      "name": "FNF",
+      "desc": "Friday Night Funkin' browser rhythm game.",
+      "icon": "/a/images/ga/fnf.webp",
+      "url": "https://fnf.kdata1.com/2024/fnf/5201/"
+    },
+    {
+      "name": "OvO",
+      "desc": "Speedrun-style parkour platformer.",
+      "icon": "/a/images/ga/ovo.webp",
+      "url": "https://www.coolmathgames.com/0-ovo/play"
+    },
+    {
+      "name": "digdigIo",
+      "desc": "Multiplayer digging battle game.",
+      "icon": "/a/images/ga/dig.webp",
+      "url": "https://digdig.io/"
+    },
+    {
+      "name": "2048",
+      "desc": "Slide tiles to reach 2048.",
+      "icon": "/a/images/ga/2048.webp",
+      "url": "https://2048game.com/"
+    },
+    {
+      "name": "Stickman Hook",
+      "desc": "Swing your way to the finish!",
+      "icon": "/a/images/ga/stick.webp",
+      "url": "https://stickman-hook-game.github.io/file/"
+    },
+    {
+      "name": "EmulatorJs",
+      "desc": "Play retro console games online.",
+      "icon": "/a/images/ga/emulatorjs.webp",
+      "url": "https://demo.emulatorjs.org/"
+    },
+    {
+      "name": "Subway Surfers",
+      "desc": "Dodge trains and collect coins!",
+      "icon": "/a/images/ga/surfers.webp",
+      "url": "https://ubg77.github.io/updatefaqs/subway-surfers-winter-holiday/"
+    },
+    {
+      "name": "KourIo",
+      "desc": "First-person shooter parkour.",
+      "icon": "/a/images/ga/kio.webp",
+      "url": "https://www.kour.io/"
+    },
+    {
+      "name": "Nvidia GeForce Now",
+      "desc": "Play PC games via cloud streaming.",
+      "icon": "/a/images/ga/gfn.webp",
+      "url": "https://play.geforcenow.com/mall/"
+    },
+    {
+      "name": "Bitlife",
+      "desc": "Live a digital life from birth to death.",
+      "icon": "/a/images/ga/bl.jpg",
+      "url": "https://xlegends.github.io/bitlife/"
+    },
+    {
+      "name": "N-gon",
+      "desc": "Multiplayer building & PvP browser game.",
+      "icon": "/a/images/ga/gone.webp",
+      "url": "https://landgreen.github.io/n-gon/"
+    },
+    {
+      "name": "DriveMad",
+      "desc": "Physics-based driving game with crazy levels.",
+      "icon": "/a/images/ga/dm.webp",
+      "url": "https://ubg77.github.io/game131022/drive-mad/"
+    },
+    {
+      "name": "FruitNinja",
+      "desc": "Slash fruit with your mouse!",
+      "icon": "/a/images/fn.jpg",
+      "url": "http://huningxin.github.io/spp.js/examples/fruitNinja/"
+    },
+    {
+      "name": "DriftBoss",
+      "desc": "Keep drifting without falling off.",
+      "icon": "/a/images/db.png",
+      "url": "https://driftbossunblocked.github.io/"
+    },
+    {
+      "name": "Merge Round Racers",
+      "desc": "Merge cars and win races!",
+      "icon": "/a/images/mrr.avif",
+      "url": "https://ubg77.github.io/edit/merge-round-racers/"
+    },
+    {
+      "name": "Geometry Dash",
+      "desc": "Dodge obstacles in rhythm-based platformer.",
+      "icon": "/a/images/ga/gd.jpg",
+      "url": "https://assets.3kh0.net/geodash/"
+    },
+    {
+      "name": "Flappy Bird",
+      "desc": "Classic bird-flying game in browser.",
+      "icon": "/a/images/ga/fb.jpg",
+      "url": "https://ellisonleao.github.io/clumsy-bird/"
+    },
+    {
+      "name": "Idle Dice",
+      "desc": "Clicker game based on rolling dice.",
+      "icon": "/a/images/ga/id.jpg",
+      "url": "https://ubg77.github.io/game131022/idle-dice/"
+    },
+    {
+      "name": "Idle Miner",
+      "desc": "Run your mining operation and grow!",
+      "icon": "/a/images/ga/im.jpg",
+      "url": "https://ubg77.github.io/game131022/idle-miner/"
+    },
+    {
+      "name": "Idle Mining Empire",
+      "desc": "Build your mining empire empire!",
+      "icon": "/a/images/ime.webp",
+      "url": "https://ubg77.github.io/fix/idle-mining-empire/"
+    },
+    {
+      "name": "Idle Startup Tycoon",
+      "desc": "Grow your tech startup into a giant.",
+      "icon": "/a/images/ga/ist.jpg",
+      "url": "https://ubg77.github.io/game131022/idle-startup-tycoon/"
+    },
+    {
+      "name": "Awesome Tanks 2",
+      "desc": "Blow up enemy tanks and upgrade yours.",
+      "icon": "/a/images/ga/at2.jpg",
+      "url": "https://ubg98.github.io/AwesomeTanks2/"
+    },
+    {
+      "name": "BasketBall Random",
+      "desc": "Crazy physics-based basketball game.",
+      "icon": "/a/images/bbr.png",
+      "url": "https://tylerpalko.github.io/gamehub/basketrandom/"
+    },
+    {
+      "name": "Basketbros",
+      "desc": "Multiplayer basketball with a twist.",
+      "icon": "/a/images/bbs.jpeg",
+      "url": "https://basketbros.io/"
+    },
+    {
+      "name": "Adventure Drivers",
+      "desc": "Race across crazy tracks and terrains.",
+      "icon": "/a/images/ad.jpg",
+      "url": "https://ubg77.github.io/game131022/adventure-drivers/"
+    },
+    {
+      "name": "1v1.LOL",
+      "desc": "Build and battle in this competitive shooter.",
+      "icon": "/a/images/ga/1v1.jpg",
+      "url": "https://1v1.lol/"
+    },
+    {
+      "name": "Shell Shockers",
+      "desc": "Egg-based first-person shooter.",
+      "icon": "/a/images/ga/shellshock.jpg",
+      "url": "https://shellshock.io/"
+    },
+    {
+      "name": "Slope",
+      "desc": "Roll down the slope without falling off.",
+      "icon": "/a/images/ga/slope.jpg",
+      "url": "https://slope-game.github.io/rune/slope/index.html"
+    },
+    {
+      "name": "Tunnel Rush",
+      "desc": "Dodge obstacles in a colorful tunnel.",
+      "icon": "/a/images/ga/tr.jpg",
+      "url": "https://tunnel-rush.github.io/file/"
+    },
+    {
+      "name": "Retro Bowl",
+      "desc": "Manage and play American football team.",
+      "icon": "/a/images/ga/rb.jpg",
+      "url": "https://retro-bowl.github.io/game/"
+    },
+    {
+      "name": "Among Us",
+      "desc": "Find the impostor among your crew.",
+      "icon": "/a/images/ga/au.jpg",
+      "url": "https://www.crazygames.com/game/among-us"
+    },
+    {
+      "name": "Drift Hunters",
+      "desc": "Drift racing with car customization.",
+      "icon": "/a/images/ga/dh.webp",
+      "url": "https://drift-hunters.github.io/drift-hunters/index.html"
+    },
+    {
+      "name": "Basketball Stars",
+      "desc": "1v1 basketball multiplayer game.",
+      "icon": "/a/images/ga/bstars.jpg",
+      "url": "https://basketball-stars.io/"
+    },
+    {
+      "name": "Happy Wheels",
+      "desc": "Ragdoll physics obstacle course game.",
+      "icon": "/a/images/ga/hw.jpg",
+      "url": "https://ubg77.github.io/game131022/happy-wheels/"
+    },
+    {
+      "name": "Temple Run 2",
+      "desc": "Endless running through ancient temples.",
+      "icon": "/a/images/ga/tr2.jpg",
+      "url": "https://ubg77.github.io/game131022/temple-run-2/"
+    },
+    {
+      "name": "Crossy Road",
+      "desc": "Cross roads and rivers without dying.",
+      "icon": "/a/images/ga/cr.jpg",
+      "url": "https://ubg77.github.io/game131022/crossy-road/"
+    },
+    {
+      "name": "Bloons TD 5",
+      "desc": "Tower defense with balloon-popping monkeys.",
+      "icon": "/a/images/ga/btd5.jpg",
+      "url": "https://www.coolmathgames.com/0-bloons-tower-defense-5/play"
+    },
+    {
+      "name": "Bloons TD 6",
+      "desc": "Advanced tower defense strategy game.",
+      "icon": "/a/images/ga/btd6.jpg",
+      "url": "https://www.crazygames.com/game/bloons-td-6"
+    },
+    {
+      "name": "Duck Life",
+      "desc": "Train your duck to race and win.",
+      "icon": "/a/images/ga/dl.jpg",
+      "url": "https://www.coolmathgames.com/0-duck-life/play"
+    },
+    {
+      "name": "Hill Climb Racing",
+      "desc": "Physics-based racing game with upgrades.",
+      "icon": "/a/images/ga/hcr.jpg",
+      "url": "https://ubg77.github.io/game131022/hill-climb-racing/"
+    },
+    {
+      "name": "Zombs Royale",
+      "desc": "Battle royale with 100 players.",
+      "icon": "/a/images/ga/zr.jpg",
+      "url": "https://zombsroyale.io/"
+    },
+    {
+      "name": "Krunker",
+      "desc": "Fast-paced browser FPS game.",
+      "icon": "/a/images/ga/krunker.jpg",
+      "url": "https://krunker.io/"
+    },
+    {
+      "name": "Vex 5",
+      "desc": "Parkour platformer with challenging levels.",
+      "icon": "/a/images/ga/vex5.webp",
+      "url": "https://www.coolmathgames.com/0-vex-5/play"
+    },
+    {
+      "name": "Vex 6",
+      "desc": "Latest installment of parkour platformer.",
+      "icon": "/a/images/ga/vex6.webp",
+      "url": "https://www.coolmathgames.com/0-vex-6/play"
+    },
+    {
+      "name": "Vex 7",
+      "desc": "Most recent Vex parkour challenge.",
+      "icon": "/a/images/ga/vex7.webp",
+      "url": "https://www.coolmathgames.com/0-vex-7/play"
+    },
+    {
+      "name": "Paper.io 2",
+      "desc": "Claim territory in this competitive game.",
+      "icon": "/a/images/ga/paper.jpg",
+      "url": "https://paper-io.com/"
+    },
+    {
+      "name": "Agar.io",
+      "desc": "Grow your cell and eat others.",
+      "icon": "/a/images/ga/agar.jpg",
+      "url": "https://agar.io/"
+    },
+    {
+      "name": "Slither.io",
+      "desc": "Snake game in multiplayer arena.",
+      "icon": "/a/images/ga/slither.jpg",
+      "url": "https://slither.io/"
+    },
+    {
+      "name": "Superhot",
+      "desc": "Time moves only when you move shooter.",
+      "icon": "/a/images/ga/sh.jpg",
+      "url": "https://ubg77.github.io/game131022/superhot/"
+    },
+    {
+      "name": "Tetris",
+      "desc": "Classic block-stacking puzzle game.",
+      "icon": "/a/images/ga/tetris.jpg",
+      "url": "https://tetris.com/play-tetris"
+    },
+    {
+      "name": "Cut the Rope",
+      "desc": "Feed candy to Om Nom by cutting ropes.",
+      "icon": "/a/images/ga/ctr.jpg",
+      "url": "https://www.crazygames.com/game/cut-the-rope"
+    },
+    {
+      "name": "Bad Ice Cream",
+      "desc": "Collect fruit while avoiding enemies.",
+      "icon": "/a/images/ga/bic.jpg",
+      "url": "https://www.coolmathgames.com/0-bad-ice-cream/play"
+    },
+    {
+      "name": "Fireboy Watergirl Forest",
+      "desc": "First temple in the classic series.",
+      "icon": "/a/images/ga/fbwg1.jpg",
+      "url": "https://www.coolmathgames.com/0-fireboy-and-watergirl-in-the-forest-temple/play"
+    },
+    {
+      "name": "Fireboy Watergirl Light",
+      "desc": "Navigate using light mechanics.",
+      "icon": "/a/images/ga/fbwg2.jpg",
+      "url": "https://www.coolmathgames.com/0-fireboy-and-watergirl-in-the-light-temple/play"
+    },
+    {
+      "name": "Bob the Robber",
+      "desc": "Stealth game about robbing buildings.",
+      "icon": "/a/images/ga/btr.jpg",
+      "url": "https://www.coolmathgames.com/0-bob-the-robber/play"
+    },
+    {
+      "name": "Papa's Scooperia",
+      "desc": "Serve custom ice cream sundaes.",
+      "icon": "/a/images/ga/pps.jpg",
+      "url": "https://www.coolmathgames.com/0-papas-scooperia/play"
+    },
+    {
+      "name": "Papa's Sushiria",
+      "desc": "Make sushi rolls for customers.",
+      "icon": "/a/images/ga/ppsu.jpg",
+      "url": "https://www.coolmathgames.com/0-papas-sushiria/play"
+    },
+    {
+      "name": "Papa's Burgeria",
+      "desc": "Cook and serve burgers to customers.",
+      "icon": "/a/images/ga/ppb.jpg",
+      "url": "https://www.coolmathgames.com/0-papas-burgeria/play"
+    },
+    {
+      "name": "Papa's Cupcakeria",
+      "desc": "Bake and decorate cupcakes.",
+      "icon": "/a/images/ga/ppc.jpg",
+      "url": "https://www.coolmathgames.com/0-papas-cupcakeria/play"
+    },
+    {
+      "name": "Papa's Pastaria",
+      "desc": "Cook pasta dishes in this restaurant.",
+      "icon": "/a/images/ga/pppa.jpg",
+      "url": "https://www.coolmathgames.com/0-papas-pastaria/play"
+    },
+    {
+      "name": "Papa's Cheeseria",
+      "desc": "Grill cheese sandwiches for customers.",
+      "icon": "/a/images/ga/ppch.jpg",
+      "url": "https://www.coolmathgames.com/0-papas-cheeseria/play"
+    },
+    {
+      "name": "Moto X3M 2",
+      "desc": "More bike stunts and obstacles.",
+      "icon": "/a/images/ga/mx3m2.jpg",
+      "url": "https://www.coolmathgames.com/0-moto-x3m-2/play"
+    },
+    {
+      "name": "Moto X3M Winter",
+      "desc": "Bike stunts in snowy conditions.",
+      "icon": "/a/images/ga/mx3mw.webp",
+      "url": "https://www.coolmathgames.com/0-moto-x3m-winter/play"
+    },
+    {
+      "name": "Moto X3M Pool Party",
+      "desc": "Summer-themed bike stunt game.",
+      "icon": "/a/images/ga/mx3mp.jpg",
+      "url": "https://www.coolmathgames.com/0-moto-x3m-pool-party/play"
+    },
+    {
+      "name": "Clicker Heroes",
+      "desc": "Idle RPG clicking adventure.",
+      "icon": "/a/images/ga/ch.jpg",
+      "url": "https://www.clickerheroes.com/play.html"
+    },
+    {
+      "name": "Earn to Die",
+      "desc": "Drive through zombies to escape.",
+      "icon": "/a/images/ga/etd.jpg",
+      "url": "https://ubg77.github.io/game131022/earn-to-die/"
+    },
+    {
+      "name": "Tank Trouble",
+      "desc": "Multiplayer tank battle maze game.",
+      "icon": "/a/images/ga/tt.webp",
+      "url": "https://tanktrouble.com/"
+    },
+    {
+      "name": "Rolling Sky",
+      "desc": "Music-based obstacle dodging game.",
+      "icon": "/a/images/ga/rs.jpg",
+      "url": "https://ubg77.github.io/game131022/rolling-sky/"
+    },
+    {
+      "name": "Bike Race",
+      "desc": "Simple but addictive bike racing.",
+      "icon": "/a/images/ga/br.jpg",
+      "url": "https://ubg77.github.io/game131022/bike-race/"
+    },
+    {
+      "name": "Monkey Mart",
+      "desc": "Run your own monkey supermarket.",
+      "icon": "/a/images/ga/mm.webp",
+      "url": "https://www.coolmathgames.com/0-monkey-mart/play"
+    },
+    {
+      "name": "Stickman Fighter",
+      "desc": "Beat up enemies as a stickman.",
+      "icon": "/a/images/ga/sf.jpg",
+      "url": "https://www.crazygames.com/game/stickman-fighter-mega-brawl"
+    },
+    {
+      "name": "Time Shooter 2",
+      "desc": "Slow-motion FPS action game.",
+      "icon": "/a/images/ga/ts2.webp",
+      "url": "https://time-shooter-2.github.io/"
+    },
+    {
+      "name": "Time Shooter 3",
+      "desc": "Latest time-bending shooter.",
+      "icon": "/a/images/ga/ts3.webp",
+      "url": "https://time-shooter-3.github.io/"
+    },
+    {
+      "name": "Rooftop Snipers",
+      "desc": "Two-button sniper duel game.",
+      "icon": "/a/images/ga/rts.jpg",
+      "url": "https://rooftop-snipers.github.io/rooftop-snipers/"
+    },
+    {
+      "name": "BoxingRandom",
+      "desc": "Physics-based boxing with random events.",
+      "icon": "/a/images/ga/boxr.webp",
+      "url": "https://tylerpalko.github.io/gamehub/boxingrandom/"
+    },
+    {
+      "name": "Soccer Random",
+      "desc": "Chaotic physics soccer game.",
+      "icon": "/a/images/ga/socr.webp",
+      "url": "https://tylerpalko.github.io/gamehub/soccerrandom/"
+    },
+    {
+      "name": "Volley Random",
+      "desc": "Random volleyball with physics.",
+      "icon": "/a/images/ga/volr.webp",
+      "url": "https://tylerpalko.github.io/gamehub/volleyrandom/"
+    },
+    {
+      "name": "Getaway Shootout",
+      "desc": "Race and shoot to the extraction.",
+      "icon": "/a/images/ga/gs.jpg",
+      "url": "https://ubg77.github.io/game131022/getaway-shootout/"
+    },
+    {
+      "name": "Worlds Hardest Game",
+      "desc": "Navigate through impossible obstacles.",
+      "icon": "/a/images/ga/whg.jpg",
+      "url": "https://www.coolmathgames.com/0-worlds-hardest-game/play"
+    },
+    {
+      "name": "Worlds Hardest Game 2",
+      "desc": "Even harder obstacle navigation.",
+      "icon": "/a/images/ga/whg2.jpg",
+      "url": "https://www.coolmathgames.com/0-worlds-hardest-game-2/play"
+    },
+    {
+      "name": "Idle Breakout",
+      "desc": "Brick breaker meets idle game.",
+      "icon": "/a/images/ga/ib.jpg",
+      "url": "https://www.coolmathgames.com/0-idle-breakout/play"
+    },
+    {
+      "name": "Snake",
+      "desc": "Classic snake game in browser.",
+      "icon": "/a/images/ga/snake.jpg",
+      "url": "https://www.google.com/fbx?fbx=snake_arcade"
+    },
+    {
+      "name": "Pac-Man",
+      "desc": "Classic arcade maze game.",
+      "icon": "/a/images/ga/pacman.jpg",
+      "url": "https://www.google.com/logos/2010/pacman10-i.html"
+    },
+    {
+      "name": "Space Invaders",
+      "desc": "Retro alien shooting arcade.",
+      "icon": "/a/images/ga/si.jpg",
+      "url": "https://www.crazygames.com/game/space-invaders"
+    },
+    {
+      "name": "Minecraft Classic",
+      "desc": "Original Minecraft in browser.",
+      "icon": "/a/images/ga/mc.webp",
+      "url": "https://classic.minecraft.net/"
+    },
+    {
+      "name": "Eaglercraft",
+      "desc": "Minecraft 1.8.8 in browser.",
+      "icon": "/a/images/ga/eagle.webp",
+      "url": "https://eaglercraft.com/"
+    },
+    {
+      "name": "Baldi's Basics",
+      "desc": "Horror education parody game.",
+      "icon": "/a/images/ga/baldi.jpg",
+      "url": "https://ubg77.github.io/game131022/baldis-basics/"
+    },
+    {
+      "name": "Fancy Pants",
+      "desc": "Stickman platformer with style.",
+      "icon": "/a/images/ga/fp.jpg",
+      "url": "https://www.coolmathgames.com/0-fancy-pants-adventure/play"
+    },
+    {
+      "name": "Cluster Rush",
+      "desc": "Jump between moving trucks.",
+      "icon": "/a/images/ga/clr.webp",
+      "url": "https://cluster-rush.github.io/game/"
+    },
+    {
+      "name": "Bottle Flip 3D",
+      "desc": "Flip bottles onto platforms.",
+      "icon": "/a/images/ga/bf3d.jpg",
+      "url": "https://ubg77.github.io/game131022/bottle-flip-3d/"
+    },
+    {
+      "name": "Doodle Jump",
+      "desc": "Jump up platforms endlessly.",
+      "icon": "/a/images/ga/dj.jpg",
+      "url": "https://ubg77.github.io/game131022/doodle-jump/"
+    },
+    {
+      "name": "Geometry Dash Lite",
+      "desc": "Rhythm platformer lite version.",
+      "icon": "/a/images/ga/gdl.webp",
+      "url": "https://scratch.mit.edu/projects/105500895/"
+    },
+    {
+      "name": "Roblox",
+      "desc": "Play millions of user-created games.",
+      "icon": "/a/images/ga/roblox.jpg",
+      "url": "https://nowgg.fun"
+    },
+    {
+      "name": "Fortnite",
+      "desc": "Battle royale building game.",
+      "icon": "/a/images/ga/fn.jpg",
+      "url": "https://play.geforcenow.com/mall/"
+    },
+    {
+      "name": "Bonk.io",
+      "desc": "Physics-based multiplayer battle.",
+      "icon": "/a/images/ga/bonk.jpg",
+      "url": "https://bonk.io/"
+    },
+    {
+      "name": "Penalty Shooters 2",
+      "desc": "Soccer penalty shootout game.",
+      "icon": "/a/images/ga/ps2.webp",
+      "url": "https://ubg77.github.io/game131022/penalty-shooters-2/"
+    },
+    {
+      "name": "Stick War",
+      "desc": "Strategy game with stick figures.",
+      "icon": "/a/images/ga/sw.jpg",
+      "url": "https://www.crazygames.com/game/stick-war"
+    },
+    {
+      "name": "Bloxorz",
+      "desc": "Roll the block into the hole.",
+      "icon": "/a/images/ga/blox.jpg",
+      "url": "https://www.coolmathgames.com/0-bloxorz/play"
+    },
+    {
+      "name": "Red Ball 4",
+      "desc": "Roll and jump through platformer.",
+      "icon": "/a/images/ga/rb4.jpg",
+      "url": "https://www.coolmathgames.com/0-red-ball-4/play"
+    },
+    {
+      "name": "Fireboy Watergirl Ice",
+      "desc": "Solve puzzles in ice temple.",
+      "icon": "/a/images/ga/fbwg3.jpg",
+      "url": "https://www.coolmathgames.com/0-fireboy-and-watergirl-in-the-ice-temple/play"
+    },
+    {
+      "name": "Fireboy Watergirl Crystal",
+      "desc": "Navigate the crystal temple.",
+      "icon": "/a/images/ga/fbwg4.jpg",
+      "url": "https://www.coolmathgames.com/0-fireboy-and-watergirl-in-the-crystal-temple/play"
+    },
+    {
+      "name": "Draw Climber",
+      "desc": "Draw legs to climb obstacles.",
+      "icon": "/a/images/ga/dc.webp",
+      "url": "https://ubg77.github.io/game131022/draw-climber/"
+    },
+    {
+      "name": "Elastic Man",
+      "desc": "Stretch a 3D face around.",
+      "icon": "/a/images/ga/em.webp",
+      "url": "https://ubg77.github.io/game131022/elastic-man/"
+    },
+    {
+      "name": "Tomb of the Mask",
+      "desc": "Fast-paced arcade maze game.",
+      "icon": "/a/images/ga/totm.jpg",
+      "url": "https://ubg77.github.io/game131022/tomb-of-the-mask/"
+    },
+    {
+      "name": "Stack",
+      "desc": "Stack blocks as high as possible.",
+      "icon": "/a/images/ga/stack.jpg",
+      "url": "https://ubg77.github.io/game131022/stack/"
+    },
+    {
+      "name": "Cube Field",
+      "desc": "Dodge cubes at high speed.",
+      "icon": "/a/images/ga/cf.webp",
+      "url": "https://www.coolmathgames.com/0-cube-field/play"
+    },
+    {
+      "name": "Stick RPG",
+      "desc": "Live life as a stick figure.",
+      "icon": "/a/images/ga/srpg.jpg",
+      "url": "https://www.coolmathgames.com/0-stick-rpg/play"
+    },
+    {
+      "name": "Learn to Fly",
+      "desc": "Help penguin learn to fly.",
+      "icon": "/a/images/ga/ltf.jpg",
+      "url": "https://www.coolmathgames.com/0-learn-to-fly/play"
+    },
+    {
+      "name": "Learn to Fly 2",
+      "desc": "More penguin flying adventures.",
+      "icon": "/a/images/ga/ltf2.jpg",
+      "url": "https://www.coolmathgames.com/0-learn-to-fly-2/play"
+    },
+    {
+      "name": "Learn to Fly 3",
+      "desc": "Latest penguin flying game.",
+      "icon": "/a/images/ga/ltf3.jpg",
+      "url": "https://www.coolmathgames.com/0-learn-to-fly-3/play"
+    },
+    {
+      "name": "Run",
+      "desc": "Run through space tunnels.",
+      "icon": "/a/images/ga/run.jpg",
+      "url": "https://www.coolmathgames.com/0-run/play"
+    },
+    {
+      "name": "Run 2",
+      "desc": "More space tunnel running.",
+      "icon": "/a/images/ga/run2.jpg",
+      "url": "https://www.coolmathgames.com/0-run-2/play"
+    },
+    {
+      "name": "There Is No Game",
+      "desc": "Interactive anti-game experience.",
+      "icon": "/a/images/ga/ting.jpg",
+      "url": "https://www.crazygames.com/game/there-is-no-game"
+    },
+    {
+      "name": "Big Tower Tiny Square",
+      "desc": "Precision platformer with tough jumps.",
+      "icon": "/a/images/ga/btts.jpg",
+      "url": "https://www.coolmathgames.com/0-big-tower-tiny-square/play"
+    },
+    {
+      "name": "Big Tower Tiny Square 2",
+      "desc": "Sequel to precision platformer.",
+      "icon": "/a/images/ga/btts2.jpg",
+      "url": "https://www.coolmathgames.com/0-big-tower-tiny-square-2/play"
+    },
+    {
+      "name": "A Dance of Fire and Ice",
+      "desc": "Rhythm game with perfect timing.",
+      "icon": "/a/images/ga/adfi.jpg",
+      "url": "https://www.coolmathgames.com/0-a-dance-of-fire-and-ice/play"
+    },
+    {
+      "name": "Raft Wars",
+      "desc": "Defend your treasure with water balloons.",
+      "icon": "/a/images/ga/rw.jpg",
+      "url": "https://www.coolmathgames.com/0-raft-wars/play"
+    },
+    {
+      "name": "Raft Wars 2",
+      "desc": "More water balloon battles.",
+      "icon": "/a/images/ga/rw2.jpg",
+      "url": "https://www.coolmathgames.com/0-raft-wars-2/play"
+    },
+    {
+      "name": "Color Switch",
+      "desc": "Match colors through obstacles.",
+      "icon": "/a/images/ga/cs.jpg",
+      "url": "https://ubg77.github.io/game131022/color-switch/"
+    },
+    {
+      "name": "Pixel Gun Apocalypse",
+      "desc": "Blocky multiplayer shooter.",
+      "icon": "/a/images/ga/pga.webp",
+      "url": "https://www.crazygames.com/game/pixel-gun-apocalypse"
+    },
+    {
+      "name": "Bubble Shooter",
+      "desc": "Classic bubble matching game.",
+      "icon": "/a/images/ga/bs.webp",
+      "url": "https://www.crazygames.com/game/bubble-shooter"
+    },
+    {
+      "name": "Minesweeper",
+      "desc": "Classic mine detection puzzle.",
+      "icon": "/a/images/ga/ms.jpg",
+      "url": "https://minesweeper.online/"
+    },
+    {
+      "name": "Solitaire",
+      "desc": "Classic card game in browser.",
+      "icon": "/a/images/ga/sol.jpg",
+      "url": "https://www.google.com/search?q=solitaire"
+    },
+    {
+      "name": "Mahjong",
+      "desc": "Match tiles in this classic game.",
+      "icon": "/a/images/ga/mj.jpg",
+      "url": "https://www.crazygames.com/game/mahjong"
+    },
+    {
+      "name": "Spider Solitaire",
+      "desc": "Advanced solitaire card game.",
+      "icon": "/a/images/ga/ss.jpg",
+      "url": "https://www.google.com/search?q=spider+solitaire"
+    },
+    {
+      "name": "Checkers",
+      "desc": "Classic board game online.",
+      "icon": "/a/images/ga/check.webp",
+      "url": "https://www.coolmathgames.com/0-checkers/play"
+    },
+    {
+      "name": "Connect 4",
+      "desc": "Classic four-in-a-row game.",
+      "icon": "/a/images/ga/c4.jpg",
+      "url": "https://www.coolmathgames.com/0-connect-4/play"
+    },
+    {
+      "name": "Backgammon",
+      "desc": "Ancient board game strategy.",
+      "icon": "/a/images/ga/bg.webp",
+      "url": "https://www.247backgammon.com/"
+    },
+    {
+      "name": "8 Ball Pool",
+      "desc": "Online billiards game.",
+      "icon": "/a/images/ga/8ball.jpg",
+      "url": "https://www.crazygames.com/game/8-ball-pool"
+    },
+    {
+      "name": "Archery World Tour",
+      "desc": "Compete in archery competitions.",
+      "icon": "/a/images/ga/awt.webp",
+      "url": "https://www.crazygames.com/game/archery-world-tour"
+    },
+    {
+      "name": "Drift Boss 2",
+      "desc": "Keep drifting without falling off.",
+      "icon": "/a/images/ga/db2.webp",
+      "url": "https://ubg77.github.io/game131022/drift-boss/"
+    },
+    {
+      "name": "Mini Golf World",
+      "desc": "Play mini golf courses online.",
+      "icon": "/a/images/ga/mgw.jpg",
+      "url": "https://www.crazygames.com/game/mini-golf-world"
+    },
+    {
+      "name": "Rocket League",
+      "desc": "Soccer with rocket-powered cars.",
+      "icon": "/a/images/ga/rl.jpg",
+      "url": "https://www.epicgames.com/store/en-US/p/rocket-league"
+    },
+    {
+      "name": "Ping Pong",
+      "desc": "Classic table tennis game.",
+      "icon": "/a/images/ga/pp.webp",
+      "url": "https://www.crazygames.com/game/ping-pong"
+    },
+    {
+      "name": "Darts",
+      "desc": "Play darts against computer.",
+      "icon": "/a/images/ga/darts.webp",
+      "url": "https://www.crazygames.com/game/darts"
+    },
+    {
+      "name": "Bowling",
+      "desc": "Strike and spare in bowling.",
+      "icon": "/a/images/ga/bowl.webp",
+      "url": "https://www.crazygames.com/game/bowling"
+    },
+    {
+      "name": "Table Tennis World Tour",
+      "desc": "Ping pong tournament game.",
+      "icon": "/a/images/ga/ttwt.webp",
+      "url": "https://www.crazygames.com/game/table-tennis-world-tour"
+    },
+    {
+      "name": "Stunt Bike Extreme",
+      "desc": "Perform crazy bike stunts.",
+      "icon": "/a/images/ga/sbe.jpg",
+      "url": "https://www.crazygames.com/game/stunt-bike-extreme"
+    },
+    {
+      "name": "Thumb Fighter",
+      "desc": "Two-player thumb wrestling game.",
+      "icon": "/a/images/ga/tf.webp",
+      "url": "https://tylerpalko.github.io/gamehub/thumbfighter/"
+    },
+    {
+      "name": "Football Legends",
+      "desc": "Play soccer with legendary players.",
+      "icon": "/a/images/ga/fl.jpg",
+      "url": "https://www.crazygames.com/game/football-legends-2021"
+    },
+    {
+      "name": "Basketball Legends",
+      "desc": "Arcade basketball with NBA stars.",
+      "icon": "/a/images/ga/bl.jpg",
+      "url": "https://basketball-legends.io/"
+    },
+    {
+      "name": "Unicycle Hero",
+      "desc": "Balance on unicycle and fight.",
+      "icon": "/a/images/ga/uh.jpg",
+      "url": "https://ubg77.github.io/game131022/unicycle-hero/"
+    },
+    {
+      "name": "Stick Fight",
+      "desc": "Multiplayer stick figure battles.",
+      "icon": "/a/images/ga/stickf.jpg",
+      "url": "https://www.crazygames.com/game/stick-fight"
+    },
+    {
+      "name": "Riddle School",
+      "desc": "Escape from school in this puzzle game.",
+      "icon": "/a/images/ga/rsch.jpg",
+      "url": "https://www.newgrounds.com/portal/view/259369"
+    },
+    {
+      "name": "Duck Hunt",
+      "desc": "Classic Nintendo duck shooting game.",
+      "icon": "/a/images/ga/dh.jpg",
+      "url": "https://duckhuntjs.com/"
+    },
+    {
+      "name": "Burger Shop",
+      "desc": "Make burgers for hungry customers.",
+      "icon": "/a/images/ga/burgers.jpg",
+      "url": "https://www.crazygames.com/game/burger-shop"
+    },
+    {
+      "name": "Cake Mania",
+      "desc": "Bake cakes in this time management game.",
+      "icon": "/a/images/ga/cakeman.jpg",
+      "url": "https://www.crazygames.com/game/cake-mania"
+    },
+    {
+      "name": "Diner Dash",
+      "desc": "Serve customers in your restaurant.",
+      "icon": "/a/images/ga/dinerd.jpg",
+      "url": "https://www.crazygames.com/game/diner-dash"
+    },
+    {
+      "name": "Pizza Tower",
+      "desc": "Fast-paced platformer with pizza.",
+      "icon": "/a/images/ga/pzt.jpg",
+      "url": "https://www.newgrounds.com/portal/view/859173"
+    },
+    {
+      "name": "Plants vs Zombies",
+      "desc": "Defend your lawn from zombies.",
+      "icon": "/a/images/ga/pvz.jpg",
+      "url": "https://ubg77.github.io/game131022/plants-vs-zombies/"
+    },
+    {
+      "name": "Age of War",
+      "desc": "Evolve through ages and defeat enemies.",
+      "icon": "/a/images/ga/aow.jpg",
+      "url": "https://www.crazygames.com/game/age-of-war"
+    },
+    {
+      "name": "Territory War",
+      "desc": "Turn-based strategy battle game.",
+      "icon": "/a/images/ga/terwar.jpg",
+      "url": "https://www.crazygames.com/game/territory-war"
+    },
+    {
+      "name": "Strike Force Heroes",
+      "desc": "Action-packed shooter with campaigns.",
+      "icon": "/a/images/ga/sfh.jpg",
+      "url": "https://www.crazygames.com/game/strike-force-heroes"
+    },
+    {
+      "name": "Raze 2",
+      "desc": "Futuristic platformer shooter.",
+      "icon": "/a/images/ga/raze2.jpg",
+      "url": "https://www.crazygames.com/game/raze-2"
+    },
+    {
+      "name": "Electric Man 2",
+      "desc": "Stick figure fighting tournament.",
+      "icon": "/a/images/ga/em2.webp",
+      "url": "https://www.crazygames.com/game/electric-man-2"
+    },
+    {
+      "name": "Kingdom Rush",
+      "desc": "Fantasy tower defense classic.",
+      "icon": "/a/images/ga/kr.jpg",
+      "url": "https://www.crazygames.com/game/kingdom-rush"
+    },
+    {
+      "name": "Kingdom Rush Frontiers",
+      "desc": "Tower defense sequel with new towers.",
+      "icon": "/a/images/ga/krf.jpg",
+      "url": "https://www.crazygames.com/game/kingdom-rush-frontiers"
+    },
+    {
+      "name": "Impossible Quiz",
+      "desc": "Tricky quiz with absurd questions.",
+      "icon": "/a/images/ga/iq.jpg",
+      "url": "https://www.crazygames.com/game/the-impossible-quiz"
+    },
+    {
+      "name": "Riddle Transfer",
+      "desc": "Sequel to Riddle School series.",
+      "icon": "/a/images/ga/rtrans.jpg",
+      "url": "https://www.newgrounds.com/portal/view/546117"
+    },
+    {
+      "name": "Fleeing the Complex",
+      "desc": "Choose-your-own-adventure escape game.",
+      "icon": "/a/images/ga/ftc.jpg",
+      "url": "https://www.crazygames.com/game/fleeing-the-complex"
+    },
+    {
+      "name": "Breaking the Bank",
+      "desc": "First Henry Stickmin adventure.",
+      "icon": "/a/images/ga/btb.webp",
+      "url": "https://www.newgrounds.com/portal/view/503796"
+    },
+    {
+      "name": "Escaping the Prison",
+      "desc": "Break out of prison with choices.",
+      "icon": "/a/images/ga/etp.webp",
+      "url": "https://www.newgrounds.com/portal/view/522548"
+    },
+    {
+      "name": "Stealing the Diamond",
+      "desc": "Steal the diamond in this adventure.",
+      "icon": "/a/images/ga/std.jpg",
+      "url": "https://www.newgrounds.com/portal/view/538707"
+    },
+    {
+      "name": "Infiltrating the Airship",
+      "desc": "Infiltrate airship with multiple endings.",
+      "icon": "/a/images/ga/ita.jpg",
+      "url": "https://www.newgrounds.com/portal/view/524091"
+    },
+    {
+      "name": "Completing the Mission",
+      "desc": "Final Henry Stickmin adventure.",
+      "icon": "/a/images/ga/ctm.jpg",
+      "url": "https://www.newgrounds.com/portal/view/760076"
+    },
+    {
+      "name": "Duck Life 2",
+      "desc": "Train your duck in new events.",
+      "icon": "/a/images/ga/dl2.jpg",
+      "url": "https://www.coolmathgames.com/0-duck-life-2/play"
+    },
+    {
+      "name": "Duck Life 3",
+      "desc": "Evolution-based duck training.",
+      "icon": "/a/images/ga/dl3.jpg",
+      "url": "https://www.coolmathgames.com/0-duck-life-3-evolution/play"
+    },
+    {
+      "name": "Duck Life 4",
+      "desc": "Duck racing adventure continues.",
+      "icon": "/a/images/ga/dl4.jpg",
+      "url": "https://www.coolmathgames.com/0-duck-life-4/play"
+    },
+    {
+      "name": "Wormate.io",
+      "desc": "Snake game with power-ups.",
+      "icon": "/a/images/ga/wormate.jpg",
+      "url": "https://wormate.io/"
+    },
+    {
+      "name": "Diep.io",
+      "desc": "Tank shooter multiplayer game.",
+      "icon": "/a/images/ga/diep.jpg",
+      "url": "https://diep.io/"
+    },
+    {
+      "name": "Starve.io",
+      "desc": "Survival game in cold wilderness.",
+      "icon": "/a/images/ga/starve.jpg",
+      "url": "https://starve.io/"
+    },
+    {
+      "name": "Mope.io",
+      "desc": "Evolve animals in this io game.",
+      "icon": "/a/images/ga/mope.jpg",
+      "url": "https://mope.io/"
+    },
+    {
+      "name": "Surviv.io",
+      "desc": "2D battle royale survival game.",
+      "icon": "/a/images/ga/surviv.jpg",
+      "url": "https://surviv.io/"
+    },
+    {
+      "name": "Hexar.io",
+      "desc": "Capture territory in hexagons.",
+      "icon": "/a/images/ga/hexar.jpg",
+      "url": "https://hexar.io/"
+    },
+    {
+      "name": "Wings.io",
+      "desc": "Airplane dogfighting multiplayer.",
+      "icon": "/a/images/ga/wings.jpg",
+      "url": "https://wings.io/"
+    },
+    {
+      "name": "Brutal.io",
+      "desc": "Spinning mace battle royale.",
+      "icon": "/a/images/ga/brutal.jpg",
+      "url": "https://brutal.io/"
+    },
+    {
+      "name": "Splix.io",
+      "desc": "Claim territory with your line.",
+      "icon": "/a/images/ga/splix.jpg",
+      "url": "https://splix.io/"
+    },
+    {
+      "name": "Narwhale.io",
+      "desc": "Underwater narwhal battles.",
+      "icon": "/a/images/ga/narw.jpg",
+      "url": "https://narwhale.io/"
+    },
+    {
+      "name": "Skribbl.io",
+      "desc": "Drawing and guessing game.",
+      "icon": "/a/images/ga/skribbl.jpg",
+      "url": "https://skribbl.io/"
+    },
+    {
+      "name": "Gartic Phone",
+      "desc": "Online drawing telephone game.",
+      "icon": "/a/images/ga/gartic.jpg",
+      "url": "https://garticphone.com/"
+    },
+    {
+      "name": "Codenames Online",
+      "desc": "Play the board game online.",
+      "icon": "/a/images/ga/codenames.webp",
+      "url": "https://www.horsepaste.com/"
+    },
+    {
+      "name": "Geoguessr",
+      "desc": "Guess locations from Street View.",
+      "icon": "/a/images/ga/geog.jpg",
+      "url": "https://www.geoguessr.com/"
+    },
+    {
+      "name": "Quizlet",
+      "desc": "Study with flashcards and games.",
+      "icon": "/a/images/ga/quizlet.webp",
+      "url": "https://quizlet.com/"
+    },
+    {
+      "name": "Kahoot",
+      "desc": "Interactive quiz game platform.",
+      "icon": "/a/images/ga/kahoot.jpg",
+      "url": "https://kahoot.com/"
+    },
+    {
+      "name": "Blooket",
+      "desc": "Educational game-based learning.",
+      "icon": "/a/images/ga/blooket.webp",
+      "url": "https://www.blooket.com/"
+    },
+    {
+      "name": "Gimkit",
+      "desc": "Live learning game platform.",
+      "icon": "/a/images/ga/gimkit.webp",
+      "url": "https://www.gimkit.com/"
+    },
+    {
+      "name": "Slope Tunnel",
+      "desc": "Roll through 3D tunnel obstacles.",
+      "icon": "/a/images/ga/stopetun.webp",
+      "url": "https://ubg77.github.io/game131022/slope-tunnel/"
+    },
+    {
+      "name": "Slope Ball",
+      "desc": "Control ball down endless slope.",
+      "icon": "/a/images/ga/slopeball.webp",
+      "url": "https://ubg77.github.io/game131022/slope-ball/"
+    },
+    {
+      "name": "Roller Coaster Builder",
+      "desc": "Design and ride roller coasters.",
+      "icon": "/a/images/ga/rcb.webp",
+      "url": "https://www.crazygames.com/game/rollercoaster-builder"
+    },
+    {
+      "name": "Parking Fury 3D",
+      "desc": "Park in 3D environments.",
+      "icon": "/a/images/ga/pf3d.webp",
+      "url": "https://www.crazygames.com/game/parking-fury-3d"
+    },
+    {
+      "name": "Car Drawing Game",
+      "desc": "Draw car and drive your creation.",
+      "icon": "/a/images/ga/cardraw.webp",
+      "url": "https://ubg77.github.io/game131022/car-drawing-game/"
+    },
+    {
+      "name": "Wheely 8",
+      "desc": "Help car solve puzzles.",
+      "icon": "/a/images/ga/wheely.webp",
+      "url": "https://www.coolmathgames.com/0-wheely-8/play"
+    }
+  ],
+  "aps": [
+    {
+      "name": "Google",
+      "desc": "Google.com helps you find anything online.",
+      "icon": "/a/images/ap/goog.webp",
+      "url": "https://google.com"
+    },
+    {
+      "name": "Bing",
+      "desc": "Search freely with Bing, by Microsoft.",
+      "icon": "/a/images/ap/bing.webp",
+      "url": "https://bing.com"
+    },
+    {
+      "name": "Pinterest",
+      "desc": "Discover and save ideas with Pinterest.",
+      "icon": "/a/images/ap/pin.webp",
+      "url": "https://pinterest.com"
+    },
+    {
+      "name": "Twitch",
+      "desc": "Watch and stream games live on Twitch.tv.",
+      "icon": "/a/images/ap/twitch.webp",
+      "url": "https://twitch.tv"
+    },
+    {
+      "name": "YouTube",
+      "desc": "Watch and share videos from around the world.",
+      "icon": "/a/images/yt.webp",
+      "url": "https://youtube.com"
+    },
+    {
+      "name": "Reddit",
+      "desc": "Join discussions and share content on Reddit.",
+      "icon": "/a/images/reddit.webp",
+      "url": "https://www.reddit.com"
+    },
+    {
+      "name": "Spotify",
+      "desc": "Stream music and podcasts from millions of tracks.",
+      "icon": "/a/images/spot.jpg",
+      "url": "https://spotify.com"
+    },
+    {
+      "name": "Discord",
+      "desc": "Connect with friends and communities on Discord.",
+      "icon": "/a/images/dis.png",
+      "url": "https://discord.com/login"
+    },
+    {
+      "name": "Discord PTB",
+      "desc": "Public testing build of Discord for beta features.",
+      "icon": "/a/images/dis.png",
+      "url": "https://ptb.discord.com/login"
+    },
+    {
+      "name": "Discord Canary",
+      "desc": "Early access version of Discord with latest features.",
+      "icon": "/a/images/dis.png",
+      "url": "https://canary.discord.com/login"
+    },
+    {
+      "name": "Stack Overflow",
+      "desc": "Get answers to your programming questions.",
+      "icon": "/a/images/so.png",
+      "url": "https://stackoverflow.com/"
+    },
+    {
+      "name": "MDN Web Docs",
+      "desc": "Comprehensive resource for web developers.",
+      "icon": "/a/images/mdn.png",
+      "url": "https://developer.mozilla.org/"
+    },
+    {
+      "name": "CodePen",
+      "desc": "Online code editor and community for front-end developers.",
+      "icon": "/a/images/cp.png",
+      "url": "https://codepen.io/"
+    },
+    {
+      "name": "W3Schools",
+      "desc": "Learn web development with tutorials and references.",
+      "icon": "/a/images/w3.png",
+      "url": "https://www.w3schools.com/"
+    },
+    {
+      "name": "VS Code",
+      "desc": "Powerful code editor for modern web development.",
+      "icon": "/a/images/vs.jpeg",
+      "url": "https://code.visualstudio.com/"
+    },
+    {
+      "name": "GitHub",
+      "desc": "Host and collaborate on code repositories.",
+      "icon": "/a/images/gh.png",
+      "url": "https://www.github.com"
+    },
+    {
+      "name": "Wolfram Alpha",
+      "desc": "Computational knowledge engine for answers and data.",
+      "icon": "/a/images/wa.png",
+      "url": "https://www.wolframalpha.com/"
+    },
+    {
+      "name": "Amazon",
+      "desc": "Shop millions of products with fast delivery.",
+      "icon": "/a/images/ama.jpeg",
+      "url": "https://www.amazon.com/"
+    },
+    {
+      "name": "ESPN",
+      "desc": "Get the latest sports news, scores, and highlights.",
+      "icon": "/a/images/espn.webp",
+      "url": "https://www.espn.com"
+    },
+    {
+      "name": "Twitter",
+      "desc": "Social media platform for news and updates.",
+      "icon": "/a/images/ap/twitter.webp",
+      "url": "https://twitter.com"
+    },
+    {
+      "name": "Instagram",
+      "desc": "Share photos and videos with friends.",
+      "icon": "/a/images/ap/insta.webp",
+      "url": "https://www.instagram.com"
+    },
+    {
+      "name": "Facebook",
+      "desc": "Connect with friends and family online.",
+      "icon": "/a/images/ap/fb.webp",
+      "url": "https://www.facebook.com"
+    },
+    {
+      "name": "TikTok",
+      "desc": "Short-form video content platform.",
+      "icon": "/a/images/ap/tiktok.webp",
+      "url": "https://www.tiktok.com"
+    },
+    {
+      "name": "LinkedIn",
+      "desc": "Professional networking platform.",
+      "icon": "/a/images/ap/linkedin.webp",
+      "url": "https://www.linkedin.com"
+    },
+    {
+      "name": "WhatsApp Web",
+      "desc": "Message friends and family on the web.",
+      "icon": "/a/images/ap/whatsapp.webp",
+      "url": "https://web.whatsapp.com"
+    },
+    {
+      "name": "Telegram Web",
+      "desc": "Fast and secure messaging platform.",
+      "icon": "/a/images/ap/telegram.webp",
+      "url": "https://web.telegram.org"
+    },
+    {
+      "name": "Slack",
+      "desc": "Team communication and collaboration tool.",
+      "icon": "/a/images/ap/slack.webp",
+      "url": "https://slack.com"
+    },
+    {
+      "name": "Notion",
+      "desc": "All-in-one workspace for notes and tasks.",
+      "icon": "/a/images/ap/notion.webp",
+      "url": "https://www.notion.so"
+    },
+    {
+      "name": "Trello",
+      "desc": "Project management with boards and cards.",
+      "icon": "/a/images/ap/trello.webp",
+      "url": "https://trello.com"
+    },
+    {
+      "name": "Asana",
+      "desc": "Work management platform for teams.",
+      "icon": "/a/images/ap/asana.webp",
+      "url": "https://app.asana.com"
+    },
+    {
+      "name": "Google Drive",
+      "desc": "Cloud storage and file sharing.",
+      "icon": "/a/images/ap/gdrive.webp",
+      "url": "https://drive.google.com"
+    },
+    {
+      "name": "Dropbox",
+      "desc": "File hosting and cloud storage service.",
+      "icon": "/a/images/ap/dropbox.webp",
+      "url": "https://www.dropbox.com"
+    },
+    {
+      "name": "OneDrive",
+      "desc": "Microsoft cloud storage solution.",
+      "icon": "/a/images/ap/onedrive.webp",
+      "url": "https://onedrive.live.com"
+    },
+    {
+      "name": "Google Docs",
+      "desc": "Create and edit documents online.",
+      "icon": "/a/images/ap/gdocs.webp",
+      "url": "https://docs.google.com"
+    },
+    {
+      "name": "Google Sheets",
+      "desc": "Online spreadsheet application.",
+      "icon": "/a/images/ap/gsheets.webp",
+      "url": "https://sheets.google.com"
+    },
+    {
+      "name": "Google Slides",
+      "desc": "Create presentations online.",
+      "icon": "/a/images/ap/gslides.webp",
+      "url": "https://slides.google.com"
+    },
+    {
+      "name": "Gmail",
+      "desc": "Google's email service.",
+      "icon": "/a/images/ap/gmail.webp",
+      "url": "https://mail.google.com"
+    },
+    {
+      "name": "Outlook",
+      "desc": "Microsoft email and calendar service.",
+      "icon": "/a/images/ap/outlook.webp",
+      "url": "https://outlook.live.com"
+    },
+    {
+      "name": "Zoom",
+      "desc": "Video conferencing platform.",
+      "icon": "/a/images/ap/zoom.webp",
+      "url": "https://zoom.us"
+    },
+    {
+      "name": "Google Meet",
+      "desc": "Video meetings by Google.",
+      "icon": "/a/images/ap/meet.webp",
+      "url": "https://meet.google.com"
+    },
+    {
+      "name": "Microsoft Teams",
+      "desc": "Chat, meet, and collaborate in one place.",
+      "icon": "/a/images/ap/teams.webp",
+      "url": "https://teams.microsoft.com"
+    },
+    {
+      "name": "Figma",
+      "desc": "Collaborative design tool for teams.",
+      "icon": "/a/images/ap/figma.webp",
+      "url": "https://www.figma.com"
+    },
+    {
+      "name": "Canva",
+      "desc": "Graphic design platform for everyone.",
+      "icon": "/a/images/ap/canva.webp",
+      "url": "https://www.canva.com"
+    },
+    {
+      "name": "Adobe Creative Cloud",
+      "desc": "Suite of creative design applications.",
+      "icon": "/a/images/ap/adobe.webp",
+      "url": "https://www.adobe.com"
+    },
+    {
+      "name": "Photopea",
+      "desc": "Free online photo editor.",
+      "icon": "/a/images/ap/photopea.webp",
+      "url": "https://www.photopea.com"
+    },
+    {
+      "name": "GIMP Online",
+      "desc": "Free and open-source image editor.",
+      "icon": "/a/images/ap/gimp.webp",
+      "url": "https://www.photopea.com"
+    },
+    {
+      "name": "Netflix",
+      "desc": "Stream movies and TV shows.",
+      "icon": "/a/images/ap/netflix.webp",
+      "url": "https://www.netflix.com"
+    },
+    {
+      "name": "Hulu",
+      "desc": "Watch TV shows and movies online.",
+      "icon": "/a/images/ap/hulu.webp",
+      "url": "https://www.hulu.com"
+    },
+    {
+      "name": "Disney+",
+      "desc": "Stream Disney, Pixar, Marvel, and more.",
+      "icon": "/a/images/ap/disney.webp",
+      "url": "https://www.disneyplus.com"
+    },
+    {
+      "name": "Prime Video",
+      "desc": "Amazon's streaming service.",
+      "icon": "/a/images/ap/prime.webp",
+      "url": "https://www.amazon.com/primevideo"
+    },
+    {
+      "name": "Apple Music",
+      "desc": "Stream millions of songs.",
+      "icon": "/a/images/ap/apple-music.webp",
+      "url": "https://music.apple.com"
+    },
+    {
+      "name": "SoundCloud",
+      "desc": "Discover and stream music.",
+      "icon": "/a/images/ap/soundcloud.webp",
+      "url": "https://soundcloud.com"
+    },
+    {
+      "name": "Pandora",
+      "desc": "Personalized internet radio.",
+      "icon": "/a/images/ap/pandora.webp",
+      "url": "https://www.pandora.com"
+    },
+    {
+      "name": "Duolingo",
+      "desc": "Learn languages for free.",
+      "icon": "/a/images/ap/duolingo.webp",
+      "url": "https://www.duolingo.com"
+    },
+    {
+      "name": "Khan Academy",
+      "desc": "Free educational resources and courses.",
+      "icon": "/a/images/ap/khan.webp",
+      "url": "https://www.khanacademy.org"
+    },
+    {
+      "name": "Coursera",
+      "desc": "Online courses from top universities.",
+      "icon": "/a/images/ap/coursera.webp",
+      "url": "https://www.coursera.org"
+    },
+    {
+      "name": "Udemy",
+      "desc": "Learn new skills with online courses.",
+      "icon": "/a/images/ap/udemy.webp",
+      "url": "https://www.udemy.com"
+    },
+    {
+      "name": "edX",
+      "desc": "Free online courses from universities.",
+      "icon": "/a/images/ap/edx.webp",
+      "url": "https://www.edx.org"
+    },
+    {
+      "name": "Codecademy",
+      "desc": "Learn to code interactively.",
+      "icon": "/a/images/ap/codecademy.webp",
+      "url": "https://www.codecademy.com"
+    },
+    {
+      "name": "freeCodeCamp",
+      "desc": "Learn coding for free.",
+      "icon": "/a/images/ap/freecode.webp",
+      "url": "https://www.freecodecamp.org"
+    },
+    {
+      "name": "LeetCode",
+      "desc": "Practice coding problems and interviews.",
+      "icon": "/a/images/ap/leetcode.webp",
+      "url": "https://leetcode.com"
+    },
+    {
+      "name": "HackerRank",
+      "desc": "Practice coding and prepare for interviews.",
+      "icon": "/a/images/ap/hackerrank.webp",
+      "url": "https://www.hackerrank.com"
+    },
+    {
+      "name": "Replit",
+      "desc": "Online coding platform and IDE.",
+      "icon": "/a/images/ap/replit.webp",
+      "url": "https://replit.com"
+    },
+    {
+      "name": "JSFiddle",
+      "desc": "Online code editor for web development.",
+      "icon": "/a/images/ap/jsfiddle.webp",
+      "url": "https://jsfiddle.net"
+    },
+    {
+      "name": "StackBlitz",
+      "desc": "Online IDE for web applications.",
+      "icon": "/a/images/ap/stackblitz.webp",
+      "url": "https://stackblitz.com"
+    },
+    {
+      "name": "Glitch",
+      "desc": "Build and share web apps instantly.",
+      "icon": "/a/images/ap/glitch.webp",
+      "url": "https://glitch.com"
+    },
+    {
+      "name": "Wikipedia",
+      "desc": "Free online encyclopedia.",
+      "icon": "/a/images/ap/wiki.webp",
+      "url": "https://www.wikipedia.org"
+    },
+    {
+      "name": "Dictionary.com",
+      "desc": "Online dictionary and thesaurus.",
+      "icon": "/a/images/ap/dict.webp",
+      "url": "https://www.dictionary.com"
+    },
+    {
+      "name": "Grammarly",
+      "desc": "Writing assistant for grammar and spelling.",
+      "icon": "/a/images/ap/grammarly.webp",
+      "url": "https://www.grammarly.com"
+    },
+    {
+      "name": "Google Translate",
+      "desc": "Translate text between languages.",
+      "icon": "/a/images/ap/translate.webp",
+      "url": "https://translate.google.com"
+    },
+    {
+      "name": "DeepL",
+      "desc": "Advanced translation tool.",
+      "icon": "/a/images/ap/deepl.webp",
+      "url": "https://www.deepl.com"
+    },
+    {
+      "name": "Desmos",
+      "desc": "Graphing calculator online.",
+      "icon": "/a/images/ap/desmos.webp",
+      "url": "https://www.desmos.com"
+    },
+    {
+      "name": "Symbolab",
+      "desc": "Advanced math solver and calculator.",
+      "icon": "/a/images/ap/symbolab.webp",
+      "url": "https://www.symbolab.com"
+    },
+    {
+      "name": "Mathway",
+      "desc": "Math problem solver with steps.",
+      "icon": "/a/images/ap/mathway.webp",
+      "url": "https://www.mathway.com"
+    },
+    {
+      "name": "Photomath",
+      "desc": "Scan and solve math problems.",
+      "icon": "/a/images/ap/photomath.webp",
+      "url": "https://photomath.com"
+    },
+    {
+      "name": "SparkNotes",
+      "desc": "Study guides and literature summaries.",
+      "icon": "/a/images/ap/sparknotes.webp",
+      "url": "https://www.sparknotes.com"
+    },
+    {
+      "name": "CliffsNotes",
+      "desc": "Study guides and test prep.",
+      "icon": "/a/images/ap/cliffsnotes.webp",
+      "url": "https://www.cliffsnotes.com"
+    },
+    {
+      "name": "Google Calendar",
+      "desc": "Organize your schedule and events.",
+      "icon": "/a/images/ap/gcal.webp",
+      "url": "https://calendar.google.com"
+    },
+    {
+      "name": "Todoist",
+      "desc": "Task manager and to-do list app.",
+      "icon": "/a/images/ap/todoist.webp",
+      "url": "https://todoist.com"
+    },
+    {
+      "name": "Evernote",
+      "desc": "Note-taking and organization app.",
+      "icon": "/a/images/ap/evernote.webp",
+      "url": "https://www.evernote.com"
+    },
+    {
+      "name": "OneNote",
+      "desc": "Digital notebook by Microsoft.",
+      "icon": "/a/images/ap/onenote.webp",
+      "url": "https://www.onenote.com"
+    },
+    {
+      "name": "Google Keep",
+      "desc": "Quick note-taking and lists.",
+      "icon": "/a/images/ap/keep.webp",
+      "url": "https://keep.google.com"
+    },
+    {
+      "name": "Spotify Web Player",
+      "desc": "Listen to music in your browser.",
+      "icon": "/a/images/ap/spotifyweb.webp",
+      "url": "https://open.spotify.com"
+    },
+    {
+      "name": "ChatGPT",
+      "desc": "AI chatbot assistant by OpenAI.",
+      "icon": "/a/images/ap/chatgpt.webp",
+      "url": "https://chat.openai.com"
+    },
+    {
+      "name": "Claude",
+      "desc": "AI assistant by Anthropic.",
+      "icon": "/a/images/ap/claude.webp",
+      "url": "https://claude.ai"
+    },
+    {
+      "name": "Perplexity",
+      "desc": "AI-powered search engine.",
+      "icon": "/a/images/ap/perplexity.webp",
+      "url": "https://www.perplexity.ai"
+    },
+    {
+      "name": "Bard",
+      "desc": "Google's AI chatbot.",
+      "icon": "/a/images/ap/bard.webp",
+      "url": "https://bard.google.com"
+    },
+    {
+      "name": "PayPal",
+      "desc": "Send and receive money online.",
+      "icon": "/a/images/ap/paypal.webp",
+      "url": "https://www.paypal.com"
+    },
+    {
+      "name": "Venmo",
+      "desc": "Mobile payment service.",
+      "icon": "/a/images/ap/venmo.webp",
+      "url": "https://venmo.com"
+    },
+    {
+      "name": "Cash App",
+      "desc": "Send and receive money instantly.",
+      "icon": "/a/images/ap/cashapp.webp",
+      "url": "https://cash.app"
+    },
+    {
+      "name": "Mint",
+      "desc": "Personal finance and budgeting tool.",
+      "icon": "/a/images/ap/mint.webp",
+      "url": "https://www.mint.com"
+    },
+    {
+      "name": "Etsy",
+      "desc": "Marketplace for handmade and vintage items.",
+      "icon": "/a/images/ap/etsy.webp",
+      "url": "https://www.etsy.com"
+    },
+    {
+      "name": "eBay",
+      "desc": "Online auction and shopping site.",
+      "icon": "/a/images/ap/ebay.webp",
+      "url": "https://www.ebay.com"
+    },
+    {
+      "name": "Walmart",
+      "desc": "Shop online at Walmart.",
+      "icon": "/a/images/ap/walmart.webp",
+      "url": "https://www.walmart.com"
+    },
+    {
+      "name": "Target",
+      "desc": "Online shopping at Target.",
+      "icon": "/a/images/ap/target.webp",
+      "url": "https://www.target.com"
+    },
+    {
+      "name": "Best Buy",
+      "desc": "Electronics and appliances store.",
+      "icon": "/a/images/ap/bestbuy.webp",
+      "url": "https://www.bestbuy.com"
+    },
+    {
+      "name": "Craigslist",
+      "desc": "Classified advertisements and community.",
+      "icon": "/a/images/ap/craigslist.webp",
+      "url": "https://www.craigslist.org"
+    },
+    {
+      "name": "IMDb",
+      "desc": "Movie and TV show database.",
+      "icon": "/a/images/ap/imdb.webp",
+      "url": "https://www.imdb.com"
+    },
+    {
+      "name": "Rotten Tomatoes",
+      "desc": "Movie and TV reviews and ratings.",
+      "icon": "/a/images/ap/rt.webp",
+      "url": "https://www.rottentomatoes.com"
+    },
+    {
+      "name": "Goodreads",
+      "desc": "Book reviews and recommendations.",
+      "icon": "/a/images/ap/goodreads.webp",
+      "url": "https://www.goodreads.com"
+    },
+    {
+      "name": "Audible",
+      "desc": "Audiobooks and podcasts.",
+      "icon": "/a/images/ap/audible.webp",
+      "url": "https://www.audible.com"
+    },
+    {
+      "name": "NPR",
+      "desc": "News and public radio.",
+      "icon": "/a/images/ap/npr.webp",
+      "url": "https://www.npr.org"
+    },
+    {
+      "name": "BBC",
+      "desc": "British news and media.",
+      "icon": "/a/images/ap/bbc.webp",
+      "url": "https://www.bbc.com"
+    },
+    {
+      "name": "CNN",
+      "desc": "Breaking news and updates.",
+      "icon": "/a/images/ap/cnn.webp",
+      "url": "https://www.cnn.com"
+    },
+    {
+      "name": "The New York Times",
+      "desc": "News, opinion, and analysis.",
+      "icon": "/a/images/ap/nyt.webp",
+      "url": "https://www.nytimes.com"
+    },
+    {
+      "name": "The Guardian",
+      "desc": "International news and opinion.",
+      "icon": "/a/images/ap/guardian.webp",
+      "url": "https://www.theguardian.com"
+    },
+    {
+      "name": "Weather.com",
+      "desc": "Weather forecasts and radar.",
+      "icon": "/a/images/ap/weather.webp",
+      "url": "https://weather.com"
+    },
+    {
+      "name": "Google Maps",
+      "desc": "Maps, directions, and navigation.",
+      "icon": "/a/images/ap/gmaps.webp",
+      "url": "https://maps.google.com"
+    },
+    {
+      "name": "Zillow",
+      "desc": "Real estate listings and home values.",
+      "icon": "/a/images/ap/zillow.webp",
+      "url": "https://www.zillow.com"
+    },
+    {
+      "name": "Indeed",
+      "desc": "Job search and career resources.",
+      "icon": "/a/images/ap/indeed.webp",
+      "url": "https://www.indeed.com"
+    },
+    {
+      "name": "Glassdoor",
+      "desc": "Company reviews and salary info.",
+      "icon": "/a/images/ap/glassdoor.webp",
+      "url": "https://www.glassdoor.com"
+    },
+    {
+      "name": "Airbnb",
+      "desc": "Vacation rentals and experiences.",
+      "icon": "/a/images/ap/airbnb.webp",
+      "url": "https://www.airbnb.com"
+    },
+    {
+      "name": "Booking.com",
+      "desc": "Book hotels and accommodations.",
+      "icon": "/a/images/ap/booking.webp",
+      "url": "https://www.booking.com"
+    },
+    {
+      "name": "Expedia",
+      "desc": "Travel booking for flights and hotels.",
+      "icon": "/a/images/ap/expedia.webp",
+      "url": "https://www.expedia.com"
+    }
+  ]
+}

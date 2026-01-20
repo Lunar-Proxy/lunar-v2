@@ -1,0 +1,118 @@
+---
+import '@/main.css';
+import ImportLucide from '../layouts/lucide.astro';
+
+interface Game {
+  name: string;
+  desc: string;
+  url: string;
+  icon: string;
+}
+
+const { list = [] }: { list?: Game[] } = Astro.props;
+const { type = '' }: { type?: string } = Astro.props;
+const sorted = [...list].sort((a, b) => a.name.localeCompare(b.name));
+---
+
+<html lang="en">
+  <body class="bg-background font-linux text-text-header min-h-screen">
+    <div class="mx-auto max-w-7xl p-6">
+      <div class="mb-6">
+        <div class="mb-4 flex items-center justify-between">
+          <h1 class="text-2xl font-bold">
+            {type === 'games' ? 'Lunar Games' : type === 'app' ? 'Lunar Apps' : 'Assets'}
+          </h1>
+          <div class="bg-background-overlay flex gap-1 rounded-lg p-1">
+            <button
+              data-view="grid"
+              class="bg-background text-text-header flex h-9 w-9 items-center justify-center rounded transition-colors"
+            >
+              <i data-lucide="grid-3x3" class="h-4 w-4"></i>
+            </button>
+            <button
+              data-view="compact"
+              class="text-text-secondary flex h-9 w-9 items-center justify-center rounded transition-colors"
+            >
+              <i data-lucide="layout-grid" class="h-4 w-4"></i>
+            </button>
+            <button
+              data-view="list"
+              class="text-text-secondary flex h-9 w-9 items-center justify-center rounded transition-colors"
+            >
+              <i data-lucide="list" class="h-4 w-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="mb-3 flex flex-wrap items-center gap-2">
+          <div class="relative max-w-md min-w-[240px] flex-1">
+            <i data-lucide="search" class="text-text-secondary absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2"></i>
+            <input
+              type="text"
+              data-input
+              placeholder="Search assets..."
+              class="bg-background-overlay text-text-header placeholder-text-secondary/60 focus:ring-text-secondary/30 h-10 w-full rounded-lg pr-3 pl-10 text-sm focus:ring-1 focus:outline-none"
+            />
+          </div>
+          <button
+            data-random
+            class="bg-background-overlay text-text-secondary flex h-10 items-center gap-2 rounded-lg px-3 text-sm"
+          >
+            <i data-lucide="shuffle" class="h-4 w-4"></i>
+            Random
+          </button>
+          <button
+            data-sort
+            class="bg-background-overlay text-text-secondary flex h-10 items-center gap-2 rounded-lg px-3 text-sm"
+          >
+            <i data-lucide="arrow-up-down" class="h-4 w-4"></i>
+            <span>A-Z</span>
+          </button>
+          <button
+            data-clear
+            class="bg-background-overlay text-text-secondary flex h-10 items-center gap-2 rounded-lg px-3 text-sm"
+          >
+            <i data-lucide="x" class="h-4 w-4"></i>
+            Clear
+          </button>
+        </div>
+
+        <div class="text-text-secondary text-sm">
+          Showing <span data-visible class="text-text-header">{sorted.length}</span> of {sorted.length}
+        </div>
+      </div>
+
+      <div data-container class="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {
+          sorted.map(g => (
+            <div
+              data-href={g.url}
+              data-name={g.name}
+              data-bg={g.icon}
+              class="card card-loading group bg-background-overlay relative flex h-44 cursor-pointer flex-col justify-end overflow-hidden rounded-lg transition-transform hover:scale-[1.02]"
+              style="animation: fadeIn 0.3s ease-out"
+            >
+              <div class="card-bg absolute inset-0 bg-cover bg-center opacity-70 transition-opacity group-hover:opacity-80" />
+              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+              <div class="relative z-10 p-4">
+                <h2 class="mb-1 font-semibold text-white drop-shadow-lg">{g.name}</h2>
+                <p class="line-clamp-2 text-xs text-gray-300 drop-shadow-md">{g.desc}</p>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+
+      <div data-empty class="hidden flex-col items-center justify-center py-16 text-center">
+        <div class="bg-background-overlay rounded-lg p-8">
+          <i data-lucide="inbox" class="text-text-secondary/50 mx-auto mb-3 h-12 w-12"></i>
+          <h3 class="text-text-header mb-1 text-lg font-semibold">No assets found</h3>
+          <p class="text-text-secondary text-sm">Try a different search</p>
+        </div>
+      </div>
+    </div>
+
+    <ImportLucide />
+    <script src="../utils/assets"></script>
+  </body>
+</html>

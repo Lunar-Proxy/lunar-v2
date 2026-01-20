@@ -1,0 +1,54 @@
+---
+import '@/main.css';
+import ImportLucide from './lucide.astro';
+const shortcuts = [
+  {
+    name: 'YouTube',
+    url: 'https://youtube.com',
+    icon: '/a/images/bm/yt.png',
+  },
+  {
+    name: 'X',
+    url: 'https://x.com',
+    icon: 'https://abs.twimg.com/favicons/twitter.2.ico',
+  },
+  {
+    name: 'GitHub',
+    url: 'https://github.com',
+    icon: '/a/images/bm/gh.ico',
+  },
+  {
+    name: 'Discord',
+    url: 'https://discord.com',
+    icon: '/a/images/bm/disc.ico',
+  },
+  {
+    name: 'Google',
+    url: 'https://google.com',
+    icon: '/a/images/bm/goo.ico',
+  },
+  {
+    name: 'Wikipedia',
+    url: 'https://wikipedia.org',
+    icon: '/a/images/bm/wiki.png',
+  },
+];
+---
+
+<div class="relative mt-10 flex w-full max-w-4xl flex-row flex-wrap items-center justify-center gap-7 px-2">
+  {
+    shortcuts.map(shortcut => (
+      <a
+        data-short={shortcut.url}
+        class="shortcut-card bg-background-overlay/80 border-border-default/20 group relative flex max-w-40 min-w-30 cursor-pointer flex-col items-center justify-center space-y-3 rounded-2xl border p-5 shadow-lg backdrop-blur-md transition-all duration-200 hover:scale-105"
+      >
+        <div class="bg-background-overlay/90 border-border-default/20 flex h-16 w-16 items-center justify-center overflow-hidden rounded-xl border">
+          <img src={shortcut.icon} class="shortcut-favicon h-10 w-10 object-contain" alt={shortcut.name + ' icon'} />
+        </div>
+        <p class="text-text-header max-w-30 text-center text-base font-semibold wrap-break-word">{shortcut.name}</p>
+      </a>
+    ))
+  }
+</div>
+<script src="@scripts/shortcuts.ts"></script>
+<ImportLucide />

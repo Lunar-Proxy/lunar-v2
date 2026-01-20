@@ -1,0 +1,22 @@
+---
+import '@/main.css';
+import GameLayout from '../components/asset.astro';
+import gaymes from '@assets/json/lists.json';
+
+const gList = gaymes.gms;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lunar Games</title>
+  </head>
+  <body>
+    <script is:inline src="/bm/index.js"></script>
+    <script is:inline src="/data/all.js"></script>
+    <script is:inline src="/tmp/config.js"></script>
+    <script is:inline src="/tmp/bundle.js"></script>
+    <GameLayout list={gList} type="games" />
+  </body>
+</html>

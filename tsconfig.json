@@ -1,0 +1,20 @@
+{
+  "extends": "./node_modules/astro/tsconfigs/strict",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@scripts/*": ["src/utils/*"],
+      "/@lb/*": ["public/lib/*"],
+      "@assets/*": ["public/a/*"]
+    }
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "public/bundled/**",
+    "lc/**",
+    "bm/**",
+    "tmp/**"
+  ]
+}

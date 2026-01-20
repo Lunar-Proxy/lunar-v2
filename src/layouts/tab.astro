@@ -1,0 +1,141 @@
+---
+import ImportLucide from './lucide.astro';
+import '@/main.css';
+
+const navButtons = [
+  { id: 'back', icon: 'arrow-left' },
+  { id: 'forward', icon: 'arrow-right' },
+  {
+    id: 'refresh',
+    icon: 'refresh-cw',
+    class: 'group',
+    iconClass: 'transition-transform duration-500',
+  },
+  { id: 'home', icon: 'house' },
+];
+
+const menuSections = [
+  [
+    { icon: 'plus', label: 'New Tab' },
+    { icon: 'maximize-2', label: 'Full Screen' },
+    { icon: 'refresh-cw', label: 'Reload' },
+  ],
+  [
+    { icon: 'code', label: 'Inspect Element' },
+    { icon: 'glasses', label: 'AB Cloak' },
+    { icon: 'log-out', label: 'Panic' },
+  ],
+  [{ icon: 'settings', label: 'Settings' }],
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="@scripts/tb.ts"></script>
+    <script src="@scripts/menu.ts"></script>
+    <script src="@scripts/suggestions.ts"></script>
+  </head>
+
+  <body class="bg-gray-900 p-4 font-sans text-white">
+    <div class="w-full">
+      <div
+        id="tab-wrapper"
+        class="relative isolate flex h-14 items-end overflow-hidden rounded-t-2xl bg-[#1c1a2b] px-2"
+      >
+        <div class="flex w-full items-center gap-2">
+          <div id="tcontainer" class="flex max-w-full flex-nowrap gap-2 overflow-x-auto"></div>
+          <button
+            id="add"
+            class="relative -top-1/2 flex h-8 w-8 items-center justify-center rounded-md text-gray-400 transition hover:bg-gray-700 hover:text-white"
+            aria-label="Add new tab"
+          >
+            <i data-lucide="plus" class="h-4 w-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex h-12 items-center gap-4 border-t border-[#3a3758] bg-[#1c1a2b] px-4">
+        <div class="flex items-center gap-2">
+          {
+            navButtons.map(({ id, icon, class: btnClass, iconClass }) => (
+              <button
+                id={id}
+                class:list={[
+                  'flex h-8 w-8 items-center justify-center rounded-md text-gray-400 transition hover:bg-gray-700 hover:text-white',
+                  btnClass,
+                ]}
+                aria-label={id}
+              >
+                <i
+                  data-lucide={icon}
+                  class:list={['h-4 w-4', iconClass, id === 'refresh' ? 'group-hover:animate-spin' : '']}
+                />
+              </button>
+            ))
+          }
+        </div>
+        <div class="relative flex grow flex-col">
+          <div class="relative w-full">
+            <div class="absolute top-1/2 left-3 z-20 flex -translate-y-1/2 items-center gap-2">
+              <i data-lucide="lock" class="h-4 w-4 text-green-500"></i>
+            </div>
+            <input
+              type="text"
+              id="urlbar"
+              class="h-9 w-full rounded-full border border-[#3a3758] bg-[#23213a] pr-12 pl-10 text-[15px] text-gray-200 shadow-sm transition-colors placeholder:text-gray-500 hover:text-white focus:ring-0 focus:outline-none"
+              placeholder="Search or enter address"
+            />
+
+            <button
+              id="fav"
+              class="absolute top-1/2 right-1 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-md text-gray-400 transition hover:bg-gray-700 hover:text-white"
+              aria-label="Bookmark this page"
+            >
+              <i data-lucide="bookmark" class="h-[18px] w-[18px] transition-transform duration-300 ease-out"></i>
+            </button>
+
+            <div
+              id="loading-bar"
+              class="pointer-events-none fixed inset-x-0 z-50 hidden h-[3px] w-screen rounded-full bg-[#5c59a5] opacity-0 transition-all duration-200"
+            >
+            </div>
+          </div>
+        </div>
+
+        <button
+          id="menubtn"
+          class="z-[110] flex h-8 w-8 items-center justify-center rounded-md text-gray-400 transition hover:bg-gray-700 hover:text-white"
+          aria-label="Open menu"
+        >
+          <i data-lucide="menu" class="h-5 w-5"></i>
+        </button>
+      </div>
+
+    <div class="relative">
+  <div
+    id="menu"
+    class="absolute top-full right-0 z-[1000] mt-2 hidden w-64 divide-y divide-[#3a3758] overflow-hidden rounded-2xl border border-[#3a3758] bg-[#1f1f30] font-medium shadow-2xl backdrop-blur-md"
+  >
+    {
+      menuSections.map(section => (
+        <div class="flex flex-col">
+          {section.map(({ icon, label }) => (
+            <button class="menu-item flex w-full items-center gap-3 px-4 py-2.5 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
+              <i data-lucide={icon} class="h-5 w-5 shrink-0" />
+              <span class="text-sm whitespace-nowrap">{label}</span>
+            </button>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+    <div id="fcontainer" class="absolute inset-x-0 top-[6.4rem] bottom-0 w-full overflow-hidden rounded-b-lg"></div>
+
+    <ImportLucide />
+  </body>
+</html>

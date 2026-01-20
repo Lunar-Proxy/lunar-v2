@@ -1,0 +1,53 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Prompt:wght@400;500;600;700;800&display=swap");
+@import "tailwindcss";
+@theme {
+  --font-linux: outfit, sans-serif;
+  --font-fit: Prompt, sans-serif;
+  --color-background: var(--background);
+  --color-background-overlay: var(--background-overlay);
+  --color-background-disabled: var(--background-disabled);
+  --color-border-default: var(--border);
+  --color-text-header: var(--text-header);
+  --color-text-secondary: var(--text-secondary);
+  --animate-spin: spin 1s linear 1;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+@layer base {
+  :root {
+    --background: #232136;
+    --background-overlay: #1f1d2e;
+    --border: #374151;
+    --text-header: #e0def4;
+    --text-secondary: #a19eb3;
+    --background-disabled: #2a2b3c;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    background-color: var(--background);
+    color: var(--text-secondary);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-accent);
+    color: var(--text-header);
+  }
+
+  body {
+    @apply bg-background;
+  }
+}

@@ -1,0 +1,13 @@
+<script>
+  import { createIcons, icons } from 'lucide';
+
+  createIcons({ icons });
+
+  document.addEventListener('astro:page-load', () => {
+    createIcons({ icons });
+  });
+
+  document.addEventListener('astro:after-swap', () => {
+    createIcons({ icons });
+  });
+</script>
