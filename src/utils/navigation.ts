@@ -191,7 +191,7 @@ urlbar?.addEventListener('keydown', async e => {
   navigate(url);
 });
 
-document.querySelectorAll<HTMLElement>('aside button').forEach(el => {
+parent.document.querySelectorAll<HTMLElement>('aside button').forEach(el => {
   el.addEventListener('click', ev => {
     ev.preventDefault();
     const targetUrl = el.getAttribute('data-url');
