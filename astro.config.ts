@@ -1,5 +1,4 @@
 import node from '@astrojs/node';
-
 import { baremuxPath } from '@mercuryworkshop/bare-mux/node';
 import { libcurlPath } from '@mercuryworkshop/libcurl-transport';
 import { scramjetPath } from '@mercuryworkshop/scramjet/path';
@@ -13,7 +12,6 @@ import { normalizePath } from 'vite';
 import type { Plugin } from 'vite';
 import obfuscatorPlugin from 'vite-plugin-javascript-obfuscator';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
-
 import { version } from './package.json';
 
 wisp.options.wisp_version = 2;
@@ -25,53 +23,6 @@ function WispServer(): Plugin {
       server.httpServer?.on('upgrade', (req: IncomingMessage, socket: any, head: any) => {
         if (req.url?.endsWith('/w/')) {
           wisp.routeRequest(req, socket, head);
-        }
-      });
-    },
-  };
-}
-
-export function searchBackend(): Plugin {
-  return {
-    name: 'search-suggestions-vite',
-    configureServer({ middlewares }) {
-      middlewares.use('/api/query', async (req: IncomingMessage, res: ServerResponse) => {
-        const urlObj = new URL(req.url ?? '', 'http://localhost');
-        const query = urlObj.searchParams.get('q');
-
-        if (!query) {
-          res.statusCode = 400;
-          res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify({ error: 'Query parameter "q" is required.' }));
-          return;
-        }
-
-        try {
-          const response = await fetch(
-            `https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}`,
-            {
-              headers: {
-                'User-Agent': 'Mozilla/5.0',
-                Accept: 'application/json',
-              },
-            },
-          );
-
-          if (!response.ok) {
-            res.statusCode = response.status;
-            res.end(JSON.stringify({ error: 'Failed to fetch suggestions.' }));
-            return;
-          }
-
-          const data = (await response.json()) as Array<{ phrase: string }>;
-          const suggestions = data.map(d => d.phrase).filter(Boolean);
-
-          res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify({ suggestions }));
-        } catch (err) {
-          console.error('Backend suggestion error:', err);
-          res.statusCode = 500;
-          res.end(JSON.stringify({ error: 'Internal server error.' }));
         }
       });
     },
@@ -153,7 +104,6 @@ export default defineConfig({
     plugins: [
       tailwindcss(),
       WispServer(),
-      searchBackend(),
       obfuscatorPlugin({
         exclude: [
           'tmp/**',
