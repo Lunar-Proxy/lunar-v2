@@ -5,210 +5,216 @@ createIcons({ icons });
   document.addEventListener(evt, () => createIcons({ icons }));
 });
 
-const input = document.getElementById('urlbar') as HTMLInputElement | null;
-const quickLinks: Record<string, string> = {
+const urlbar = document.getElementById('urlbar') as HTMLInputElement | null;
+const quicklinks: Record<string, string> = {
   'lunar://settings': 'Settings',
   'lunar://new': 'New Page',
   'lunar://games': 'Games',
   'lunar://apps': 'Apps',
 };
 
-let debounceTimer: number | null = null;
-let isMenuOpen = false;
-let currentQuery = '';
+let debounce: number | null = null;
+let menuopen = false;
+let prevquery = '';
 
-function isQuickLink(str: string): boolean {
+function isquicklink(str: string): boolean {
   return str.startsWith('lunar://');
 }
 
-function matchQuickLinks(str: string): [string, string][] {
-  const q = str.toLowerCase();
-  return Object.entries(quickLinks).filter(([k]) => k.toLowerCase().includes(q));
+function getquicklinks(str: string): [string, string][] {
+  const lc = str.toLowerCase();
+  return Object.entries(quicklinks).filter(([k]) => k.toLowerCase().includes(lc));
 }
 
-async function getSuggestions(query: string): Promise<string[]> {
+async function fetchsuggestions(query: string): Promise<string[]> {
   if (!query) return [];
   try {
-    const res = await fetch(`/api/query?q=${encodeURIComponent(query)}`);
-    if (!res.ok) return [];
-    const data = await res.json();
-    return Array.isArray(data.suggestions) ? data.suggestions : [];
+    const resp = await fetch(`/api/query?q=${encodeURIComponent(query)}`);
+    if (!resp.ok) return [];
+    const json = await resp.json();
+    return Array.isArray(json.suggestions) ? json.suggestions : [];
   } catch {
     return [];
   }
 }
 
-function isMathExpr(str: string): boolean {
-  const v = str.trim().replace(/x/gi, '*');
-  return /^[0-9+\-*/().%^√\s]+$/.test(v) && !/^[0-9.]+$/.test(v) && /[+\-*/%^√()]/.test(v);
+function ismathquery(str: string): boolean {
+  const normalized = str.trim().replace(/x/gi, '*');
+  return /^[0-9+\-*/().%^√\s]+$/.test(normalized) && 
+         !/^[0-9.]+$/.test(normalized) && 
+         /[+\-*/%^√()]/.test(normalized);
 }
 
-function calcExpr(str: string): string | null {
+function evalmath(str: string): string | null {
   try {
-    const expr = str
+    const expression = str
       .replace(/x/gi, '*')
       .replace(/√(\d+)/g, 'Math.sqrt($1)')
       .replace(/√/g, 'Math.sqrt')
       .replace(/\^/g, '**')
       .replace(/(\d+)%/g, '($1/100)');
-    const result = Function('"use strict";return(' + expr + ')')();
-    return typeof result === 'number' && isFinite(result) ? String(result) : null;
+    const answer = Function('"use strict";return(' + expression + ')')();
+    return typeof answer === 'number' && isFinite(answer) ? String(answer) : null;
   } catch {
     return null;
   }
 }
 
-function makeDropdown(): HTMLDivElement {
-  hideMenu();
-  const dropdown = document.createElement('div');
-  dropdown.id = 'suggestions';
-  dropdown.className = 'absolute top-full z-50 mt-0 w-full rounded-b-xl border-x border-b border-[#3a3758] bg-[#1f1f30]/95 shadow-2xl backdrop-blur-xl transition-all duration-200 overflow-y-auto opacity-0 hidden';
-  input?.parentElement?.appendChild(dropdown);
-  return dropdown;
+function createdropdown(): HTMLDivElement {
+  closemenu();
+  const menu = document.createElement('div');
+  menu.id = 'suggestions';
+  menu.className = 'absolute top-full z-50 mt-0 w-full rounded-b-xl border-x border-b border-[#3a3758] bg-[#1f1f30]/95 shadow-2xl backdrop-blur-xl transition-all duration-200 overflow-y-auto opacity-0 hidden';
+  urlbar?.parentElement?.appendChild(menu);
+  return menu;
 }
 
-function showMenu(menu: HTMLDivElement): void {
-  if (!input || !input.value.trim()) {
-    hideMenu();
+function openmenu(menu: HTMLDivElement): void {
+  if (!urlbar?.value.trim()) {
+    closemenu();
     return;
   }
   menu.classList.remove('opacity-0', 'hidden');
-  const rect = input.getBoundingClientRect();
-  const maxHeight = window.innerHeight - rect.bottom - 16;
-  menu.style.maxHeight = `${Math.max(maxHeight, 100)}px`;
+  const bounds = urlbar.getBoundingClientRect();
+  const maxheight = window.innerHeight - bounds.bottom - 16;
+  menu.style.maxHeight = `${Math.max(maxheight, 100)}px`;
 }
 
-function hideMenu(): void {
+function closemenu(): void {
   document.getElementById('suggestions')?.remove();
-  isMenuOpen = false;
+  menuopen = false;
 }
 
-function setInputValue(val: string): void {
-  if (!input) return;
-  input.value = val;
-  hideMenu();
-  const event = new KeyboardEvent('keydown', { 
+function selectitem(value: string): void {
+  if (!urlbar) return;
+  urlbar.value = value;
+  closemenu();
+  urlbar.dispatchEvent(new KeyboardEvent('keydown', { 
     key: 'Enter', 
     code: 'Enter',
     keyCode: 13,
     bubbles: true,
     cancelable: true
-  });
-  input.dispatchEvent(event);
+  }));
 }
 
-function escapeHtml(text: string): string {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
+function htmlescape(text: string): string {
+  const temp = document.createElement('div');
+  temp.textContent = text;
+  return temp.innerHTML;
 }
 
-function renderMenu(suggestions: string[], quick: [string, string][], math: string | null, query: string): void {
-  hideMenu();
-  if (!input || !input.value.trim()) return;
-  const list = suggestions.slice(0, 7);
-  const showQuick = isQuickLink(query);
-  if (!list.length && !quick.length && !math) return;
+function rendermenu(suggestions: string[], quickmatches: [string, string][], mathresult: string | null, searchquery: string): void {
+  closemenu();
+  if (!urlbar?.value.trim()) return;
   
-  const dropdown = makeDropdown();
-  const html: string[] = [];
+  const trimmed = suggestions.slice(0, 7);
+  const showquick = isquicklink(searchquery);
   
-  if (math) {
-    html.push(`<div class="flex items-center space-x-3 px-4 py-3 text-(--text-header) cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${escapeHtml(math)}"><i data-lucide="calculator" class="h-5 w-5 text-green-400"></i><span>${escapeHtml(math)}</span></div>`);
+  if (!trimmed.length && !quickmatches.length && !mathresult) return;
+  
+  const dropdown = createdropdown();
+  const markup: string[] = [];
+  
+  if (mathresult) {
+    markup.push(`<div class="flex items-center space-x-3 px-4 py-3 text-(--text-header) cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${htmlescape(mathresult)}"><i data-lucide="calculator" class="h-5 w-5 text-green-400"></i><span>${htmlescape(mathresult)}</span></div>`);
   }
   
-  if (list.length) {
-    html.push(`<div class="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-(--text-secondary)">Suggestions for <span class="text-white">"${escapeHtml(query)}"</span></div>`);
-    list.forEach(suggestion => {
-      html.push(`<div class="flex items-center space-x-3 px-4 py-3 text-(--text-header) cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${escapeHtml(suggestion)}"><i data-lucide="search" class="h-4 w-4 text-(--text-secondary)"></i><span>${escapeHtml(suggestion)}</span></div>`);
+  if (trimmed.length) {
+    markup.push(`<div class="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-(--text-secondary)">Suggestions for <span class="text-white">"${htmlescape(searchquery)}"</span></div>`);
+    trimmed.forEach(sug => {
+      markup.push(`<div class="flex items-center space-x-3 px-4 py-3 text-(--text-header) cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${htmlescape(sug)}"><i data-lucide="search" class="h-4 w-4 text-(--text-secondary)"></i><span>${htmlescape(sug)}</span></div>`);
     });
   }
   
-  if (showQuick && quick.length) {
-    html.push(`<div class="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-(--text-secondary) border-t border-[#3a3758]">Lunar Links</div>`);
-    quick.forEach(([link, label]) => {
-      html.push(`<div class="flex items-center justify-between px-4 py-3 text-(--text-header) cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${escapeHtml(link)}"><div class="flex items-center space-x-3"><i data-lucide="globe" class="h-5 w-5 text-purple-400"></i><span>${escapeHtml(link)}</span></div><span class="text-xs text-(--text-secondary)">${escapeHtml(label)}</span></div>`);
+  if (showquick && quickmatches.length) {
+    markup.push(`<div class="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-(--text-secondary) border-t border-[#3a3758]">Lunar Links</div>`);
+    quickmatches.forEach(([link, desc]) => {
+      markup.push(`<div class="flex items-center justify-between px-4 py-3 text-(--text-header) cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${htmlescape(link)}"><div class="flex items-center space-x-3"><i data-lucide="globe" class="h-5 w-5 text-purple-400"></i><span>${htmlescape(link)}</span></div><span class="text-xs text-(--text-secondary)">${htmlescape(desc)}</span></div>`);
     });
   }
   
-  dropdown.innerHTML = html.join('');
-  dropdown.querySelectorAll<HTMLElement>('[data-value]').forEach(el => {
-    el.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      const value = el.dataset.value;
-      if (value) setInputValue(value);
+  dropdown.innerHTML = markup.join('');
+  dropdown.querySelectorAll<HTMLElement>('[data-value]').forEach(elem => {
+    elem.addEventListener('click', evt => {
+      evt.preventDefault();
+      evt.stopPropagation();
+      const val = elem.dataset.value;
+      if (val) selectitem(val);
     });
   });
   createIcons({ icons });
-  showMenu(dropdown);
-  isMenuOpen = true;
+  openmenu(dropdown);
+  menuopen = true;
 }
 
-async function updateMenu(): Promise<void> {
-  if (!input) return;
-  const value = input.value.trim();
-  if (!value) {
-    hideMenu();
+async function updatemenu(): Promise<void> {
+  if (!urlbar) return;
+  const current = urlbar.value.trim();
+  if (!current) {
+    closemenu();
     return;
   }
-  currentQuery = value;
-  const [suggestions, mathResult] = await Promise.all([
-    getSuggestions(value),
-    isMathExpr(value) ? calcExpr(value) : Promise.resolve(null),
+  prevquery = current;
+  const [suggestions, mathans] = await Promise.all([
+    fetchsuggestions(current),
+    ismathquery(current) ? evalmath(current) : Promise.resolve(null),
   ]);
-  if (input.value.trim() !== currentQuery) return;
-  const quickMatches = isQuickLink(value) ? matchQuickLinks(value) : [];
-  renderMenu(suggestions, quickMatches, mathResult, value);
+  if (urlbar.value.trim() !== prevquery) return;
+  const quickres = isquicklink(current) ? getquicklinks(current) : [];
+  rendermenu(suggestions, quickres, mathans, current);
 }
 
-function debounceUpdate(): void {
-  if (debounceTimer) clearTimeout(debounceTimer);
-  debounceTimer = window.setTimeout(() => {
-    if (!input || !input.value.trim()) {
-      hideMenu();
+function scheduleupdate(): void {
+  if (debounce) clearTimeout(debounce);
+  debounce = window.setTimeout(() => {
+    if (!urlbar?.value.trim()) {
+      closemenu();
       return;
     }
-    updateMenu();
+    updatemenu();
   }, 150);
 }
 
-function closeMenuDelayed(): void {
-  if (debounceTimer) {
-    clearTimeout(debounceTimer);
-    debounceTimer = null;
+function handleblur(): void {
+  if (debounce) {
+    clearTimeout(debounce);
+    debounce = null;
   }
-  setTimeout(() => hideMenu(), 150);
+  setTimeout(() => closemenu(), 150);
 }
 
-if (input) {
-  input.addEventListener('input', debounceUpdate);
-  input.addEventListener('focus', () => {
-    if (input.value.trim()) updateMenu();
+if (urlbar) {
+  urlbar.addEventListener('input', scheduleupdate);
+  urlbar.addEventListener('focus', () => {
+    if (urlbar.value.trim()) updatemenu();
   });
-  input.addEventListener('blur', closeMenuDelayed);
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      e.preventDefault();
-      hideMenu();
-    } else if (e.key === 'Enter') {
-      hideMenu();
+  urlbar.addEventListener('blur', handleblur);
+  urlbar.addEventListener('keydown', evt => {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+      closemenu();
+    } else if (evt.key === 'Enter') {
+      closemenu();
     }
   });
+  
   window.addEventListener('resize', () => {
     const dropdown = document.getElementById('suggestions') as HTMLDivElement | null;
-    if (dropdown && isMenuOpen && input && input.value.trim()) {
-      showMenu(dropdown);
+    if (dropdown && menuopen && urlbar?.value.trim()) {
+      openmenu(dropdown);
     } else if (dropdown) {
-      hideMenu();
+      closemenu();
     }
   });
-  document.addEventListener('mousedown', (e) => {
-    const target = e.target as HTMLElement;
-    if (!target.closest('#urlbar') && !target.closest('#suggestions')) hideMenu();
+  
+  document.addEventListener('mousedown', evt => {
+    const target = evt.target as HTMLElement;
+    if (!target.closest('#urlbar') && !target.closest('#suggestions')) closemenu();
   });
-  document.addEventListener('mousedown', (e) => {
-    const target = e.target as HTMLElement;
-    if (target.closest('#suggestions')) e.preventDefault();
+  
+  document.addEventListener('mousedown', evt => {
+    const target = evt.target as HTMLElement;
+    if (target.closest('#suggestions')) evt.preventDefault();
   }, true);
 }

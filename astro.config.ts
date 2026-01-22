@@ -29,6 +29,53 @@ function WispServer(): Plugin {
   };
 }
 
+ function searchBackend(): Plugin {
+  return {
+    name: 'search-suggestions-vite',
+    configureServer({ middlewares }) {
+      middlewares.use('/api/query', async (req: IncomingMessage, res: ServerResponse) => {
+        const urlObj = new URL(req.url ?? '', 'http://localhost');
+        const query = urlObj.searchParams.get('q');
+
+        if (!query) {
+          res.statusCode = 400;
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ error: 'Query parameter "q" is required.' }));
+          return;
+        }
+
+        try {
+          const response = await fetch(
+            `https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}`,
+            {
+              headers: {
+                'User-Agent': 'Mozilla/5.0',
+                Accept: 'application/json',
+              },
+            },
+          );
+
+          if (!response.ok) {
+            res.statusCode = response.status;
+            res.end(JSON.stringify({ error: 'Failed to fetch suggestions.' }));
+            return;
+          }
+
+          const data = (await response.json()) as Array<{ phrase: string }>;
+          const suggestions = data.map(d => d.phrase).filter(Boolean);
+
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ suggestions }));
+        } catch (err) {
+          console.error('Backend suggestion error:', err);
+          res.statusCode = 500;
+          res.end(JSON.stringify({ error: 'Internal server error.' }));
+        }
+      });
+    },
+  };
+}
+
 const OBFUSCATOR_SEED = Math.floor(Math.random() * 9999999);
 
 export default defineConfig({
@@ -104,6 +151,7 @@ export default defineConfig({
     plugins: [
       tailwindcss(),
       WispServer(),
+      searchBackend(),
       obfuscatorPlugin({
         exclude: [
           'tmp/**',
