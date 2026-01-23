@@ -22,58 +22,53 @@ const sorted = [...list].sort((a, b) => a.name.localeCompare(b.name));
           <h1 class="text-2xl font-bold">
             {type === 'games' ? 'Lunar Games' : type === 'app' ? 'Lunar Apps' : 'Assets'}
           </h1>
-          <div class="bg-background-overlay flex gap-1 rounded-lg p-1">
-            <button
-              data-view="grid"
-              class="bg-background text-text-header flex h-9 w-9 items-center justify-center rounded transition-colors"
-            >
-              <i data-lucide="grid-3x3" class="h-4 w-4"></i>
-            </button>
-            <button
-              data-view="compact"
-              class="text-text-secondary flex h-9 w-9 items-center justify-center rounded transition-colors"
-            >
-              <i data-lucide="layout-grid" class="h-4 w-4"></i>
-            </button>
-            <button
-              data-view="list"
-              class="text-text-secondary flex h-9 w-9 items-center justify-center rounded transition-colors"
-            >
-              <i data-lucide="list" class="h-4 w-4"></i>
-            </button>
+          <div class="flex items-center gap-2">
+            <div class="bg-background-overlay flex gap-1 rounded-lg p-1">
+              <button
+                data-view="grid"
+                class="bg-background text-text-header flex h-9 w-9 items-center justify-center rounded transition-colors"
+              >
+                <i data-lucide="grid-3x3" class="h-4 w-4"></i>
+              </button>
+              <button
+                data-view="compact"
+                class="text-text-secondary flex h-9 w-9 items-center justify-center rounded transition-colors"
+              >
+                <i data-lucide="layout-grid" class="h-4 w-4"></i>
+              </button>
+              <button
+                data-view="list"
+                class="text-text-secondary flex h-9 w-9 items-center justify-center rounded transition-colors"
+              >
+                <i data-lucide="list" class="h-4 w-4"></i>
+              </button>
+            </div>
           </div>
         </div>
 
         <div class="mb-3 flex flex-wrap items-center gap-2">
-          <div class="relative max-w-md min-w-[240px] flex-1">
+          <div class="relative max-w-md min-w-60 flex-1">
             <i data-lucide="search" class="text-text-secondary absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2"></i>
             <input
               type="text"
               data-input
-              placeholder="Search assets..."
+              placeholder={`Search the ${type === 'games' ? 'Games' : type === 'app' ? 'Apps' : 'Assets'}`}
               class="bg-background-overlay text-text-header placeholder-text-secondary/60 focus:ring-text-secondary/30 h-10 w-full rounded-lg pr-3 pl-10 text-sm focus:ring-1 focus:outline-none"
             />
           </div>
           <button
             data-random
-            class="bg-background-overlay text-text-secondary flex h-10 items-center gap-2 rounded-lg px-3 text-sm"
+            class="bg-background-overlay text-text-secondary hover:bg-background hover:text-text-header flex h-10 items-center gap-2 rounded-lg px-3 text-sm transition-colors"
           >
             <i data-lucide="shuffle" class="h-4 w-4"></i>
             Random
           </button>
           <button
             data-sort
-            class="bg-background-overlay text-text-secondary flex h-10 items-center gap-2 rounded-lg px-3 text-sm"
+            class="bg-background-overlay text-text-secondary hover:bg-background hover:text-text-header flex h-10 items-center gap-2 rounded-lg px-3 text-sm transition-colors"
           >
             <i data-lucide="arrow-up-down" class="h-4 w-4"></i>
             <span>A-Z</span>
-          </button>
-          <button
-            data-clear
-            class="bg-background-overlay text-text-secondary flex h-10 items-center gap-2 rounded-lg px-3 text-sm"
-          >
-            <i data-lucide="x" class="h-4 w-4"></i>
-            Clear
           </button>
         </div>
 
@@ -93,7 +88,7 @@ const sorted = [...list].sort((a, b) => a.name.localeCompare(b.name));
               style="animation: fadeIn 0.3s ease-out"
             >
               <div class="card-bg absolute inset-0 bg-cover bg-center opacity-70 transition-opacity group-hover:opacity-80" />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+              <div class="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent" />
               <div class="relative z-10 p-4">
                 <h2 class="mb-1 font-semibold text-white drop-shadow-lg">{g.name}</h2>
                 <p class="line-clamp-2 text-xs text-gray-300 drop-shadow-md">{g.desc}</p>

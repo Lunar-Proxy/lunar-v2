@@ -1,4 +1,3 @@
-
 import ConfigAPI from './config';
 import { TabManager } from './tb';
 
@@ -7,6 +6,7 @@ interface MenuElements {
   menuContainer: HTMLDivElement;
   newTab: HTMLButtonElement;
   fullscreen: HTMLButtonElement;
+  darkmode: HTMLButtonElement;
   reload: HTMLButtonElement;
   inspectElement: HTMLButtonElement;
   cloak: HTMLButtonElement;
@@ -39,6 +39,7 @@ class MenuHandler {
       { element: this.elements.fullscreen, combo: 'Ctrl+Alt+Z' },
       { element: this.elements.reload, combo: 'Ctrl+Alt+R' },
       { element: this.elements.inspectElement, combo: 'Ctrl+Alt+I' },
+      { element: this.elements.darkmode, combo: 'Ctrl+Alt+X' },
       { element: this.elements.cloak, combo: 'Ctrl+Alt+C' },
       { element: this.elements.panic, combo: panicKeybind },
       { element: this.elements.settings, combo: 'Ctrl+,' },
@@ -93,6 +94,7 @@ class MenuHandler {
     this.elements.cloak.addEventListener('click', this.handleCloak.bind(this));
     this.elements.fullscreen.addEventListener('click', this.handleFullscreen.bind(this));
     this.elements.inspectElement.addEventListener('click', this.handleInspectElement.bind(this));
+    this.elements.darkmode.addEventListener('click', this.handleDarkMode.bind(this));
     this.elements.panic.addEventListener('click', this.handlePanic.bind(this));
   }
 
@@ -131,6 +133,24 @@ class MenuHandler {
 
   private handleReload(): void {
     this.getActiveFrame()?.contentWindow?.location.reload();
+  }
+  
+  private handleDarkMode(): void {
+    const frame = this.getActiveFrame();
+    if (!frame?.contentWindow || !frame.contentDocument) return;
+    const script = frame.contentDocument.createElement('script');
+    script.textContent = `(() => {
+      let style = document.getElementById('dark-mode');
+      if (style) {
+        style.parentNode.removeChild(style);
+      } else {
+        style = document.createElement('style');
+        style.id = 'dark-mode';
+        style.textContent = 'html { filter: invert(100%) hue-rotate(180deg); } iframe,img,object,video { filter: invert(90%) hue-rotate(180deg); }';
+        document.head.appendChild(style);
+      }
+    })();`;
+    frame.contentDocument.head.appendChild(script);
   }
 
   private async handleCloak(): Promise<void> {
@@ -237,12 +257,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.error('Required menu elements not found');
     return;
   }
-  const [newTab, fullscreen, reload, inspectElement, cloak, panic, settings] = menuItems;
+  const [newTab, fullscreen, reload, inspectElement, darkmode, cloak, panic, settings] = menuItems;
   const elements: MenuElements = {
     menuButton,
     menuContainer,
     newTab,
     fullscreen,
+    darkmode,
     reload,
     inspectElement,
     cloak,

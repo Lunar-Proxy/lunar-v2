@@ -22,10 +22,13 @@ const menuSections = [
   ],
   [
     { icon: 'code', label: 'Inspect Element' },
+    { icon: 'moon', label: 'Dark Mode' },
     { icon: 'glasses', label: 'AB Cloak' },
-    { icon: 'log-out', label: 'Panic' },
   ],
-  [{ icon: 'settings', label: 'Settings' }],
+  [
+    { icon: 'log-out', label: 'Panic' },
+    { icon: 'settings', label: 'Settings' },
+  ],
 ];
 ---
 
@@ -92,14 +95,14 @@ const menuSections = [
 
             <button
               id="fav"
-              class="absolute top-1/2 right-1 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-md text-gray-400 transition hover:bg-gray-700 hover:text-white"            >
-            >
-              <i data-lucide="bookmark" class="h-[18px] w-[18px] transition-transform duration-300 ease-out"></i>
+              class="absolute top-1/2 right-1 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-md text-gray-400 transition hover:bg-gray-700 hover:text-white"            
+              >
+              <i data-lucide="bookmark" class="h-5 w-5 transition-transform duration-300 ease-out"></i>
             </button>
 
             <div
               id="loading-bar"
-              class="pointer-events-none fixed inset-x-0 z-50 hidden h-[3px] w-screen rounded-full bg-[#5c59a5] opacity-0 transition-all duration-200"
+              class="pointer-events-none fixed inset-x-0 z-50 hidden h-0.75 w-screen rounded-full bg-[#5c59a5] opacity-0 transition-all duration-200"
             >
             </div>
           </div>
@@ -107,7 +110,7 @@ const menuSections = [
 
         <button
           id="menubtn"
-          class="z-[110] flex h-8 w-8 items-center justify-center rounded-md text-gray-400 transition hover:bg-gray-700 hover:text-white"
+          class="z-110 flex h-8 w-8 items-center justify-center rounded-md text-gray-400 transition hover:bg-gray-700 hover:text-white"
           aria-label="Open menu"
         >
           <i data-lucide="menu" class="h-5 w-5"></i>
@@ -117,7 +120,7 @@ const menuSections = [
     <div class="relative">
   <div
     id="menu"
-    class="absolute top-full right-0 z-[1000] mt-2 hidden w-64 divide-y divide-[#3a3758] overflow-hidden rounded-2xl border border-[#3a3758] bg-[#1f1f30] font-medium shadow-2xl backdrop-blur-md"
+    class="absolute top-full right-0 z-1000 mt-2 hidden w-64 divide-y divide-[#3a3758] overflow-hidden rounded-2xl border border-[#3a3758] bg-[#1f1f30] font-medium shadow-2xl backdrop-blur-md"
   >
     {
       menuSections.map(section => (

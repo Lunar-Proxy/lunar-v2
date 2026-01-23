@@ -245,7 +245,7 @@ function renderTabs() {
   tabBar.appendChild(wrapper);
 }
 
-function updateActiveStyles() {
+function updateActive() {
   for (const tab of tabs) {
     if (tab.el) tab.el.className = getTabClass(tab.id === activeId);
   }
@@ -343,7 +343,7 @@ function switchTab(id: number) {
     tab.iframe.classList.toggle('hidden', tab.id !== id);
   }
   
-  updateActiveStyles();
+  updateActive();
   resetLoader();
 
   const activeTab = tabs.find(t => t.id === id);
