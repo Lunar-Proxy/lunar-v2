@@ -309,7 +309,7 @@ function openTab(src?: string) {
     document.addEventListener('DOMContentLoaded', () => openTab(src), { once: true });
     return;
   }
-  
+
   const tab: Tab = {
     id,
     title: 'New Tab',
@@ -317,11 +317,11 @@ function openTab(src?: string) {
     iframe: frame,
   };
   tabs.push(tab);
-  
+
   frameContainer.appendChild(frame);
   renderTabs();
   switchTab(id);
-  
+
   frame.onload = () => {
     handleFrameLoad(tab);
     resetLoader();
@@ -331,18 +331,18 @@ function openTab(src?: string) {
 
 function switchTab(id: number) {
   activeId = id;
-  
+
   if (urlWatcher) {
     clearInterval(urlWatcher);
     urlWatcher = null;
   }
-  
+
   prevHref = '';
-  
+
   for (const tab of tabs) {
     tab.iframe.classList.toggle('hidden', tab.id !== id);
   }
-  
+
   updateActive();
   resetLoader();
 
@@ -383,7 +383,7 @@ function switchTab(id: number) {
   const urlInput = document.getElementById('urlbar') as HTMLInputElement | null;
   urlWatcher = setInterval(() => {
     if (activeId !== id) return;
-    
+
     try {
       const tab = tabs.find(t => t.id === id);
       const href = tab?.iframe.contentWindow?.location.href;

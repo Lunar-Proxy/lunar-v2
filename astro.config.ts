@@ -29,7 +29,7 @@ function WispServer(): Plugin {
   };
 }
 
- function searchBackend(): Plugin {
+function searchBackend(): Plugin {
   return {
     name: 'search-suggestions-vite',
     configureServer({ middlewares }) {

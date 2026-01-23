@@ -1,5 +1,4 @@
-
-const encode = (url) => {
+const encode = url => {
   if (!url) return url;
   let r = '';
   for (let i = 0; i < url.length; i++) {
@@ -8,7 +7,7 @@ const encode = (url) => {
   return encodeURIComponent(r);
 };
 
-const decode = (url) => {
+const decode = url => {
   if (!url) return url;
   const [input, ...search] = url.split('?');
   let r = '';
@@ -18,7 +17,6 @@ const decode = (url) => {
   }
   return r + (search.length ? '?' + search.join('?') : '');
 };
-
 
 tmpConfig = {
   prefix: '/v1/tmp/',

@@ -49,10 +49,12 @@
 
 > **Note**  
 > Before deploying, install:
+>
 > - [Git](https://git-scm.com/downloads)
 > - [Node.js](https://nodejs.org/en/download/prebuilt-installer)
 >
 > Then install **pnpm**:
+>
 > ```bash
 > npm install -g pnpm
 > ```
@@ -60,6 +62,7 @@
 ### Production
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/lunar-proxy/lunar-v2
    cd lunar-v2

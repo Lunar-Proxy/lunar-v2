@@ -40,9 +40,11 @@ async function fetchsuggestions(query: string): Promise<string[]> {
 
 function ismathquery(str: string): boolean {
   const normalized = str.trim().replace(/x/gi, '*');
-  return /^[0-9+\-*/().%^√\s]+$/.test(normalized) && 
-         !/^[0-9.]+$/.test(normalized) && 
-         /[+\-*/%^√()]/.test(normalized);
+  return (
+    /^[0-9+\-*/().%^√\s]+$/.test(normalized) &&
+    !/^[0-9.]+$/.test(normalized) &&
+    /[+\-*/%^√()]/.test(normalized)
+  );
 }
 
 function evalmath(str: string): string | null {
@@ -64,7 +66,8 @@ function createdropdown(): HTMLDivElement {
   closemenu();
   const menu = document.createElement('div');
   menu.id = 'suggestions';
-  menu.className = 'absolute top-full z-50 mt-0 w-full rounded-b-xl border-x border-b border-[#3a3758] bg-[#1f1f30]/95 shadow-2xl backdrop-blur-xl transition-all duration-200 overflow-y-auto opacity-0 hidden';
+  menu.className =
+    'absolute top-full z-50 mt-0 w-full rounded-b-xl border-x border-b border-[#3a3758] bg-[#1f1f30]/95 shadow-2xl backdrop-blur-xl transition-all duration-200 overflow-y-auto opacity-0 hidden';
   urlbar?.parentElement?.appendChild(menu);
   return menu;
 }
@@ -89,13 +92,15 @@ function selectitem(value: string): void {
   if (!urlbar) return;
   urlbar.value = value;
   closemenu();
-  urlbar.dispatchEvent(new KeyboardEvent('keydown', { 
-    key: 'Enter', 
-    code: 'Enter',
-    keyCode: 13,
-    bubbles: true,
-    cancelable: true
-  }));
+  urlbar.dispatchEvent(
+    new KeyboardEvent('keydown', {
+      key: 'Enter',
+      code: 'Enter',
+      keyCode: 13,
+      bubbles: true,
+      cancelable: true,
+    }),
+  );
 }
 
 function htmlescape(text: string): string {
@@ -104,36 +109,51 @@ function htmlescape(text: string): string {
   return temp.innerHTML;
 }
 
-function rendermenu(suggestions: string[], quickmatches: [string, string][], mathresult: string | null, searchquery: string): void {
+function rendermenu(
+  suggestions: string[],
+  quickmatches: [string, string][],
+  mathresult: string | null,
+  searchquery: string,
+): void {
   closemenu();
   if (!urlbar?.value.trim()) return;
-  
+
   const trimmed = suggestions.slice(0, 7);
   const showquick = isquicklink(searchquery);
-  
+
   if (!trimmed.length && !quickmatches.length && !mathresult) return;
-  
+
   const dropdown = createdropdown();
   const markup: string[] = [];
-  
+
   if (mathresult) {
-    markup.push(`<div class="flex items-center space-x-3 px-4 py-3 text-(--text-header) cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${htmlescape(mathresult)}"><i data-lucide="calculator" class="h-5 w-5 text-green-400"></i><span>${htmlescape(mathresult)}</span></div>`);
+    markup.push(
+      `<div class="flex items-center space-x-3 px-4 py-3 text-(--text-header) cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${htmlescape(mathresult)}"><i data-lucide="calculator" class="h-5 w-5 text-green-400"></i><span>${htmlescape(mathresult)}</span></div>`,
+    );
   }
-  
+
   if (trimmed.length) {
-    markup.push(`<div class="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-(--text-secondary)">Suggestions for <span class="text-white">"${htmlescape(searchquery)}"</span></div>`);
+    markup.push(
+      `<div class="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-(--text-secondary)">Suggestions for <span class="text-white">"${htmlescape(searchquery)}"</span></div>`,
+    );
     trimmed.forEach(sug => {
-      markup.push(`<div class="flex items-center space-x-3 px-4 py-3 text-(--text-header) cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${htmlescape(sug)}"><i data-lucide="search" class="h-4 w-4 text-(--text-secondary)"></i><span>${htmlescape(sug)}</span></div>`);
+      markup.push(
+        `<div class="flex items-center space-x-3 px-4 py-3 text-(--text-header) cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${htmlescape(sug)}"><i data-lucide="search" class="h-4 w-4 text-(--text-secondary)"></i><span>${htmlescape(sug)}</span></div>`,
+      );
     });
   }
-  
+
   if (showquick && quickmatches.length) {
-    markup.push(`<div class="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-(--text-secondary) border-t border-[#3a3758]">Lunar Links</div>`);
+    markup.push(
+      `<div class="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-(--text-secondary) border-t border-[#3a3758]">Lunar Links</div>`,
+    );
     quickmatches.forEach(([link, desc]) => {
-      markup.push(`<div class="flex items-center justify-between px-4 py-3 text-(--text-header) cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${htmlescape(link)}"><div class="flex items-center space-x-3"><i data-lucide="globe" class="h-5 w-5 text-purple-400"></i><span>${htmlescape(link)}</span></div><span class="text-xs text-(--text-secondary)">${htmlescape(desc)}</span></div>`);
+      markup.push(
+        `<div class="flex items-center justify-between px-4 py-3 text-(--text-header) cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${htmlescape(link)}"><div class="flex items-center space-x-3"><i data-lucide="globe" class="h-5 w-5 text-purple-400"></i><span>${htmlescape(link)}</span></div><span class="text-xs text-(--text-secondary)">${htmlescape(desc)}</span></div>`,
+      );
     });
   }
-  
+
   dropdown.innerHTML = markup.join('');
   dropdown.querySelectorAll<HTMLElement>('[data-value]').forEach(elem => {
     elem.addEventListener('click', evt => {
@@ -198,7 +218,7 @@ if (urlbar) {
       closemenu();
     }
   });
-  
+
   window.addEventListener('resize', () => {
     const dropdown = document.getElementById('suggestions') as HTMLDivElement | null;
     if (dropdown && menuopen && urlbar?.value.trim()) {
@@ -207,14 +227,18 @@ if (urlbar) {
       closemenu();
     }
   });
-  
+
   document.addEventListener('mousedown', evt => {
     const target = evt.target as HTMLElement;
     if (!target.closest('#urlbar') && !target.closest('#suggestions')) closemenu();
   });
-  
-  document.addEventListener('mousedown', evt => {
-    const target = evt.target as HTMLElement;
-    if (target.closest('#suggestions')) evt.preventDefault();
-  }, true);
+
+  document.addEventListener(
+    'mousedown',
+    evt => {
+      const target = evt.target as HTMLElement;
+      if (target.closest('#suggestions')) evt.preventDefault();
+    },
+    true,
+  );
 }

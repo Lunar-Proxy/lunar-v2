@@ -74,16 +74,17 @@ const BLOCK_RULES = [
   '**/gtag.js',
   '**/gtm.js',
   '**/fbevents.js',
-  '**/pixel.js'
+  '**/pixel.js',
 ];
 
 function wildcardToRegex(p) {
   return new RegExp(
     '^' +
-      p.replace(/[.+?^${}()|[\]\\]/g, '\\$&')
-       .replace(/\*\*/g, '.*')
-       .replace(/\*/g, '[^/]*') +
-    '$',
+      p
+        .replace(/[.+?^${}()|[\]\\]/g, '\\$&')
+        .replace(/\*\*/g, '.*')
+        .replace(/\*/g, '[^/]*') +
+      '$',
     'i'
   );
 }
@@ -101,12 +102,12 @@ function isAdRequest(url, request) {
       p.hostname.endsWith('.googlesyndication.com') ||
       p.hostname.endsWith('.doubleclick.net') ||
       p.hostname.endsWith('.media.net')
-    ) return true;
+    )
+      return true;
 
     if (request?.destination === 'script') {
-      if (
-        /ads|adservice|pagead|doubleclick|googlesyndication|analytics/i.test(p.pathname)
-      ) return true;
+      if (/ads|adservice|pagead|doubleclick|googlesyndication|analytics/i.test(p.pathname))
+        return true;
     }
 
     if (request?.destination === 'ping') return true;

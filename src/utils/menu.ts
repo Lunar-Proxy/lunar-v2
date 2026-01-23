@@ -78,7 +78,7 @@ class MenuHandler {
     window.addEventListener('blur', this.handleWindowBlur.bind(this));
     menuContainer.querySelectorAll<HTMLButtonElement>('.menu-item').forEach(item => {
       item.addEventListener('click', this.hideMenu.bind(this));
-      item.addEventListener('keydown', (e) => {
+      item.addEventListener('keydown', e => {
         if (e.key === 'Enter') this.hideMenu();
       });
     });
@@ -110,7 +110,7 @@ class MenuHandler {
   private handleDocumentClick(e: MouseEvent): void {
     const target = e.target as Node;
     const { menuButton, menuContainer } = this.elements;
-    
+
     if (!menuButton.contains(target) && !menuContainer.contains(target)) {
       this.hideMenu();
     }
@@ -126,7 +126,7 @@ class MenuHandler {
 
   private getActiveFrame(): HTMLIFrameElement | null {
     if (!TabManager?.activeTabId) return null;
-    
+
     const frame = document.getElementById(`frame-${TabManager.activeTabId}`);
     return frame instanceof HTMLIFrameElement ? frame : null;
   }
@@ -134,7 +134,7 @@ class MenuHandler {
   private handleReload(): void {
     this.getActiveFrame()?.contentWindow?.location.reload();
   }
-  
+
   private handleDarkMode(): void {
     const frame = this.getActiveFrame();
     if (!frame?.contentWindow || !frame.contentDocument) return;
@@ -234,7 +234,7 @@ class MenuHandler {
 
   private buildKeybind(e: KeyboardEvent): string {
     const parts: string[] = [];
-    
+
     if (e.ctrlKey) parts.push('ctrl');
     if (e.altKey) parts.push('alt');
     if (e.shiftKey) parts.push('shift');
@@ -250,9 +250,7 @@ class MenuHandler {
 document.addEventListener('DOMContentLoaded', async () => {
   const menuButton = document.querySelector<HTMLButtonElement>('#menubtn');
   const menuContainer = document.querySelector<HTMLDivElement>('#menu');
-  const menuItems = Array.from(
-    document.querySelectorAll<HTMLButtonElement>('#menu .menu-item')
-  );
+  const menuItems = Array.from(document.querySelectorAll<HTMLButtonElement>('#menu .menu-item'));
   if (!menuButton || !menuContainer || menuItems.length < 7) {
     console.error('Required menu elements not found');
     return;

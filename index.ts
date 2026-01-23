@@ -13,7 +13,6 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { updateChecker } from 'serverlib/check';
 import { findProvider } from 'serverlib/provider';
-
 import { version } from './package.json' with { type: 'json' };
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

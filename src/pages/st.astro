@@ -62,7 +62,7 @@ import ImportLucide from '../layouts/lucide.astro';
             </header>
             <a
               href="#privacy"
-              class="nav-item hover:text-text-header flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm hover:bg-white/5 bg-[#6366f1]/10 text-[#6366f1]"
+              class="nav-item hover:text-text-header flex items-center gap-2.5 rounded-lg bg-[#6366f1]/10 px-3 py-2 text-sm text-[#6366f1] hover:bg-white/5"
               data-nav="privacy"
             >
               <i data-lucide="shield" class="h-4 w-4"></i>Privacy
@@ -245,56 +245,56 @@ import ImportLucide from '../layouts/lucide.astro';
               </div>
 
               <div class="bg-background-overlay/60 rounded-xl border border-white/6 p-5">
-  <h3 class="mb-3 font-medium">Search Engine</h3>
-  <div class="mb-4 grid grid-cols-4 gap-2">
-    <button
-      data-engine="https://duckduckgo.com/?q="
-      class="engine-button bg-background/60 relative rounded-lg border border-white/6 py-2.5 text-xs hover:bg-[#6366f1]/10 flex items-center justify-center gap-2"
-    >
-      <img src="/a/images/engines/ddg.ico" alt="DuckDuckGo" class="h-4 w-4" />
-      DuckDuckGo
-      <div class="engine-check absolute -top-1 -right-1 hidden">
-        <i data-lucide="check-circle" class="h-3.5 w-3.5 text-[#6366f1]"></i>
-      </div>
-    </button>
-    <button
-      data-engine="https://www.google.com/search?q="
-      class="engine-button bg-background/60 relative rounded-lg border border-white/6 py-2.5 text-xs hover:bg-[#6366f1]/10 flex items-center justify-center gap-2"
-    >
-      <img src="/a/images/co/go.ico" alt="Google" class="h-4 w-4" />
-      Google
-      <div class="engine-check absolute -top-1 -right-1 hidden">
-        <i data-lucide="check-circle" class="h-3.5 w-3.5 text-[#6366f1]"></i>
-      </div>
-    </button>
-    <button
-      data-engine="https://www.bing.com/search?q="
-      class="engine-button bg-background/60 relative rounded-lg border border-white/6 py-2.5 text-xs hover:bg-[#6366f1]/10 flex items-center justify-center gap-2"
-    >
-      <img src="/a/images/engines/bi.ico" alt="Bing" class="h-4 w-4" />
-      Bing
-      <div class="engine-check absolute -top-1 -right-1 hidden">
-        <i data-lucide="check-circle" class="h-3.5 w-3.5 text-[#6366f1]"></i>
-      </div>
-    </button>
-    <button
-      data-engine="https://search.brave.com/search?q="
-      class="engine-button bg-background/60 relative rounded-lg border border-white/6 py-2.5 text-xs hover:bg-[#6366f1]/10 flex items-center justify-center gap-2"
-    >
-      <img src="/a/images/engines/br.jpeg" alt="Brave" class="h-4 w-4" />
-      Brave
-      <div class="engine-check absolute -top-1 -right-1 hidden">
-        <i data-lucide="check-circle" class="h-3.5 w-3.5 text-[#6366f1]"></i>
-      </div>
-    </button>
-  </div>
-  <input
-    type="text"
-    data-input="engine"
-    placeholder="Custom search URL (ends with ?q= or &q=)"
-    class="bg-background/80 w-full rounded-lg border border-white/6 px-4 py-2.5 text-sm focus:border-[#6366f1]/40 focus:outline-none"
-  />
-</div>
+                <h3 class="mb-3 font-medium">Search Engine</h3>
+                <div class="mb-4 grid grid-cols-4 gap-2">
+                  <button
+                    data-engine="https://duckduckgo.com/?q="
+                    class="engine-button bg-background/60 relative flex items-center justify-center gap-2 rounded-lg border border-white/6 py-2.5 text-xs hover:bg-[#6366f1]/10"
+                  >
+                    <img src="/a/images/engines/ddg.ico" alt="DuckDuckGo" class="h-4 w-4" />
+                    DuckDuckGo
+                    <div class="engine-check absolute -top-1 -right-1 hidden">
+                      <i data-lucide="check-circle" class="h-3.5 w-3.5 text-[#6366f1]"></i>
+                    </div>
+                  </button>
+                  <button
+                    data-engine="https://www.google.com/search?q="
+                    class="engine-button bg-background/60 relative flex items-center justify-center gap-2 rounded-lg border border-white/6 py-2.5 text-xs hover:bg-[#6366f1]/10"
+                  >
+                    <img src="/a/images/co/go.ico" alt="Google" class="h-4 w-4" />
+                    Google
+                    <div class="engine-check absolute -top-1 -right-1 hidden">
+                      <i data-lucide="check-circle" class="h-3.5 w-3.5 text-[#6366f1]"></i>
+                    </div>
+                  </button>
+                  <button
+                    data-engine="https://www.bing.com/search?q="
+                    class="engine-button bg-background/60 relative flex items-center justify-center gap-2 rounded-lg border border-white/6 py-2.5 text-xs hover:bg-[#6366f1]/10"
+                  >
+                    <img src="/a/images/engines/bi.ico" alt="Bing" class="h-4 w-4" />
+                    Bing
+                    <div class="engine-check absolute -top-1 -right-1 hidden">
+                      <i data-lucide="check-circle" class="h-3.5 w-3.5 text-[#6366f1]"></i>
+                    </div>
+                  </button>
+                  <button
+                    data-engine="https://search.brave.com/search?q="
+                    class="engine-button bg-background/60 relative flex items-center justify-center gap-2 rounded-lg border border-white/6 py-2.5 text-xs hover:bg-[#6366f1]/10"
+                  >
+                    <img src="/a/images/engines/br.jpeg" alt="Brave" class="h-4 w-4" />
+                    Brave
+                    <div class="engine-check absolute -top-1 -right-1 hidden">
+                      <i data-lucide="check-circle" class="h-3.5 w-3.5 text-[#6366f1]"></i>
+                    </div>
+                  </button>
+                </div>
+                <input
+                  type="text"
+                  data-input="engine"
+                  placeholder="Custom search URL (ends with ?q= or &q=)"
+                  class="bg-background/80 w-full rounded-lg border border-white/6 px-4 py-2.5 text-sm focus:border-[#6366f1]/40 focus:outline-none"
+                />
+              </div>
               <div
                 class="bg-background-overlay/60 flex items-center justify-between rounded-xl border border-white/6 p-5"
               >
