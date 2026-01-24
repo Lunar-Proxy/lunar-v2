@@ -106,10 +106,9 @@ const ConfigAPI = {
     const keys = await store.keys();
 
     const entries = await Promise.all(
-      keys.map(function (key) {
-        return store.getItem(key).then(function (value) {
-          return [key, value] as const;
-        });
+      keys.map(async function (key) {
+        const value = await store.getItem(key);
+        return [key, value] as const;
       })
     );
 

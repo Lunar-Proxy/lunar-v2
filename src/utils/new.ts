@@ -65,16 +65,12 @@ document.addEventListener('DOMContentLoaded', () => {
     refreshBtn?.removeEventListener('click', handleRefreshClick);
   }
 
-  // Start clock
   clockInterval = setInterval(updateClock, 1000);
   updateClock();
 
-  // Setup refresh button
   refreshBtn?.addEventListener('click', handleRefreshClick);
 
-  // Initial ping
   updatePing();
 
-  // Cleanup on unload
   window.addEventListener('unload', cleanup);
 });
