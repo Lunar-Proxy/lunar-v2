@@ -24,77 +24,96 @@ interface ConfigDefaults {
 
 type ConfigKey = string;
 
+const isBrowser = typeof location !== 'undefined';
+
+function wispUrl(): string {
+  if (!isBrowser) return '';
+  const isHttps = location.protocol === 'https:';
+  return `${isHttps ? 'wss' : 'ws'}://${location.host}/w/`;
+}
+
+const defaults: ConfigDefaults = {
+  engine: 'https://duckduckgo.com/?q=',
+  cloak: 'off',
+  adBlock: 'on',
+  cloakTitle: 'Google',
+  cloakFavicon: 'https://www.google.com/favicon.ico',
+  autoCloak: 'off',
+  beforeUnload: 'off',
+  backend: 'sc',
+  panicLoc: 'https://google.com',
+  panicKey: '`',
+  wispUrl: wispUrl(),
+  bm: [],
+};
+
+const store = localForage.createInstance({
+  name: 'LunarDB',
+  storeName: 'Settings',
+});
+
+let initialized = false;
+
+async function ensureInit(): Promise<void> {
+  if (initialized) return;
+
+  const test = await store.getItem('engine');
+  if (test == null) {
+    const keys = Object.keys(defaults);
+    await Promise.all(
+      keys.map(function (key) {
+        return store.setItem(key, defaults[key]);
+      })
+    );
+  }
+
+  initialized = true;
+}
+
 const ConfigAPI = {
-  config: localForage.createInstance({
-    name: 'LunarDB',
-    storeName: 'Settings',
-  }),
+  config: store,
 
   async get(key: ConfigKey): Promise<any | null> {
-    return this.config.getItem(key as string);
+    await ensureInit();
+    return store.getItem(key);
   },
 
   async set(key: ConfigKey, value: any): Promise<any> {
-    return this.config.setItem(key as string, value);
+    await ensureInit();
+    return store.setItem(key, value);
+  },
+
+  async getIndecator(key: ConfigKey): Promise<any> {
+    await ensureInit();
+    const value = await store.getItem(key);
+    if (value != null) return value;
+    return defaults[key] ?? null;
   },
 
   async init(): Promise<void> {
-    const wispUrlDefault =
-      typeof location !== 'undefined' && typeof location.protocol === 'string'
-        ? `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/w/`
-        : '';
-
-    const defaults: ConfigDefaults = {
-      engine: 'https://duckduckgo.com/?q=',
-      cloak: 'off',
-      adBlock: 'on',
-      cloakTitle: 'Google',
-      cloakFavicon: 'https://www.google.com/favicon.ico',
-      autoCloak: 'off',
-      beforeUnload: 'off',
-      backend: 'sc',
-      panicLoc: 'https://google.com',
-      panicKey: '`',
-      wispUrl: wispUrlDefault,
-      bm: [],
-    };
-
-    const keys = Object.keys(defaults) as ConfigKey[];
-    const existingValues = await Promise.all(keys.map(key => this.get(key)));
-
-    const updates = keys
-      .map((key, index) => {
-        if (existingValues[index] == null) {
-          return this.set(key, defaults[key]);
-        }
-        return null;
-      })
-      .filter(Boolean);
-
-    await Promise.all(updates);
+    initialized = false;
+    await ensureInit();
   },
 
   async reset(): Promise<void> {
-    await this.config.clear();
-    await this.init();
+    await store.clear();
+    initialized = false;
+    await ensureInit();
   },
 
   async getAll(): Promise<Record<string, any>> {
-    const keys = (await this.config.keys()) as string[];
-    const values = await Promise.all(
-      keys.map(async key => ({
-        key,
-        value: await this.config.getItem(key),
-      })),
+    await ensureInit();
+    const keys = await store.keys();
+
+    const entries = await Promise.all(
+      keys.map(function (key) {
+        return store.getItem(key).then(function (value) {
+          return [key, value] as const;
+        });
+      })
     );
 
-    return values.reduce(
-      (acc, { key, value }) => {
-        acc[key] = value;
-        return acc;
-      },
-      {} as Record<string, any>,
-    );
+    return Object.fromEntries(entries);
   },
 };
 
