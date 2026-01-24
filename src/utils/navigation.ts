@@ -191,17 +191,39 @@ urlbar?.addEventListener('keydown', async e => {
   navigate(url);
 });
 
-parent.document.querySelectorAll<HTMLElement>('aside button').forEach(el => {
-  el.addEventListener('click', ev => {
+const doc = parent.document;
+const aside = doc.querySelector('aside');
+const reverseNativePaths = Object.fromEntries(
+  Object.entries(nativePaths).map(([key, value]) => [value, key])
+);
+
+if (aside) {
+  aside.addEventListener('click', (ev) => {
+    const btn = (ev.target as HTMLElement).closest('button');
+    if (!btn) return;
+
     ev.preventDefault();
-    const targetUrl = el.getAttribute('data-url');
-    if (!targetUrl) return;
-    let nativeKey = Object.keys(nativePaths).find(k => nativePaths[k] === targetUrl);
-    if (!nativeKey && targetUrl === '/') nativeKey = 'lunar://new';
-    if (nativeKey && urlbar) urlbar.value = nativeKey;
-    loading();
-    navigate(nativeKey ? nativePaths[nativeKey] : targetUrl);
+
+    const url = btn.dataset.url;
+    if (!url) return;
+
+    let nativeKey = reverseNativePaths[url];
+
+    if (!nativeKey && url === '/') {
+      nativeKey = 'lunar://new';
+    }
+
+    if (nativeKey && urlbar) {
+      urlbar.value = nativeKey;
+    } else if (urlbar) {
+      urlbar.value = url;
+    }
+
+    const finalUrl = nativeKey ? nativePaths[nativeKey] : url;
+
+    navigate(finalUrl);
   });
-});
+}
+
 
 TabManager.onUrlChange(updateBookmark);
