@@ -2,7 +2,17 @@
 import '@/main.css';
 import Tabs from '../layouts/tab.astro';
 ---
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DQZPCVEF89"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
+  gtag('config', 'G-DQZPCVEF89');
+</script>
+</head>
 <body class="h-screen text-white">
   <Tabs />
   <script is:inline src="/bm/index.js"></script>
