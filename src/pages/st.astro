@@ -6,15 +6,16 @@ import ImportLucide from '../layouts/lucide.astro';
 <html lang="en">
   <head>
     <title>Settings</title>
-<!-- Google tag (gtag.js) -->
-<script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-DQZPCVEF89"></script>
-<script is:inline>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-DQZPCVEF89');
-</script>
+     <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-DQZPCVEF89"></script>
+    <script is:inline>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          window.dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', 'G-DQZPCVEF89');
+       
+      </script>     
     <style>
       .toggle {
         width: 40px;
