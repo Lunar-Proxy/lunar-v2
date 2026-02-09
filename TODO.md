@@ -16,6 +16,8 @@
 
 [] - implement auto AB
 
-[] - more games
+[working on] - more games and more tuff games
+
+[] - single html file apps (like sandstone, helios, code editor etc. etc.)
 
 [] - custom scramjet & UV encode/decode (MAKE SURE IT DOESNT BREAK SITES)
