@@ -28,6 +28,15 @@ import ImportLucide from '../layouts/lucide.astro';
 
     <script src="@scripts/config"></script>
     <script src="@scripts/index"></script>
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-DQZPCVEF89"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        window.dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'G-DQZPCVEF89');
+    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
