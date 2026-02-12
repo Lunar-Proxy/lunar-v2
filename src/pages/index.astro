@@ -1,6 +1,5 @@
 ---
 import '@/main.css';
-import SideBar from '../layouts/side.astro';
 import ImportLucide from '../layouts/lucide.astro';
 ---
 
@@ -10,52 +9,42 @@ import ImportLucide from '../layouts/lucide.astro';
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="generator" content={Astro.generator} />
-
     <title>IXL | Math, Language Arts, Science, Social Studies, and Spanish</title>
-
     <meta
       name="description"
       content="IXL is the world's most popular subscription-based learning site for K–12. Used by over 17 million students, IXL provides personalized learning in more than 17,000 topics, covering math, language arts, science, social studies, and Spanish. Interactive questions, awards, and certificates keep kids motivated as they master skills."
     />
-
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-
     <style>
-      html, body {
-        background: #11121c;
+      html, body { background: #11121c; }
+      .seo-hidden {
+        position: absolute;
+        left: -9999px;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
       }
     </style>
-
     <script src="@scripts/config"></script>
     <script src="@scripts/index"></script>
     <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-DQZPCVEF89"></script>
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        window.dataLayer.push(arguments);
-      }
+      function gtag() { window.dataLayer.push(arguments); }
       gtag('js', new Date());
       gtag('config', 'G-DQZPCVEF89');
     </script>
-
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   </head>
-
   <body class="flex h-screen w-screen overflow-hidden text-gray-900" style="background:#11121c;">
-    <SideBar />
-
     <div class="flex flex-1 flex-col h-dvh">
-      <header
-        style="display:none !important;"
-        aria-hidden="true"
-        class="flex items-center justify-between px-6 py-4 border-b bg-white"
-      >
-        <div class="flex items-center gap-3">
-          <div class="text-2xl font-bold text-green-600">IDL</div>
-          <span class="text-sm text-gray-500">Learning Platform</span>
+      <header class="seo-hidden">
+        <div>
+          <div>IDL</div>
+          <span>Learning Platform</span>
         </div>
-        <nav class="hidden md:flex gap-6 text-sm text-gray-600">
+        <nav>
           <span>Math</span>
           <span>Language Arts</span>
           <span>Science</span>
@@ -63,9 +52,8 @@ import ImportLucide from '../layouts/lucide.astro';
           <span>Spanish</span>
         </nav>
       </header>
-
       <div class="relative flex-1">
-        <div style="display:none !important;" aria-hidden="true">
+        <div class="seo-hidden">
           <h1>Personalized Learning for Every Student</h1>
           <p>
             Our comprehensive K–12 learning platform provides adaptive practice,
@@ -79,7 +67,6 @@ import ImportLucide from '../layouts/lucide.astro';
             recommendations.
           </p>
         </div>
-
         <iframe
           id="frame"
           src="/welcome"
@@ -87,7 +74,6 @@ import ImportLucide from '../layouts/lucide.astro';
         ></iframe>
       </div>
     </div>
-
     <ImportLucide />
   </body>
 </html>
