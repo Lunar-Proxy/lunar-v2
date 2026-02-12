@@ -63,7 +63,7 @@ async function ensureInit(): Promise<void> {
     await Promise.all(
       keys.map(function (key) {
         return store.setItem(key, defaults[key]);
-      })
+      }),
     );
   }
 
@@ -109,7 +109,7 @@ const ConfigAPI = {
       keys.map(async function (key) {
         const value = await store.getItem(key);
         return [key, value] as const;
-      })
+      }),
     );
 
     return Object.fromEntries(entries);

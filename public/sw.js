@@ -121,7 +121,7 @@ function isAdRequest(url, request) {
 }
 
 async function handleFetch(event) {
-    await scramjet.loadConfig();
+  await scramjet.loadConfig();
   const url = event.request.url;
   const cdnCgiRegex = /\/cdn-cgi\//i;
   if ((adblockEnabled && isAdRequest(url, event.request)) || cdnCgiRegex.test(url)) {

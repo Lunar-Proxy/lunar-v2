@@ -155,7 +155,7 @@ async function handleFrameLoad(tab: Tab) {
       tab.favicon = defaultIcon;
       updateTabEl(tab, 'icon');
     }
-    
+
     tab.isReady = true;
     updateUrlBar(tab);
   } catch {
@@ -167,14 +167,14 @@ async function handleFrameLoad(tab: Tab) {
 
 function updateUrlBar(tab: Tab) {
   if (tab.id !== activeId) return;
-  
+
   const urlInput = document.getElementById('urlbar') as HTMLInputElement | null;
   if (!urlInput) return;
-  
+
   try {
     const doc = tab.iframe.contentDocument;
     if (!doc) return;
-    
+
     const pathname = new URL(doc.location.href || '', location.origin).pathname;
     const route = Object.entries(internalRoutes).find(([, v]) => v === pathname);
     urlInput.value = route ? route[0] : decodeProxyUrl(pathname);
@@ -218,10 +218,10 @@ function getTabClass(active: boolean): string {
 function createTabEl(tab: Tab): HTMLDivElement {
   const el = document.createElement('div');
   el.className = getTabClass(tab.id === activeId);
-  
+
   const left = document.createElement('div');
   left.className = 'flex items-center gap-2 flex-1 min-w-0';
-  
+
   const icon = document.createElement('img');
   icon.className = 'tab-favicon flex-shrink-0';
   icon.src = tab.favicon;
@@ -230,16 +230,16 @@ function createTabEl(tab: Tab): HTMLDivElement {
   icon.style.width = '16px';
   icon.style.height = '16px';
   icon.style.objectFit = 'contain';
-  
+
   const title = document.createElement('span');
   title.className = 'tab-title truncate text-sm font-normal flex-1 min-w-0';
   title.style.overflow = 'hidden';
   title.style.textOverflow = 'ellipsis';
   title.style.whiteSpace = 'nowrap';
   title.textContent = truncate(tab.title, 14);
-  
+
   left.append(icon, title);
-  
+
   const closeBtn = document.createElement('button');
   closeBtn.className =
     'flex items-center justify-center w-5 h-5 flex-shrink-0 rounded-full bg-transparent hover:bg-[color:var(--background-disabled)] text-[color:var(--text-secondary)] hover:text-red-400 transition-all duration-200 text-base leading-none';
@@ -249,7 +249,7 @@ function createTabEl(tab: Tab): HTMLDivElement {
     e.stopPropagation();
     closeTab(tab.id);
   };
-  
+
   el.append(left, closeBtn);
   el.onclick = () => switchTab(tab.id);
   tab.el = el;
@@ -260,9 +260,9 @@ function renderTabs() {
   if (!tabBar) return;
   const existingTabs = tabBar.querySelectorAll('.tab');
   const hasChanges = existingTabs.length !== tabs.length;
-  
+
   if (!hasChanges) return;
-  
+
   tabBar.innerHTML = '';
   const wrapper = document.createElement('div');
   wrapper.className = 'flex items-center justify-center w-full';
@@ -337,7 +337,7 @@ function resetLoader() {
 
 function openTab(src?: string) {
   const id = nextId();
-  
+
   if (!frameContainer) {
     document.addEventListener('DOMContentLoaded', () => openTab(src), { once: true });
     return;
@@ -350,14 +350,16 @@ function openTab(src?: string) {
     iframe: null as any,
     isReady: false,
   };
-  
+
   tabs.push(tab);
-  
+
   const tabEl = createTabEl(tab);
   if (tabBar) {
-    const wrapper = tabBar.querySelector('.flex.items-center.justify-center') || document.createElement('div');
+    const wrapper =
+      tabBar.querySelector('.flex.items-center.justify-center') || document.createElement('div');
     wrapper.className = 'flex items-center justify-center w-full';
-    const container = wrapper.querySelector('.flex.items-center.gap-0') || document.createElement('div');
+    const container =
+      wrapper.querySelector('.flex.items-center.gap-0') || document.createElement('div');
     container.className = 'flex items-center gap-0';
     container.appendChild(tabEl);
     if (!wrapper.parentElement) {
@@ -365,14 +367,14 @@ function openTab(src?: string) {
       tabBar.appendChild(wrapper);
     }
   }
-  
+
   requestAnimationFrame(() => {
     const frame = createFrame(id, src);
     tab.iframe = frame;
     frameContainer!.appendChild(frame);
-    
+
     switchTab(id);
-    
+
     const urlInput = document.getElementById('urlbar') as HTMLInputElement | null;
     if (urlInput && (!src || src === 'new')) urlInput.value = '';
 
@@ -404,7 +406,7 @@ function switchTab(id: number) {
   const activeTab = tabs.find(t => t.id === id);
   if (activeTab && activeTab.isReady) {
     updateUrlBar(activeTab);
-    
+
     try {
       const doc = activeTab.iframe?.contentDocument;
       if (doc) {
@@ -437,14 +439,14 @@ function switchTab(id: number) {
       const href = tab.iframe.contentWindow?.location.href;
       if (!href || href === prevHref) return;
       prevHref = href;
-      
+
       const urlInput = document.getElementById('urlbar') as HTMLInputElement | null;
       if (urlInput) {
         const pathname = new URL(href, location.origin).pathname;
         const route = Object.entries(internalRoutes).find(([, v]) => v === pathname);
         urlInput.value = route ? route[0] : decodeProxyUrl(pathname);
       }
-      
+
       if (tab) {
         const doc = tab.iframe.contentDocument;
         if (doc) {
