@@ -22,6 +22,7 @@ interface KeybindConfig {
 class MenuHandler {
   private elements: MenuElements;
   private keyMap = new Map<string, HTMLButtonElement>();
+  private isMenuOpen = false;
 
   constructor(elements: MenuElements) {
     this.elements = elements;
@@ -75,13 +76,16 @@ class MenuHandler {
 
     menuButton.addEventListener('click', this.toggleMenu.bind(this));
     document.addEventListener('click', this.handleDocumentClick.bind(this));
+    document.addEventListener('mousedown', this.handleDocumentClick.bind(this));
     window.addEventListener('blur', this.handleWindowBlur.bind(this));
+    
     menuContainer.querySelectorAll<HTMLButtonElement>('.menu-item').forEach(item => {
       item.addEventListener('click', this.hideMenu.bind(this));
       item.addEventListener('keydown', e => {
-        if (e.key === 'Enter') this.hideMenu();
+        if (e.key === 'Enter' || e.key === 'Escape') this.hideMenu();
       });
     });
+    
     this.setupMenuActions();
     window.addEventListener('keydown', this.handleKeydown.bind(this), true);
     document.addEventListener('keydown', this.handleKeydown.bind(this), true);
@@ -100,14 +104,30 @@ class MenuHandler {
 
   private toggleMenu(e: MouseEvent): void {
     e.stopPropagation();
-    this.elements.menuContainer.classList.toggle('hidden');
+    e.preventDefault();
+    
+    const wasHidden = this.elements.menuContainer.classList.contains('hidden');
+    
+    if (wasHidden) {
+      this.showMenu();
+    } else {
+      this.hideMenu();
+    }
+  }
+
+  private showMenu(): void {
+    this.elements.menuContainer.classList.remove('hidden');
+    this.isMenuOpen = true;
   }
 
   private hideMenu(): void {
     this.elements.menuContainer.classList.add('hidden');
+    this.isMenuOpen = false;
   }
 
   private handleDocumentClick(e: MouseEvent): void {
+    if (!this.isMenuOpen) return;
+
     const target = e.target as Node;
     const { menuButton, menuContainer } = this.elements;
 
@@ -117,11 +137,11 @@ class MenuHandler {
   }
 
   private handleWindowBlur(): void {
-    setTimeout(() => {
+    requestAnimationFrame(() => {
       if (document.activeElement instanceof HTMLIFrameElement) {
         this.hideMenu();
       }
-    }, 0);
+    });
   }
 
   private getActiveFrame(): HTMLIFrameElement | null {
@@ -132,12 +152,16 @@ class MenuHandler {
   }
 
   private handleReload(): void {
-    this.getActiveFrame()?.contentWindow?.location.reload();
+    const frame = this.getActiveFrame();
+    if (frame?.contentWindow) {
+      frame.contentWindow.location.reload();
+    }
   }
 
   private handleDarkMode(): void {
     const frame = this.getActiveFrame();
     if (!frame?.contentWindow || !frame.contentDocument) return;
+    
     const script = frame.contentDocument.createElement('script');
     script.textContent = `(() => {
       let style = document.getElementById('dark-mode');
@@ -163,6 +187,7 @@ class MenuHandler {
       const panicLoc = await this.getConfigValue('panicLoc', 'https://google.com');
       top.window.location.href = panicLoc;
     }
+    
     const iframe = newWindow.document.createElement('iframe');
     iframe.style.cssText = 'width:100%;height:100vh;border:0;margin:0;padding:0';
     iframe.src = `${location.origin}/`;
@@ -219,12 +244,22 @@ class MenuHandler {
 
   private handleKeydown(e: KeyboardEvent): void {
     if (e.repeat) return;
+    
+    if (e.key === 'Escape' && this.isMenuOpen) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.hideMenu();
+      return;
+    }
+    
     if (e.key === 'Enter' && this.elements.menuContainer.contains(document.activeElement)) {
       this.hideMenu();
       return;
     }
+    
     const keybind = this.buildKeybind(e);
     const target = this.keyMap.get(keybind);
+    
     if (target) {
       e.preventDefault();
       e.stopPropagation();
@@ -251,11 +286,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   const menuButton = document.querySelector<HTMLButtonElement>('#menubtn');
   const menuContainer = document.querySelector<HTMLDivElement>('#menu');
   const menuItems = Array.from(document.querySelectorAll<HTMLButtonElement>('#menu .menu-item'));
-  if (!menuButton || !menuContainer || menuItems.length < 7) {
+  
+  if (!menuButton || !menuContainer || menuItems.length < 8) {
     console.error('Required menu elements not found');
     return;
   }
+  
   const [newTab, fullscreen, reload, inspectElement, darkmode, cloak, panic, settings] = menuItems;
+  
   const elements: MenuElements = {
     menuButton,
     menuContainer,
@@ -268,6 +306,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     panic,
     settings,
   };
+  
   const menuHandler = new MenuHandler(elements);
   await menuHandler.initialize();
 });

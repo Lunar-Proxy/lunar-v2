@@ -7,6 +7,7 @@ import { logging, server as wisp } from '@mercuryworkshop/wisp-js/server';
 import chalk from 'chalk';
 import Fastify from 'fastify';
 import { execSync } from 'node:child_process';
+import { EventEmitter } from 'node:events';
 import fs from 'node:fs';
 import { createServer } from 'node:http';
 import path from 'node:path';
@@ -14,6 +15,8 @@ import { fileURLToPath } from 'node:url';
 import { updateChecker } from 'serverlib/check';
 import { findProvider } from 'serverlib/provider';
 import { version } from './package.json' with { type: 'json' };
+
+EventEmitter.defaultMaxListeners = 20;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const port = Number(process.env.PORT) || 6060;
@@ -46,6 +49,10 @@ const app = Fastify({
   logger: false,
   serverFactory: handler => {
     const server = createServer();
+    
+    server.setMaxListeners(20);
+    // it will log about a memory leak due to how many sockets it adds due to astros SSR & fastify shit
+    
     const requestHandler = (req: any, res: any) => handler(req, res);
     const upgradeHandler = (req: any, socket: any, head: any) => {
       if (req.url?.endsWith('/w/')) {
@@ -54,8 +61,10 @@ const app = Fastify({
         socket.destroy();
       }
     };
+    
     server.on('request', requestHandler);
     server.on('upgrade', upgradeHandler);
+    
     return server;
   },
 });

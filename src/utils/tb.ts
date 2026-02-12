@@ -221,6 +221,7 @@ function createTabEl(tab: Tab): HTMLDivElement {
 
   const left = document.createElement('div');
   left.className = 'flex items-center gap-2 flex-1 min-w-0';
+  left.style.height = '100%';
 
   const icon = document.createElement('img');
   icon.className = 'tab-favicon flex-shrink-0';
@@ -230,12 +231,16 @@ function createTabEl(tab: Tab): HTMLDivElement {
   icon.style.width = '16px';
   icon.style.height = '16px';
   icon.style.objectFit = 'contain';
+  icon.style.display = 'block';
 
   const title = document.createElement('span');
   title.className = 'tab-title truncate text-sm font-normal flex-1 min-w-0';
   title.style.overflow = 'hidden';
   title.style.textOverflow = 'ellipsis';
   title.style.whiteSpace = 'nowrap';
+  title.style.lineHeight = '1';
+  title.style.display = 'flex';
+  title.style.alignItems = 'center';
   title.textContent = truncate(tab.title, 14);
 
   left.append(icon, title);
@@ -245,6 +250,8 @@ function createTabEl(tab: Tab): HTMLDivElement {
     'flex items-center justify-center w-5 h-5 flex-shrink-0 rounded-full bg-transparent hover:bg-[color:var(--background-disabled)] text-[color:var(--text-secondary)] hover:text-red-400 transition-all duration-200 text-base leading-none';
   closeBtn.textContent = '×';
   closeBtn.style.fontWeight = '400';
+  closeBtn.style.padding = '0';
+  closeBtn.style.lineHeight = '1';
   closeBtn.onclick = e => {
     e.stopPropagation();
     closeTab(tab.id);
@@ -284,10 +291,20 @@ function updateActive() {
 function closeTab(id: number) {
   const idx = tabs.findIndex(t => t.id === id);
   if (idx === -1) return;
-  if (tabs.length <= 1) {
+  
+  // If this is the last tab, open a new one before closing
+  if (tabs.length === 1) {
     openTab();
+    // Wait a frame to ensure new tab is created before removing the old one
+    requestAnimationFrame(() => {
+      const [removed] = tabs.splice(idx, 1);
+      if (removed.titleTimer) clearInterval(removed.titleTimer);
+      removed.iframe.remove();
+      renderTabs();
+    });
     return;
   }
+  
   const [removed] = tabs.splice(idx, 1);
   if (removed.titleTimer) clearInterval(removed.titleTimer);
   removed.iframe.remove();

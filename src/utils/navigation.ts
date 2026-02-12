@@ -3,225 +3,291 @@ import { scramjetWrapper, vWrapper } from './pro';
 import { TabManager } from './tb';
 import { validateUrl } from './url';
 
-const reload = document.getElementById('refresh') as HTMLButtonElement | null;
-const back = document.getElementById('back') as HTMLButtonElement | null;
-const forward = document.getElementById('forward') as HTMLButtonElement | null;
+const reloadBtn = document.getElementById('refresh') as HTMLButtonElement | null;
+const backBtn = document.getElementById('back') as HTMLButtonElement | null;
+const fwdBtn = document.getElementById('forward') as HTMLButtonElement | null;
 const urlbar = document.getElementById('urlbar') as HTMLInputElement | null;
-const favorite = document.getElementById('fav') as HTMLButtonElement | null;
-const home = document.getElementById('home') as HTMLElement | null;
-const wispUrl = await ConfigAPI.get('wispUrl');
-const nativePaths: Record<string, string> = {
+const favBtn = document.getElementById('fav') as HTMLButtonElement | null;
+const homeBtn = document.getElementById('home') as HTMLElement | null;
+const sidebar = document.querySelector('aside');
+
+const routes: Record<string, string> = {
   'lunar://settings': '/st',
   'lunar://new': '/new',
   'lunar://games': '/math',
   'lunar://apps': '/sci',
 };
 
-const scramjetInstance = scramjetWrapper.getConfig();
-const vInstance = vWrapper.getConfig();
+const reverseRoutes = Object.fromEntries(
+  Object.entries(routes).map(([k, v]) => [v, k])
+);
 
-scramjetWrapper.init();
-await navigator.serviceWorker.register('./sw.js');
+const sc = scramjetWrapper.getConfig();
+const uv = vWrapper.getConfig();
+const hist = new Map<string, { stack: string[]; idx: number }>();
 
-const connection = new BareMux.BareMuxConnection(`/bm/worker.js`);
-if ((await connection.getTransport()) !== `/lc/index.mjs`)
-  await connection.setTransport(`/lc/index.mjs`, [{ wisp: wispUrl }]);
+let wisp: string;
 
-type TabHistory = { stack: string[]; index: number };
-const histories = new Map<string, TabHistory>();
-
-function getActiveFrame(): HTMLIFrameElement | null {
-  return document.getElementById(`frame-${TabManager.activeTabId}`) as HTMLIFrameElement | null;
+async function setup() {
+  wisp = await ConfigAPI.get('wispUrl');
+  scramjetWrapper.init();
+  await navigator.serviceWorker.register('./sw.js');
+  
+  const conn = new BareMux.BareMuxConnection('/bm/worker.js');
+  const trans = await conn.getTransport();
+  if (trans !== '/lc/index.mjs') {
+    await conn.setTransport('/lc/index.mjs', [{ wisp }]);
+  }
 }
 
-function getHistory(): TabHistory {
+function frame(): HTMLIFrameElement | null {
+  const id = TabManager.activeTabId;
+  if (!id) return null;
+  return document.getElementById(`frame-${id}`) as HTMLIFrameElement | null;
+}
+
+function history() {
   const id = String(TabManager.activeTabId);
-  if (!histories.has(id)) histories.set(id, { stack: [], index: -1 });
-  return histories.get(id)!;
+  if (!hist.has(id)) {
+    hist.set(id, { stack: [], idx: -1 });
+  }
+  return hist.get(id)!;
 }
 
-function loading() {
-  if (!reload) return;
-  reload.style.animation = 'none';
-  void reload.offsetWidth;
-  reload.style.animation = 'spin 0.4s linear';
+function spin() {
+  if (!reloadBtn) return;
+  reloadBtn.style.animation = 'none';
+  reloadBtn.offsetWidth;
+  reloadBtn.style.animation = 'spin 0.4s linear';
 }
 
 function record(url: string) {
-  const history = getHistory();
-  if (history.stack[history.index] === url) return;
-  history.stack.length = history.index + 1;
-  history.stack.push(url);
-  history.index++;
+  const h = history();
+  if (h.stack[h.idx] === url) return;
+  
+  h.stack = h.stack.slice(0, h.idx + 1);
+  h.stack.push(url);
+  h.idx++;
 }
 
-function navigate(url: string, push = true) {
-  const frame = getActiveFrame();
-  if (!frame) return;
-  if (push) record(url);
-  frame.src = url;
+function nav(url: string, save = true) {
+  const f = frame();
+  if (!f) return;
+  
+  if (save) record(url);
+  f.src = url;
 }
 
-function backNavigate() {
-  const history = getHistory();
-  if (history.index <= 0) return;
-  history.index--;
-  navigate(history.stack[history.index], false);
+function back() {
+  const h = history();
+  if (h.idx <= 0) return;
+  
+  h.idx--;
+  nav(h.stack[h.idx], false);
 }
 
-function forwardNavigate() {
-  const history = getHistory();
-  if (history.index >= history.stack.length - 1) return;
-  history.index++;
-  navigate(history.stack[history.index], false);
+function fwd() {
+  const h = history();
+  if (h.idx >= h.stack.length - 1) return;
+  
+  h.idx++;
+  nav(h.stack[h.idx], false);
 }
 
-async function updateBookmark() {
-  const frame = getActiveFrame();
-  if (!frame) return;
-  record(frame.src);
-  let src = frame.src;
+function strip(url: string): string {
   try {
-    const u = new URL(src, location.origin);
+    const u = new URL(url, location.origin);
     let p = u.pathname + u.search;
-    if (p.startsWith(scramjetInstance.prefix)) p = p.slice(scramjetInstance.prefix.length);
-    else if (p.startsWith(vInstance.prefix)) p = p.slice(vInstance.prefix.length);
-    src = p;
-  } catch {}
-  const backend = await ConfigAPI.get('backend');
-  const url =
-    backend === 'u' && typeof vInstance.decodeUrl === 'function'
-      ? vInstance.decodeUrl(src)
-      : scramjetInstance.codec.decode(src);
-  const currentBm = (await ConfigAPI.get('bm')) || [];
-  const normalize = (u: string) => {
-    try {
-      return decodeURIComponent(u).replace(/\/$/, '');
-    } catch {
-      return u.replace(/\/$/, '');
+    
+    if (p.startsWith(sc.prefix)) {
+      return p.slice(sc.prefix.length);
     }
-  };
-  const active = currentBm.some((b: any) => normalize(b.redir) === normalize(url));
-  const svg = favorite?.querySelector('svg');
+    if (p.startsWith(uv.prefix)) {
+      return p.slice(uv.prefix.length);
+    }
+    
+    return p;
+  } catch {
+    return url;
+  }
+}
+
+async function decode(enc: string): Promise<string> {
+  const backend = await ConfigAPI.get('backend');
+  
+  if (backend === 'u' && typeof uv.decodeUrl === 'function') {
+    return uv.decodeUrl(enc);
+  }
+  
+  return sc.codec.decode(enc);
+}
+
+function norm(url: string): string {
+  try {
+    return decodeURIComponent(url).replace(/\/$/, '');
+  } catch {
+    return url.replace(/\/$/, '');
+  }
+}
+
+async function sync() {
+  const f = frame();
+  if (!f) return;
+  
+  record(f.src);
+  
+  const s = strip(f.src);
+  const d = await decode(s);
+  const bm = (await ConfigAPI.get('bm')) || [];
+  const active = bm.some((b: any) => norm(b.redir) === norm(d));
+  
+  const svg = favBtn?.querySelector('svg');
   if (svg) {
     svg.style.fill = active ? '#a8a3c7' : 'none';
     svg.style.stroke = active ? '#a8a3c7' : '';
   }
 }
 
-reload?.addEventListener('click', () => {
-  const history = getHistory();
-  if (history.index >= 0) navigate(history.stack[history.index], false);
-});
-
-back?.addEventListener('click', () => {
-  loading();
-  backNavigate();
-});
-
-forward?.addEventListener('click', () => {
-  loading();
-  forwardNavigate();
-});
-
-home?.addEventListener('click', () => {
-  loading();
-  navigate('/new');
-});
-
-favorite?.addEventListener('click', async () => {
+async function toggleFav() {
   if (!urlbar) return;
-  const frame = getActiveFrame();
-  if (!frame || nativePaths[urlbar.value]) return;
-  let src = frame.src;
-  try {
-    const url = new URL(src, location.origin);
-    let path = url.pathname + url.search;
-    if (path.startsWith(scramjetInstance.prefix)) path = path.slice(scramjetInstance.prefix.length);
-    else if (path.startsWith(vInstance.prefix)) path = path.slice(vInstance.prefix.length);
-    src = path;
-  } catch {}
-  const backend = await ConfigAPI.get('backend');
-  const url =
-    backend === 'u' && typeof vInstance.decodeUrl === 'function'
-      ? vInstance.decodeUrl(src)
-      : scramjetInstance.codec.decode(src);
-  const currentBm = (await ConfigAPI.get('bm')) || [];
-  const normalize = (u: string) => {
+  
+  const f = frame();
+  if (!f || routes[urlbar.value]) return;
+  
+  const s = strip(f.src);
+  const d = await decode(s);
+  const bm = (await ConfigAPI.get('bm')) || [];
+  
+  const i = bm.findIndex((b: any) => norm(b.redir) === norm(d));
+  
+  if (i !== -1) {
+    bm.splice(i, 1);
+  } else {
+    let domain = d;
     try {
-      return decodeURIComponent(u).replace(/\/$/, '');
-    } catch {
-      return u.replace(/\/$/, '');
-    }
-  };
-  const index = currentBm.findIndex((b: any) => normalize(b.redir) === normalize(url));
-  if (index !== -1) currentBm.splice(index, 1);
-  else {
-    let domain = url;
-    try {
-      domain = new URL(url).hostname;
+      domain = new URL(d).hostname;
     } catch {}
-    currentBm.push({
-      name: frame.contentDocument?.title || url,
+    
+    bm.push({
+      name: f.contentDocument?.title || d,
       logo: `/api/icon/?url=https://${domain}`,
-      redir: url,
+      redir: d,
     });
   }
-  await ConfigAPI.set('bm', currentBm);
-  updateBookmark();
-});
+  
+  await ConfigAPI.set('bm', bm);
+  sync();
+}
 
-urlbar?.addEventListener('keydown', async e => {
-  if (e.key !== 'Enter') return;
-  const value = urlbar.value.trim();
-  if (nativePaths[value]) {
-    loading();
-    navigate(nativePaths[value]);
+async function submit() {
+  if (!urlbar) return;
+  
+  const v = urlbar.value.trim();
+  
+  if (routes[v]) {
+    spin();
+    nav(routes[v]);
     return;
   }
-  if ((await connection.getTransport()) !== `/lc/index.mjs`)
-    await connection.setTransport(`/lc/index.mjs`, [{ wisp: wispUrl }]);
-  const input = await validateUrl(value);
+  
+  const conn = new BareMux.BareMuxConnection('/bm/worker.js');
+  const trans = await conn.getTransport();
+  if (trans !== '/lc/index.mjs') {
+    await conn.setTransport('/lc/index.mjs', [{ wisp }]);
+  }
+  
+  const val = await validateUrl(v);
   const backend = await ConfigAPI.get('backend');
-  const url =
-    backend === 'u'
-      ? `${vInstance.prefix}${vInstance.encodeUrl(input)}`
-      : `${scramjetInstance.prefix}${scramjetInstance.codec.encode(input)}`;
-  loading();
-  navigate(url);
-});
+  
+  const enc = backend === 'u'
+    ? `${uv.prefix}${uv.encodeUrl(val)}`
+    : `${sc.prefix}${sc.codec.encode(val)}`;
+  
+  spin();
+  nav(enc);
+}
 
-const aside = document.querySelector('aside');
-const reverseNativePaths = Object.fromEntries(
-  Object.entries(nativePaths).map(([key, value]) => [value, key]),
-);
+function clickSide(e: MouseEvent) {
+  const btn = (e.target as HTMLElement).closest('button');
+  if (!btn) return;
+  
+  e.preventDefault();
+  e.stopPropagation();
+  
+  const url = btn.dataset.url;
+  if (!url || !urlbar) return;
+  
+  let r = reverseRoutes[url];
+  if (!r && url === '/') {
+    r = 'lunar://new';
+  }
+  
+  urlbar.value = r || url;
+  const target = r ? routes[r] : url;
+  
+  spin();
+  nav(target);
+}
 
-if (aside) {
-  aside.addEventListener('click', ev => {
-    const btn = (ev.target as HTMLElement).closest('button');
-    if (!btn) return;
-
-    ev.preventDefault();
-
-    const url = btn.dataset.url;
-    if (!url) return;
-
-    let nativeKey = reverseNativePaths[url];
-
-    if (!nativeKey && url === '/') {
-      nativeKey = 'lunar://new';
+if (reloadBtn) {
+  reloadBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const h = history();
+    if (h.idx >= 0) {
+      nav(h.stack[h.idx], false);
     }
-
-    if (nativeKey && urlbar) {
-      urlbar.value = nativeKey;
-    } else if (urlbar) {
-      urlbar.value = url;
-    }
-
-    const finalUrl = nativeKey ? nativePaths[nativeKey] : url;
-
-    navigate(finalUrl);
   });
 }
 
-TabManager.onUrlChange(updateBookmark);
+if (backBtn) {
+  backBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    spin();
+    back();
+  });
+}
+
+if (fwdBtn) {
+  fwdBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    spin();
+    fwd();
+  });
+}
+
+if (homeBtn) {
+  homeBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    spin();
+    nav('/new');
+  });
+}
+
+if (favBtn) {
+  favBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleFav();
+  });
+}
+
+if (urlbar) {
+  urlbar.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      submit();
+    }
+  });
+}
+
+if (sidebar) {
+  sidebar.addEventListener('click', clickSide);
+}
+
+TabManager.onUrlChange(sync);
+
+setup();
