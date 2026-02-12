@@ -27,33 +27,14 @@ class ScramjetWrapper {
         syncxhr: false,
       },
       codec: {
-        // obfuscator fucked this, so we needed to do it this way (send help)
-        encode: new Function(
-          'url',
-          `
-          if (!url) return url;
-          let result = '';
-          for (let i = 0; i < url.length; i++) {
-            result += i % 2 ? String.fromCharCode(url.charCodeAt(i) ^ 7) : url[i];
-          }
-          return encodeURIComponent(result);
-        `,
-        ),
-        decode: new Function(
-          'url',
-          `
-          if (!url) return url;
-          const parts = url.split('?');
-          const input = parts[0];
-          const search = parts.slice(1);
-          let result = '';
-          const decoded = decodeURIComponent(input);
-          for (let i = 0; i < decoded.length; i++) {
-            result += i % 2 ? String.fromCharCode(decoded.charCodeAt(i) ^ 7) : decoded[i];
-          }
-          return result + (search.length ? '?' + search.join('?') : '');
-        `,
-        ),
+        // @ts-ignore
+        encode: (url) => {
+         return encodeURIComponent(url);
+        },
+        // @ts-ignore
+        decode: (url) => {
+         return decodeURIComponent(url);
+        }
       },
     };
   }
