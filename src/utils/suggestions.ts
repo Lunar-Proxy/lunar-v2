@@ -6,92 +6,97 @@ createIcons({ icons });
 });
 
 const urlbar = document.getElementById('urlbar') as HTMLInputElement | null;
-const quicklinks: Record<string, string> = {
+const quick: Record<string, string> = {
   'lunar://settings': 'Settings',
   'lunar://new': 'New Page',
   'lunar://games': 'Games',
   'lunar://apps': 'Apps',
 };
 
-let debounce: number | null = null;
-let menuopen = false;
-let prevquery = '';
+let timer: number | null = null;
+let open = false;
+let prev = '';
 
-function isquicklink(str: string): boolean {
+function isQuick(str: string): boolean {
   return str.startsWith('lunar://');
 }
 
-function getquicklinks(str: string): [string, string][] {
+function filterQuick(str: string): [string, string][] {
   const lc = str.toLowerCase();
-  return Object.entries(quicklinks).filter(([k]) => k.toLowerCase().includes(lc));
+  return Object.entries(quick).filter(([k]) => k.toLowerCase().includes(lc));
 }
 
-async function fetchsuggestions(query: string): Promise<string[]> {
-  if (!query) return [];
+async function fetchSugg(q: string): Promise<string[]> {
+  if (!q) return [];
   try {
-    const resp = await fetch(`/api/query?q=${encodeURIComponent(query)}`);
-    if (!resp.ok) return [];
-    const json = await resp.json();
-    return Array.isArray(json.suggestions) ? json.suggestions : [];
+    const r = await fetch(`/api/query?q=${encodeURIComponent(q)}`);
+    if (!r.ok) return [];
+    const j = await r.json();
+    return Array.isArray(j.suggestions) ? j.suggestions : [];
   } catch {
     return [];
   }
 }
 
-function ismathquery(str: string): boolean {
-  const normalized = str.trim().replace(/x/gi, '*');
+function isMath(str: string): boolean {
+  const norm = str.trim().replace(/x/gi, '*');
   return (
-    /^[0-9+\-*/().%^√\s]+$/.test(normalized) &&
-    !/^[0-9.]+$/.test(normalized) &&
-    /[+\-*/%^√()]/.test(normalized)
+    /^[0-9+\-*/().%^√\s]+$/.test(norm) &&
+    !/^[0-9.]+$/.test(norm) &&
+    /[+\-*/%^√()]/.test(norm)
   );
 }
 
-function evalmath(str: string): string | null {
+function calc(str: string): string | null {
   try {
-    const expression = str
+    const expr = str
       .replace(/x/gi, '*')
       .replace(/√(\d+)/g, 'Math.sqrt($1)')
       .replace(/√/g, 'Math.sqrt')
       .replace(/\^/g, '**')
       .replace(/(\d+)%/g, '($1/100)');
-    const answer = Function('"use strict";return(' + expression + ')')();
-    return typeof answer === 'number' && isFinite(answer) ? String(answer) : null;
+    const ans = Function('"use strict";return(' + expr + ')')();
+    return typeof ans === 'number' && isFinite(ans) ? String(ans) : null;
   } catch {
     return null;
   }
 }
 
-function createdropdown(): HTMLDivElement {
-  closemenu();
-  const menu = document.createElement('div');
-  menu.id = 'suggestions';
-  menu.className =
+function create(): HTMLDivElement {
+  close();
+  const m = document.createElement('div');
+  m.id = 'suggestions';
+  m.className =
     'absolute top-full z-50 mt-0 w-full rounded-b-xl border-x border-b border-[#3a3758] bg-[#1f1f30]/95 shadow-2xl backdrop-blur-xl transition-all duration-200 overflow-y-auto opacity-0 hidden';
-  urlbar?.parentElement?.appendChild(menu);
-  return menu;
+  urlbar?.parentElement?.appendChild(m);
+  return m;
 }
 
-function openmenu(menu: HTMLDivElement): void {
+function show(m: HTMLDivElement): void {
   if (!urlbar?.value.trim()) {
-    closemenu();
+    close();
     return;
   }
-  menu.classList.remove('opacity-0', 'hidden');
-  const bounds = urlbar.getBoundingClientRect();
-  const maxheight = window.innerHeight - bounds.bottom - 16;
-  menu.style.maxHeight = `${Math.max(maxheight, 100)}px`;
+  m.classList.remove('opacity-0', 'hidden');
+  const b = urlbar.getBoundingClientRect();
+  const max = window.innerHeight - b.bottom - 16;
+  m.style.maxHeight = `${Math.max(max, 100)}px`;
+  open = true;
 }
 
-function closemenu(): void {
-  document.getElementById('suggestions')?.remove();
-  menuopen = false;
+function close(): void {
+  const m = document.getElementById('suggestions');
+  if (m) {
+    m.classList.add('opacity-0');
+    setTimeout(() => m.remove(), 200);
+  }
+  open = false;
 }
 
-function selectitem(value: string): void {
+function select(val: string): void {
   if (!urlbar) return;
-  urlbar.value = value;
-  closemenu();
+  urlbar.value = val;
+  close();
   urlbar.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'Enter',
@@ -103,142 +108,140 @@ function selectitem(value: string): void {
   );
 }
 
-function htmlescape(text: string): string {
-  const temp = document.createElement('div');
-  temp.textContent = text;
-  return temp.innerHTML;
+function esc(text: string): string {
+  const t = document.createElement('div');
+  t.textContent = text;
+  return t.innerHTML;
 }
 
-function rendermenu(
-  suggestions: string[],
-  quickmatches: [string, string][],
-  mathresult: string | null,
-  searchquery: string,
-): void {
-  closemenu();
+function render(sugg: string[], qm: [string, string][], math: string | null, sq: string): void {
+  close();
   if (!urlbar?.value.trim()) return;
 
-  const trimmed = suggestions.slice(0, 7);
-  const showquick = isquicklink(searchquery);
+  const trim = sugg.slice(0, 7);
+  const showq = isQuick(sq);
 
-  if (!trimmed.length && !quickmatches.length && !mathresult) return;
+  if (!trim.length && !qm.length && !math) return;
 
-  const dropdown = createdropdown();
-  const markup: string[] = [];
+  const dd = create();
+  const html: string[] = [];
 
-  if (mathresult) {
-    markup.push(
-      `<div class="flex items-center space-x-3 px-4 py-3 text-(--text-header) cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${htmlescape(mathresult)}"><i data-lucide="calculator" class="h-5 w-5 text-green-400"></i><span>${htmlescape(mathresult)}</span></div>`,
+  if (math) {
+    html.push(
+      `<div class="flex items-center space-x-3 px-4 py-3 text-(--text-header) cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${esc(math)}"><i data-lucide="calculator" class="h-5 w-5 text-green-400"></i><span>${esc(math)}</span></div>`,
     );
   }
 
-  if (trimmed.length) {
-    markup.push(
-      `<div class="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-(--text-secondary)">Suggestions for <span class="text-white">"${htmlescape(searchquery)}"</span></div>`,
+  if (trim.length) {
+    html.push(
+      `<div class="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-(--text-secondary)">Suggestions for <span class="text-white">"${esc(sq)}"</span></div>`,
     );
-    trimmed.forEach(sug => {
-      markup.push(
-        `<div class="flex items-center space-x-3 px-4 py-3 text-(--text-header) cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${htmlescape(sug)}"><i data-lucide="search" class="h-4 w-4 text-(--text-secondary)"></i><span>${htmlescape(sug)}</span></div>`,
+    trim.forEach(s => {
+      html.push(
+        `<div class="flex items-center space-x-3 px-4 py-3 text-(--text-header) cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${esc(s)}"><i data-lucide="search" class="h-4 w-4 text-(--text-secondary)"></i><span>${esc(s)}</span></div>`,
       );
     });
   }
 
-  if (showquick && quickmatches.length) {
-    markup.push(
+  if (showq && qm.length) {
+    html.push(
       `<div class="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-(--text-secondary) border-t border-[#3a3758]">Lunar Links</div>`,
     );
-    quickmatches.forEach(([link, desc]) => {
-      markup.push(
-        `<div class="flex items-center justify-between px-4 py-3 text-(--text-header) cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${htmlescape(link)}"><div class="flex items-center space-x-3"><i data-lucide="globe" class="h-5 w-5 text-purple-400"></i><span>${htmlescape(link)}</span></div><span class="text-xs text-(--text-secondary)">${htmlescape(desc)}</span></div>`,
+    qm.forEach(([link, desc]) => {
+      html.push(
+        `<div class="flex items-center justify-between px-4 py-3 text-(--text-header) cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${esc(link)}"><div class="flex items-center space-x-3"><i data-lucide="globe" class="h-5 w-5 text-purple-400"></i><span>${esc(link)}</span></div><span class="text-xs text-(--text-secondary)">${esc(desc)}</span></div>`,
       );
     });
   }
 
-  dropdown.innerHTML = markup.join('');
-  dropdown.querySelectorAll<HTMLElement>('[data-value]').forEach(elem => {
-    elem.addEventListener('click', evt => {
-      evt.preventDefault();
-      evt.stopPropagation();
-      const val = elem.dataset.value;
-      if (val) selectitem(val);
+  dd.innerHTML = html.join('');
+  dd.querySelectorAll<HTMLElement>('[data-value]').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      const v = el.dataset.value;
+      if (v) select(v);
     });
   });
   createIcons({ icons });
-  openmenu(dropdown);
-  menuopen = true;
+  show(dd);
 }
 
-async function updatemenu(): Promise<void> {
+async function update(): Promise<void> {
   if (!urlbar) return;
-  const current = urlbar.value.trim();
-  if (!current) {
-    closemenu();
+  const cur = urlbar.value.trim();
+  if (!cur) {
+    close();
     return;
   }
-  prevquery = current;
-  const [suggestions, mathans] = await Promise.all([
-    fetchsuggestions(current),
-    ismathquery(current) ? evalmath(current) : Promise.resolve(null),
+  prev = cur;
+  const [sugg, math] = await Promise.all([
+    fetchSugg(cur),
+    isMath(cur) ? calc(cur) : Promise.resolve(null),
   ]);
-  if (urlbar.value.trim() !== prevquery) return;
-  const quickres = isquicklink(current) ? getquicklinks(current) : [];
-  rendermenu(suggestions, quickres, mathans, current);
+  if (urlbar.value.trim() !== prev) return;
+  const qr = isQuick(cur) ? filterQuick(cur) : [];
+  render(sugg, qr, math, cur);
 }
 
-function scheduleupdate(): void {
-  if (debounce) clearTimeout(debounce);
-  debounce = window.setTimeout(() => {
+function schedule(): void {
+  if (timer) clearTimeout(timer);
+  timer = window.setTimeout(() => {
     if (!urlbar?.value.trim()) {
-      closemenu();
+      close();
       return;
     }
-    updatemenu();
+    update();
   }, 150);
 }
 
-function handleblur(): void {
-  if (debounce) {
-    clearTimeout(debounce);
-    debounce = null;
+function blur(): void {
+  if (timer) {
+    clearTimeout(timer);
+    timer = null;
   }
-  setTimeout(() => closemenu(), 150);
+  setTimeout(() => {
+    if (!document.activeElement?.closest('#suggestions')) {
+      close();
+    }
+  }, 150);
 }
 
 if (urlbar) {
-  urlbar.addEventListener('input', scheduleupdate);
+  urlbar.addEventListener('input', schedule);
   urlbar.addEventListener('focus', () => {
-    if (urlbar.value.trim()) updatemenu();
+    if (urlbar.value.trim()) update();
   });
-  urlbar.addEventListener('blur', handleblur);
-  urlbar.addEventListener('keydown', evt => {
-    if (evt.key === 'Escape') {
-      evt.preventDefault();
-      closemenu();
-    } else if (evt.key === 'Enter') {
-      closemenu();
+  urlbar.addEventListener('blur', blur);
+  urlbar.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      close();
+    } else if (e.key === 'Enter') {
+      close();
     }
   });
 
   window.addEventListener('resize', () => {
-    const dropdown = document.getElementById('suggestions') as HTMLDivElement | null;
-    if (dropdown && menuopen && urlbar?.value.trim()) {
-      openmenu(dropdown);
-    } else if (dropdown) {
-      closemenu();
+    const dd = document.getElementById('suggestions') as HTMLDivElement | null;
+    if (dd && open && urlbar?.value.trim()) {
+      show(dd);
+    } else if (dd) {
+      close();
     }
   });
 
-  document.addEventListener('mousedown', evt => {
-    const target = evt.target as HTMLElement;
-    if (!target.closest('#urlbar') && !target.closest('#suggestions')) closemenu();
+  document.addEventListener('click', e => {
+    const t = e.target as HTMLElement;
+    if (!t.closest('#urlbar') && !t.closest('#suggestions')) {
+      close();
+    }
   });
 
-  document.addEventListener(
-    'mousedown',
-    evt => {
-      const target = evt.target as HTMLElement;
-      if (target.closest('#suggestions')) evt.preventDefault();
-    },
-    true,
-  );
+  document.addEventListener('mousedown', e => {
+    const t = e.target as HTMLElement;
+    if (t.closest('#suggestions')) {
+      e.preventDefault();
+    }
+  }, true);
 }
