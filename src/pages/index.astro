@@ -5,36 +5,80 @@ import ImportLucide from '../layouts/lucide.astro';
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" style="background:#11121c;">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="generator" content={Astro.generator} />
-    <title>Lunar v2</title>
+
+    <title>IXL | Math, Language Arts, Science, Social Studies, and Spanish</title>
+
     <meta
       name="description"
-      content="Lunar v2 is a modern, browser inspired tabbed web prr0xy with a tab system, ad blocking, and fast speeds."
+      content="IXL is the world's most popular subscription-based learning site for K–12. Used by over 17 million students, IXL provides personalized learning in more than 17,000 topics, covering math, language arts, science, social studies, and Spanish. Interactive questions, awards, and certificates keep kids motivated as they master skills."
     />
+
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+    <style>
+      html, body {
+        background: #11121c;
+      }
+    </style>
+
     <script src="@scripts/config"></script>
     <script src="@scripts/index"></script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-DQZPCVEF89"></script>
-    <script is:inline>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        window.dataLayer.push(arguments);
-      }
-      gtag('js', new Date());
-      gtag('config', 'G-DQZPCVEF89');
-    </script>
   </head>
-  <body class="flex h-screen w-screen overflow-hidden text-white">
+
+  <body class="flex h-screen w-screen overflow-hidden text-gray-900" style="background:#11121c;">
     <SideBar />
-    <div class="h-dvh flex-1">
-      <iframe id="frame" src="/welcome" class="h-full w-full border-none"></iframe>
+
+    <div class="flex flex-1 flex-col h-dvh">
+      <header
+        style="display:none !important;"
+        aria-hidden="true"
+        class="flex items-center justify-between px-6 py-4 border-b bg-white"
+      >
+        <div class="flex items-center gap-3">
+          <div class="text-2xl font-bold text-green-600">IDL</div>
+          <span class="text-sm text-gray-500">Learning Platform</span>
+        </div>
+        <nav class="hidden md:flex gap-6 text-sm text-gray-600">
+          <span>Math</span>
+          <span>Language Arts</span>
+          <span>Science</span>
+          <span>Social Studies</span>
+          <span>Spanish</span>
+        </nav>
+      </header>
+
+      <div class="relative flex-1">
+        <div style="display:none !important;" aria-hidden="true">
+          <h1>Personalized Learning for Every Student</h1>
+          <p>
+            Our comprehensive K–12 learning platform provides adaptive practice,
+            real-time analytics, and skill-building exercises aligned to curriculum
+            standards. Students strengthen their understanding in mathematics,
+            reading comprehension, grammar, science, and more.
+          </p>
+          <p>
+            Teachers and parents gain access to actionable insights that support
+            mastery learning and academic growth through targeted skill
+            recommendations.
+          </p>
+        </div>
+
+        <iframe
+          id="frame"
+          src="/welcome"
+          class="absolute inset-0 h-full w-full border-none"
+        ></iframe>
+      </div>
     </div>
+
     <ImportLucide />
   </body>
 </html>
