@@ -1,6 +1,7 @@
 ---
 import '@/main.css';
 import Tabs from '../layouts/tab.astro';
+import SideBar from '../layouts/side.astro';
 ---
 
 <head>
@@ -21,4 +22,6 @@ import Tabs from '../layouts/tab.astro';
   <script is:inline src="/tmp/config.js"></script>
   <script is:inline src="/tmp/bundle.js"></script>
   <script src="@scripts/navigation"></script>
+
+  <SideBar />
 </body>

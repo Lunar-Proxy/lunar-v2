@@ -191,8 +191,7 @@ urlbar?.addEventListener('keydown', async e => {
   navigate(url);
 });
 
-const doc = parent.document;
-const aside = doc.querySelector('aside');
+const aside = document.querySelector('aside');
 const reverseNativePaths = Object.fromEntries(
   Object.entries(nativePaths).map(([key, value]) => [value, key]),
 );
