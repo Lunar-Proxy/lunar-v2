@@ -194,11 +194,11 @@ urlbar?.addEventListener('keydown', async e => {
 const doc = parent.document;
 const aside = doc.querySelector('aside');
 const reverseNativePaths = Object.fromEntries(
-  Object.entries(nativePaths).map(([key, value]) => [value, key])
+  Object.entries(nativePaths).map(([key, value]) => [value, key]),
 );
 
 if (aside) {
-  aside.addEventListener('click', (ev) => {
+  aside.addEventListener('click', ev => {
     const btn = (ev.target as HTMLElement).closest('button');
     if (!btn) return;
 
@@ -224,6 +224,5 @@ if (aside) {
     navigate(finalUrl);
   });
 }
-
 
 TabManager.onUrlChange(updateBookmark);
