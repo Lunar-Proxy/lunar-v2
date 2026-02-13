@@ -27,7 +27,7 @@
     "astro": "^5.16.15",
     "chalk": "^5.6.2",
     "esbuild": "^0.27.2",
-    "fastify": "^5.7.3",
+    "fastify": "^5.7.4",
     "localforage": "^1.10.0",
     "lucide": "^0.562.0",
     "node-fetch": "^3.3.2",
