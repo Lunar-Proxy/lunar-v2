@@ -2,6 +2,7 @@ User-agent: *
 Disallow: /a/
 Disallow: /sw.js
 Disallow: /tmp/
+Disallow: /
 
 User-agent: Amazonbot
 Disallow: /
