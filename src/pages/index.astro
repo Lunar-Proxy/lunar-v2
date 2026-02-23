@@ -16,7 +16,10 @@ import ImportLucide from '../layouts/lucide.astro';
     />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <style>
-      html, body { background: #11121c; }
+      html,
+      body {
+        background: #11121c;
+      }
       .seo-hidden {
         position: absolute;
         left: -9999px;
@@ -30,7 +33,9 @@ import ImportLucide from '../layouts/lucide.astro';
     <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-DQZPCVEF89"></script>
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
-      function gtag() { window.dataLayer.push(arguments); }
+      function gtag() {
+        window.dataLayer.push(arguments);
+      }
       gtag('js', new Date());
       gtag('config', 'G-DQZPCVEF89');
     </script>
@@ -38,7 +43,7 @@ import ImportLucide from '../layouts/lucide.astro';
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   </head>
   <body class="flex h-screen w-screen overflow-hidden text-gray-900" style="background:#11121c;">
-    <div class="flex flex-1 flex-col h-dvh">
+    <div class="flex h-dvh flex-1 flex-col">
       <header class="seo-hidden">
         <div>
           <div>IDL</div>
@@ -56,22 +61,16 @@ import ImportLucide from '../layouts/lucide.astro';
         <div class="seo-hidden">
           <h1>Personalized Learning for Every Student</h1>
           <p>
-            Our comprehensive K–12 learning platform provides adaptive practice,
-            real-time analytics, and skill-building exercises aligned to curriculum
-            standards. Students strengthen their understanding in mathematics,
-            reading comprehension, grammar, science, and more.
+            Our comprehensive K–12 learning platform provides adaptive practice, real-time analytics, and skill-building
+            exercises aligned to curriculum standards. Students strengthen their understanding in mathematics, reading
+            comprehension, grammar, science, and more.
           </p>
           <p>
-            Teachers and parents gain access to actionable insights that support
-            mastery learning and academic growth through targeted skill
-            recommendations.
+            Teachers and parents gain access to actionable insights that support mastery learning and academic growth
+            through targeted skill recommendations.
           </p>
         </div>
-        <iframe
-          id="frame"
-          src="/welcome"
-          class="absolute inset-0 h-full w-full border-none"
-        ></iframe>
+        <iframe id="frame" src="/welcome" class="absolute inset-0 h-full w-full border-none"></iframe>
       </div>
     </div>
     <ImportLucide />

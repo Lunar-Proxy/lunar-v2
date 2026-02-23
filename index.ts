@@ -15,11 +15,14 @@ import { fileURLToPath } from 'node:url';
 import { updateChecker } from 'serverlib/check';
 import { findProvider } from 'serverlib/provider';
 import { version } from './package.json' with { type: 'json' };
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 EventEmitter.defaultMaxListeners = 20;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const port = Number(process.env.PORT) || 6060;
+const port = Number(process.env.PORT) || 8080;
 
 logging.set_level(logging.ERROR);
 Object.assign(wisp.options, {
@@ -45,14 +48,67 @@ async function ensureBuild() {
   }
 }
 
+interface RateLimitEntry {
+  minute: number[];
+  hour: number[];
+  day: number[];
+}
+
+const rateLimitStore = new Map<string, RateLimitEntry>();
+
+const RATE_LIMITS = {
+  perMinute: 30,
+  perHour: 200,
+  perDay: 1000,
+};
+
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, entry] of rateLimitStore.entries()) {
+    entry.day = entry.day.filter(t => now - t < 86_400_000);
+    if (entry.day.length === 0) rateLimitStore.delete(ip);
+  }
+}, 10 * 60 * 1000);
+
+function checkRateLimit(ip: string): { allowed: boolean; retryAfter?: number } {
+  const now = Date.now();
+  let entry = rateLimitStore.get(ip);
+
+  if (!entry) {
+    entry = { minute: [], hour: [], day: [] };
+    rateLimitStore.set(ip, entry);
+  }
+
+  entry.minute = entry.minute.filter(t => now - t < 60_000);
+  entry.hour   = entry.hour.filter(t => now - t < 3_600_000);
+  entry.day    = entry.day.filter(t => now - t < 86_400_000);
+
+  if (entry.minute.length >= RATE_LIMITS.perMinute) {
+    return { allowed: false, retryAfter: Math.ceil((entry.minute[0] + 60_000 - now) / 1000) };
+  }
+  if (entry.hour.length >= RATE_LIMITS.perHour) {
+    return { allowed: false, retryAfter: Math.ceil((entry.hour[0] + 3_600_000 - now) / 1000) };
+  }
+  if (entry.day.length >= RATE_LIMITS.perDay) {
+    return { allowed: false, retryAfter: Math.ceil((entry.day[0] + 86_400_000 - now) / 1000) };
+  }
+
+  entry.minute.push(now);
+  entry.hour.push(now);
+  entry.day.push(now);
+
+  return { allowed: true };
+}
+
+const WORKER_URL = 'https://muddy-frost-34e4.pandaslifeyt.workers.dev/'; // if you are selfhosting, dm me for help (bearcattt)
+
 const app = Fastify({
   logger: false,
   serverFactory: handler => {
     const server = createServer();
-    
-    server.setMaxListeners(20);
-    // it will log about a memory leak due to how many sockets it adds due to astros SSR & fastify shit
-    
+
+    server.setMaxListeners(50);
+
     const requestHandler = (req: any, res: any) => handler(req, res);
     const upgradeHandler = (req: any, socket: any, head: any) => {
       if (req.url?.endsWith('/w/')) {
@@ -61,15 +117,19 @@ const app = Fastify({
         socket.destroy();
       }
     };
-    
+
     server.on('request', requestHandler);
     server.on('upgrade', upgradeHandler);
-    
+
     return server;
   },
 });
 
 await ensureBuild();
+
+if (!process.env.AIKEY) {
+  console.warn(chalk.yellow('⚠️  Warning: AIKEY environment variable is not set. AI features will be disabled.'));
+}
 
 await app.register(fastifyHelmet, {
   crossOriginEmbedderPolicy: { policy: 'require-corp' },
@@ -103,6 +163,96 @@ const staticFileOptions: FastifyStaticOptions = {
   root: path.join(__dirname, 'dist', 'client'),
 };
 await app.register(fastifyStatic, staticFileOptions);
+
+app.use('/api/ii', async (req: any, res: any) => {
+  if (req.method !== 'POST') {
+    res.statusCode = 405;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ error: 'Method not allowed. Use POST.' }));
+    return;
+  }
+
+  if (!process.env.AIKEY) {
+    res.statusCode = 503;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({ error: 'AI features are currently disabled.' }));
+    return;
+  }
+
+  const ip: string =
+    (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() ||
+    req.headers['x-real-ip'] as string ||
+    req.socket?.remoteAddress ||
+    'unknown';
+
+  const rateResult = checkRateLimit(ip);
+  if (!rateResult.allowed) {
+    res.statusCode = 429;
+    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Retry-After', String(rateResult.retryAfter ?? 60));
+    res.end(JSON.stringify({ error: `Rate limit exceeded. Try again in ${rateResult.retryAfter}s.`, retryAfter: rateResult.retryAfter }));
+    return;
+  }
+
+  let body = '';
+  req.on('data', (chunk: any) => {
+    body += chunk;
+    if (body.length > 8192) {
+      res.statusCode = 413;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ error: 'Request body too large.' }));
+      req.destroy();
+    }
+  });
+
+  req.on('end', async () => {
+    try {
+      let parsed: any;
+      try {
+        parsed = JSON.parse(body);
+      } catch {
+        res.statusCode = 400;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ error: 'Invalid JSON body.' }));
+        return;
+      }
+
+      if (!parsed.message || typeof parsed.message !== 'string' || parsed.message.trim().length === 0) {
+        res.statusCode = 400;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ error: 'Field "message" is required.' }));
+        return;
+      }
+
+      try {
+        const workerRes = await fetch(WORKER_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${process.env.AIKEY}`,
+          },
+          body: JSON.stringify(parsed),
+        });
+
+        const data = await workerRes.json();
+        res.setHeader('Content-Type', 'application/json');
+        res.statusCode = workerRes.status;
+        res.end(JSON.stringify(data));
+      } catch (err) {
+        console.error('Worker fetch error:', err);
+        res.statusCode = 502;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ error: 'Failed to reach AI worker.' }));
+      }
+
+    } catch (err) {
+      console.error('AI endpoint error:', err);
+      res.statusCode = 500;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ error: 'Internal server error.' }));
+    }
+  });
+});
 
 app.use('/api/query', async (req: any, res: any) => {
   const urlObj = new URL(req.url ?? '', 'http://localhost');
@@ -150,10 +300,7 @@ app.listen({ host: '0.0.0.0', port }, err => {
 
   const updateStatus = updateChecker();
   type StatusKey = 'u' | 'n' | 'f';
-  const statusMap: Record<
-    StatusKey,
-    { icon: string; text: string; color: string; extra?: string }
-  > = {
+  const statusMap: Record<StatusKey, { icon: string; text: string; color: string; extra?: string }> = {
     u: { icon: '✅', text: 'Up to date', color: '#2ecc71' },
     n: {
       icon: '❌',

@@ -1,21 +1,38 @@
-const encode = url => {
+function rotHost(host) {
+  return host.split('').map(function(c) {
+    var n = c.charCodeAt(0);
+    if (n >= 97 && n <= 122) return String.fromCharCode(((n - 97 + 13) % 26) + 97);
+    if (n >= 65 && n <= 90)  return String.fromCharCode(((n - 65 + 13) % 26) + 97);
+    if (n >= 48 && n <= 57)  return String.fromCharCode(((n - 48 + 5)  % 10) + 48);
+    return c;
+  }).join('');
+}
+
+function encode(url) {
   if (!url) return url;
-  let r = '';
-  for (let i = 0; i < url.length; i++) {
-    r += i % 2 ? String.fromCharCode(url.charCodeAt(i) ^ 7) : url[i];
-  }
-  return encodeURIComponent(r);
+  var parts = url.split('?');
+  var base = parts[0];
+  var query = parts.length > 1 ? '?' + parts.slice(1).join('?') : '';
+  var encoded = base.replace(/^([\w+.-]+:\/\/)([^/?#]+)/, function(_, proto, host) {
+    return proto + rotHost(host);
+  });
+  return encodeURIComponent(encoded) + query;
 };
 
-const decode = url => {
+function decode(url) {
   if (!url) return url;
-  const [input, ...search] = url.split('?');
-  let r = '';
-  const d = decodeURIComponent(input);
-  for (let i = 0; i < d.length; i++) {
-    r += i % 2 ? String.fromCharCode(d.charCodeAt(i) ^ 7) : d[i];
-  }
-  return r + (search.length ? '?' + search.join('?') : '');
+  var parts = url.split('?');
+  var input = parts[0];
+  var query = parts.length > 1 ? '?' + parts.slice(1).join('?') : '';
+  var decoded = decodeURIComponent(input).replace(/^([\w+.-]+:\/\/)([^/?#]+)/, function(_, proto, host) {
+    return proto + host.split('').map(function(c) {
+      var n = c.charCodeAt(0);
+      if (n >= 97 && n <= 122) return String.fromCharCode(((n - 97 + 13) % 26) + 97);
+      if (n >= 48 && n <= 57)  return String.fromCharCode(((n - 48 + 5)  % 10) + 48);
+      return c;
+    }).join('');
+  });
+  return decoded + query;
 };
 
 tmpConfig = {

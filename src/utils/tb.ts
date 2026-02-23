@@ -18,6 +18,7 @@ const internalRoutes: Record<string, string> = {
   'lunar://games': '/math',
   'lunar://apps': '/sci',
 };
+
 const defaultIcon = '/a/moon.svg';
 const faviconApi =
   'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64&url=';
@@ -36,7 +37,7 @@ let tabBar: HTMLDivElement | null = null;
 let frameContainer: HTMLDivElement | null = null;
 const faviconCache = new Map<string, string>();
 
-function nextId() {
+function nextId(): number {
   return idCounter++;
 }
 
@@ -85,7 +86,7 @@ async function fetchFavicon(url: string): Promise<string> {
       return defaultIcon;
     }
     const blob = await res.blob();
-    return await new Promise(r => {
+    return await new Promise<string>(r => {
       const reader = new FileReader();
       reader.onloadend = () => {
         faviconCache.set(url, reader.result as string);
@@ -99,20 +100,18 @@ async function fetchFavicon(url: string): Promise<string> {
   }
 }
 
-function updateTabEl(tab: Tab, field: 'title' | 'icon') {
+function updateTabEl(tab: Tab, field: 'title' | 'icon'): void {
   if (!tab.el) return;
   if (field === 'title') {
     const span = tab.el.querySelector('.tab-title');
     if (span) span.textContent = truncate(tab.title);
   } else {
-    const img = tab.el.querySelector('.tab-favicon') as HTMLImageElement | null;
-    if (img && img.src !== tab.favicon) {
-      img.src = tab.favicon;
-    }
+    const img = tab.el.querySelector<HTMLImageElement>('.tab-favicon');
+    if (img && img.src !== tab.favicon) img.src = tab.favicon;
   }
 }
 
-function pollTitle(tab: Tab) {
+function pollTitle(tab: Tab): void {
   if (tab.titleTimer) clearInterval(tab.titleTimer);
   let lastTitle = tab.title;
   tab.titleTimer = window.setInterval(() => {
@@ -122,24 +121,30 @@ function pollTitle(tab: Tab) {
       let title = doc.title || '';
       try {
         title = decodeURIComponent(title);
-      } catch {}
+      } catch {
+        /* noop */
+      }
       title = title.trim();
       if (title && title !== lastTitle) {
         lastTitle = title;
         tab.title = title;
         updateTabEl(tab, 'title');
       }
-    } catch {}
+    } catch {
+      /* noop */
+    }
   }, 1000);
 }
 
-async function handleFrameLoad(tab: Tab) {
+async function handleFrameLoad(tab: Tab): Promise<void> {
   try {
     const doc = tab.iframe.contentDocument;
     let pageTitle = doc?.title || '';
     try {
       pageTitle = decodeURIComponent(pageTitle);
-    } catch {}
+    } catch {
+      /* noop */
+    }
     tab.title = pageTitle.trim() || 'New Tab';
     updateTabEl(tab, 'title');
     pollTitle(tab);
@@ -165,20 +170,19 @@ async function handleFrameLoad(tab: Tab) {
   }
 }
 
-function updateUrlBar(tab: Tab) {
+function updateUrlBar(tab: Tab): void {
   if (tab.id !== activeId) return;
-
   const urlInput = document.getElementById('urlbar') as HTMLInputElement | null;
   if (!urlInput) return;
-
   try {
     const doc = tab.iframe.contentDocument;
     if (!doc) return;
-
     const pathname = new URL(doc.location.href || '', location.origin).pathname;
     const route = Object.entries(internalRoutes).find(([, v]) => v === pathname);
     urlInput.value = route ? route[0] : decodeProxyUrl(pathname);
-  } catch {}
+  } catch {
+    /* noop */
+  }
 }
 
 function createFrame(id: number, src?: string): HTMLIFrameElement {
@@ -193,26 +197,25 @@ function createFrame(id: number, src?: string): HTMLIFrameElement {
   frame.addEventListener('load', () => {
     try {
       const win = frame.contentWindow;
-      const doc = frame.contentDocument;
-      if (!win || !doc) return;
+      if (!win) return;
       win.open = (openUrl?: string | URL) => {
         if (!openUrl) return null;
-        encodeProxyUrl(openUrl.toString()).then(proxyUrl => {
-          openTab(proxyUrl);
-        });
+        encodeProxyUrl(openUrl.toString()).then(proxyUrl => openTab(proxyUrl));
         return null;
       };
-    } catch {}
+    } catch {
+      /* noop */
+    }
   });
   return frame;
 }
 
 function getTabClass(active: boolean): string {
   const base =
-    'tab flex items-center justify-between h-10 min-w-[180px] max-w-[200px] px-3 py-2 rounded-t-xl cursor-pointer select-none transition-all duration-200 relative z-10 mx-0.5 border border-b-0 border-[color:var(--border)] gap-2';
+    'tab flex items-center justify-between h-[34px] min-w-[160px] max-w-[220px] px-3 rounded-t-lg cursor-pointer select-none transition-all duration-200 relative z-10 border border-b-0 border-[color:var(--border)] gap-2 text-[12.5px]';
   return active
-    ? `${base} bg-[color:var(--background)] shadow-[0_4px_16px_#23213660] text-[color:var(--text-header)]`
-    : `${base} bg-[color:var(--background-overlay)] hover:bg-[color:var(--background)] text-[color:var(--text-secondary)] opacity-70 hover:opacity-90`;
+    ? `${base} bg-[color:var(--background)] shadow-[0_2px_12px_#23213640] text-[color:var(--text-header)]`
+    : `${base} bg-[color:var(--background-overlay)] hover:bg-[color:var(--background)] text-[color:var(--text-secondary)] opacity-60 hover:opacity-85`;
 }
 
 function createTabEl(tab: Tab): HTMLDivElement {
@@ -220,39 +223,30 @@ function createTabEl(tab: Tab): HTMLDivElement {
   el.className = getTabClass(tab.id === activeId);
 
   const left = document.createElement('div');
-  left.className = 'flex items-center gap-2 flex-1 min-w-0';
-  left.style.height = '100%';
+  left.className = 'flex items-center gap-1.5 flex-1 min-w-0 h-full';
 
   const icon = document.createElement('img');
   icon.className = 'tab-favicon flex-shrink-0';
   icon.src = tab.favicon;
-  icon.width = 16;
-  icon.height = 16;
-  icon.style.width = '16px';
-  icon.style.height = '16px';
-  icon.style.objectFit = 'contain';
-  icon.style.display = 'block';
+  icon.width = 14;
+  icon.height = 14;
+  icon.style.cssText = 'width:14px;height:14px;object-fit:contain;display:block;';
 
   const title = document.createElement('span');
-  title.className = 'tab-title truncate text-sm font-normal flex-1 min-w-0';
-  title.style.overflow = 'hidden';
-  title.style.textOverflow = 'ellipsis';
-  title.style.whiteSpace = 'nowrap';
-  title.style.lineHeight = '1';
-  title.style.display = 'flex';
-  title.style.alignItems = 'center';
+  title.className = 'tab-title flex-1 min-w-0';
+  title.style.cssText =
+    'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1;font-size:12px;';
   title.textContent = truncate(tab.title, 14);
 
   left.append(icon, title);
 
   const closeBtn = document.createElement('button');
   closeBtn.className =
-    'flex items-center justify-center w-5 h-5 flex-shrink-0 rounded-full bg-transparent hover:bg-[color:var(--background-disabled)] text-[color:var(--text-secondary)] hover:text-red-400 transition-all duration-200 text-base leading-none';
-  closeBtn.textContent = '×';
-  closeBtn.style.fontWeight = '400';
-  closeBtn.style.padding = '0';
-  closeBtn.style.lineHeight = '1';
-  closeBtn.onclick = e => {
+    'flex items-center justify-center w-4 h-4 flex-shrink-0 rounded hover:bg-white/15 text-gray-500 hover:text-gray-200 transition-all duration-150';
+  closeBtn.innerHTML =
+    '<svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1L7 7M7 1L1 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+  closeBtn.style.cssText = 'padding:0;line-height:1;';
+  closeBtn.onclick = (e: MouseEvent) => {
     e.stopPropagation();
     closeTab(tab.id);
   };
@@ -263,35 +257,24 @@ function createTabEl(tab: Tab): HTMLDivElement {
   return el;
 }
 
-function renderTabs() {
+function renderTabs(): void {
   if (!tabBar) return;
-  const existingTabs = tabBar.querySelectorAll('.tab');
-  const hasChanges = existingTabs.length !== tabs.length;
-
-  if (!hasChanges) return;
-
   tabBar.innerHTML = '';
-  const wrapper = document.createElement('div');
-  wrapper.className = 'flex items-center justify-center w-full';
-  const tabsContainer = document.createElement('div');
-  tabsContainer.className = 'flex items-center gap-0';
   for (const tab of tabs) {
-    tabsContainer.appendChild(tab.el ?? createTabEl(tab));
+    tabBar.appendChild(tab.el ?? createTabEl(tab));
   }
-  wrapper.appendChild(tabsContainer);
-  tabBar.appendChild(wrapper);
 }
 
-function updateActive() {
+function updateActive(): void {
   for (const tab of tabs) {
     if (tab.el) tab.el.className = getTabClass(tab.id === activeId);
   }
 }
 
-function closeTab(id: number) {
+function closeTab(id: number): void {
   const idx = tabs.findIndex(t => t.id === id);
   if (idx === -1) return;
-  
+
   if (tabs.length === 1) {
     openTab();
     requestAnimationFrame(() => {
@@ -302,18 +285,17 @@ function closeTab(id: number) {
     });
     return;
   }
-  
+
   const [removed] = tabs.splice(idx, 1);
   if (removed.titleTimer) clearInterval(removed.titleTimer);
   removed.iframe.remove();
   if (activeId === id && tabs.length) {
-    const newActiveId = tabs[Math.max(0, idx - 1)].id;
-    switchTab(newActiveId);
+    switchTab(tabs[Math.max(0, idx - 1)].id);
   }
   renderTabs();
 }
 
-function showLoader() {
+function showLoader(): void {
   const bar = document.getElementById('loading-bar') as HTMLDivElement | null;
   if (!bar || isLoading) return;
   isLoading = true;
@@ -331,7 +313,7 @@ function showLoader() {
   }, 1200);
 }
 
-function hideLoader() {
+function hideLoader(): void {
   const bar = document.getElementById('loading-bar') as HTMLDivElement | null;
   if (!bar || !isLoading) return;
   bar.style.cssText =
@@ -342,7 +324,7 @@ function hideLoader() {
   }, 180);
 }
 
-function resetLoader() {
+function resetLoader(): void {
   if (loadTimer) {
     clearTimeout(loadTimer);
     loadTimer = null;
@@ -350,7 +332,7 @@ function resetLoader() {
   hideLoader();
 }
 
-function openTab(src?: string) {
+function openTab(src?: string): void {
   const id = nextId();
 
   if (!frameContainer) {
@@ -362,32 +344,18 @@ function openTab(src?: string) {
     id,
     title: 'New Tab',
     favicon: defaultIcon,
-    iframe: null as any,
+    iframe: null as unknown as HTMLIFrameElement,
     isReady: false,
   };
 
   tabs.push(tab);
-
   const tabEl = createTabEl(tab);
-  if (tabBar) {
-    const wrapper =
-      tabBar.querySelector('.flex.items-center.justify-center') || document.createElement('div');
-    wrapper.className = 'flex items-center justify-center w-full';
-    const container =
-      wrapper.querySelector('.flex.items-center.gap-0') || document.createElement('div');
-    container.className = 'flex items-center gap-0';
-    container.appendChild(tabEl);
-    if (!wrapper.parentElement) {
-      wrapper.appendChild(container);
-      tabBar.appendChild(wrapper);
-    }
-  }
+  if (tabBar) tabBar.appendChild(tabEl);
 
   requestAnimationFrame(() => {
     const frame = createFrame(id, src);
     tab.iframe = frame;
     frameContainer!.appendChild(frame);
-
     switchTab(id);
 
     const urlInput = document.getElementById('urlbar') as HTMLInputElement | null;
@@ -401,14 +369,13 @@ function openTab(src?: string) {
   });
 }
 
-function switchTab(id: number) {
+function switchTab(id: number): void {
   activeId = id;
 
   if (urlWatcher) {
     clearInterval(urlWatcher);
     urlWatcher = null;
   }
-
   prevHref = '';
 
   for (const tab of tabs) {
@@ -419,18 +386,18 @@ function switchTab(id: number) {
   resetLoader();
 
   const activeTab = tabs.find(t => t.id === id);
-  if (activeTab && activeTab.isReady) {
+  if (activeTab?.isReady) {
     updateUrlBar(activeTab);
-
     try {
       const doc = activeTab.iframe?.contentDocument;
       if (doc) {
         let title = doc.title || '';
         try {
           title = decodeURIComponent(title);
-        } catch {}
-        title = title.trim();
-        activeTab.title = title || 'New Tab';
+        } catch {
+          /* noop */
+        }
+        activeTab.title = title.trim() || 'New Tab';
         updateTabEl(activeTab, 'title');
 
         const pathname = new URL(doc.location.href || '', location.origin).pathname;
@@ -442,12 +409,13 @@ function switchTab(id: number) {
           });
         }
       }
-    } catch {}
+    } catch {
+      /* noop */
+    }
   }
 
   urlWatcher = setInterval(() => {
     if (activeId !== id) return;
-
     try {
       const tab = tabs.find(t => t.id === id);
       if (!tab?.iframe) return;
@@ -462,31 +430,34 @@ function switchTab(id: number) {
         urlInput.value = route ? route[0] : decodeProxyUrl(pathname);
       }
 
-      if (tab) {
-        const doc = tab.iframe.contentDocument;
-        if (doc) {
-          let title = doc.title || '';
-          try {
-            title = decodeURIComponent(title);
-          } catch {}
-          title = title.trim();
-          if (title && title !== tab.title) {
-            tab.title = title;
-            updateTabEl(tab, 'title');
-          }
+      const doc = tab.iframe.contentDocument;
+      if (doc) {
+        let title = doc.title || '';
+        try {
+          title = decodeURIComponent(title);
+        } catch {
+          /* noop */
+        }
+        title = title.trim();
+        if (title && title !== tab.title) {
+          tab.title = title;
+          updateTabEl(tab, 'title');
+        }
 
-          const pathname = new URL(doc.location.href || '', location.origin).pathname;
-          const decoded = decodeProxyUrl(pathname);
-          if (decoded) {
-            fetchFavicon(decoded).then(icon => {
-              tab.favicon = icon;
-              updateTabEl(tab, 'icon');
-            });
-          }
+        const pathname = new URL(doc.location.href || '', location.origin).pathname;
+        const decoded = decodeProxyUrl(pathname);
+        if (decoded) {
+          fetchFavicon(decoded).then(icon => {
+            tab.favicon = icon;
+            updateTabEl(tab, 'icon');
+          });
         }
       }
+
       if (onUrlChange) onUrlChange(href);
-    } catch {}
+    } catch {
+      /* noop */
+    }
   }, 150);
 }
 
@@ -494,19 +465,22 @@ document.addEventListener('DOMContentLoaded', () => {
   tabBar = document.getElementById('tcontainer') as HTMLDivElement | null;
   frameContainer = document.getElementById('fcontainer') as HTMLDivElement | null;
   document.getElementById('add')?.addEventListener('click', () => openTab());
+
   const urlbar = document.getElementById('urlbar') as HTMLInputElement | null;
-  urlbar?.addEventListener('keydown', e => {
+  urlbar?.addEventListener('keydown', (e: KeyboardEvent) => {
     if (e.key === 'Enter') showLoader();
   });
+
   setInterval(() => {
     if (!isLoading) return;
     const tab = tabs.find(t => t.id === activeId);
     if (tab?.iframe?.contentDocument?.readyState === 'complete') resetLoader();
   }, 400);
+
   openTab();
 });
 
-function cleanup() {
+function cleanup(): void {
   if (urlWatcher) {
     clearInterval(urlWatcher);
     urlWatcher = null;

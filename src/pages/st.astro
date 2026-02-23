@@ -15,49 +15,6 @@ import ImportLucide from '../layouts/lucide.astro';
       gtag('js', new Date());
       gtag('config', 'G-DQZPCVEF89');
     </script>
-    <style>
-      .toggle {
-        width: 40px;
-        height: 22px;
-        background: var(--background-overlay);
-        border-radius: 11px;
-        cursor: pointer;
-        position: relative;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-      }
-      .toggle::after {
-        content: '';
-        position: absolute;
-        top: 2px;
-        left: 2px;
-        width: 16px;
-        height: 16px;
-        background: var(--text-secondary);
-        border-radius: 50%;
-        transition: 0.15s;
-      }
-      .toggle.active {
-        background: #6366f1;
-        border-color: #6366f1;
-      }
-      .toggle.active::after {
-        left: 20px;
-        background: #fff;
-      }
-      .toast {
-        animation: toast 0.2s ease;
-      }
-      @keyframes toast {
-        from {
-          opacity: 0;
-          transform: translateY(6px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-    </style>
   </head>
 
   <body class="bg-background font-linux text-text-header min-h-screen p-6 md:p-8">
@@ -119,7 +76,7 @@ import ImportLucide from '../layouts/lucide.astro';
                 />
                 <button
                   data-about-blank
-                  class="flex items-center gap-2 rounded-lg border border-[#6366f1]/30 bg-[#6366f1]/15 px-4 py-2 text-sm hover:bg-[#6366f1]/25"
+                  class="cloak-preset bg-background/60 hover:bg-background/80 flex items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm w-full"
                 >
                   <i data-lucide="external-link" class="h-4 w-4"></i>Open in About:Blank
                 </button>
@@ -135,12 +92,12 @@ import ImportLucide from '../layouts/lucide.astro';
                 </div>
 
                 <div data-cloak-inputs class="space-y-3 border-t border-white/6 pt-4">
-                  <div class="flex gap-2">
+                  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 relative">
                     <button
                       data-cloak-preset="google"
                       data-preset-title="Google"
                       data-preset-favicon="/a/images/co/go.ico"
-                      class="cloak-preset bg-background/60 hover:bg-background/80 flex flex-1 items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm"
+                      class="cloak-preset bg-background/60 hover:bg-background/80 flex items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm w-full"
                     >
                       <img src="/a/images/co/go.ico" class="h-4 w-4" alt="" />Google
                     </button>
@@ -148,7 +105,7 @@ import ImportLucide from '../layouts/lucide.astro';
                       data-cloak-preset="drive"
                       data-preset-title="Google Drive"
                       data-preset-favicon="/a/images/co/drei.png"
-                      class="cloak-preset bg-background/60 hover:bg-background/80 flex flex-1 items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm"
+                      class="cloak-preset bg-background/60 hover:bg-background/80 flex items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm w-full"
                     >
                       <img src="/a/images/co/drei.png" class="h-4 w-4" alt="" />Drive
                     </button>
@@ -156,9 +113,50 @@ import ImportLucide from '../layouts/lucide.astro';
                       data-cloak-preset="classroom"
                       data-preset-title="Home"
                       data-preset-favicon="/a/images/co/class.png"
-                      class="cloak-preset bg-background/60 hover:bg-background/80 flex flex-1 items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm"
+                      class="cloak-preset bg-background/60 hover:bg-background/80 flex items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm w-full"
                     >
                       <img src="/a/images/co/class.png" class="h-4 w-4" alt="" />Classroom
+                    </button>
+                    <button
+                      data-cloak-preset="gmail"
+                      data-preset-title="Gmail"
+                      data-preset-favicon="/a/images/co/gmail.png"
+                      class="cloak-preset bg-background/60 hover:bg-background/80 flex items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm w-full"
+                    >
+                      <img src="/a/images/co/gmail.png" class="h-4 w-4" alt="" />Gmail
+                    </button>
+                    <button
+                      data-cloak-preset="youtube"
+                      data-preset-title="YouTube"
+                      data-preset-favicon="/a/images/co/yt.png"
+                      class="cloak-preset bg-background/60 hover:bg-background/80 flex items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm w-full"
+                    >
+                      <img src="/a/images/co/yt.png" class="h-4 w-4" alt="" />YouTube
+                    </button>
+                    <button
+                      data-cloak-preset="docs"
+                      data-preset-title="Google Docs"
+                      data-preset-favicon="/a/images/co/docs.png"
+                      class="cloak-preset bg-background/60 hover:bg-background/80 flex items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm w-full"
+                    >
+                      <img src="/a/images/co/docs.png" class="h-4 w-4" alt="" />Docs
+                    </button>
+
+                    <button
+                      data-cloak-preset="slack"
+                      data-preset-title="Slack"
+                      data-preset-favicon="/a/images/co/slack.png"
+                      class="cloak-preset bg-background/60 hover:bg-background/80 flex items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm w-full"
+                    >
+                      <img src="/a/images/co/slack.png" class="h-4 w-4" alt="" />Slack
+                    </button>
+                    <button
+                      data-cloak-preset="canvas"
+                      data-preset-title="Dashboard"
+                      data-preset-favicon="/a/images/co/canvas.png"
+                      class="cloak-preset bg-background/60 hover:bg-background/80 flex items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm w-full"
+                    >
+                      <img src="/a/images/co/canvas.png" class="h-4 w-4" alt="" />Canvas
                     </button>
                   </div>
                   <input
@@ -193,7 +191,9 @@ import ImportLucide from '../layouts/lucide.astro';
               >
                 <div>
                   <h3 class="font-medium">Anti-close</h3>
-                  <p class="text-text-secondary text-sm">Show a confirm prompt before closing lunar. Helpful for some filters that autoclose tabs.</p>
+                  <p class="text-text-secondary text-sm">
+                    Show a confirm prompt before closing lunar. Helpful for some filters that autoclose tabs.
+                  </p>
                 </div>
                 <div class="toggle" data-toggle="beforeUnload"></div>
               </div>
@@ -303,13 +303,19 @@ import ImportLucide from '../layouts/lucide.astro';
                   placeholder="Custom search URL (ends with ?q= or &q=)"
                   class="bg-background/80 w-full rounded-lg border border-white/6 px-4 py-2.5 text-sm focus:border-[#6366f1]/40 focus:outline-none"
                 />
+                <div class="mt-3">
+                  <button
+                    data-reset="engine"
+                    class="rounded-lg border border-white/6 bg-background/60 px-3 py-2 text-sm hover:bg-background/80"
+                  >
+                    Reset Search Engine
+                  </button>
+                </div>
               </div>
-              <div
-                class="bg-background-overlay/60 flex items-center justify-between rounded-xl border border-white/6 p-5"
-              >
+              <div class="bg-background-overlay/60 flex items-center justify-between rounded-xl border border-white/6 p-5">
                 <div>
-                  <h3 class="font-medium">Ad Blocker (experimental)</h3>
-                  <p class="text-text-secondary text-sm">Block ads and trackers while browsing</p>
+                  <h3 class="font-medium">Ad Block (experimental)</h3>
+                  <p class="text-text-secondary text-sm">Block ads/trackers while browsing</p>
                 </div>
                 <div class="toggle" data-toggle="adBlock"></div>
               </div>
@@ -332,6 +338,14 @@ import ImportLucide from '../layouts/lucide.astro';
                   placeholder="ws://localhost:3000/wisp/"
                   class="bg-background/80 w-full rounded-lg border border-white/6 px-4 py-2.5 text-sm focus:border-[#6366f1]/40 focus:outline-none"
                 />
+                <div class="mt-3">
+                  <button
+                    data-reset="wisp"
+                    class="rounded-lg border border-white/6 bg-background/60 px-3 py-2 text-sm hover:bg-background/80"
+                  >
+                    Reset Wisp
+                  </button>
+                </div>
               </div>
 
               <div class="bg-background-overlay/60 rounded-xl border border-red-500/20 p-5">
@@ -429,6 +443,7 @@ import ImportLucide from '../layouts/lucide.astro';
           win.document.body.appendChild(iframe);
         });
       });
+      
     </script>
   </body>
 </html>

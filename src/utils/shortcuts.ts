@@ -5,6 +5,14 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('[data-short]').forEach(el => {
     el.addEventListener('click', async e => {
       const url = (el as HTMLElement).getAttribute('data-short');
+      if (url === "/gkm") {
+        e.preventDefault();
+        const input = window.parent.document.getElementById('urlbar') as HTMLInputElement | null;
+        if (!input) return;
+        input.value = "lunar://games"
+        input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+        return;
+      }
       if (url) {
         e.preventDefault();
         const conn = new BareMux.BareMuxConnection('/bm/worker.js');

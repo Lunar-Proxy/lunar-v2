@@ -27,32 +27,52 @@ document.addEventListener('DOMContentLoaded', async () => {
     sn: el.dataset.name?.toLowerCase() || '',
   }));
 
-  for (const { el } of items) {
-    const bg = el.dataset.bg;
-    if (!bg) continue;
-    const img = new Image();
-    img.onload = () => {
-      el.classList.remove('card-loading');
-      const div = el.querySelector<HTMLElement>('.card-bg');
-      if (div) div.style.backgroundImage = `url('${bg}')`;
-    };
-    img.onerror = () => el.classList.remove('card-loading');
-    img.src = bg;
-  }
+  const loadImages = () => {
+    const visible = items.filter(({ el }) => {
+      const rect = el.getBoundingClientRect();
+      return rect.top < window.innerHeight + 200 && rect.bottom > -200;
+    });
 
-  function update(): void {
+    visible.forEach(({ el }) => {
+      if (el.classList.contains('card-loading')) {
+        const bg = el.dataset.bg;
+        if (!bg) return;
+        const div = el.querySelector<HTMLElement>('.card-bg');
+        if (div && !div.style.backgroundImage) {
+          div.style.backgroundImage = `url('${bg}')`;
+          const img = new Image();
+          img.onload = () => el.classList.remove('card-loading');
+          img.onerror = () => el.classList.remove('card-loading');
+          img.src = bg;
+        }
+      }
+    });
+  };
+
+  let loadTimer: number;
+  const scheduleLoad = () => {
+    clearTimeout(loadTimer);
+    loadTimer = window.setTimeout(loadImages, 50);
+  };
+
+  loadImages();
+  window.addEventListener('scroll', scheduleLoad, { passive: true });
+  window.addEventListener('resize', scheduleLoad, { passive: true });
+
+  const update = (): void => {
     const vis = items.filter(({ el }) => el.style.display !== 'none').length;
     if (count) count.textContent = String(vis);
     const show = vis === 0 && input && input.value.trim() !== '';
     empty?.classList.toggle('hidden', !show);
     empty?.classList.toggle('flex', !!show);
-  }
+    scheduleLoad();
+  };
 
   input.addEventListener('input', () => {
     const q = input.value.toLowerCase().trim();
-    for (const { el, n, d } of items) {
+    items.forEach(({ el, n, d }) => {
       el.style.display = n.includes(q) || d.includes(q) ? '' : 'none';
-    }
+    });
     update();
   });
 
@@ -66,61 +86,66 @@ document.addEventListener('DOMContentLoaded', async () => {
     rev = !rev;
     items.sort((a, b) => (rev ? b.sn.localeCompare(a.sn) : a.sn.localeCompare(b.sn)));
     this.querySelector('span')!.textContent = rev ? 'Z-A' : 'A-Z';
-    for (const { el } of items) box.appendChild(el);
+    items.forEach(({ el }) => box.appendChild(el));
+    scheduleLoad();
   });
 
   document.querySelector<HTMLButtonElement>('[data-clear]')?.addEventListener('click', () => {
     input.value = '';
-    for (const { el } of items) el.style.display = '';
+    items.forEach(({ el }) => (el.style.display = ''));
     update();
   });
 
-  const views = ['grid', 'list', 'compact'] as const;
+  const views = ['grid', 'compact', 'list'] as const;
   const btns = views.map(v => document.querySelector<HTMLButtonElement>(`[data-view="${v}"]`));
 
-  function setActive(btn: HTMLButtonElement) {
-    for (const b of btns) {
-      b?.classList.remove('bg-background', 'text-text-header');
-      b?.classList.add('text-text-secondary');
-    }
-    btn.classList.add('bg-background', 'text-text-header');
-    btn.classList.remove('text-text-secondary');
-  }
+  const setActive = (btn: HTMLButtonElement) => {
+    btns.forEach(b => {
+      if (!b) return;
+      b.classList.remove('bg-[#252537]/60', 'text-white/70');
+      b.classList.add('text-white/50');
+    });
+    btn.classList.remove('text-white/50');
+    btn.classList.add('bg-[#252537]/60', 'text-white/70');
+  };
 
   btns[0]?.addEventListener('click', function () {
-    for (const { el } of items) {
+    items.forEach(({ el }) => {
       el.classList.remove('h-32', 'h-36');
-      el.classList.add('h-44');
+      el.classList.add('h-40');
       const p = el.querySelector<HTMLElement>('p');
       if (p) p.style.display = '';
-    }
-    box.className = 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4';
+    });
+    box.className = 'grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4';
     setActive(this);
+    scheduleLoad();
   });
 
   btns[1]?.addEventListener('click', function () {
-    for (const { el } of items) {
-      el.classList.remove('h-32', 'h-44');
-      el.classList.add('h-36');
-      const p = el.querySelector<HTMLElement>('p');
-      if (p) p.style.display = '';
-    }
-    box.className = 'flex flex-col gap-4';
-    setActive(this);
-  });
-
-  btns[2]?.addEventListener('click', function () {
-    for (const { el } of items) {
-      el.classList.remove('h-36', 'h-44');
+    items.forEach(({ el }) => {
+      el.classList.remove('h-32', 'h-40');
       el.classList.add('h-32');
       const p = el.querySelector<HTMLElement>('p');
       if (p) p.style.display = 'none';
-    }
+    });
     box.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3';
     setActive(this);
+    scheduleLoad();
   });
 
-  for (const { el } of items) {
+  btns[2]?.addEventListener('click', function () {
+    items.forEach(({ el }) => {
+      el.classList.remove('h-32', 'h-40');
+      el.classList.add('h-36');
+      const p = el.querySelector<HTMLElement>('p');
+      if (p) p.style.display = '';
+    });
+    box.className = 'flex flex-col gap-3';
+    setActive(this);
+    scheduleLoad();
+  });
+
+  items.forEach(({ el }) => {
     el.addEventListener('click', async () => {
       const url = el.dataset.href;
       if (!url) return;
@@ -136,7 +161,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       window.location.href = targetUrl;
     });
-  }
+  });
 
   update();
 });

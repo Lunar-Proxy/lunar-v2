@@ -83,6 +83,11 @@ const ConfigAPI = {
     return store.setItem(key, value);
   },
 
+  async delete(key: ConfigKey): Promise<void> {
+    await ensureInit();
+    await store.removeItem(key);
+  },
+
   async getIndecator(key: ConfigKey): Promise<any> {
     await ensureInit();
     const value = await store.getItem(key);

@@ -8,14 +8,19 @@ const shortcuts = [
     icon: '/a/images/bm/yt.png',
   },
   {
-    name: 'X',
-    url: 'https://x.com',
-    icon: 'https://abs.twimg.com/favicons/twitter.2.ico',
+    name: 'TikTok',
+    url: 'https://tiktok.com',
+    icon: '/a/images/bm/tictak.png',
   },
   {
-    name: 'GitHub',
-    url: 'https://github.com',
-    icon: '/a/images/bm/gh.ico',
+    name: 'Instagram',
+    url: 'https://instagram.com',
+    icon: '/a/images/bm/insta.png',
+  },
+  {
+    name: 'Snapchat',
+    url: 'https://snapchat.com',
+    icon: '/a/images/bm/snap.png',
   },
   {
     name: 'Discord',
@@ -23,29 +28,26 @@ const shortcuts = [
     icon: '/a/images/bm/disc.ico',
   },
   {
-    name: 'Google',
-    url: 'https://google.com',
-    icon: '/a/images/bm/goo.ico',
-  },
-  {
-    name: 'Wikipedia',
-    url: 'https://wikipedia.org',
-    icon: '/a/images/bm/wiki.png',
-  },
+    name: 'Lunar Games',
+    url: '/gkm',
+    icon: '/a/images/bm/gay.png',
+  }
 ];
 ---
 
-<div class="relative mt-10 flex w-full max-w-4xl flex-row flex-wrap items-center justify-center gap-7 px-2">
+<div class="relative mt-12 flex w-full max-w-4xl flex-row items-center justify-center gap-4 px-2">
   {
     shortcuts.map(shortcut => (
       <a
         data-short={shortcut.url}
-        class="shortcut-card bg-background-overlay/80 border-border-default/20 group relative flex max-w-40 min-w-30 cursor-pointer flex-col items-center justify-center space-y-3 rounded-2xl border p-5 shadow-lg backdrop-blur-md transition-all duration-200 hover:scale-105"
+        class="shortcut-card group relative flex w-32 cursor-pointer flex-col items-center justify-center space-y-3 rounded-lg border border-white/[0.08] bg-[#1e1e2f]/40 p-4 backdrop-blur-sm transition-all duration-200 hover:border-white/[0.15] hover:bg-[#1e1e2f]/60"
       >
-        <div class="bg-background-overlay/90 border-border-default/20 flex h-16 w-16 items-center justify-center overflow-hidden rounded-xl border">
+        <div class="flex h-16 w-16 items-center justify-center overflow-hidden rounded-lg bg-[#252537]/60">
           <img src={shortcut.icon} class="shortcut-favicon h-10 w-10 object-contain" alt={shortcut.name + ' icon'} />
         </div>
-        <p class="text-text-header max-w-30 text-center text-base font-semibold wrap-break-word">{shortcut.name}</p>
+        <p class="text-center text-sm font-medium text-white/60 transition-colors group-hover:text-white/85">
+          {shortcut.name}
+        </p>
       </a>
     ))
   }

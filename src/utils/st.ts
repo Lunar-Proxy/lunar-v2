@@ -414,6 +414,23 @@ export class SettingsManager {
                 this.setCloak(true, titleIn?.value, iconIn?.value);
               }
             }
+            if (key === 'engine') {
+              const val = el.value;
+              const matched = Array.from(document.querySelectorAll('[data-engine]')).some(b => {
+                return (b as HTMLElement).getAttribute('data-engine') === val;
+              });
+              if (!matched) {
+                document.querySelectorAll('[data-engine]').forEach(b => {
+                  b.classList.remove('bg-[#6366f1]/15', 'border-[#6366f1]/50');
+                  const check = b.querySelector('.engine-check');
+                  if (check) check.classList.add('hidden');
+                  const icon = b.querySelector('.engine-icon');
+                  const txt = b.querySelector('.engine-text');
+                  if (icon) icon.classList.remove('text-[#6366f1]');
+                  if (txt) txt.classList.remove('text-[#6366f1]', 'font-semibold');
+                });
+              }
+            }
           }
         }
       });
@@ -727,9 +744,10 @@ export class SettingsManager {
 
     const wispIn = document.querySelector('[data-input="wispUrl"]') as HTMLInputElement;
 
-    if (wispIn && cfg.wispUrl) {
-      wispIn.value = cfg.wispUrl;
-      wispIn.placeholder = cfg.wispUrl;
+    if (wispIn) {
+      const current = cfg.wispUrl || await ConfigAPI.get('wispUrl');
+      wispIn.value = current || '';
+      wispIn.placeholder = current || '';
     }
 
     const panicUrlIn = document.querySelector('[data-input="panicLoc"]') as HTMLInputElement;
@@ -807,5 +825,65 @@ export class SettingsManager {
 
     const resetBtn = document.querySelector('[data-reset="reset"]');
     resetBtn?.addEventListener('click', () => this.reset());
+    const resetWisp = document.querySelector('[data-reset="wisp"]');
+    resetWisp?.addEventListener('click', async () => {
+      //await ConfigAPI.delete('wispUrl'); this is NOT it 
+      await ConfigAPI.set('wispUrl', '');
+      const wispIn = document.querySelector('[data-input="wispUrl"]') as HTMLInputElement;
+      function wispUrl() {
+        if (typeof window === 'undefined') return '';
+        const isHttps = location.protocol === 'https:';
+        return `${isHttps ? 'wss' : 'ws'}://${location.host}/w/`;
+      }
+      if (wispIn) {
+        wispIn.value = wispUrl();
+        wispIn.placeholder = wispUrl();
+      }
+
+      
+      await ConfigAPI.set('wispUrl', wispUrl());
+      window.location.reload();
+      this.notify();
+    });
+
+    const resetEngine = document.querySelector('[data-reset="engine"]');
+    resetEngine?.addEventListener('click', async () => {
+      const defaultEngine = 'https://duckduckgo.com/?q=';
+      let fallbackEngine = defaultEngine;
+      const engineButtons = Array.from(document.querySelectorAll('[data-engine]'));
+      const ddgBtn = engineButtons.find(b => b.getAttribute('data-engine') === defaultEngine);
+      if (!ddgBtn && engineButtons.length > 0) {
+        fallbackEngine = engineButtons[0].getAttribute('data-engine') || defaultEngine;
+      }
+      await ConfigAPI.set('engine', fallbackEngine);
+      const engineIn = document.querySelector('[data-input="engine"]') as HTMLInputElement;
+      if (engineIn) {
+        engineIn.value = fallbackEngine;
+        engineIn.placeholder = fallbackEngine;
+      }
+
+      engineButtons.forEach(b => {
+        const url = b.getAttribute('data-engine');
+        if (url === fallbackEngine) {
+          b.classList.add('bg-[#6366f1]/15', 'border-[#6366f1]/50');
+          const check = b.querySelector('.engine-check');
+          if (check) check.classList.remove('hidden');
+          const icon = b.querySelector('.engine-icon');
+          const txt = b.querySelector('.engine-text');
+          if (icon) icon.classList.add('text-[#6366f1]');
+          if (txt) txt.classList.add('text-[#6366f1]', 'font-semibold');
+        } else {
+          b.classList.remove('bg-[#6366f1]/15', 'border-[#6366f1]/50');
+          const check = b.querySelector('.engine-check');
+          if (check) check.classList.add('hidden');
+          const icon = b.querySelector('.engine-icon');
+          const txt = b.querySelector('.engine-text');
+          if (icon) icon.classList.remove('text-[#6366f1]');
+          if (txt) txt.classList.remove('text-[#6366f1]', 'font-semibold');
+        }
+      });
+
+      this.notify();
+    });
   }
 }

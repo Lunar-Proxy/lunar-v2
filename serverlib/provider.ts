@@ -13,9 +13,7 @@ export function findProvider(port: number) {
       `https://${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.replit.dev`) ||
     (process.env.REPLIT_DEV_DOMAIN && `https://${process.env.REPLIT_DEV_DOMAIN}`) ||
     (process.env.KOYEB_PUBLIC_DOMAIN && `https://${process.env.KOYEB_PUBLIC_DOMAIN}`) ||
-    (process.env.HEROKU_APP_NAME && `https://${process.env.HEROKU_APP_NAME}.herokuapp.com`) ||
-    (process.env.ADAPTABLE_APP_URL && process.env.ADAPTABLE_APP_URL) ||
-    (process.env.CLEVERCLOUD_APP_DOMAIN && `https://${process.env.CLEVERCLOUD_APP_DOMAIN}`);
-
+    (process.env.HEROKU_APP_NAME && `https://${process.env.HEROKU_APP_NAME}.herokuapp.com`)
+    
   return provider;
 }

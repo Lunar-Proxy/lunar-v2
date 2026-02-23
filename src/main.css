@@ -51,3 +51,132 @@
     @apply bg-background;
   }
 }
+
+@layer components {
+  .toggle {
+    width: 40px;
+    height: 22px;
+    background: var(--background-overlay);
+    border-radius: 11px;
+    cursor: pointer;
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    background: var(--text-secondary);
+    border-radius: 50%;
+    transition: 0.15s;
+  }
+
+  .toggle.active {
+    background: #6366f1;
+    border-color: #6366f1;
+  }
+
+  .toggle.active::after {
+    left: 20px;
+    background: #fff;
+  }
+
+  .toast {
+    animation: toast 0.2s ease;
+  }
+
+  @keyframes toast {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .cloak-preset {
+    white-space: nowrap;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease, border-color 0.12s ease, background-color 0.12s ease;
+  }
+  .cloak-preset:hover,
+  .cloak-preset:focus {
+    transform: translateY(-3px);
+    filter: brightness(1.06);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    border-color: rgba(99,102,241,0.14);
+  }
+  .cloak-preset:active {
+    transform: translateY(0);
+    box-shadow: none;
+    filter: brightness(0.98);
+  }
+  
+  .proxy-button,
+  .engine-button,
+  .rounded-lg.border:not(.nav-item) {
+     transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease, border-color 0.12s ease, background-color 0.12s ease;
+  }
+  .proxy-button:hover,
+  .engine-button:hover,
+  .rounded-lg.border:not(.nav-item):hover,
+  .proxy-button:focus,
+  .engine-button:focus,
+  .rounded-lg.border:not(.nav-item):focus {
+     transform: translateY(-3px);
+     filter: brightness(1.06);
+     box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+     border-color: rgba(99,102,241,0.14);
+  }
+  .proxy-button:active,
+  .engine-button:active,
+  .rounded-lg.border:not(.nav-item):active {
+     transform: translateY(0);
+     box-shadow: none;
+     filter: brightness(0.98);
+  }
+  .cloak-preset,
+  .proxy-button,
+  .engine-button,
+  button[data-about-blank],
+  button[data-reset],
+  button[data-proxy],
+  button[data-engine] {
+    transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease, border-color 0.12s ease, background-color 0.12s ease;
+  }
+  .cloak-preset:hover,
+  .proxy-button:hover,
+  .engine-button:hover,
+  button[data-about-blank]:hover,
+  button[data-reset]:hover,
+  button[data-proxy]:hover,
+  button[data-engine]:hover,
+  .cloak-preset:focus,
+  .proxy-button:focus,
+  .engine-button:focus,
+  button[data-about-blank]:focus,
+  button[data-reset]:focus,
+  button[data-proxy]:focus,
+  button[data-engine]:focus {
+    transform: translateY(-3px);
+    filter: brightness(1.06);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    border-color: rgba(99,102,241,0.14);
+  }
+  .cloak-preset:active,
+  .proxy-button:active,
+  .engine-button:active,
+  button[data-about-blank]:active,
+  button[data-reset]:active,
+  button[data-proxy]:active,
+  button[data-engine]:active {
+    transform: translateY(0);
+    box-shadow: none;
+    filter: brightness(0.98);
+  }
+}

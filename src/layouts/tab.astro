@@ -9,7 +9,7 @@ const navButtons = [
     id: 'refresh',
     icon: 'refresh-cw',
     class: 'group',
-    iconClass: 'transition-transform duration-500',
+    iconClass: 'transition-transform duration-500 group-hover:rotate-180',
   },
   { id: 'home', icon: 'house' },
 ];
@@ -21,6 +21,7 @@ const menuSections = [
     { icon: 'refresh-cw', label: 'Reload' },
   ],
   [
+    { icon: 'gamepad', label: 'Games' },
     { icon: 'code', label: 'Inspect Element' },
     { icon: 'moon', label: 'Dark Mode' },
     { icon: 'glasses', label: 'AB Cloak' },
@@ -40,103 +41,162 @@ const menuSections = [
     <script src="@scripts/tb.ts"></script>
     <script src="@scripts/menu.ts"></script>
     <script src="@scripts/suggestions.ts"></script>
+    <style>
+      #tcontainer::-webkit-scrollbar {
+        height: 0;
+      }
+
+      @keyframes menu-in {
+        from {
+          opacity: 0;
+          transform: scale(0.94) translateY(-6px);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+      }
+      @keyframes menu-out {
+        from {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+        to {
+          opacity: 0;
+          transform: scale(0.94) translateY(-6px);
+        }
+      }
+      @keyframes item-in {
+        from {
+          opacity: 0;
+          transform: translateX(4px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      #menu.menu-opening {
+        display: block !important;
+        animation: menu-in 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        transform-origin: top right;
+      }
+      #menu.menu-closing {
+        display: block !important;
+        animation: menu-out 0.13s cubic-bezier(0.4, 0, 1, 1) forwards;
+        transform-origin: top right;
+      }
+      #menu .menu-item {
+        opacity: 0;
+        transform: translateX(4px);
+      }
+      #menu.menu-opening .menu-item {
+        animation: item-in 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+    </style>
   </head>
 
-  <body class="bg-gray-900 p-3 font-sans text-sm text-white">
-    <div class="w-full">
-      <div
-        id="tab-wrapper"
-        class="relative isolate flex h-12 items-end overflow-hidden rounded-t-xl bg-[#1c1a2b] px-1.5"
-      >
-        <div class="flex w-full items-center gap-1.5">
-          <div id="tcontainer" class="flex max-w-full flex-nowrap gap-1.5 overflow-x-auto"></div>
+  <body class="m-0 h-screen overflow-hidden bg-gray-900 p-0 font-sans text-white">
+    <div class="flex h-screen w-screen flex-col">
+      <div id="tab-wrapper" class="flex h-11 items-end bg-[#18172a] px-2 pt-1.5">
+        <div class="flex w-full items-center gap-1">
+          <div id="tcontainer" class="flex min-w-0 flex-nowrap items-end gap-0.5 overflow-x-auto"></div>
           <button
             id="add"
-            class="relative -top-1/2 flex h-7 w-7 items-center justify-center rounded-md text-gray-400 transition hover:bg-gray-700 hover:text-white"
+            class="mb-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded text-gray-500 transition hover:bg-white/10 hover:text-white"
           >
-            <i data-lucide="plus" class="h-3.5 w-3.5"></i>
+            <i data-lucide="plus" class="h-3 w-3"></i>
           </button>
         </div>
       </div>
 
-      <div class="flex h-10 items-center gap-3 border-t border-[#3a3758] bg-[#1c1a2b] px-3">
-        <div class="flex items-center gap-1.5">
+      <div class="relative flex h-10 items-center gap-1.5 border-t border-white/[0.06] bg-[#1c1a2b] px-3">
+        <div class="flex items-center gap-0.5">
           {
             navButtons.map(({ id, icon, class: btnClass, iconClass }) => (
               <button
                 id={id}
                 class:list={[
-                  'flex h-7 w-7 items-center justify-center rounded-md text-gray-400 transition hover:bg-gray-700 hover:text-white',
+                  'flex h-7 w-7 items-center justify-center rounded text-gray-500 transition hover:bg-white/10 hover:text-white',
                   btnClass,
                 ]}
               >
-                <i
-                  data-lucide={icon}
-                  class:list={['h-3.5 w-3.5', iconClass, id === 'refresh' ? 'group-hover:animate-spin' : '']}
-                />
+                <i data-lucide={icon} class:list={['h-3.5 w-3.5', iconClass]} />
               </button>
             ))
           }
         </div>
 
-        <div class="relative flex grow flex-col">
+        <div class="mx-0.5 h-4 w-px shrink-0 bg-white/[0.12]"></div>
+
+        <div class="relative z-50 min-w-0 flex-1">
           <div class="relative w-full">
-            <div class="absolute top-1/2 left-2.5 z-20 flex -translate-y-1/2 items-center gap-2">
-              <i data-lucide="lock" class="h-3.5 w-3.5 text-green-500"></i>
-            </div>
+            <span class="pointer-events-none absolute top-1/2 left-2.5 z-10 flex -translate-y-1/2 items-center">
+              <i data-lucide="lock" class="h-3 w-3 text-green-500"></i>
+            </span>
 
             <input
               id="urlbar"
               type="text"
               autocomplete="off"
-              class="h-8 w-full rounded-full border border-[#3a3758] bg-[#23213a] pr-10 pl-9 text-[13px] text-gray-200 transition-colors placeholder:text-gray-500 hover:text-white focus:outline-none"
+              class="h-7 w-full rounded-md border border-white/[0.07] bg-[#23213a] pr-7 pl-7 text-xs text-gray-300 transition placeholder:text-gray-600 hover:border-white/[0.14] hover:text-white focus:rounded-b-none focus:border-[#5c59a5]/50 focus:bg-[#201e38] focus:outline-none"
               placeholder="Search or enter address"
             />
 
             <button
               id="fav"
-              class="absolute top-1/2 right-1 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-md text-gray-400 transition hover:bg-gray-700 hover:text-white"
+              class="absolute top-1/2 right-1 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded text-gray-500 transition hover:bg-white/10 hover:text-white"
             >
-              <i data-lucide="bookmark" class="h-4 w-4"></i>
+              <i data-lucide="bookmark" class="h-3.5 w-3.5"></i>
             </button>
 
             <div
-              id="loading-bar"
-              class="pointer-events-none fixed inset-x-0 z-50 hidden h-0.5 w-screen rounded-full bg-[#5c59a5] opacity-0 transition-all duration-200"
+              id="suggestions"
+              class="absolute top-full right-0 left-0 z-50 -mt-px hidden overflow-hidden rounded-b-lg border border-t-0 border-[#3a3758] bg-[#23213a] shadow-lg"
             >
+              <div id="suggestions-container" class="py-1"></div>
             </div>
           </div>
         </div>
 
+        <div class="mx-0.5 h-4 w-px shrink-0 bg-white/[0.12]"></div>
+
         <button
           id="menubtn"
-          class="flex h-7 w-7 items-center justify-center rounded-md text-gray-400 transition hover:bg-gray-700 hover:text-white"
+          class="flex h-7 w-7 shrink-0 items-center justify-center rounded text-gray-500 transition hover:bg-white/10 hover:text-white"
         >
-          <i data-lucide="menu" class="h-4 w-4"></i>
+          <i data-lucide="menu" class="h-3.5 w-3.5"></i>
         </button>
+
+        <div
+          id="loading-bar"
+          class="pointer-events-none absolute right-0 bottom-0 left-0 z-50 hidden h-0.5 w-full bg-[#5c59a5] opacity-0 transition-opacity duration-200"
+        >
+        </div>
       </div>
 
-      <div class="relative">
+      <div class="relative flex-1 overflow-hidden">
         <div
           id="menu"
-          class="absolute top-full right-0 z-1000 mt-2 hidden w-56 overflow-hidden rounded-xl border border-[#3a3758] bg-[#1f1f30] shadow-2xl backdrop-blur-md"
+          class="absolute top-2 right-3 z-50 hidden w-64 overflow-hidden rounded-lg border border-[#3a3758] bg-[#1f1f30] shadow-2xl"
         >
           {
             menuSections.map((section, i) => (
               <div class:list={['flex flex-col', i !== 0 ? 'border-t border-[#3a3758]' : '']}>
                 {section.map(({ icon, label }) => (
-                  <button class="menu-item flex w-full items-center gap-3 px-3.5 py-2.25 text-gray-200 transition hover:bg-[#2a293f] hover:text-white">
-                    <i data-lucide={icon} class="h-4.5 w-4.5 shrink-0" />
-                    <span class="text-[13px] whitespace-nowrap">{label}</span>
+                  <button class="menu-item flex w-full items-center gap-2.5 px-3 py-2 text-gray-300 transition hover:bg-white/8 hover:text-white">
+                    <i data-lucide={icon} class="h-3.5 w-3.5 shrink-0" />
+                    <span class="text-xs">{label}</span>
                   </button>
                 ))}
               </div>
             ))
           }
         </div>
-      </div>
 
-      <div id="fcontainer" class="absolute inset-x-0 top-[5.6rem] bottom-0 w-full overflow-hidden rounded-b-lg"></div>
+        <div id="fcontainer" class="h-full w-full bg-[#1c1a2b]"></div>
+      </div>
 
       <ImportLucide />
     </div>
