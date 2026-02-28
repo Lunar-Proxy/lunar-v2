@@ -59,7 +59,7 @@ class MenuHandler {
 
   private async getPanicKeybind(): Promise<string> {
     try {
-      return String((await ConfigAPI.get('panicKey')) ?? '');
+      return String((await ConfigAPI.get('panicKeyBind')) ?? '');
     } catch {
       return '';
     }
@@ -68,7 +68,8 @@ class MenuHandler {
   private addKeybindBadge(element: HTMLButtonElement, label: string): void {
     if (!label) return;
     const badge = document.createElement('span');
-    badge.className = 'ml-auto shrink-0 text-[10px] text-gray-600 bg-white/5 rounded px-1 py-0.5 font-mono leading-none';
+    badge.className =
+      'ml-auto shrink-0 text-[10px] text-gray-600 bg-white/5 rounded px-1 py-0.5 font-mono leading-none';
     badge.textContent = label;
     element.appendChild(badge);
   }
@@ -80,7 +81,7 @@ class MenuHandler {
   private attachEventListeners(): void {
     this.elements.menuButton.addEventListener('click', this.toggleMenu.bind(this));
     this.setupMenuActions();
-    window.addEventListener('keydown', this.handleKeydown.bind(this), true);
+    window.addEventListener('keydown', e => void this.handleKeydown(e), true);
   }
 
   private setupMenuActions(): void {
@@ -125,7 +126,7 @@ class MenuHandler {
     });
 
     this.elements.panic.addEventListener('click', () => {
-      this.handlePanic();
+      void this.handlePanic();
       this.hideMenu();
     });
   }
@@ -146,7 +147,8 @@ class MenuHandler {
 
     if (!this.iframeOverlay) {
       const overlay = document.createElement('div');
-      overlay.style.cssText = 'position:fixed;inset:0;z-index:40;background:transparent;cursor:default;';
+      overlay.style.cssText =
+        'position:fixed;inset:0;z-index:40;background:transparent;cursor:default;';
       overlay.addEventListener('mousedown', () => this.hideMenu());
       document.body.appendChild(overlay);
       this.iframeOverlay = overlay;
@@ -230,9 +232,12 @@ class MenuHandler {
   }
 
   private handleFullscreen(): void {
-    const doc = window.top?.document;
+    const frame = this.getActiveFrame();
+    const doc = frame?.contentDocument;
     if (!doc) return;
-    const p = doc.fullscreenElement ? doc.exitFullscreen() : doc.documentElement.requestFullscreen();
+    const p = doc.fullscreenElement
+      ? doc.exitFullscreen()
+      : doc.documentElement.requestFullscreen();
     p?.catch?.(() => {});
   }
 
@@ -255,6 +260,8 @@ class MenuHandler {
   }
 
   private async handlePanic(): Promise<void> {
+    const panicKey = await this.getConfigValue('panicKey', 'on');
+    if (panicKey !== 'on') return;
     const panicLoc = await this.getConfigValue('panicLoc', 'https://google.com');
     (window.top || window).location.href = panicLoc;
   }
@@ -267,21 +274,28 @@ class MenuHandler {
     }
   }
 
-  private handleKeydown(e: KeyboardEvent): void {
+  private async handleKeydown(e: KeyboardEvent): Promise<void> {
     if (e.repeat) return;
+
     if (e.key === 'Escape' && this.isOpen) {
       e.preventDefault();
       e.stopPropagation();
       this.hideMenu();
       return;
     }
+
     const keybind = this.buildKeybind(e);
     const target = this.keyMap.get(keybind);
-    if (target) {
-      e.preventDefault();
-      e.stopPropagation();
-      target.click();
+    if (!target) return;
+
+    if (target === this.elements.panic) {
+      const panicKey = await this.getConfigValue('panicKey', 'on');
+      if (panicKey !== 'on') return;
     }
+
+    e.preventDefault();
+    e.stopPropagation();
+    target.click();
   }
 
   private buildKeybind(e: KeyboardEvent): string {
@@ -301,12 +315,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   const menuContainer = document.querySelector<HTMLDivElement>('#menu');
   const menuItems = Array.from(document.querySelectorAll<HTMLButtonElement>('#menu .menu-item'));
 
-  if (!menuButton || !menuContainer || menuItems.length < 9) {
+  if (!menuButton || !menuContainer) {
     console.error('Required menu elements not found');
     return;
   }
 
-  const [newTab, fullscreen, reload, games, inspectElement, darkmode, cloak, panic, settings] = menuItems;
+  const [newTab, fullscreen, reload, games, inspectElement, darkmode, cloak, panic, settings] =
+    menuItems;
 
   const handler = new MenuHandler({
     menuButton,

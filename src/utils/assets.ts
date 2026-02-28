@@ -1,167 +1,174 @@
 import ConfigAPI from './config';
 import { scramjetWrapper, vWrapper } from './pro';
 
-type CardItem = {
+type Card = {
   el: HTMLDivElement;
-  n: string;
-  d: string;
-  sn: string;
+  name: string;
+  desc: string;
+  sortKey: string;
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
   scramjetWrapper.init();
-  const sc = scramjetWrapper.getConfig();
-  const conn = new BareMux.BareMuxConnection(`/bm/worker.js`);
-  const input = document.querySelector<HTMLInputElement>('[data-input]');
-  const box = document.querySelector<HTMLDivElement>('[data-container]');
+  const sj = scramjetWrapper.getConfig();
+  const bare = new BareMux.BareMuxConnection('/bm/worker.js');
+
+  const search = document.querySelector<HTMLInputElement>('[data-input]');
+  const grid = document.querySelector<HTMLDivElement>('[data-container]');
   const empty = document.querySelector<HTMLDivElement>('[data-empty]');
-  const count = document.querySelector<HTMLSpanElement>('[data-visible]');
+  const counter = document.querySelector<HTMLSpanElement>('[data-visible]');
   const wisp = await ConfigAPI.get('wispUrl');
 
-  if (!input || !box) return;
+  if (!search || !grid) return;
 
-  const items: CardItem[] = Array.from(box.querySelectorAll<HTMLDivElement>('.card')).map(el => ({
+  const cards: Card[] = Array.from(grid.querySelectorAll<HTMLDivElement>('.card')).map(el => ({
     el,
-    n: el.querySelector('h2')?.textContent?.toLowerCase() || '',
-    d: el.querySelector('p')?.textContent?.toLowerCase() || '',
-    sn: el.dataset.name?.toLowerCase() || '',
+    name: el.querySelector('h2')?.textContent?.toLowerCase() ?? '',
+    desc: el.querySelector('p')?.textContent?.toLowerCase() ?? '',
+    sortKey: el.dataset.name?.toLowerCase() ?? '',
   }));
 
-  const loadImages = () => {
-    const visible = items.filter(({ el }) => {
-      const rect = el.getBoundingClientRect();
-      return rect.top < window.innerHeight + 200 && rect.bottom > -200;
-    });
+  let imgTimer: number;
 
-    visible.forEach(({ el }) => {
-      if (el.classList.contains('card-loading')) {
-        const bg = el.dataset.bg;
-        if (!bg) return;
-        const div = el.querySelector<HTMLElement>('.card-bg');
-        if (div && !div.style.backgroundImage) {
-          div.style.backgroundImage = `url('${bg}')`;
-          const img = new Image();
-          img.onload = () => el.classList.remove('card-loading');
-          img.onerror = () => el.classList.remove('card-loading');
-          img.src = bg;
-        }
-      }
-    });
+  const loadImgs = () => {
+    for (const { el } of cards) {
+      if (!el.classList.contains('card-loading')) continue;
+      const { top, bottom } = el.getBoundingClientRect();
+      if (top > window.innerHeight + 200 || bottom < -200) continue;
+      const bg = el.dataset.bg;
+      if (!bg) continue;
+      const bgDiv = el.querySelector<HTMLElement>('.card-bg');
+      if (!bgDiv || bgDiv.style.backgroundImage) continue;
+      bgDiv.style.backgroundImage = `url('${bg}')`;
+      const img = new Image();
+      img.onload = img.onerror = () => el.classList.remove('card-loading');
+      img.src = bg;
+    }
   };
 
-  let loadTimer: number;
-  const scheduleLoad = () => {
-    clearTimeout(loadTimer);
-    loadTimer = window.setTimeout(loadImages, 50);
+  const queueImgs = () => {
+    clearTimeout(imgTimer);
+    imgTimer = window.setTimeout(loadImgs, 50);
   };
 
-  loadImages();
-  window.addEventListener('scroll', scheduleLoad, { passive: true });
-  window.addEventListener('resize', scheduleLoad, { passive: true });
+  loadImgs();
+  window.addEventListener('scroll', queueImgs, { passive: true });
+  window.addEventListener('resize', queueImgs, { passive: true });
 
-  const update = (): void => {
-    const vis = items.filter(({ el }) => el.style.display !== 'none').length;
-    if (count) count.textContent = String(vis);
-    const show = vis === 0 && input && input.value.trim() !== '';
-    empty?.classList.toggle('hidden', !show);
-    empty?.classList.toggle('flex', !!show);
-    scheduleLoad();
+  const refresh = () => {
+    const shown = cards.filter(({ el }) => el.style.display !== 'none').length;
+    if (counter) counter.textContent = String(shown);
+    const noResults = shown === 0 && search.value.trim() !== '';
+    empty?.classList.toggle('hidden', !noResults);
+    empty?.classList.toggle('flex', noResults);
+    queueImgs();
   };
 
-  input.addEventListener('input', () => {
-    const q = input.value.toLowerCase().trim();
-    items.forEach(({ el, n, d }) => {
-      el.style.display = n.includes(q) || d.includes(q) ? '' : 'none';
-    });
-    update();
+  search.addEventListener('input', () => {
+    const q = search.value.toLowerCase().trim();
+    for (const { el, name, desc } of cards)
+      el.style.display = name.includes(q) || desc.includes(q) ? '' : 'none';
+    refresh();
   });
 
   document.querySelector<HTMLButtonElement>('[data-random]')?.addEventListener('click', () => {
-    const vis = items.filter(({ el }) => el.style.display !== 'none');
-    if (vis.length) vis[Math.floor(Math.random() * vis.length)].el.click();
+    const pool = cards.filter(({ el }) => el.style.display !== 'none');
+    if (pool.length) pool[Math.floor(Math.random() * pool.length)].el.click();
   });
 
-  let rev = false;
+  let flipped = false;
   document.querySelector<HTMLButtonElement>('[data-sort]')?.addEventListener('click', function () {
-    rev = !rev;
-    items.sort((a, b) => (rev ? b.sn.localeCompare(a.sn) : a.sn.localeCompare(b.sn)));
-    this.querySelector('span')!.textContent = rev ? 'Z-A' : 'A-Z';
-    items.forEach(({ el }) => box.appendChild(el));
-    scheduleLoad();
+    flipped = !flipped;
+    cards.sort((a, b) =>
+      flipped ? b.sortKey.localeCompare(a.sortKey) : a.sortKey.localeCompare(b.sortKey),
+    );
+    this.querySelector('span')!.textContent = flipped ? 'Z-A' : 'A-Z';
+    for (const { el } of cards) grid.appendChild(el);
+    queueImgs();
   });
 
   document.querySelector<HTMLButtonElement>('[data-clear]')?.addEventListener('click', () => {
-    input.value = '';
-    items.forEach(({ el }) => (el.style.display = ''));
-    update();
+    search.value = '';
+    for (const { el } of cards) el.style.display = '';
+    refresh();
   });
 
-  const views = ['grid', 'compact', 'list'] as const;
-  const btns = views.map(v => document.querySelector<HTMLButtonElement>(`[data-view="${v}"]`));
-
-  const setActive = (btn: HTMLButtonElement) => {
-    btns.forEach(b => {
-      if (!b) return;
-      b.classList.remove('bg-[#252537]/60', 'text-white/70');
-      b.classList.add('text-white/50');
-    });
-    btn.classList.remove('text-white/50');
-    btn.classList.add('bg-[#252537]/60', 'text-white/70');
+  const setView = (active: HTMLButtonElement) => {
+    for (const v of ['grid', 'compact', 'list']) {
+      const btn = document.querySelector<HTMLButtonElement>(`[data-view="${v}"]`);
+      if (!btn) continue;
+      btn.classList.toggle('bg-[#252537]/60', btn === active);
+      btn.classList.toggle('text-white/70', btn === active);
+      btn.classList.toggle('text-white/50', btn !== active);
+    }
   };
 
-  btns[0]?.addEventListener('click', function () {
-    items.forEach(({ el }) => {
-      el.classList.remove('h-32', 'h-36');
-      el.classList.add('h-40');
-      const p = el.querySelector<HTMLElement>('p');
-      if (p) p.style.display = '';
+  document
+    .querySelector<HTMLButtonElement>('[data-view="grid"]')
+    ?.addEventListener('click', function () {
+      for (const { el } of cards) {
+        el.classList.replace('h-32', 'h-40') ||
+          el.classList.replace('h-36', 'h-40') ||
+          el.classList.add('h-40');
+        const p = el.querySelector<HTMLElement>('p');
+        if (p) p.style.display = '';
+      }
+      grid.className = 'grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4';
+      setView(this);
+      queueImgs();
     });
-    box.className = 'grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4';
-    setActive(this);
-    scheduleLoad();
-  });
 
-  btns[1]?.addEventListener('click', function () {
-    items.forEach(({ el }) => {
-      el.classList.remove('h-32', 'h-40');
-      el.classList.add('h-32');
-      const p = el.querySelector<HTMLElement>('p');
-      if (p) p.style.display = 'none';
+  document
+    .querySelector<HTMLButtonElement>('[data-view="compact"]')
+    ?.addEventListener('click', function () {
+      for (const { el } of cards) {
+        el.classList.replace('h-40', 'h-32') ||
+          el.classList.replace('h-36', 'h-32') ||
+          el.classList.add('h-32');
+        const p = el.querySelector<HTMLElement>('p');
+        if (p) p.style.display = 'none';
+      }
+      grid.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3';
+      setView(this);
+      queueImgs();
     });
-    box.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3';
-    setActive(this);
-    scheduleLoad();
-  });
 
-  btns[2]?.addEventListener('click', function () {
-    items.forEach(({ el }) => {
-      el.classList.remove('h-32', 'h-40');
-      el.classList.add('h-36');
-      const p = el.querySelector<HTMLElement>('p');
-      if (p) p.style.display = '';
+  document
+    .querySelector<HTMLButtonElement>('[data-view="list"]')
+    ?.addEventListener('click', function () {
+      for (const { el } of cards) {
+        el.classList.replace('h-40', 'h-36') ||
+          el.classList.replace('h-32', 'h-36') ||
+          el.classList.add('h-36');
+        const p = el.querySelector<HTMLElement>('p');
+        if (p) p.style.display = '';
+      }
+      grid.className = 'flex flex-col gap-3';
+      setView(this);
+      queueImgs();
     });
-    box.className = 'flex flex-col gap-3';
-    setActive(this);
-    scheduleLoad();
-  });
 
-  items.forEach(({ el }) => {
+  for (const { el } of cards) {
     el.addEventListener('click', async () => {
       const url = el.dataset.href;
       if (!url) return;
 
-      if ((await conn.getTransport()) !== `/lc/index.mjs`) {
-        await conn.setTransport(`/lc/index.mjs`, [{ wisp }]);
-      }
+      fetch('/api/plays', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: el.dataset.name }),
+      });
+
+      if ((await bare.getTransport()) !== '/lc/index.mjs')
+        await bare.setTransport('/lc/index.mjs', [{ wisp }]);
 
       const backend = await ConfigAPI.get('backend');
-      const encoded = sc.codec.encode(url);
-      const targetUrl =
-        backend === 'v' ? vWrapper.getConfig().prefix + encoded : sc.prefix + encoded;
+      const encoded = sj.codec.encode(url);
+      const target = backend === 'v' ? vWrapper.getConfig().prefix + encoded : sj.prefix + encoded;
 
-      window.location.href = targetUrl;
+      window.location.href = target;
     });
-  });
+  }
 
-  update();
+  refresh();
 });
