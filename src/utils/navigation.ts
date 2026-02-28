@@ -159,7 +159,6 @@ async function toggleBookmark(): Promise<void> {
     try {
       hostname = new URL(decoded).hostname;
     } catch {
-      /* noop */
     }
 
     bookmarks.push({

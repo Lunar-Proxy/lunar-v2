@@ -5,11 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('[data-short]').forEach(el => {
     el.addEventListener('click', async e => {
       const url = (el as HTMLElement).getAttribute('data-short');
-      if (url === "/gkm") {
+      if (url === '/gkm') {
         e.preventDefault();
         const input = window.parent.document.getElementById('urlbar') as HTMLInputElement | null;
         if (!input) return;
-        input.value = "lunar://games"
+        input.value = 'lunar://games';
         input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
         return;
       }

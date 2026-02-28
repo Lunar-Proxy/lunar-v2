@@ -57,18 +57,20 @@ function searchBackend(): Plugin {
 
           if (!response.ok) {
             res.statusCode = response.status;
+            res.setHeader('Content-Type', 'application/json');
             res.end(JSON.stringify({ error: 'Failed to fetch suggestions.' }));
             return;
           }
 
           const data = (await response.json()) as Array<{ phrase: string }>;
-          const suggestions = data.map(d => d.phrase).filter(Boolean);
+          const suggestions = data.map((d) => d.phrase).filter(Boolean);
 
           res.setHeader('Content-Type', 'application/json');
           res.end(JSON.stringify({ suggestions }));
         } catch (err) {
           console.error('Backend suggestion error:', err);
           res.statusCode = 500;
+          res.setHeader('Content-Type', 'application/json');
           res.end(JSON.stringify({ error: 'Internal server error.' }));
         }
       });
@@ -76,12 +78,18 @@ function searchBackend(): Plugin {
   };
 }
 
-const OBFUSCATOR_SEED = Math.floor(Math.random() * 9999999);
+const OBFUSCATOR_SEED = Math.floor(Math.random() * 9_999_999);
 
 export default defineConfig({
   integrations: [
     playformCompress({
-      CSS: true,
+      CSS: {
+        csso: {
+          comments: false,
+          restructure: true,
+          forceMediaMerge: true,
+        },
+      },
       HTML: {
         'html-minifier-terser': {
           caseSensitive: true,
@@ -120,10 +128,75 @@ export default defineConfig({
           removeTagWhitespace: true,
         },
       },
-      Image: true,
-      JavaScript: true,
+      Image: false,
+      JavaScript: {
+        terser: {
+          compress: {
+            passes: 2,
+            drop_console: true,
+            drop_debugger: true,
+            pure_getters: true,
+            dead_code: true,
+            hoist_funs: true,
+            inline: 2,
+            collapse_vars: true,
+            reduce_vars: true,
+            evaluate: true,
+            sequences: true,
+            negate_iife: true,
+            keep_infinity: true,
+          },
+          mangle: {
+            toplevel: false,
+            safari10: false,
+          },
+          format: {
+            comments: false,
+            ascii_only: true,
+          },
+        },
+      },
       JSON: true,
-      SVG: true,
+      SVG: {
+        svgo: {
+          multipass: true,
+          plugins: [
+            { name: 'preset-default' },
+            { name: 'removeDoctype' },
+            { name: 'removeXMLProcInst' },
+            { name: 'removeComments' },
+            { name: 'removeMetadata' },
+            { name: 'removeEditorsNSData' },
+            { name: 'cleanupAttrs' },
+            { name: 'mergeStyles' },
+            { name: 'inlineStyles' },
+            { name: 'minifyStyles' },
+            { name: 'cleanupIds' },
+            { name: 'removeUselessDefs' },
+            { name: 'cleanupNumericValues' },
+            { name: 'convertColors' },
+            { name: 'removeUnknownsAndDefaults' },
+            { name: 'removeNonInheritableGroupAttrs' },
+            { name: 'removeUselessStrokeAndFill' },
+            { name: 'cleanupEnableBackground' },
+            { name: 'removeHiddenElems' },
+            { name: 'removeEmptyText' },
+            { name: 'convertShapeToPath' },
+            { name: 'convertEllipseToCircle' },
+            { name: 'moveElemsAttrsToGroup' },
+            { name: 'moveGroupAttrsToElems' },
+            { name: 'collapseGroups' },
+            { name: 'convertPathData' },
+            { name: 'convertTransform' },
+            { name: 'removeEmptyAttrs' },
+            { name: 'removeEmptyContainers' },
+            { name: 'mergePaths' },
+            { name: 'removeUnusedNS' },
+            { name: 'sortDefsChildren' },
+            { name: 'removeDimensions' },
+          ],
+        },
+      },
     }),
   ],
   output: 'server',
@@ -131,19 +204,45 @@ export default defineConfig({
   prefetch: { prefetchAll: true, defaultStrategy: 'load' },
   vite: {
     build: {
-      minify: 'esbuild',
+      minify: 'terser',
+      terserOptions: {
+        compress: {
+          passes: 2,
+          drop_console: true,
+          drop_debugger: true,
+          pure_getters: true,
+          dead_code: true,
+          hoist_funs: true,
+          inline: 2,
+          collapse_vars: true,
+          reduce_vars: true,
+          evaluate: true,
+          sequences: true,
+          negate_iife: true,
+          keep_infinity: true,
+        },
+        mangle: {
+          toplevel: false,
+          safari10: false,
+        },
+        format: {
+          comments: false,
+          ascii_only: true,
+        },
+      },
       chunkSizeWarningLimit: 1000,
+      cssMinify: 'lightningcss',
       rollupOptions: {
         output: {
           manualChunks: {
             'vendor-lucide': ['lucide'],
           },
+          compact: true,
         },
       },
     },
     optimizeDeps: {
       include: ['lucide'],
-      exclude: [],
     },
     define: {
       VERSION: JSON.stringify(version),
@@ -176,25 +275,13 @@ export default defineConfig({
           transformObjectKeys: false,
           ignoreImports: true,
           stringArray: false,
-          stringArrayThreshold: 0.7,
           splitStrings: false,
-          splitStringsChunkLength: 14,
-          stringArrayEncoding: [],
-          stringArrayIndexShift: false,
-          stringArrayRotate: false,
-          stringArrayShuffle: false,
-          stringArrayWrappersCount: 1,
-          stringArrayWrappersType: 'variable',
-          stringArrayWrappersChainedCalls: false,
-          stringArrayWrappersParametersMaxCount: 2,
-          stringArrayCallsTransform: false,
           controlFlowFlattening: false,
-          controlFlowFlatteningThreshold: 0,
           deadCodeInjection: false,
-          deadCodeInjectionThreshold: 0.2,
           selfDefending: true,
-          debugProtection: true,
-          disableConsoleOutput: false,
+         // debugProtection: true,
+        //  debugProtectionInterval: 0,
+          disableConsoleOutput: true,
           numbersToExpressions: false,
           unicodeEscapeSequence: false,
         },
@@ -215,9 +302,7 @@ export default defineConfig({
           {
             src: [normalizePath(`${uvPath}/*.js`), '!' + normalizePath(`${uvPath}/sw.js`)],
             dest: 'tmp',
-            rename: (name: string) => {
-              return `${name.replace(/^uv\./, '')}.js`;
-            },
+            rename: (name: string) => `${name.replace(/^uv\./, '')}.js`,
             overwrite: false,
           },
         ],

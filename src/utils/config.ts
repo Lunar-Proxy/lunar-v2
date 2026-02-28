@@ -16,7 +16,8 @@ interface ConfigDefaults {
   beforeUnload: 'on' | 'off';
   backend: string;
   panicLoc: string;
-  panicKey: string;
+  panicKey: 'on' | 'off';
+  panicKeyBind: string;
   wispUrl: string;
   bm: Bookmark[];
   [key: string]: any;
@@ -42,7 +43,8 @@ const defaults: ConfigDefaults = {
   beforeUnload: 'off',
   backend: 'sc',
   panicLoc: 'https://google.com',
-  panicKey: '`',
+  panicKeyBind: '`',
+  panicKey: 'on',
   wispUrl: wispUrl(),
   bm: [],
 };
@@ -57,15 +59,14 @@ let initialized = false;
 async function ensureInit(): Promise<void> {
   if (initialized) return;
 
-  const test = await store.getItem('engine');
-  if (test == null) {
-    const keys = Object.keys(defaults);
-    await Promise.all(
-      keys.map(function (key) {
-        return store.setItem(key, defaults[key]);
-      }),
-    );
-  }
+  await Promise.all(
+    Object.keys(defaults).map(async key => {
+      const existing = await store.getItem(key);
+      if (existing == null) {
+        await store.setItem(key, defaults[key]);
+      }
+    }),
+  );
 
   initialized = true;
 }
@@ -73,7 +74,7 @@ async function ensureInit(): Promise<void> {
 const ConfigAPI = {
   config: store,
 
-  async get(key: ConfigKey): Promise<any | null> {
+  async get(key: ConfigKey): Promise<any> {
     await ensureInit();
     return store.getItem(key);
   },
@@ -109,14 +110,12 @@ const ConfigAPI = {
   async getAll(): Promise<Record<string, any>> {
     await ensureInit();
     const keys = await store.keys();
-
     const entries = await Promise.all(
-      keys.map(async function (key) {
+      keys.map(async key => {
         const value = await store.getItem(key);
         return [key, value] as const;
       }),
     );
-
     return Object.fromEntries(entries);
   },
 };
