@@ -1,4 +1,7 @@
 import localForage from 'localforage';
+import { nanoid } from 'nanoid';
+
+const prefix = `chunk-${nanoid(8).toLowerCase().replace(/[^a-z0-9]/g, 'x')}`;
 
 interface Bookmark {
   name: string;
@@ -10,6 +13,7 @@ interface ConfigDefaults {
   engine: string;
   cloak: 'on' | 'off';
   adBlock: 'on' | 'off';
+  prefix: string;
   cloakTitle: string;
   cloakFavicon: string;
   autoCloak: 'on' | 'off';
@@ -41,6 +45,7 @@ const defaults: ConfigDefaults = {
   cloakFavicon: 'https://www.google.com/favicon.ico',
   autoCloak: 'off',
   beforeUnload: 'off',
+  prefix: prefix,
   backend: 'sc',
   panicLoc: 'https://google.com',
   panicKeyBind: '`',

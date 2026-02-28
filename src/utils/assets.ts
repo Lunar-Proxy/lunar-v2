@@ -9,10 +9,9 @@ type Card = {
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
-  scramjetWrapper.init();
-  const sj = scramjetWrapper.getConfig();
+  await scramjetWrapper.init();
+  const sj = await scramjetWrapper.getConfig();
   const bare = new BareMux.BareMuxConnection('/bm/worker.js');
-
   const search = document.querySelector<HTMLInputElement>('[data-input]');
   const grid = document.querySelector<HTMLDivElement>('[data-container]');
   const empty = document.querySelector<HTMLDivElement>('[data-empty]');

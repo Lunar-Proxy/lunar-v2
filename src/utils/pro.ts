@@ -1,83 +1,58 @@
+import ConfigAPI from "./config"
 // @ts-ignore
-const { ScramjetController } = $scramjetLoadController();
-
+const { ScramjetController } = $scramjetLoadController()
+const encode = (url: string): string => {
+  const i = url.indexOf("?")
+  const path = i === -1 ? url : url.slice(0, i)
+  const query = i === -1 ? "" : url.slice(i)
+  return encodeURIComponent(path)
+    .split("")
+    .map((c) => (c.charCodeAt(0) + 1).toString(16).padStart(4, "0"))
+    .join("") + query
+}
+const decode = (url: string): string => {
+  const i = url.indexOf("?")
+  const path = i === -1 ? url : url.slice(0, i)
+  const query = i === -1 ? "" : url.slice(i)
+  let shifted = ""
+  for (let j = 0; j < path.length; j += 4)
+    shifted += String.fromCharCode(parseInt(path.slice(j, j + 4), 16) - 1)
+  return decodeURIComponent(shifted) + query
+}
 class VWrapper {
   getConfig() {
-    return tmpConfig;
+    return tmpConfig
   }
 }
-
 class ScramjetWrapper {
-  instance: any;
-
+  instance: any
+  private prefix: string = ""
   getConfig() {
     return {
-      prefix: '/v1/data/',
+      prefix: `/assets/${this.prefix}/`,
       files: {
-        wasm: '/data/wasm.wasm',
-        all: '/data/all.js',
-        sync: '/data/sync.js',
+        wasm: "/data/wasm.wasm",
+        all: "/data/all.js",
+        sync: "/data/sync.js",
       },
       flags: {
         captureErrors: false,
         cleanErrors: true,
         rewriterLogs: false,
         serviceworkers: false,
-        strictRewrites: false, // site support is better off
+        strictRewrites: false,
         syncxhr: false,
       },
-      codec: {
-        encode: (url: string): string => {
-          const [base, ...rest] = url.split('?');
-          const query = rest.length ? '?' + rest.join('?') : '';
-
-          const rotHost = base.replace(
-            /^(\w+:\/\/)([^/?#]+)/,
-            (_: string, proto: string, host: string) =>
-              proto +
-              host
-                .split('')
-                .map((c: string) => {
-                  const n = c.charCodeAt(0);
-                  if (n >= 97 && n <= 122) return String.fromCharCode(((n - 97 + 13) % 26) + 97);
-                  if (n >= 65 && n <= 90) return String.fromCharCode(((n - 65 + 13) % 26) + 97);
-                  if (n >= 48 && n <= 57) return String.fromCharCode(((n - 48 + 5) % 10) + 48);
-                  return c;
-                })
-                .join(''),
-          );
-
-          return encodeURIComponent(rotHost) + query;
-        },
-        // @ts-ignore
-        decode: (url: string): string => {
-          const decoded = decodeURIComponent(url);
-          return decoded.replace(
-            /^(\w+:\/\/)([^/?#]+)/,
-            (_: string, proto: string, host: string) =>
-              proto +
-              host
-                .split('')
-                .map((c: string) => {
-                  const n = c.charCodeAt(0);
-                  if (n >= 97 && n <= 122) return String.fromCharCode(((n - 97 + 13) % 26) + 97);
-                  if (n >= 48 && n <= 57) return String.fromCharCode(((n - 48 + 5) % 10) + 48);
-                  return c;
-                })
-                .join(''),
-          );
-        },
-      },
-    };
+      codec: { encode, decode },
+    }
   }
-
   async init() {
-    this.instance = new ScramjetController(this.getConfig());
-    await this.instance.init();
-    return this.instance;
+    this.prefix = await ConfigAPI.getIndecator("prefix")
+    this.instance = new ScramjetController(this.getConfig())
+    await this.instance.init()
+    return this.instance
   }
 }
-
-const scramjetWrapper = new ScramjetWrapper();
-const vWrapper = new VWrapper();
-export { scramjetWrapper, vWrapper };
+const scramjetWrapper = new ScramjetWrapper()
+const vWrapper = new VWrapper()
+export { scramjetWrapper, vWrapper }
