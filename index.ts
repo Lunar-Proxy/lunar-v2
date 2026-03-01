@@ -52,7 +52,10 @@ const app = Fastify({
     
     server.setMaxListeners(0);
     // it will log about a memory leak due to how many sockets it adds due to astros SSR & fastify shit
-    
+
+  server.on('connection', (socket) => {
+    socket.setMaxListeners(0);
+  });
     const requestHandler = (req: any, res: any) => handler(req, res);
     const upgradeHandler = (req: any, socket: any, head: any) => {
       if (req.url?.endsWith('/w/')) {
