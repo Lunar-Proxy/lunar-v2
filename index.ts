@@ -16,7 +16,7 @@ import { updateChecker } from 'serverlib/check';
 import { findProvider } from 'serverlib/provider';
 import { version } from './package.json' with { type: 'json' };
 
-EventEmitter.defaultMaxListeners = 20;
+EventEmitter.defaultMaxListeners = 0;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const port = Number(process.env.PORT) || 6060;
@@ -50,7 +50,7 @@ const app = Fastify({
   serverFactory: handler => {
     const server = createServer();
     
-    server.setMaxListeners(20);
+    server.setMaxListeners(0);
     // it will log about a memory leak due to how many sockets it adds due to astros SSR & fastify shit
     
     const requestHandler = (req: any, res: any) => handler(req, res);
