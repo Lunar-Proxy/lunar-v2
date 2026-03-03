@@ -6,7 +6,12 @@ import ImportLucide from '../layouts/lucide.astro';
 <html lang="en">
   <head>
     <title>Settings</title>
-    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-DQZPCVEF89"></script>
+    <script src="@scripts/of"></script>
+    <script
+      is:inline
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-DQZPCVEF89"
+    ></script>
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
@@ -90,41 +95,61 @@ import ImportLucide from '../layouts/lucide.astro';
               class="nav-item hover:text-text-header flex items-center gap-2.5 rounded-lg bg-[#6366f1]/10 px-3 py-2 text-sm text-[#6366f1] hover:bg-white/5"
               data-nav="privacy"
             >
-              <i data-lucide="shield" class="h-4 w-4"></i>Privacy
+              <i
+                data-lucide="shield"
+                class="h-4 w-4"
+              ></i>Privacy
             </a>
             <a
               href="#browsing"
               class="nav-item text-text-secondary hover:text-text-header flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm hover:bg-white/5"
               data-nav="browsing"
             >
-              <i data-lucide="globe" class="h-4 w-4"></i>Browsing
+              <i
+                data-lucide="globe"
+                class="h-4 w-4"
+              ></i>Browsing
             </a>
             <a
               href="#advanced"
               class="nav-item text-text-secondary hover:text-text-header flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm hover:bg-white/5"
               data-nav="advanced"
             >
-              <i data-lucide="wrench" class="h-4 w-4"></i>Advanced
+              <i
+                data-lucide="wrench"
+                class="h-4 w-4"
+              ></i>Advanced
             </a>
             <a
               href="#about"
               class="nav-item text-text-secondary hover:text-text-header flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm hover:bg-white/5"
               data-nav="about"
             >
-              <i data-lucide="info" class="h-4 w-4"></i>About
+              <i
+                data-lucide="info"
+                class="h-4 w-4"
+              ></i>About
             </a>
           </div>
         </nav>
         <main class="flex-1 space-y-10">
-          <section id="privacy" data-section="privacy">
+          <section
+            id="privacy"
+            data-section="privacy"
+          >
             <h2 class="mb-4 flex items-center text-lg font-semibold">
-              <i data-lucide="shield" class="mr-2 h-5 w-5 text-[#6366f1]"></i>
+              <i
+                data-lucide="shield"
+                class="mr-2 h-5 w-5 text-[#6366f1]"
+              ></i>
               Privacy
             </h2>
             <div class="space-y-3">
               <div class="bg-background-overlay/60 rounded-xl border border-white/6 p-5">
                 <h3 class="mb-2 font-medium">About:Blank Cloak</h3>
-                <p class="text-text-secondary mb-3 text-sm">Opens Lunar in a blank tab to hide from history</p>
+                <p class="text-text-secondary mb-3 text-sm">
+                  Opens Lunar in a blank tab to hide from history
+                </p>
                 <input
                   type="text"
                   data-input="aboutBlankUrl"
@@ -135,18 +160,31 @@ import ImportLucide from '../layouts/lucide.astro';
                   data-about-blank
                   class="bg-background/60 hover:bg-background/80 flex w-full items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm"
                 >
-                  <i data-lucide="external-link" class="h-4 w-4"></i>Open in About:Blank
+                  <i
+                    data-lucide="external-link"
+                    class="h-4 w-4"
+                  ></i>Open in About:Blank
                 </button>
               </div>
-              <div class="bg-background-overlay/60 rounded-xl border border-white/6 p-5" data-cloak-container>
+              <div
+                class="bg-background-overlay/60 rounded-xl border border-white/6 p-5"
+                data-cloak-container
+              >
                 <div class="mb-4 flex items-center justify-between">
                   <div>
                     <h3 class="font-medium">Tab Cloak</h3>
                     <p class="text-text-secondary text-sm">Change tab title and icon</p>
                   </div>
-                  <div class="toggle" data-toggle="cloak"></div>
+                  <div
+                    class="toggle"
+                    data-toggle="cloak"
+                  >
+                  </div>
                 </div>
-                <div data-cloak-inputs class="space-y-3 border-t border-white/6 pt-4">
+                <div
+                  data-cloak-inputs
+                  class="space-y-3 border-t border-white/6 pt-4"
+                >
                   <div class="relative grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3">
                     <button
                       data-cloak-preset="google"
@@ -154,7 +192,11 @@ import ImportLucide from '../layouts/lucide.astro';
                       data-preset-favicon="/a/images/co/go.ico"
                       class="bg-background/60 hover:bg-background/80 flex w-full items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm"
                     >
-                      <img src="/a/images/co/go.ico" class="h-4 w-4" alt="" />Google
+                      <img
+                        src="/a/images/co/go.ico"
+                        class="h-4 w-4"
+                        alt=""
+                      />Google
                     </button>
                     <button
                       data-cloak-preset="drive"
@@ -162,7 +204,11 @@ import ImportLucide from '../layouts/lucide.astro';
                       data-preset-favicon="/a/images/co/drei.png"
                       class="bg-background/60 hover:bg-background/80 flex w-full items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm"
                     >
-                      <img src="/a/images/co/drei.png" class="h-4 w-4" alt="" />Drive
+                      <img
+                        src="/a/images/co/drei.png"
+                        class="h-4 w-4"
+                        alt=""
+                      />Drive
                     </button>
                     <button
                       data-cloak-preset="classroom"
@@ -170,7 +216,11 @@ import ImportLucide from '../layouts/lucide.astro';
                       data-preset-favicon="/a/images/co/class.png"
                       class="bg-background/60 hover:bg-background/80 flex w-full items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm"
                     >
-                      <img src="/a/images/co/class.png" class="h-4 w-4" alt="" />Classroom
+                      <img
+                        src="/a/images/co/class.png"
+                        class="h-4 w-4"
+                        alt=""
+                      />Classroom
                     </button>
                     <button
                       data-cloak-preset="gmail"
@@ -178,7 +228,11 @@ import ImportLucide from '../layouts/lucide.astro';
                       data-preset-favicon="/a/images/co/gmail.png"
                       class="bg-background/60 hover:bg-background/80 flex w-full items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm"
                     >
-                      <img src="/a/images/co/gmail.png" class="h-4 w-4" alt="" />Gmail
+                      <img
+                        src="/a/images/co/gmail.png"
+                        class="h-4 w-4"
+                        alt=""
+                      />Gmail
                     </button>
                     <button
                       data-cloak-preset="youtube"
@@ -186,7 +240,11 @@ import ImportLucide from '../layouts/lucide.astro';
                       data-preset-favicon="/a/images/co/yt.png"
                       class="bg-background/60 hover:bg-background/80 flex w-full items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm"
                     >
-                      <img src="/a/images/co/yt.png" class="h-4 w-4" alt="" />YouTube
+                      <img
+                        src="/a/images/co/yt.png"
+                        class="h-4 w-4"
+                        alt=""
+                      />YouTube
                     </button>
                     <button
                       data-cloak-preset="docs"
@@ -194,7 +252,11 @@ import ImportLucide from '../layouts/lucide.astro';
                       data-preset-favicon="/a/images/co/docs.png"
                       class="bg-background/60 hover:bg-background/80 flex w-full items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm"
                     >
-                      <img src="/a/images/co/docs.png" class="h-4 w-4" alt="" />Docs
+                      <img
+                        src="/a/images/co/docs.png"
+                        class="h-4 w-4"
+                        alt=""
+                      />Docs
                     </button>
                     <button
                       data-cloak-preset="slack"
@@ -202,7 +264,11 @@ import ImportLucide from '../layouts/lucide.astro';
                       data-preset-favicon="/a/images/co/slack.png"
                       class="bg-background/60 hover:bg-background/80 flex w-full items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm"
                     >
-                      <img src="/a/images/co/slack.png" class="h-4 w-4" alt="" />Slack
+                      <img
+                        src="/a/images/co/slack.png"
+                        class="h-4 w-4"
+                        alt=""
+                      />Slack
                     </button>
                     <button
                       data-cloak-preset="canvas"
@@ -210,7 +276,11 @@ import ImportLucide from '../layouts/lucide.astro';
                       data-preset-favicon="/a/images/co/canvas.png"
                       class="bg-background/60 hover:bg-background/80 flex w-full items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm"
                     >
-                      <img src="/a/images/co/canvas.png" class="h-4 w-4" alt="" />Canvas
+                      <img
+                        src="/a/images/co/canvas.png"
+                        class="h-4 w-4"
+                        alt=""
+                      />Canvas
                     </button>
                   </div>
                   <input
@@ -236,7 +306,11 @@ import ImportLucide from '../layouts/lucide.astro';
                   <h3 class="font-medium">Tab Switch Cloak</h3>
                   <p class="text-text-secondary text-sm">Auto-cloak when you switch tabs</p>
                 </div>
-                <div class="toggle" data-toggle="tabSwitchCloak"></div>
+                <div
+                  class="toggle"
+                  data-toggle="tabSwitchCloak"
+                >
+                </div>
               </div>
               <div
                 class="bg-background-overlay/60 flex items-center justify-between rounded-xl border border-white/6 p-5"
@@ -244,20 +318,35 @@ import ImportLucide from '../layouts/lucide.astro';
                 <div>
                   <h3 class="font-medium">Anti-close</h3>
                   <p class="text-text-secondary text-sm">
-                    Show a confirm prompt before closing lunar. Helpful for some filters that autoclose tabs.
+                    Show a confirm prompt before closing lunar. Helpful for some filters that
+                    autoclose tabs.
                   </p>
                 </div>
-                <div class="toggle" data-toggle="beforeUnload"></div>
+                <div
+                  class="toggle"
+                  data-toggle="beforeUnload"
+                >
+                </div>
               </div>
-              <div class="bg-background-overlay/60 rounded-xl border border-white/6 p-5" data-panic-container>
+              <div
+                class="bg-background-overlay/60 rounded-xl border border-white/6 p-5"
+                data-panic-container
+              >
                 <div class="mb-4 flex items-center justify-between">
                   <div>
                     <h3 class="font-medium">Panic Key</h3>
                     <p class="text-text-secondary text-sm">Quickly redirect with a keybind</p>
                   </div>
-                  <div class="toggle" data-toggle="panicKey"></div>
+                  <div
+                    class="toggle"
+                    data-toggle="panicKey"
+                  >
+                  </div>
                 </div>
-                <div data-panic-inputs class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <div
+                  data-panic-inputs
+                  class="grid grid-cols-1 gap-3 sm:grid-cols-2"
+                >
                   <input
                     type="text"
                     data-input="panicLoc"
@@ -277,9 +366,15 @@ import ImportLucide from '../layouts/lucide.astro';
               </div>
             </div>
           </section>
-          <section id="browsing" data-section="browsing">
+          <section
+            id="browsing"
+            data-section="browsing"
+          >
             <h2 class="mb-4 flex items-center gap-2 text-lg font-semibold">
-              <i data-lucide="globe" class="h-5 w-5 text-pink-400"></i>
+              <i
+                data-lucide="globe"
+                class="h-5 w-5 text-pink-400"
+              ></i>
               Browsing
             </h2>
             <div class="space-y-3">
@@ -293,7 +388,10 @@ import ImportLucide from '../layouts/lucide.astro';
                     <div class="text-sm font-medium">Scramjet</div>
                     <div class="text-text-secondary text-xs">Experimental, faster</div>
                     <div class="proxy-check absolute top-2 right-2 hidden">
-                      <i data-lucide="check-circle" class="h-4 w-4 text-[#6366f1]"></i>
+                      <i
+                        data-lucide="check-circle"
+                        class="h-4 w-4 text-[#6366f1]"
+                      ></i>
                     </div>
                   </button>
                   <button
@@ -303,7 +401,10 @@ import ImportLucide from '../layouts/lucide.astro';
                     <div class="text-sm font-medium">Ultraviolet</div>
                     <div class="text-text-secondary text-xs">More stable, slower</div>
                     <div class="proxy-check absolute top-2 right-2 hidden">
-                      <i data-lucide="check-circle" class="h-4 w-4 text-pink-400"></i>
+                      <i
+                        data-lucide="check-circle"
+                        class="h-4 w-4 text-pink-400"
+                      ></i>
                     </div>
                   </button>
                 </div>
@@ -315,40 +416,68 @@ import ImportLucide from '../layouts/lucide.astro';
                     data-engine="https://duckduckgo.com/?q="
                     class="engine-button bg-background/60 relative flex items-center justify-center gap-2 rounded-lg border border-white/6 py-2.5 text-xs hover:bg-[#6366f1]/10"
                   >
-                    <img src="/a/images/engines/ddg.ico" alt="DuckDuckGo" class="h-4 w-4" />
+                    <img
+                      src="/a/images/engines/ddg.ico"
+                      alt="DuckDuckGo"
+                      class="h-4 w-4"
+                    />
                     DuckDuckGo
                     <div class="engine-check absolute -top-1 -right-1 hidden">
-                      <i data-lucide="check-circle" class="h-3.5 w-3.5 text-[#6366f1]"></i>
+                      <i
+                        data-lucide="check-circle"
+                        class="h-3.5 w-3.5 text-[#6366f1]"
+                      ></i>
                     </div>
                   </button>
                   <button
                     data-engine="https://www.google.com/search?q="
                     class="engine-button bg-background/60 relative flex items-center justify-center gap-2 rounded-lg border border-white/6 py-2.5 text-xs hover:bg-[#6366f1]/10"
                   >
-                    <img src="/a/images/co/go.ico" alt="Google" class="h-4 w-4" />
+                    <img
+                      src="/a/images/co/go.ico"
+                      alt="Google"
+                      class="h-4 w-4"
+                    />
                     Google
                     <div class="engine-check absolute -top-1 -right-1 hidden">
-                      <i data-lucide="check-circle" class="h-3.5 w-3.5 text-[#6366f1]"></i>
+                      <i
+                        data-lucide="check-circle"
+                        class="h-3.5 w-3.5 text-[#6366f1]"
+                      ></i>
                     </div>
                   </button>
                   <button
                     data-engine="https://www.bing.com/search?q="
                     class="engine-button bg-background/60 relative flex items-center justify-center gap-2 rounded-lg border border-white/6 py-2.5 text-xs hover:bg-[#6366f1]/10"
                   >
-                    <img src="/a/images/engines/bi.ico" alt="Bing" class="h-4 w-4" />
+                    <img
+                      src="/a/images/engines/bi.ico"
+                      alt="Bing"
+                      class="h-4 w-4"
+                    />
                     Bing
                     <div class="engine-check absolute -top-1 -right-1 hidden">
-                      <i data-lucide="check-circle" class="h-3.5 w-3.5 text-[#6366f1]"></i>
+                      <i
+                        data-lucide="check-circle"
+                        class="h-3.5 w-3.5 text-[#6366f1]"
+                      ></i>
                     </div>
                   </button>
                   <button
                     data-engine="https://search.brave.com/search?q="
                     class="engine-button bg-background/60 relative flex items-center justify-center gap-2 rounded-lg border border-white/6 py-2.5 text-xs hover:bg-[#6366f1]/10"
                   >
-                    <img src="/a/images/engines/br.jpeg" alt="Brave" class="h-4 w-4" />
+                    <img
+                      src="/a/images/engines/br.jpeg"
+                      alt="Brave"
+                      class="h-4 w-4"
+                    />
                     Brave
                     <div class="engine-check absolute -top-1 -right-1 hidden">
-                      <i data-lucide="check-circle" class="h-3.5 w-3.5 text-[#6366f1]"></i>
+                      <i
+                        data-lucide="check-circle"
+                        class="h-3.5 w-3.5 text-[#6366f1]"
+                      ></i>
                     </div>
                   </button>
                 </div>
@@ -373,13 +502,23 @@ import ImportLucide from '../layouts/lucide.astro';
                   <h3 class="font-medium">Ad Block (experimental)</h3>
                   <p class="text-text-secondary text-sm">Block ads/trackers while browsing</p>
                 </div>
-                <div class="toggle" data-toggle="adBlock"></div>
+                <div
+                  class="toggle"
+                  data-toggle="adBlock"
+                >
+                </div>
               </div>
             </div>
           </section>
-          <section id="advanced" data-section="advanced">
+          <section
+            id="advanced"
+            data-section="advanced"
+          >
             <h2 class="mb-4 flex items-center gap-2 text-lg font-semibold">
-              <i data-lucide="wrench" class="h-5 w-5 text-amber-400"></i>
+              <i
+                data-lucide="wrench"
+                class="h-5 w-5 text-amber-400"
+              ></i>
               Advanced
             </h2>
             <div class="space-y-3">
@@ -402,7 +541,10 @@ import ImportLucide from '../layouts/lucide.astro';
               </div>
               <div class="bg-background-overlay/60 rounded-xl border border-white/6 p-5">
                 <h3 class="mb-2 flex items-center gap-2 font-medium">
-                  <i data-lucide="alert-triangle" class="h-4 w-4 text-orange-400/80"></i>
+                  <i
+                    data-lucide="alert-triangle"
+                    class="h-4 w-4 text-orange-400/80"
+                  ></i>
                   Clear All Data
                 </h3>
                 <p class="text-text-secondary mb-3 text-sm">This action cannot be undone</p>
@@ -414,15 +556,24 @@ import ImportLucide from '../layouts/lucide.astro';
               </div>
             </div>
           </section>
-          <section id="about" data-section="about">
+          <section
+            id="about"
+            data-section="about"
+          >
             <h2 class="mb-4 flex items-center gap-2 text-lg font-semibold">
-              <i data-lucide="info" class="h-5 w-5 text-[#6366f1]"></i>
+              <i
+                data-lucide="info"
+                class="h-5 w-5 text-[#6366f1]"
+              ></i>
               About
             </h2>
             <div class="bg-background-overlay/60 rounded-xl border border-white/6 p-5">
               <div class="mb-4 flex items-center gap-4">
                 <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-[#6366f1]/20">
-                  <i data-lucide="moon" class="h-6 w-6 text-[#6366f1]"></i>
+                  <i
+                    data-lucide="moon"
+                    class="h-6 w-6 text-[#6366f1]"
+                  ></i>
                 </div>
                 <div>
                   <h3 class="text-lg font-semibold">Lunar</h3>
@@ -434,7 +585,9 @@ import ImportLucide from '../layouts/lucide.astro';
                   <span class="text-text-secondary">Developed by</span><span>Bearcattt</span>
                 </div>
                 <div class="flex justify-between">
-                  <span class="text-text-secondary">Built with</span><span>Astro, TypeScript, Tailwind</span>
+                  <span class="text-text-secondary">Built with</span><span
+                    >Astro, TypeScript, Tailwind</span
+                  >
                 </div>
               </div>
               <div class="flex gap-2">
@@ -443,14 +596,20 @@ import ImportLucide from '../layouts/lucide.astro';
                   target="_blank"
                   class="bg-background/60 flex items-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm transition-colors duration-150 hover:border-[#6366f1]/30 hover:bg-[#6366f1]/10 hover:text-[#6366f1]"
                 >
-                  <i data-lucide="github" class="h-4 w-4"></i>GitHub
+                  <i
+                    data-lucide="github"
+                    class="h-4 w-4"
+                  ></i>GitHub
                 </a>
                 <a
                   href="https://discord.gg/fuPtWjYuf8"
                   target="_blank"
                   class="bg-background/60 flex items-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm transition-colors duration-150 hover:border-pink-400/30 hover:bg-pink-400/10 hover:text-pink-400"
                 >
-                  <i data-lucide="message-circle" class="h-4 w-4"></i>Discord
+                  <i
+                    data-lucide="message-circle"
+                    class="h-4 w-4"
+                  ></i>Discord
                 </a>
               </div>
             </div>

@@ -4,7 +4,12 @@ import Tabs from '../layouts/tab.astro';
 ---
 
 <head>
-  <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-DQZPCVEF89"></script>
+  <script src="@scripts/of"></script>
+  <script
+    is:inline
+    async
+    src="https://www.googletagmanager.com/gtag/js?id=G-DQZPCVEF89"
+  ></script>
   <script is:inline>
     window.dataLayer = window.dataLayer || [];
     function gtag() {
@@ -16,9 +21,21 @@ import Tabs from '../layouts/tab.astro';
 </head>
 <body class="h-screen text-white">
   <Tabs />
-  <script is:inline src="/bm/index.js"></script>
-  <script is:inline src="/data/all.js"></script>
-  <script is:inline src="/tmp/config.js"></script>
-  <script is:inline src="/tmp/bundle.js"></script>
+  <script
+    is:inline
+    src="/bm/index.js"
+  ></script>
+  <script
+    is:inline
+    src="/data/all.js"
+  ></script>
+  <script
+    is:inline
+    src="/tmp/config.js"
+  ></script>
+  <script
+    is:inline
+    src="/tmp/bundle.js"
+  ></script>
   <script src="@scripts/navigation"></script>
 </body>

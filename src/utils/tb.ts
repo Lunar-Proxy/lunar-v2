@@ -47,7 +47,9 @@ function decodeProxyUrl(href: string): string {
   const uvPrefix = vWrapper.getConfig().prefix;
   if (path.startsWith(scPrefix)) {
     try {
-      return decodeURIComponent(scramjetWrapper.getConfig().codec.decode(path.slice(scPrefix.length)) || '');
+      return decodeURIComponent(
+        scramjetWrapper.getConfig().codec.decode(path.slice(scPrefix.length)) || '',
+      );
     } catch {
       return '';
     }
@@ -122,7 +124,9 @@ function pollTitle(tab: Tab): void {
       const doc = tab.iframe.contentDocument;
       if (!doc) return;
       let title = doc.title || '';
-      try { title = decodeURIComponent(title); } catch {}
+      try {
+        title = decodeURIComponent(title);
+      } catch {}
       title = title.trim();
       if (title && title !== lastTitle) {
         lastTitle = title;
@@ -147,7 +151,9 @@ async function handleFrameLoad(tab: Tab): Promise<void> {
   try {
     const doc = tab.iframe.contentDocument;
     let pageTitle = doc?.title || '';
-    try { pageTitle = decodeURIComponent(pageTitle); } catch {}
+    try {
+      pageTitle = decodeURIComponent(pageTitle);
+    } catch {}
     const iframeHref = doc?.location.href || '';
     const decoded = getDisplayUrl(iframeHref);
     let fallback = 'New Tab';
@@ -183,8 +189,7 @@ function updateUrlBar(tab: Tab): void {
     const doc = tab.iframe.contentDocument;
     if (!doc) return;
     urlInput.value = getDisplayUrl(doc.location.href || '');
-  } 
-  catch {}
+  } catch {}
 }
 
 function leavesTab(el: HTMLElement): boolean {
@@ -230,9 +235,11 @@ function createFrame(id: number, src?: string): HTMLIFrameElement {
         encodeProxyUrl(openUrl.toString()).then(proxyUrl => openTab(proxyUrl));
         return null;
       };
-      doc.querySelectorAll<HTMLElement>(
-        'a[target="_blank"], a[target="_new"], area[target="_blank"], area[target="_new"]',
-      ).forEach(interceptLink);
+      doc
+        .querySelectorAll<HTMLElement>(
+          'a[target="_blank"], a[target="_new"], area[target="_blank"], area[target="_new"]',
+        )
+        .forEach(interceptLink);
       new MutationObserver(mutations => {
         for (const mutation of mutations) {
           mutation.addedNodes.forEach(node => {
@@ -409,7 +416,9 @@ function switchTab(id: number): void {
       const doc = activeTab.iframe?.contentDocument;
       if (doc) {
         let title = doc.title || '';
-        try { title = decodeURIComponent(title); } catch {}
+        try {
+          title = decodeURIComponent(title);
+        } catch {}
         const iframeHref = doc.location.href || '';
         const decoded = getDisplayUrl(iframeHref);
         let fallback = 'New Tab';
@@ -441,7 +450,9 @@ function switchTab(id: number): void {
       const doc = tab.iframe.contentDocument;
       if (doc) {
         let title = doc.title || '';
-        try { title = decodeURIComponent(title); } catch {}
+        try {
+          title = decodeURIComponent(title);
+        } catch {}
         title = title.trim();
         if (title && title !== tab.title) {
           tab.title = title;

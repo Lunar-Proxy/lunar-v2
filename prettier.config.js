@@ -5,33 +5,32 @@ export default {
   useTabs: false,
   semi: true,
   singleQuote: true,
-  trailingComma: 'es5',
+  trailingComma: 'all',
   bracketSpacing: true,
+  bracketSameLine: false,
   arrowParens: 'avoid',
   endOfLine: 'lf',
+  singleAttributePerLine: true,
   plugins: ['prettier-plugin-astro', 'prettier-plugin-tailwindcss'],
   overrides: [
     {
       files: '*.astro',
       options: {
         parser: 'astro',
-        printWidth: 120,
-        bracketSpacing: true,
+        printWidth: 100,
+        singleAttributePerLine: true,
       },
     },
     {
       files: ['*.ts', '*.tsx', '*.mts', '*.cts'],
       options: {
         parser: 'typescript',
-        semi: true,
-        trailingComma: 'all',
       },
     },
     {
       files: ['*.js', '*.jsx', '*.mjs', '*.cjs'],
       options: {
         parser: 'babel',
-        trailingComma: 'es5',
       },
     },
     {
@@ -39,7 +38,6 @@ export default {
       options: {
         parser: 'json',
         printWidth: 80,
-        tabWidth: 2,
         trailingComma: 'none',
       },
     },
@@ -48,7 +46,6 @@ export default {
       options: {
         parser: 'json-stringify',
         printWidth: 80,
-        tabWidth: 2,
       },
     },
     {
@@ -65,14 +62,13 @@ export default {
       options: {
         parser: 'css',
         singleQuote: false,
-        printWidth: 120,
       },
     },
     {
       files: ['*.html', '*.htm'],
       options: {
         parser: 'html',
-        printWidth: 120,
+        printWidth: 100,
         bracketSameLine: true,
         htmlWhitespaceSensitivity: 'css',
       },
@@ -82,7 +78,6 @@ export default {
       options: {
         parser: 'yaml',
         singleQuote: false,
-        bracketSpacing: true,
         printWidth: 80,
       },
     },

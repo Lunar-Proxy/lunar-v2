@@ -1,7 +1,9 @@
 import localForage from 'localforage';
 import { nanoid } from 'nanoid';
 
-const prefix = `chunk-${nanoid(8).toLowerCase().replace(/[^a-z0-9]/g, 'x')}`;
+const prefix = `chunk-${nanoid(8)
+  .toLowerCase()
+  .replace(/[^a-z0-9]/g, 'x')}`;
 
 interface Bookmark {
   name: string;

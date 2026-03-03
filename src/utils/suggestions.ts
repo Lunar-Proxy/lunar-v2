@@ -1,6 +1,7 @@
 import { createIcons, icons } from 'lucide';
 
 createIcons({ icons });
+
 ['astro:page-load', 'astro:after-swap'].forEach(evt => {
   document.addEventListener(evt, () => createIcons({ icons }));
 });
@@ -17,6 +18,7 @@ let debounceTimer: number | null = null;
 let isOpen = false;
 let lastQuery = '';
 let activeIndex = -1;
+let ignoreBlur = false;
 
 function isLunarUrl(str: string): boolean {
   return str.startsWith('lunar://');
@@ -29,9 +31,11 @@ function matchQuickLinks(str: string): [string, string][] {
 
 async function fetchSuggestions(query: string): Promise<string[]> {
   if (!query) return [];
+
   try {
     const res = await fetch(`/api/query?q=${encodeURIComponent(query)}`);
     if (!res.ok) return [];
+
     const data = await res.json();
     return Array.isArray(data.suggestions) ? data.suggestions : [];
   } catch {
@@ -41,6 +45,7 @@ async function fetchSuggestions(query: string): Promise<string[]> {
 
 function isMathExpression(str: string): boolean {
   const normalized = str.trim().replace(/x/gi, '*');
+
   return (
     /^[0-9+\-*/().%^√\s]+$/.test(normalized) &&
     !/^[0-9.]+$/.test(normalized) &&
@@ -56,6 +61,7 @@ function evaluateMath(str: string): string | null {
       .replace(/√/g, 'Math.sqrt')
       .replace(/\^/g, '**')
       .replace(/(\d+)%/g, '($1/100)');
+
     const result = Function('"use strict";return(' + expr + ')')();
     return typeof result === 'number' && isFinite(result) ? String(result) : null;
   } catch {
@@ -75,10 +81,14 @@ function getDropdown(): HTMLDivElement | null {
 
 function closeSuggestions(): void {
   const dropdown = getDropdown();
+
   isOpen = false;
   activeIndex = -1;
+
   if (!dropdown) return;
-  dropdown.classList.add('opacity-0');
+
+  dropdown.classList.add('opacity-0', 'pointer-events-none');
+
   setTimeout(() => {
     if (!isOpen) dropdown.remove();
   }, 150);
@@ -89,24 +99,32 @@ function showDropdown(dropdown: HTMLDivElement): void {
     closeSuggestions();
     return;
   }
-  dropdown.classList.remove('opacity-0', 'hidden');
+
+  dropdown.classList.remove('opacity-0', 'hidden', 'pointer-events-none');
+
   const rect = urlbar.getBoundingClientRect();
   const maxHeight = window.innerHeight - rect.bottom - 16;
   dropdown.style.maxHeight = `${Math.max(maxHeight, 100)}px`;
+
   isOpen = true;
 }
 
 function setActiveItem(dropdown: HTMLDivElement, index: number): void {
   const items = dropdown.querySelectorAll<HTMLElement>('[data-value]');
+
   items.forEach((el, i) => {
-    el.classList.toggle('bg-[#2a293f]', i === index);
+    const active = i === index;
+    el.classList.toggle('bg-[#2a293f]', active);
+    if (active) el.scrollIntoView({ block: 'nearest' });
   });
 }
 
 function selectSuggestion(value: string): void {
   if (!urlbar) return;
+
   urlbar.value = value;
   closeSuggestions();
+
   urlbar.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'Enter',
@@ -117,6 +135,7 @@ function selectSuggestion(value: string): void {
     }),
   );
 }
+
 
 function renderSuggestions(
   suggestions: string[],
@@ -138,6 +157,7 @@ function renderSuggestions(
   dropdown.id = 'suggestions';
   dropdown.className =
     'absolute top-full z-50 mt-0 w-full rounded-b-xl border-x border-b border-[#3a3758] bg-[#1f1f30]/95 shadow-2xl backdrop-blur-xl overflow-y-auto opacity-0 transition-opacity duration-150';
+
   urlbar.parentElement?.appendChild(dropdown);
 
   const rows: string[] = [];
@@ -154,6 +174,7 @@ function renderSuggestions(
       `<div class="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-(--text-secondary)">` +
         `Suggestions for <span class="text-white">"${escapeHtml(query)}"</span></div>`,
     );
+
     topSuggestions.forEach(s => {
       rows.push(
         `<div class="flex items-center space-x-3 px-4 py-3 text-(--text-header) cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${escapeHtml(s)}">` +
@@ -166,6 +187,7 @@ function renderSuggestions(
     rows.push(
       `<div class="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-(--text-secondary) border-t border-[#3a3758]">Lunar Links</div>`,
     );
+
     quickMatches.forEach(([link, description]) => {
       rows.push(
         `<div class="flex items-center justify-between px-4 py-3 text-(--text-header) cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${escapeHtml(link)}">` +
@@ -181,6 +203,8 @@ function renderSuggestions(
     el.addEventListener('mousedown', e => {
       e.preventDefault();
       e.stopPropagation();
+      ignoreBlur = true;
+
       const value = el.dataset.value;
       if (value) selectSuggestion(value);
     });
@@ -190,9 +214,12 @@ function renderSuggestions(
   showDropdown(dropdown);
 }
 
+
 async function updateSuggestions(): Promise<void> {
   if (!urlbar) return;
+
   const query = urlbar.value.trim();
+
   if (!query) {
     closeSuggestions();
     return;
@@ -202,7 +229,7 @@ async function updateSuggestions(): Promise<void> {
 
   const [suggestions, mathResult] = await Promise.all([
     fetchSuggestions(query),
-    isMathExpression(query) ? evaluateMath(query) : Promise.resolve(null),
+    Promise.resolve(isMathExpression(query) ? evaluateMath(query) : null),
   ]);
 
   if (urlbar.value.trim() !== lastQuery) return;
@@ -213,6 +240,7 @@ async function updateSuggestions(): Promise<void> {
 
 function scheduleUpdate(): void {
   if (debounceTimer) clearTimeout(debounceTimer);
+
   debounceTimer = window.setTimeout(() => {
     if (!urlbar?.value.trim()) {
       closeSuggestions();
@@ -222,6 +250,7 @@ function scheduleUpdate(): void {
   }, 150);
 }
 
+
 if (urlbar) {
   urlbar.addEventListener('input', scheduleUpdate);
 
@@ -230,7 +259,11 @@ if (urlbar) {
   });
 
   urlbar.addEventListener('blur', () => {
-    setTimeout(closeSuggestions, 150);
+    if (ignoreBlur) {
+      ignoreBlur = false;
+      return;
+    }
+    closeSuggestions();
   });
 
   urlbar.addEventListener('keydown', e => {
@@ -273,14 +306,18 @@ if (urlbar) {
 
   window.addEventListener('resize', () => {
     const dropdown = getDropdown();
+
     if (dropdown && isOpen && urlbar.value.trim()) showDropdown(dropdown);
     else closeSuggestions();
   });
 
   document.addEventListener('mousedown', e => {
     const dropdown = getDropdown();
-    if (dropdown && !dropdown.contains(e.target as Node) && !urlbar.contains(e.target as Node)) {
-      closeSuggestions();
-    }
+    if (!dropdown) return;
+
+    if (dropdown.contains(e.target as Node) || urlbar.contains(e.target as Node)) return;
+
+    closeSuggestions();
+    urlbar.blur();
   });
 }

@@ -2,3 +2,5 @@ node_modules
 dist
 download.sh
 plays.json
+map.json
+f.ttf
