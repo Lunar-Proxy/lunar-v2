@@ -136,7 +136,6 @@ function selectSuggestion(value: string): void {
   );
 }
 
-
 function renderSuggestions(
   suggestions: string[],
   quickMatches: [string, string][],
@@ -214,7 +213,6 @@ function renderSuggestions(
   showDropdown(dropdown);
 }
 
-
 async function updateSuggestions(): Promise<void> {
   if (!urlbar) return;
 
@@ -249,7 +247,6 @@ function scheduleUpdate(): void {
     updateSuggestions();
   }, 150);
 }
-
 
 if (urlbar) {
   urlbar.addEventListener('input', scheduleUpdate);
