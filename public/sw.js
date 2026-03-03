@@ -85,7 +85,7 @@ function wildcardToRegex(p) {
         .replace(/\*\*/g, '.*')
         .replace(/\*/g, '[^/]*') +
       '$',
-    'i'
+    'i',
   );
 }
 

@@ -17,9 +17,7 @@ const routes: Record<string, string> = {
   'lunar://games': '/math',
 };
 
-const byPath = Object.fromEntries(
-  Object.entries(routes).map(([k, v]) => [v, k]),
-);
+const byPath = Object.fromEntries(Object.entries(routes).map(([k, v]) => [v, k]));
 
 let wisp: string;
 
@@ -62,8 +60,11 @@ async function decodeUrl(enc: string): Promise<string> {
 }
 
 function norm(url: string): string {
-  try { return decodeURIComponent(url).replace(/\/$/, ''); }
-  catch { return url.replace(/\/$/, ''); }
+  try {
+    return decodeURIComponent(url).replace(/\/$/, '');
+  } catch {
+    return url.replace(/\/$/, '');
+  }
 }
 
 async function syncFav(): Promise<void> {
@@ -89,7 +90,9 @@ async function toggleFav(): Promise<void> {
     bms.splice(idx, 1);
   } else {
     let host = decoded;
-    try { host = new URL(decoded).hostname; } catch {}
+    try {
+      host = new URL(decoded).hostname;
+    } catch {}
     bms.push({
       name: f.contentDocument?.title || decoded,
       logo: `/api/icon/?url=https://${host}`,
@@ -111,7 +114,7 @@ async function submit(): Promise<void> {
   }
 
   const conn = new BareMux.BareMuxConnection('/bm/worker.js');
-  if (await conn.getTransport() !== '/lc/index.mjs') {
+  if ((await conn.getTransport()) !== '/lc/index.mjs') {
     await conn.setTransport('/lc/index.mjs', [{ wisp }]);
   }
 
@@ -120,9 +123,8 @@ async function submit(): Promise<void> {
   const sj = scramjetWrapper.getConfig();
   const uv = vWrapper.getConfig();
 
-  const dest = backend === 'u'
-    ? `${uv.prefix}${uv.encodeUrl(url)}`
-    : `${sj.prefix}${sj.codec.encode(url)}`;
+  const dest =
+    backend === 'u' ? `${uv.prefix}${uv.encodeUrl(url)}` : `${sj.prefix}${sj.codec.encode(url)}`;
 
   spin();
   go(dest);
@@ -146,7 +148,7 @@ async function setup(): Promise<void> {
   await scramjetWrapper.init();
   await navigator.serviceWorker.register('./sw.js');
   const conn = new BareMux.BareMuxConnection('/bm/worker.js');
-  if (await conn.getTransport() !== '/lc/index.mjs') {
+  if ((await conn.getTransport()) !== '/lc/index.mjs') {
     await conn.setTransport('/lc/index.mjs', [{ wisp }]);
   }
 }

@@ -37,7 +37,10 @@ const menuSections = [
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
     <script src="@scripts/tb.ts"></script>
     <script src="@scripts/menu.ts"></script>
     <script src="@scripts/suggestions.ts"></script>
@@ -99,19 +102,31 @@ const menuSections = [
 
   <body class="m-0 h-screen overflow-hidden bg-gray-900 p-0 font-sans text-white">
     <div class="flex h-screen w-screen flex-col">
-      <div id="tab-wrapper" class="flex h-11 items-end bg-[#18172a] px-2 pt-1.5">
+      <div
+        id="tab-wrapper"
+        class="flex h-11 items-end bg-[#18172a] px-2 pt-1.5"
+      >
         <div class="flex w-full items-center gap-1">
-          <div id="tcontainer" class="flex min-w-0 flex-nowrap items-end gap-0.5 overflow-x-auto"></div>
+          <div
+            id="tcontainer"
+            class="flex min-w-0 flex-nowrap items-end gap-0.5 overflow-x-auto"
+          >
+          </div>
           <button
             id="add"
             class="mb-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded text-gray-500 transition hover:bg-white/10 hover:text-white"
           >
-            <i data-lucide="plus" class="h-3 w-3"></i>
+            <i
+              data-lucide="plus"
+              class="h-3 w-3"
+            ></i>
           </button>
         </div>
       </div>
 
-      <div class="relative flex h-10 items-center gap-1.5 border-t border-white/[0.06] bg-[#1c1a2b] px-3">
+      <div
+        class="relative flex h-10 items-center gap-1.5 border-t border-white/[0.06] bg-[#1c1a2b] px-3"
+      >
         <div class="flex items-center gap-0.5">
           {
             navButtons.map(({ id, icon, class: btnClass, iconClass }) => (
@@ -122,7 +137,10 @@ const menuSections = [
                   btnClass,
                 ]}
               >
-                <i data-lucide={icon} class:list={['h-3.5 w-3.5', iconClass]} />
+                <i
+                  data-lucide={icon}
+                  class:list={['h-3.5 w-3.5', iconClass]}
+                />
               </button>
             ))
           }
@@ -132,8 +150,13 @@ const menuSections = [
 
         <div class="relative z-50 min-w-0 flex-1">
           <div class="relative w-full">
-            <span class="pointer-events-none absolute top-1/2 left-2.5 z-10 flex -translate-y-1/2 items-center">
-              <i data-lucide="lock" class="h-3 w-3 text-green-500"></i>
+            <span
+              class="pointer-events-none absolute top-1/2 left-2.5 z-10 flex -translate-y-1/2 items-center"
+            >
+              <i
+                data-lucide="lock"
+                class="h-3 w-3 text-green-500"
+              ></i>
             </span>
 
             <input
@@ -148,14 +171,21 @@ const menuSections = [
               id="fav"
               class="absolute top-1/2 right-1 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded text-gray-500 transition hover:bg-white/10 hover:text-white"
             >
-              <i data-lucide="bookmark" class="h-3.5 w-3.5"></i>
+              <i
+                data-lucide="bookmark"
+                class="h-3.5 w-3.5"
+              ></i>
             </button>
 
             <div
               id="suggestions"
               class="absolute top-full right-0 left-0 z-50 -mt-px hidden overflow-hidden rounded-b-lg border border-t-0 border-[#3a3758] bg-[#23213a] shadow-lg"
             >
-              <div id="suggestions-container" class="py-1"></div>
+              <div
+                id="suggestions-container"
+                class="py-1"
+              >
+              </div>
             </div>
           </div>
         </div>
@@ -166,7 +196,10 @@ const menuSections = [
           id="menubtn"
           class="flex h-7 w-7 shrink-0 items-center justify-center rounded text-gray-500 transition hover:bg-white/10 hover:text-white"
         >
-          <i data-lucide="menu" class="h-3.5 w-3.5"></i>
+          <i
+            data-lucide="menu"
+            class="h-3.5 w-3.5"
+          ></i>
         </button>
 
         <div
@@ -186,7 +219,10 @@ const menuSections = [
               <div class:list={['flex flex-col', i !== 0 ? 'border-t border-[#3a3758]' : '']}>
                 {section.map(({ icon, label }) => (
                   <button class="menu-item flex w-full items-center gap-2.5 px-3 py-2 text-gray-300 transition hover:bg-white/8 hover:text-white">
-                    <i data-lucide={icon} class="h-3.5 w-3.5 shrink-0" />
+                    <i
+                      data-lucide={icon}
+                      class="h-3.5 w-3.5 shrink-0"
+                    />
                     <span class="text-xs">{label}</span>
                   </button>
                 ))}
@@ -195,7 +231,11 @@ const menuSections = [
           }
         </div>
 
-        <div id="fcontainer" class="h-full w-full bg-[#1c1a2b]"></div>
+        <div
+          id="fcontainer"
+          class="h-full w-full bg-[#1c1a2b]"
+        >
+        </div>
       </div>
 
       <ImportLucide />

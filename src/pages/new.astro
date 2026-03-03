@@ -12,8 +12,15 @@ const randomQuote = quotes[randomIndex]?.quote || '';
   <head>
     <meta charset="UTF-8" />
     <title>New Tab</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="generator" content={Astro.generator} />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1"
+    />
+    <meta
+      name="generator"
+      content={Astro.generator}
+    />
+    <script src="@scripts/of"></script>
     <style>
       @keyframes drift1 {
         from {
@@ -51,27 +58,40 @@ const randomQuote = quotes[randomIndex]?.quote || '';
     </div>
 
     <div class="relative z-10 flex flex-col items-center space-y-7">
-      <div id="clock" class="flex items-baseline space-x-1 select-none">
+      <div
+        id="clock"
+        class="flex items-baseline space-x-1 select-none"
+      >
         <span
           id="hours"
           class="text-[clamp(2.75rem,9vw,6rem)] leading-none font-extrabold tracking-tight text-white"
-          style="text-shadow: 0 0 35px rgba(255,255,255,0.1);">12</span
+          style="text-shadow: 0 0 35px rgba(255,255,255,0.1);"
+          >12</span
         >
-        <span class="text-[clamp(2.75rem,9vw,6rem)] leading-none font-extrabold tracking-tight opacity-35">:</span>
+        <span
+          class="text-[clamp(2.75rem,9vw,6rem)] leading-none font-extrabold tracking-tight opacity-35"
+          >:</span
+        >
         <span
           id="minutes"
           class="text-[clamp(2.75rem,9vw,6rem)] leading-none font-extrabold tracking-tight text-white"
-          style="text-shadow: 0 0 35px rgba(255,255,255,0.1);">59</span
+          style="text-shadow: 0 0 35px rgba(255,255,255,0.1);"
+          >59</span
         >
-        <span class="text-[clamp(2.75rem,9vw,6rem)] leading-none font-extrabold tracking-tight opacity-35">:</span>
+        <span
+          class="text-[clamp(2.75rem,9vw,6rem)] leading-none font-extrabold tracking-tight opacity-35"
+          >:</span
+        >
         <span
           id="seconds"
           class="text-[clamp(2.75rem,9vw,6rem)] leading-none font-extrabold tracking-tight text-white opacity-45"
-          style="text-shadow: 0 0 35px rgba(255,255,255,0.1);">48</span
+          style="text-shadow: 0 0 35px rgba(255,255,255,0.1);"
+          >48</span
         >
         <span
           id="ampm"
-          class="mt-1.5 ml-2 self-start text-[clamp(0.75rem,2.2vw,1.1rem)] font-semibold text-white opacity-35">AM</span
+          class="mt-1.5 ml-2 self-start text-[clamp(0.75rem,2.2vw,1.1rem)] font-semibold text-white opacity-35"
+          >AM</span
         >
       </div>
 
@@ -109,7 +129,11 @@ const randomQuote = quotes[randomIndex]?.quote || '';
     <div
       class="fixed bottom-5 left-5 z-50 flex items-center gap-3 rounded-lg border border-white/5 bg-[#1a1a2e]/60 px-3 py-2 backdrop-blur-md"
     >
-      <span id="sl" class="text-xs font-medium text-white/50 tabular-nums">...</span>
+      <span
+        id="sl"
+        class="text-xs font-medium text-white/50 tabular-nums"
+        >...</span
+      >
       <div class="h-3 w-px bg-white/15"></div>
       <button
         id="refresh"
@@ -123,7 +147,11 @@ const randomQuote = quotes[randomIndex]?.quote || '';
           stroke="currentColor"
           stroke-width="2"
         >
-          <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-3-6.708M21 3v6h-6"></path>
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M21 12a9 9 0 11-3-6.708M21 3v6h-6"
+          ></path>
         </svg>
       </button>
     </div>

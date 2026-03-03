@@ -88,4 +88,11 @@
   .toast {
     animation: toast 0.2s ease;
   }
+
+  #clock,
+  #hours,
+  #minutes,
+  #seconds {
+    font-family: var(--font-linux), sans-serif !important;
+  }
 }

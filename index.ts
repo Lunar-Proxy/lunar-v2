@@ -20,8 +20,10 @@ EventEmitter.defaultMaxListeners = 20;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const port = Number(process.env.PORT) || 6060;
+const plays = path.join(process.cwd(), 'plays.json');
 
 logging.set_level(logging.ERROR);
+
 Object.assign(wisp.options, {
   dns_method: 'resolve',
   dns_servers: ['1.1.1.3', '1.0.0.3'],
@@ -30,45 +32,70 @@ Object.assign(wisp.options, {
   wisp_motd: 'wisp server',
 });
 
-async function ensureBuild() {
-  if (!fs.existsSync('dist')) {
-    console.log(chalk.hex('#f39c12')('🚀 Building Lunar...'));
-    try {
-      execSync('npm run build', { stdio: 'inherit' });
-      console.log(chalk.hex('#2ecc71')('✅ Build completed successfully!'));
-    } catch (error) {
-      console.error(chalk.red('Build failed:'), error);
-      process.exit(1);
-    }
-  } else {
-    console.log(chalk.hex('#3498db')('Lunar is already built, skipping...'));
+const hits = new Map<string, { count: number; resetAt: number }>();
+let lastPrune = Date.now();
+
+function pruneHits() {
+  const now = Date.now();
+  if (now - lastPrune < 60_000) return;
+  lastPrune = now;
+  for (const [ip, entry] of hits.entries()) {
+    if (now > entry.resetAt) hits.delete(ip);
   }
+}
+
+function limited(ip: string): boolean {
+  const now = Date.now();
+  const entry = hits.get(ip);
+  if (!entry || now > entry.resetAt) {
+    hits.set(ip, { count: 1, resetAt: now + 60_000 });
+    return false;
+  }
+  if (entry.count >= 10) return true;
+  entry.count++;
+  return false;
+}
+
+function readPlays(): Record<string, number> {
+  if (!fs.existsSync(plays)) return {};
+  try {
+    const parsed = JSON.parse(fs.readFileSync(plays, 'utf-8'));
+    if (typeof parsed !== 'object' || Array.isArray(parsed)) return {};
+    return parsed;
+  } catch {
+    return {};
+  }
+}
+
+if (!fs.existsSync('dist')) {
+  console.log(chalk.hex('#f39c12')('Building Lunar...'));
+  try {
+    execSync('npm run build', { stdio: 'inherit' });
+    console.log(chalk.hex('#2ecc71')('Build completed successfully!'));
+  } catch (error) {
+    console.error(chalk.red('Build failed:'), error);
+    process.exit(1);
+  }
+} else {
+  console.log(chalk.hex('#3498db')('Lunar is already built, skipping...'));
 }
 
 const app = Fastify({
   logger: false,
   serverFactory: handler => {
     const server = createServer();
-
     server.setMaxListeners(50);
-
-    const requestHandler = (req: any, res: any) => handler(req, res);
-    const upgradeHandler = (req: any, socket: any, head: any) => {
+    server.on('request', (req, res) => handler(req, res));
+    server.on('upgrade', (req, socket, head) => {
       if (req.url?.endsWith('/w/')) {
-        wisp.routeRequest(req, socket, head);
+        wisp.routeRequest(req, socket as any, head);
       } else {
         socket.destroy();
       }
-    };
-
-    server.on('request', requestHandler);
-    server.on('upgrade', upgradeHandler);
-
+    });
     return server;
   },
 });
-
-await ensureBuild();
 
 await app.register(fastifyHelmet, {
   crossOriginEmbedderPolicy: { policy: 'require-corp' },
@@ -77,14 +104,13 @@ await app.register(fastifyHelmet, {
   xPoweredBy: false,
 });
 
-await app.register(fastifyCompress, {
-  encodings: ['gzip', 'deflate', 'br'],
-});
+await app.register(fastifyCompress, { encodings: ['gzip', 'deflate', 'br'] });
 
 await app.register(fastifyMiddie);
 
-const staticFileOptions: FastifyStaticOptions = {
+const staticOpts: FastifyStaticOptions = {
   decorateReply: true,
+  root: path.join(__dirname, 'dist', 'client'),
   setHeaders(res: SetHeadersResponse, filePath: string) {
     if (/\.(html?|astro)$/i.test(filePath)) {
       res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
@@ -99,36 +125,52 @@ const staticFileOptions: FastifyStaticOptions = {
     res.setHeader('X-Frame-Options', 'SAMEORIGIN');
     res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   },
-  root: path.join(__dirname, 'dist', 'client'),
 };
-await app.register(fastifyStatic, staticFileOptions);
 
-app.use('/api/query', async (req: any, res: any) => {
-  const urlObj = new URL(req.url ?? '', 'http://localhost');
-  const search = urlObj.searchParams.get('q');
-  if (!search) {
-    res.statusCode = 400;
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify({ error: 'Query parameter "q" is required.' }));
-    return;
+await app.register(fastifyStatic, staticOpts);
+
+app.get('/api/plays', () => readPlays());
+
+app.post<{ Body: { name?: string } }>('/api/plays', async (req, reply) => {
+  pruneHits();
+  const ip =
+    req.headers['x-forwarded-for']?.toString().split(',')[0].trim() ??
+    req.headers['x-real-ip']?.toString() ??
+    req.ip;
+  if (limited(ip)) return reply.code(429).send({ error: 'Too many requests' });
+  const name = req.body?.name;
+  if (
+    typeof name !== 'string' ||
+    !name.trim() ||
+    name.length > 100 ||
+    !/^[\w\s\-'.]+$/i.test(name)
+  ) {
+    return reply.code(400).send({ error: 'Invalid name' });
   }
+  const plays = readPlays();
+  if (!(name in plays) && Object.keys(plays).length >= 10_000) {
+    return reply.code(403).send({ error: 'Limit reached' });
+  }
+  plays[name] = (plays[name] || 0) + 1;
+  fs.writeFileSync(plays as any, JSON.stringify(plays));
+  return { ok: true };
+});
+
+app.get<{ Querystring: { q?: string } }>('/api/query', async (req, reply) => {
+  const query = req.query.q;
+  if (!query) return reply.code(400).send({ error: 'Query parameter "q" is required.' });
   try {
-    const response = await fetch(`https://duckduckgo.com/ac/?q=${encodeURIComponent(search)}`, {
+    const response = await fetch(`https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}`, {
       headers: { 'User-Agent': 'Mozilla/5.0', Accept: 'application/json' },
     });
-    if (!response.ok) {
-      res.statusCode = response.status;
-      res.end(JSON.stringify({ error: 'Failed to fetch suggestions.' }));
-      return;
-    }
+    if (!response.ok)
+      return reply.code(response.status).send({ error: 'Failed to fetch suggestions.' });
     const data = await response.json();
     const suggestions = Array.isArray(data) ? data.map((d: any) => d.phrase).filter(Boolean) : [];
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify({ suggestions }));
+    return { suggestions };
   } catch (err) {
     console.error('Backend suggestion error:', err);
-    res.statusCode = 500;
-    res.end(JSON.stringify({ error: 'Internal server error.' }));
+    return reply.code(500).send({ error: 'Internal server error.' });
   }
 });
 
@@ -137,8 +179,8 @@ const { handler } = await import('./dist/server/entry.mjs');
 app.use(handler);
 
 app.setNotFoundHandler((_, reply) => {
-  const notFoundText = fs.existsSync('404') ? fs.readFileSync('404', 'utf8') : '404 Not Found';
-  reply.type('text/plain').send(notFoundText);
+  const text = fs.existsSync('404') ? fs.readFileSync('404', 'utf8') : '404 Not Found';
+  reply.type('text/plain').send(text);
 });
 
 app.listen({ host: '0.0.0.0', port }, err => {
@@ -147,7 +189,8 @@ app.listen({ host: '0.0.0.0', port }, err => {
     process.exit(1);
   }
 
-  const updateStatus = updateChecker();
+  const update = updateChecker();
+
   type StatusKey = 'u' | 'n' | 'f';
   const statusMap: Record<
     StatusKey,
@@ -156,18 +199,16 @@ app.listen({ host: '0.0.0.0', port }, err => {
     u: { icon: '✅', text: 'Up to date', color: '#2ecc71' },
     n: {
       icon: '❌',
-      text: `Update available (${updateStatus.commitId})`,
+      text: `Update available (${update.commitId})`,
       color: '#f1c40f',
       extra: chalk.hex('#95a5a6')('→ https://github.com/lunar-proxy/lunar-v2/wiki'),
     },
     f: { icon: '❌', text: 'Failed to check for updates', color: '#e74c3c' },
   };
-  const statusKey = (
-    ['u', 'n', 'f'].includes(updateStatus.status) ? updateStatus.status : 'f'
-  ) as StatusKey;
-  const status = statusMap[statusKey];
-  const deploymentURL = findProvider(port);
 
+  const key = (['u', 'n', 'f'].includes(update.status) ? update.status : 'f') as StatusKey;
+  const status = statusMap[key];
+  const url = findProvider(port);
   console.log();
   console.log(chalk.hex('#8e44ad').bold('╭────────────────────────────────────────────╮'));
   console.log(
@@ -191,11 +232,11 @@ app.listen({ host: '0.0.0.0', port }, err => {
   if (status.extra) console.log('       ' + status.extra);
   console.log();
   console.log(chalk.hex('#00b894')('Access Information:'));
-  if (deploymentURL) {
+  if (url) {
     console.log(
       chalk.hex('#bdc3c7')('   ├─ ') +
         chalk.hex('#ecf0f1')('Deployment URL: ') +
-        chalk.hex('#0984e3').underline(deploymentURL),
+        chalk.hex('#0984e3').underline(url),
     );
     console.log(
       chalk.hex('#bdc3c7')('   └─ ') +

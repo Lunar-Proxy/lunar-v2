@@ -43,7 +43,11 @@ const shortcuts = [
         class="shortcut-card group relative flex w-32 cursor-pointer flex-col items-center justify-center space-y-3 rounded-lg border border-white/[0.08] bg-[#1e1e2f]/40 p-4 backdrop-blur-sm transition-all duration-200 hover:border-white/[0.15] hover:bg-[#1e1e2f]/60"
       >
         <div class="flex h-16 w-16 items-center justify-center overflow-hidden rounded-lg bg-[#252537]/60">
-          <img src={shortcut.icon} class="shortcut-favicon h-10 w-10 object-contain" alt={shortcut.name + ' icon'} />
+          <img
+            src={shortcut.icon}
+            class="shortcut-favicon h-10 w-10 object-contain"
+            alt={shortcut.name + ' icon'}
+          />
         </div>
         <p class="text-center text-sm font-medium text-white/60 transition-colors group-hover:text-white/85">
           {shortcut.name}

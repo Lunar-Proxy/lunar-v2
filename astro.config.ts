@@ -1,4 +1,3 @@
-
 import node from '@astrojs/node';
 import { baremuxPath } from '@mercuryworkshop/bare-mux/node';
 import { libcurlPath } from '@mercuryworkshop/libcurl-transport';
@@ -9,12 +8,13 @@ import tailwindcss from '@tailwindcss/vite';
 import { uvPath } from '@titaniumnetwork-dev/ultraviolet';
 import { defineConfig } from 'astro/config';
 import type { IncomingMessage, ServerResponse } from 'http';
+import { existsSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { normalizePath } from 'vite';
 import type { Plugin } from 'vite';
 import obfuscatorPlugin from 'vite-plugin-javascript-obfuscator';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { version } from './package.json';
-
 wisp.options.wisp_version = 2;
 
 function WispServer(): Plugin {
@@ -29,7 +29,6 @@ function WispServer(): Plugin {
     },
   };
 }
-
 function searchBackend(): Plugin {
   return {
     name: 'search-suggestions-vite',
@@ -37,36 +36,25 @@ function searchBackend(): Plugin {
       middlewares.use('/api/query', async (req: IncomingMessage, res: ServerResponse) => {
         const urlObj = new URL(req.url ?? '', 'http://localhost');
         const query = urlObj.searchParams.get('q');
-
         if (!query) {
           res.statusCode = 400;
           res.setHeader('Content-Type', 'application/json');
           res.end(JSON.stringify({ error: 'Query parameter "q" is required.' }));
           return;
         }
-
         try {
           const response = await fetch(
             `https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}`,
-            {
-              headers: {
-                'User-Agent': 'Mozilla/5.0',
-                Accept: 'application/json',
-              },
-            },
+            { headers: { 'User-Agent': 'Mozilla/5.0', Accept: 'application/json' } },
           );
-
           if (!response.ok) {
             res.statusCode = response.status;
             res.end(JSON.stringify({ error: 'Failed to fetch suggestions.' }));
             return;
           }
-
           const data = (await response.json()) as Array<{ phrase: string }>;
-          const suggestions = data.map(d => d.phrase).filter(Boolean);
-
           res.setHeader('Content-Type', 'application/json');
-          res.end(JSON.stringify({ suggestions }));
+          res.end(JSON.stringify({ suggestions: data.map(d => d.phrase).filter(Boolean) }));
         } catch (err) {
           console.error('Backend suggestion error:', err);
           res.statusCode = 500;
@@ -77,8 +65,78 @@ function searchBackend(): Plugin {
   };
 }
 
-const OBFUSCATOR_SEED = Math.floor(Math.random() * 9999999);
+function shuffle<T>(arr: T[]): T[] {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
 
+function fontGenerator(): Plugin {
+  return {
+    name: 'vite-font-generator',
+    buildStart() {
+      if (existsSync('public/f.ttf')) rmSync('public/f.ttf');
+      if (existsSync('public/map.json')) rmSync('public/map.json');
+      const src = readdirSync('public').find(f => /\.(ttf|otf)$/i.test(f) && f !== 'f.ttf');
+      if (!src) {
+        console.warn('[font] no source .ttf/.otf in public/');
+        return;
+      }
+      const require = createRequire(import.meta.url);
+      const opentype = require('opentype.js');
+      const font = opentype.loadSync(`public/${src}`);
+      const ascii = Array.from({ length: 95 }, (_, i) => String.fromCharCode(i + 32)).filter(
+        ch => !/[0-9]/.test(ch),
+      );
+      const pool = shuffle(Array.from({ length: ascii.length }, (_, i) => 0x4e00 + i));
+      const map: Record<string, number> = {};
+      ascii.forEach((ch, i) => {
+        map[ch] = pool[i];
+      });
+      const glyphs: any[] = [font.glyphs.get(0)];
+      for (const [ch, cp] of Object.entries(map)) {
+        const g = font.charToGlyph(ch);
+        if (!g || g.index === 0) continue;
+        glyphs.push(
+          new opentype.Glyph({
+            name: `u${cp.toString(16)}`,
+            unicode: cp,
+            advanceWidth: g.advanceWidth,
+            path: g.path,
+          }),
+        );
+      }
+
+      for (let i = 0; i <= 9; i++) {
+        const g = font.charToGlyph(String(i));
+        if (!g || g.index === 0) continue;
+        glyphs.push(
+          new opentype.Glyph({
+            name: `d${i}`,
+            unicode: 0x30 + i,
+            advanceWidth: g.advanceWidth,
+            path: g.path,
+          }),
+        );
+      }
+      const out = new opentype.Font({
+        familyName: 'F',
+        styleName: 'R',
+        unitsPerEm: font.unitsPerEm,
+        ascender: font.ascender,
+        descender: font.descender,
+        glyphs,
+      });
+      writeFileSync('public/f.ttf', Buffer.from(out.toArrayBuffer()));
+      writeFileSync('public/map.json', JSON.stringify(map));
+      console.log(`[font] done (${glyphs.length} glyphs)`);
+    },
+  };
+}
+
+const OBFUSCATOR_SEED = Math.floor(Math.random() * 9999999);
 export default defineConfig({
   integrations: [
     playformCompress({
@@ -86,39 +144,39 @@ export default defineConfig({
       HTML: {
         'html-minifier-terser': {
           caseSensitive: true,
+          collapseBooleanAttributes: true,
+          collapseWhitespace: true,
           conservativeCollapse: false,
           customAttrAssign: [/\?=/],
           customAttrCollapse: /\s+/,
           customEventAttributes: [/^on[a-z]{3,}$/],
+          decodeEntities: true,
           html5: true,
           ignoreCustomComments: [/^!/, /^\s*ko/],
           ignoreCustomFragments: [/<%[\s\S]*?%>/, /<\?[\s\S]*?\?>/],
+          keepClosingSlash: false,
           maxLineLength: 0,
+          minifyCSS: true,
+          minifyJS: true,
+          minifyURLs: true,
           preserveLineBreaks: false,
           preventAttributesEscaping: false,
+          processConditionalComments: true,
           processScripts: ['text/html'],
           quoteCharacter: '"',
           removeAttributeQuotes: true,
+          removeComments: true,
+          removeEmptyAttributes: true,
+          removeEmptyElements: true,
+          removeOptionalTags: true,
           removeRedundantAttributes: true,
+          removeScriptTypeAttributes: true,
           removeStyleLinkTypeAttributes: true,
+          removeTagWhitespace: true,
           sortAttributes: true,
           sortClassName: true,
           trimCustomFragments: true,
           useShortDoctype: true,
-          collapseWhitespace: true,
-          removeComments: true,
-          removeEmptyAttributes: true,
-          keepClosingSlash: false,
-          minifyJS: true,
-          minifyCSS: true,
-          decodeEntities: true,
-          collapseBooleanAttributes: true,
-          removeOptionalTags: true,
-          removeEmptyElements: true,
-          minifyURLs: true,
-          removeScriptTypeAttributes: true,
-          processConditionalComments: true,
-          removeTagWhitespace: true,
         },
       },
       Image: true,
@@ -144,16 +202,17 @@ export default defineConfig({
     },
     optimizeDeps: {
       include: ['lucide'],
-      exclude: [],
     },
     define: {
       VERSION: JSON.stringify(version),
     },
     plugins: [
       tailwindcss(),
+      fontGenerator(),
       WispServer(),
       searchBackend(),
       obfuscatorPlugin({
+        include: ['**/client/**', '**/_astro/**'],
         exclude: [
           'tmp/**',
           'data/**',
@@ -161,6 +220,11 @@ export default defineConfig({
           '**/data/**',
           'node_modules/**',
           '**/node_modules/**',
+          '**/server/**',
+          '**/chunks/**',
+          '**/entry.*',
+          '**/renderers.*',
+          '**/manifest*',
         ],
         apply: 'build',
         debugger: false,
@@ -174,29 +238,26 @@ export default defineConfig({
           identifierNamesGenerator: 'hexadecimal',
           renameGlobals: false,
           renameProperties: false,
-          transformObjectKeys: false,
+          transformObjectKeys: true,
           ignoreImports: true,
-          stringArray: false,
-          stringArrayThreshold: 0.6,
-          splitStrings: false,
-          splitStringsChunkLength: 14,
-          stringArrayEncoding: [],
-          stringArrayIndexShift: false,
-          stringArrayRotate: false,
-          stringArrayShuffle: false,
+          stringArray: true,
+          stringArrayThreshold: 0.5,
+          stringArrayEncoding: ['base64'],
+          stringArrayRotate: true,
+          stringArrayShuffle: true,
+          stringArrayIndexShift: true,
           stringArrayWrappersCount: 1,
           stringArrayWrappersType: 'variable',
-          stringArrayWrappersChainedCalls: false,
-          stringArrayWrappersParametersMaxCount: 2,
           stringArrayCallsTransform: false,
-          controlFlowFlattening: false,
-          controlFlowFlatteningThreshold: 0.3,
+          splitStrings: true,
+          splitStringsChunkLength: 8,
+          controlFlowFlattening: true,
+          controlFlowFlatteningThreshold: 0.5,
           deadCodeInjection: false,
-          deadCodeInjectionThreshold: 0.3,
           selfDefending: true,
           debugProtection: false,
-          disableConsoleOutput: false,
-          numbersToExpressions: false,
+          disableConsoleOutput: true,
+          numbersToExpressions: true,
           unicodeEscapeSequence: false,
         },
       }),
@@ -216,9 +277,7 @@ export default defineConfig({
           {
             src: [normalizePath(`${uvPath}/*.js`), '!' + normalizePath(`${uvPath}/sw.js`)],
             dest: 'tmp',
-            rename: (name: string) => {
-              return `${name.replace(/^uv\./, '')}.js`;
-            },
+            rename: (name: string) => `${name.replace(/^uv\./, '')}.js`,
             overwrite: false,
           },
         ],
