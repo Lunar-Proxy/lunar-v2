@@ -1,7 +1,7 @@
 {
   "name": "lunar-v2",
   "type": "module",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "scripts": {
     "dev": "npx astro dev --host 0.0.0.0",
     "start": "node --trace-warnings --enable-source-maps --import tsx index.ts",
