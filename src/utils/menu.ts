@@ -1,3 +1,4 @@
+import { createIcons, icons } from 'lucide';
 import ConfigAPI from './config';
 import { TabManager } from './tb';
 
@@ -25,6 +26,7 @@ class MenuHandler {
   private elements: MenuElements;
   private keyMap = new Map<string, HTMLButtonElement>();
   private isOpen = false;
+  private darkModeActive = false;
   private outsideListener: ((e: MouseEvent) => void) | null = null;
   private iframeOverlay: HTMLDivElement | null = null;
 
@@ -122,6 +124,12 @@ class MenuHandler {
 
     this.elements.darkmode.addEventListener('click', () => {
       this.handleDarkMode();
+      this.darkModeActive = !this.darkModeActive;
+      const span = this.elements.darkmode.querySelector('span');
+      if (span) span.textContent = this.darkModeActive ? 'Light Mode' : 'Dark Mode';
+      const icon = this.elements.darkmode.querySelector<HTMLElement>('[data-lucide]');
+      if (icon) icon.setAttribute('data-lucide', this.darkModeActive ? 'sun' : 'moon');
+      createIcons({ icons, nameAttr: 'data-lucide' });
       this.hideMenu();
     });
 

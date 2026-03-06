@@ -131,7 +131,7 @@ function fontGenerator(): Plugin {
       });
       writeFileSync('public/f.ttf', Buffer.from(out.toArrayBuffer()));
       writeFileSync('public/map.json', JSON.stringify(map));
-      console.log(`[font] done (${glyphs.length} glyphs)`);
+      console.log(`[font ob] done (${glyphs.length} glyphs)`);
     },
   };
 }

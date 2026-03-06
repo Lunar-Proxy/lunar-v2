@@ -19,6 +19,7 @@ let isOpen = false;
 let lastQuery = '';
 let activeIndex = -1;
 let ignoreBlur = false;
+let requestId = 0;
 
 function isLunarUrl(str: string): boolean {
   return str.startsWith('lunar://');
@@ -80,14 +81,23 @@ function getDropdown(): HTMLDivElement | null {
 }
 
 function closeSuggestions(): void {
-  const dropdown = getDropdown();
-
   isOpen = false;
   activeIndex = -1;
+  requestId++;
 
+  if (debounceTimer) {
+    clearTimeout(debounceTimer);
+    debounceTimer = null;
+  }
+
+  const dropdown = getDropdown();
   if (!dropdown) return;
 
-  dropdown.classList.add('opacity-0', 'pointer-events-none');
+  dropdown.style.opacity = '0';
+  dropdown.style.pointerEvents = 'none';
+
+  const backdrop = document.getElementById('suggestions-backdrop');
+  if (backdrop) backdrop.remove();
 
   setTimeout(() => {
     if (!isOpen) dropdown.remove();
@@ -100,11 +110,19 @@ function showDropdown(dropdown: HTMLDivElement): void {
     return;
   }
 
-  dropdown.classList.remove('opacity-0', 'hidden', 'pointer-events-none');
+  dropdown.style.opacity = '1';
+  dropdown.style.pointerEvents = 'auto';
 
   const rect = urlbar.getBoundingClientRect();
   const maxHeight = window.innerHeight - rect.bottom - 16;
   dropdown.style.maxHeight = `${Math.max(maxHeight, 100)}px`;
+
+  if (!document.getElementById('suggestions-backdrop')) {
+    const backdrop = document.createElement('div');
+    backdrop.id = 'suggestions-backdrop';
+    backdrop.className = 'fixed inset-0 z-40 bg-black/5';
+    document.body.appendChild(backdrop);
+  }
 
   isOpen = true;
 }
@@ -124,6 +142,7 @@ function selectSuggestion(value: string): void {
 
   urlbar.value = value;
   closeSuggestions();
+  urlbar.blur();
 
   urlbar.dispatchEvent(
     new KeyboardEvent('keydown', {
@@ -134,6 +153,28 @@ function selectSuggestion(value: string): void {
       cancelable: true,
     }),
   );
+}
+
+function buildRow(
+  icon: string,
+  iconClass: string,
+  label: string,
+  value: string,
+  trailing?: string,
+): string {
+  const base = `<div class="flex items-center ${trailing ? 'justify-between' : 'space-x-3'} px-3 py-2 text-sm text-(--text-header) cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${escapeHtml(value)}">`;
+  const iconEl = `<i data-lucide="${icon}" class="${iconClass}"></i>`;
+  const labelEl = `<span>${escapeHtml(label)}</span>`;
+
+  if (trailing) {
+    return (
+      base +
+      `<div class="flex items-center space-x-3">${iconEl}${labelEl}</div>` +
+      `<span class="text-xs text-(--text-secondary)">${escapeHtml(trailing)}</span></div>`
+    );
+  }
+
+  return base + iconEl + labelEl + '</div>';
 }
 
 function renderSuggestions(
@@ -155,45 +196,37 @@ function renderSuggestions(
   const dropdown = document.createElement('div');
   dropdown.id = 'suggestions';
   dropdown.className =
-    'absolute top-full z-50 mt-0 w-full rounded-b-xl border-x border-b border-[#3a3758] bg-[#1f1f30]/95 shadow-2xl backdrop-blur-xl overflow-y-auto opacity-0 transition-opacity duration-150';
+    'absolute top-full z-50 mt-0 w-full rounded-b-xl border-x border-b border-[#3a3758] bg-[#1f1f30]/95 shadow-2xl backdrop-blur-xl overflow-y-auto transition-opacity duration-150';
+  dropdown.style.opacity = '0';
+  dropdown.style.pointerEvents = 'none';
 
   urlbar.parentElement?.appendChild(dropdown);
 
   const rows: string[] = [];
 
   if (mathResult) {
-    rows.push(
-      `<div class="flex items-center space-x-3 px-4 py-3 text-(--text-header) cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${escapeHtml(mathResult)}">` +
-        `<i data-lucide="calculator" class="h-5 w-5 text-green-400"></i><span>${escapeHtml(mathResult)}</span></div>`,
-    );
+    rows.push(buildRow('calculator', 'h-4 w-4 text-green-400', mathResult, mathResult));
   }
 
   if (topSuggestions.length) {
     rows.push(
-      `<div class="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-(--text-secondary)">` +
+      `<div class="px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-(--text-secondary)">` +
         `Suggestions for <span class="text-white">"${escapeHtml(query)}"</span></div>`,
     );
 
-    topSuggestions.forEach(s => {
-      rows.push(
-        `<div class="flex items-center space-x-3 px-4 py-3 text-(--text-header) cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${escapeHtml(s)}">` +
-          `<i data-lucide="search" class="h-4 w-4 text-(--text-secondary)"></i><span>${escapeHtml(s)}</span></div>`,
-      );
-    });
+    for (const s of topSuggestions) {
+      rows.push(buildRow('search', 'h-3.5 w-3.5 text-(--text-secondary)', s, s));
+    }
   }
 
   if (hasQuickLinks && quickMatches.length) {
     rows.push(
-      `<div class="px-4 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-(--text-secondary) border-t border-[#3a3758]">Lunar Links</div>`,
+      `<div class="px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-(--text-secondary) border-t border-[#3a3758]">Lunar Links</div>`,
     );
 
-    quickMatches.forEach(([link, description]) => {
-      rows.push(
-        `<div class="flex items-center justify-between px-4 py-3 text-(--text-header) cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${escapeHtml(link)}">` +
-          `<div class="flex items-center space-x-3"><i data-lucide="globe" class="h-5 w-5 text-purple-400"></i><span>${escapeHtml(link)}</span></div>` +
-          `<span class="text-xs text-(--text-secondary)">${escapeHtml(description)}</span></div>`,
-      );
-    });
+    for (const [link, description] of quickMatches) {
+      rows.push(buildRow('globe', 'h-4 w-4 text-purple-400', link, link, description));
+    }
   }
 
   dropdown.innerHTML = rows.join('');
@@ -224,12 +257,14 @@ async function updateSuggestions(): Promise<void> {
   }
 
   lastQuery = query;
+  const currentRequest = ++requestId;
 
   const [suggestions, mathResult] = await Promise.all([
     fetchSuggestions(query),
     Promise.resolve(isMathExpression(query) ? evaluateMath(query) : null),
   ]);
 
+  if (currentRequest !== requestId) return;
   if (urlbar.value.trim() !== lastQuery) return;
 
   const quickMatches = isLunarUrl(query) ? matchQuickLinks(query) : [];

@@ -22,9 +22,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const cards: Card[] = Array.from(grid.querySelectorAll<HTMLDivElement>('.card')).map(el => ({
     el,
-    name: el.querySelector('h2')?.textContent?.toLowerCase() ?? '',
-    desc: el.querySelector('p')?.textContent?.toLowerCase() ?? '',
-    sortKey: el.dataset.name?.toLowerCase() ?? '',
+    name: (el.dataset.name ?? el.querySelector('h2')?.textContent ?? '').toLowerCase(),
+    desc: (el.querySelector('p')?.textContent ?? '').toLowerCase(),
+    sortKey: (el.dataset.name ?? '').toLowerCase(),
   }));
 
   let imgTimer: number;
