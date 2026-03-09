@@ -20,7 +20,7 @@ EventEmitter.defaultMaxListeners = 20;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const port = Number(process.env.PORT) || 6060;
-const plays = path.join(process.cwd(), 'plays.json');
+const playsFile = path.join(process.cwd(), 'plays.json');
 
 logging.set_level(logging.ERROR);
 
@@ -57,14 +57,18 @@ function limited(ip: string): boolean {
 }
 
 function readPlays(): Record<string, number> {
-  if (!fs.existsSync(plays)) return {};
+  if (!fs.existsSync(playsFile)) return {};
   try {
-    const parsed = JSON.parse(fs.readFileSync(plays, 'utf-8'));
+    const parsed = JSON.parse(fs.readFileSync(playsFile, 'utf-8'));
     if (typeof parsed !== 'object' || Array.isArray(parsed)) return {};
     return parsed;
   } catch {
     return {};
   }
+}
+
+function writePlays(data: Record<string, number>): void {
+  fs.writeFileSync(playsFile, JSON.stringify(data, null, 2));
 }
 
 if (!fs.existsSync('dist')) {
@@ -147,12 +151,12 @@ app.post<{ Body: { name?: string } }>('/api/plays', async (req, reply) => {
   ) {
     return reply.code(400).send({ error: 'Invalid name' });
   }
-  const plays = readPlays();
-  if (!(name in plays) && Object.keys(plays).length >= 10_000) {
+  const data = readPlays();
+  if (!(name in data) && Object.keys(data).length >= 10_000) {
     return reply.code(403).send({ error: 'Limit reached' });
   }
-  plays[name] = (plays[name] || 0) + 1;
-  fs.writeFileSync(plays as any, JSON.stringify(plays));
+  data[name] = (data[name] || 0) + 1;
+  writePlays(data);
   return { ok: true };
 });
 

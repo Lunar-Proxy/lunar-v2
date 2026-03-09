@@ -1,4 +1,3 @@
-import * as baremux from '@mercuryworkshop/bare-mux';
 import ConfigAPI from './config';
 import { scramjetWrapper, vWrapper } from './pro';
 import { shadow, ready } from './shadow';
@@ -24,7 +23,11 @@ const defaultIcon = '/a/moon.svg';
 const faviconApi =
   'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64&url=';
 
-const bmClient = new baremux.BareClient();
+let bmClient: any = null;
+function getBmClient() {
+  if (!bmClient) bmClient = new BareMux.BareClient();
+  return bmClient;
+}
 
 const tabs: Tab[] = [];
 let activeId: number | null = null;
@@ -37,13 +40,12 @@ let onUrlChange: ((href: string) => void) | null = null;
 let tabBar: HTMLDivElement | null = null;
 let frameContainer: HTMLDivElement | null = null;
 
+let urlInput: HTMLInputElement | null = null;
+let loadingBar: HTMLDivElement | null = null;
+
 const faviconCache = new Map<string, string>();
 const pendingFavicons = new Map<string, Promise<string>>();
 let transportReady = false;
-
-function nextId(): number {
-  return idCounter++;
-}
 
 function decodeProxyUrl(href: string): string {
   let path: string;
@@ -77,19 +79,17 @@ function decodeProxyUrl(href: string): string {
 
   return '';
 }
+
 async function encodeProxyUrl(url: string): Promise<string> {
   const backend = await ConfigAPI.get('backend');
-
   if (backend === 'sc') {
     const cfg = scramjetWrapper.getConfig();
     return cfg.prefix + cfg.codec.encode(url);
   }
-
   if (backend === 'u') {
     const cfg = vWrapper.getConfig();
     return cfg.prefix + cfg.encodeUrl(url);
   }
-
   return url;
 }
 
@@ -99,12 +99,15 @@ function truncate(str: string, len = 16): string {
 
 async function ensureTransport(): Promise<void> {
   if (transportReady) return;
-  const conn = new baremux.BareMuxConnection('/bm/worker.js');
-  const transport = await ConfigAPI.get('transport');
-  const wisp = await ConfigAPI.get('wispUrl');
-  if (transport === 'ep' && (await conn.getTransport()) !== '/ep/index.mjs') {
+  const conn = new BareMux.BareMuxConnection('/bm/worker.js');
+  const [transport, wisp] = await Promise.all([
+    ConfigAPI.get('transport'),
+    ConfigAPI.get('wispUrl'),
+  ]);
+  const current = await conn.getTransport();
+  if (transport === 'ep' && current !== '/ep/index.mjs') {
     await conn.setTransport('/ep/index.mjs', [{ wisp }]);
-  } else if (transport === 'lc' && (await conn.getTransport()) !== '/lc/index.mjs') {
+  } else if (transport === 'lc' && current !== '/lc/index.mjs') {
     await conn.setTransport('/lc/index.mjs', [{ wisp }]);
   }
   transportReady = true;
@@ -112,13 +115,17 @@ async function ensureTransport(): Promise<void> {
 
 async function fetchFavicon(url: string): Promise<string> {
   if (url.startsWith('lunar://')) return defaultIcon;
-  if (faviconCache.has(url)) return faviconCache.get(url)!;
-  if (pendingFavicons.has(url)) return pendingFavicons.get(url)!;
+  const cached = faviconCache.get(url);
+  if (cached) return cached;
+  const pending = pendingFavicons.get(url);
+  if (pending) return pending;
 
   const p = (async () => {
     try {
       await ensureTransport();
-      const res = await bmClient.fetch(faviconApi + encodeURIComponent(decodeURIComponent(url)));
+      const res = await getBmClient().fetch(
+        faviconApi + encodeURIComponent(decodeURIComponent(url))
+      );
       if (!res.ok) {
         faviconCache.set(url, defaultIcon);
         return defaultIcon;
@@ -127,8 +134,9 @@ async function fetchFavicon(url: string): Promise<string> {
       return await new Promise<string>(resolve => {
         const reader = new FileReader();
         reader.onloadend = () => {
-          faviconCache.set(url, reader.result as string);
-          resolve(reader.result as string);
+          const result = reader.result as string;
+          faviconCache.set(url, result);
+          resolve(result);
         };
         reader.readAsDataURL(blob);
       });
@@ -146,7 +154,6 @@ async function fetchFavicon(url: string): Promise<string> {
 
 function updateTabEl(tab: Tab, field: 'title' | 'icon'): void {
   if (!tab.el) return;
-
   if (field === 'title') {
     const span = tab.el.querySelector('.tab-title');
     if (span) span.textContent = truncate(tab.title);
@@ -160,8 +167,9 @@ function getDisplayUrl(iframeHref: string): string {
   try {
     const url = new URL(iframeHref, location.origin);
     const fullPath = url.pathname + url.search + url.hash;
-    const route = Object.entries(internalRoutes).find(([, v]) => v === url.pathname);
-    if (route) return route[0];
+    for (const [key, val] of Object.entries(internalRoutes)) {
+      if (val === url.pathname) return key;
+    }
     return decodeProxyUrl(fullPath) || '';
   } catch {
     return '';
@@ -224,35 +232,36 @@ function handleFrameLoad(tab: Tab): void {
 }
 
 function updateUrlBar(tab: Tab): void {
-  if (tab.id !== activeId) return;
-  const urlInput = shadow.querySelector('#urlbar') as HTMLInputElement | null;
-  if (!urlInput) return;
+  if (tab.id !== activeId || !urlInput) return;
   try {
     const doc = tab.iframe.contentDocument;
     if (!doc) return;
     urlInput.value = getDisplayUrl(doc.location.href || '');
   } catch {}
 }
+
 function leavesTab(el: HTMLElement): boolean {
   if (el.tagName === 'A' || el.tagName === 'AREA') {
-    const target = (el as HTMLAnchorElement).target;
-    return target === '_blank' || target === '_new';
+    const t = (el as HTMLAnchorElement).target;
+    return t === '_blank' || t === '_new';
   }
   return false;
 }
 
 function interceptLink(el: HTMLElement): void {
-  if (!leavesTab(el)) return;
-  if ((el as any).__lunarIntercepted) return;
-  (el as any).__lunarIntercepted = true;
-  if (window.location.href === `${window.location.origin}/welcome`) return;
+  if (!leavesTab(el) || (el as any).__lr) return;
+  (el as any).__lr = true;
+  if (location.href === location.origin + '/welcome') return;
   el.addEventListener('click', e => {
     if (!leavesTab(el)) return;
     e.preventDefault();
     const href = (el as HTMLAnchorElement).href;
-    if (href) encodeProxyUrl(href).then(proxyUrl => openTab(proxyUrl));
+    if (href) encodeProxyUrl(href).then(u => openTab(u));
   });
 }
+
+const linkSelector =
+  'a[target="_blank"], a[target="_new"], area[target="_blank"], area[target="_new"]';
 
 function createFrame(id: number, src?: string): HTMLIFrameElement {
   const frame = document.createElement('iframe');
@@ -268,29 +277,28 @@ function createFrame(id: number, src?: string): HTMLIFrameElement {
       const win = frame.contentWindow;
       const doc = frame.contentDocument;
       if (!win || !doc) return;
+
       win.open = (openUrl?: string | URL) => {
         if (!openUrl) return null;
-        console.log('Intercepted url', openUrl.toString());
-        encodeProxyUrl(openUrl.toString()).then(proxyUrl => openTab(proxyUrl));
+        encodeProxyUrl(openUrl.toString()).then(u => openTab(u));
         return null;
       };
-      doc
-        .querySelectorAll<HTMLElement>(
-          'a[target="_blank"], a[target="_new"], area[target="_blank"], area[target="_new"]'
-        )
-        .forEach(interceptLink);
-      new MutationObserver(mutations => {
-        for (const mutation of mutations) {
-          mutation.addedNodes.forEach(node => {
-            if (node.nodeType !== 1) return;
-            const el = node as HTMLElement;
-            if (el.matches('a, area')) interceptLink(el);
-            el.querySelectorAll<HTMLElement>(
-              'a[target="_blank"], a[target="_new"], area[target="_blank"], area[target="_new"]'
-            ).forEach(interceptLink);
-          });
-          if (mutation.type === 'attributes' && mutation.attributeName === 'target') {
-            const el = mutation.target as HTMLElement;
+
+      doc.querySelectorAll<HTMLElement>(linkSelector).forEach(interceptLink);
+
+      new MutationObserver(muts => {
+        for (let i = 0; i < muts.length; i++) {
+          const m = muts[i];
+          if (m.type === 'childList') {
+            for (let j = 0; j < m.addedNodes.length; j++) {
+              const node = m.addedNodes[j];
+              if (node.nodeType !== 1) continue;
+              const el = node as HTMLElement;
+              if (el.matches('a, area')) interceptLink(el);
+              el.querySelectorAll<HTMLElement>(linkSelector).forEach(interceptLink);
+            }
+          } else if (m.type === 'attributes' && m.attributeName === 'target') {
+            const el = m.target as HTMLElement;
             if (el.matches('a, area')) interceptLink(el);
           }
         }
@@ -305,30 +313,37 @@ function createFrame(id: number, src?: string): HTMLIFrameElement {
   return frame;
 }
 
-function getTabClass(active: boolean): string {
-  const base =
-    'tab flex items-center justify-between h-[34px] min-w-[160px] max-w-[220px] px-3 rounded-t-lg cursor-pointer select-none transition-all duration-200 relative z-10 border border-b-0 border-[color:var(--border)] gap-2 text-[12px]';
-  return active
-    ? `${base} bg-[color:var(--background)] shadow-[0_2px_12px_#23213640] text-[color:var(--text-header)]`
-    : `${base} bg-[color:var(--background-overlay)] hover:bg-[color:var(--background)] text-[color:var(--text-secondary)] opacity-60 hover:opacity-85`;
-}
+const tabBaseClass =
+  'tab flex items-center justify-between h-[34px] min-w-[160px] max-w-[220px] px-3 rounded-t-lg cursor-pointer select-none transition-all duration-200 relative z-10 border border-b-0 border-[color:var(--border)] gap-2 text-[12px]';
+const tabActiveClass =
+  tabBaseClass +
+  ' bg-[color:var(--background)] shadow-[0_2px_12px_#23213640] text-[color:var(--text-header)]';
+const tabInactiveClass =
+  tabBaseClass +
+  ' bg-[color:var(--background-overlay)] hover:bg-[color:var(--background)] text-[color:var(--text-secondary)] opacity-60 hover:opacity-85';
+
 function createTabEl(tab: Tab): HTMLDivElement {
   const el = document.createElement('div');
-  el.className = getTabClass(tab.id === activeId);
+  el.className = tab.id === activeId ? tabActiveClass : tabInactiveClass;
+
   const left = document.createElement('div');
   left.className = 'flex items-center gap-1.5 flex-1 min-w-0 h-full';
+
   const icon = document.createElement('img');
   icon.className = 'tab-favicon flex-shrink-0';
   icon.src = tab.favicon;
   icon.width = 14;
   icon.height = 14;
   icon.style.cssText = 'width:14px;height:14px;object-fit:contain;display:block;';
+
   const title = document.createElement('span');
   title.className = 'tab-title flex-1 min-w-0';
   title.style.cssText =
     'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.2;font-size:11px;';
   title.textContent = truncate(tab.title, 14);
+
   left.append(icon, title);
+
   const closeBtn = document.createElement('button');
   closeBtn.className =
     'flex items-center justify-center w-4 h-4 flex-shrink-0 rounded hover:bg-white/15 text-gray-500 hover:text-gray-200 transition-all duration-150';
@@ -339,6 +354,7 @@ function createTabEl(tab: Tab): HTMLDivElement {
     e.stopPropagation();
     closeTab(tab.id);
   };
+
   el.append(left, closeBtn);
   el.onclick = () => switchTab(tab.id);
   tab.el = el;
@@ -347,25 +363,28 @@ function createTabEl(tab: Tab): HTMLDivElement {
 
 function renderTabs(): void {
   if (!tabBar) return;
-  const existing = new Set<Node>();
+  const keep = new Set<Node>();
   for (const tab of tabs) {
     const el = tab.el ?? createTabEl(tab);
-    existing.add(el);
+    keep.add(el);
     tabBar.appendChild(el);
   }
-  for (const child of Array.from(tabBar.children)) {
-    if (!existing.has(child)) child.remove();
+  for (let i = tabBar.children.length - 1; i >= 0; i--) {
+    const child = tabBar.children[i];
+    if (!keep.has(child)) child.remove();
   }
 }
+
 function updateActive(): void {
   for (const tab of tabs) {
-    if (tab.el) tab.el.className = getTabClass(tab.id === activeId);
+    if (tab.el) tab.el.className = tab.id === activeId ? tabActiveClass : tabInactiveClass;
   }
 }
 
 function closeTab(id: number): void {
   const idx = tabs.findIndex(t => t.id === id);
   if (idx === -1) return;
+
   if (tabs.length === 1) {
     openTab();
     requestAnimationFrame(() => {
@@ -377,6 +396,7 @@ function closeTab(id: number): void {
     });
     return;
   }
+
   const [removed] = tabs.splice(idx, 1);
   if (removed.titleTimer) clearInterval(removed.titleTimer);
   removed.iframe.remove();
@@ -386,32 +406,32 @@ function closeTab(id: number): void {
 }
 
 function showLoader(): void {
-  const bar = shadow.querySelector('#loading-bar') as HTMLDivElement | null;
-  if (!bar || isLoading) return;
+  if (!loadingBar || isLoading) return;
   isLoading = true;
-  bar.style.cssText = 'display:block;opacity:1;width:0%;transition:none';
+  loadingBar.style.cssText = 'display:block;opacity:1;width:0%;transition:none';
   requestAnimationFrame(() => {
-    if (!isLoading) return;
-    bar.style.cssText =
+    if (!isLoading || !loadingBar) return;
+    loadingBar.style.cssText =
       'display:block;opacity:1;width:80%;transition:width .5s cubic-bezier(.4,0,.2,1)';
   });
   loadTimer = setTimeout(() => {
-    if (isLoading && bar) {
-      bar.style.transition = 'width .3s cubic-bezier(.4,0,.2,1)';
-      bar.style.width = '90%';
+    if (isLoading && loadingBar) {
+      loadingBar.style.transition = 'width .3s cubic-bezier(.4,0,.2,1)';
+      loadingBar.style.width = '90%';
     }
   }, 1200);
 }
+
 function hideLoader(): void {
-  const bar = shadow.querySelector('#loading-bar') as HTMLDivElement | null;
-  if (!bar || !isLoading) return;
-  bar.style.cssText =
+  if (!loadingBar || !isLoading) return;
+  loadingBar.style.cssText =
     'display:block;opacity:1;width:100%;transition:width .2s cubic-bezier(.4,0,.2,1)';
   setTimeout(() => {
-    bar.style.cssText = 'display:none;opacity:0;width:0%';
+    if (loadingBar) loadingBar.style.cssText = 'display:none;opacity:0;width:0%';
     isLoading = false;
   }, 180);
 }
+
 function resetLoader(): void {
   if (loadTimer) {
     clearTimeout(loadTimer);
@@ -421,11 +441,12 @@ function resetLoader(): void {
 }
 
 function openTab(src?: string): void {
-  const id = nextId();
   if (!frameContainer) {
     ready.then(() => openTab(src));
     return;
   }
+
+  const id = idCounter++;
   const tab: Tab = {
     id,
     title: 'New Tab',
@@ -434,20 +455,24 @@ function openTab(src?: string): void {
     isReady: false,
   };
   tabs.push(tab);
+
   const tabEl = createTabEl(tab);
   if (tabBar) tabBar.appendChild(tabEl);
+
   const frame = createFrame(id, src);
   tab.iframe = frame;
-  frameContainer!.appendChild(frame);
+  frameContainer.appendChild(frame);
   switchTab(id);
-  const urlInput = shadow.querySelector('#urlbar') as HTMLInputElement | null;
+
   if (urlInput && (!src || src === 'new')) urlInput.value = 'lunar://new';
+
   frame.onload = () => {
     handleFrameLoad(tab);
     resetLoader();
   };
   frame.onerror = resetLoader;
 }
+
 function switchTab(id: number): void {
   activeId = id;
   if (urlWatcher) {
@@ -455,15 +480,17 @@ function switchTab(id: number): void {
     urlWatcher = null;
   }
   prevHref = '';
+
   for (const tab of tabs) {
     if (tab.iframe) tab.iframe.classList.toggle('hidden', tab.id !== id);
   }
   updateActive();
   resetLoader();
-  const activeTab = tabs.find(t => t.id === id);
-  if (activeTab?.isReady) {
-    syncTab(activeTab);
-    updateUrlBar(activeTab);
+
+  const active = tabs.find(t => t.id === id);
+  if (active?.isReady) {
+    syncTab(active);
+    updateUrlBar(active);
   }
 
   urlWatcher = setInterval(() => {
@@ -474,28 +501,34 @@ function switchTab(id: number): void {
       const href = tab.iframe.contentWindow?.location.href;
       if (!href || href === prevHref) return;
       prevHref = href;
-      const urlInput = shadow.querySelector('#urlbar') as HTMLInputElement | null;
       if (urlInput) urlInput.value = getDisplayUrl(href);
       syncTab(tab);
       if (onUrlChange) onUrlChange(href);
     } catch {}
   }, 250);
 }
+
 ready.then(() => {
   tabBar = shadow.querySelector('#tcontainer') as HTMLDivElement | null;
   frameContainer = shadow.querySelector('#fcontainer') as HTMLDivElement | null;
+  urlInput = shadow.querySelector('#urlbar') as HTMLInputElement | null;
+  loadingBar = shadow.querySelector('#loading-bar') as HTMLDivElement | null;
+
   shadow.querySelector('#add')?.addEventListener('click', () => openTab());
-  const urlbar = shadow.querySelector('#urlbar') as HTMLInputElement | null;
-  urlbar?.addEventListener('keydown', (e: KeyboardEvent) => {
+
+  urlInput?.addEventListener('keydown', (e: KeyboardEvent) => {
     if (e.key === 'Enter') showLoader();
   });
+
   setInterval(() => {
     if (!isLoading) return;
     const tab = tabs.find(t => t.id === activeId);
     if (tab?.iframe?.contentDocument?.readyState === 'complete') resetLoader();
   }, 400);
+
   openTab();
 });
+
 window.addEventListener('unload', () => {
   if (urlWatcher) clearInterval(urlWatcher);
   if (loadTimer) clearTimeout(loadTimer);
@@ -503,6 +536,7 @@ window.addEventListener('unload', () => {
     if (tab.titleTimer) clearInterval(tab.titleTimer);
   }
 });
+
 export const TabManager = {
   get activeTabId() {
     return activeId;

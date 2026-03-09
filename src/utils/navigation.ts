@@ -147,9 +147,12 @@ function onSidebarClick(e: MouseEvent): void {
 }
 
 async function setup(): Promise<void> {
-  wisp = await ConfigAPI.get('wispUrl');
-  await scramjetWrapper.init();
-  await navigator.serviceWorker.register('./sw.js');
+  const [wispUrl] = await Promise.all([
+    ConfigAPI.get('wispUrl'),
+    scramjetWrapper.init(),
+    navigator.serviceWorker.register('./sw.js'),
+  ]);
+  wisp = wispUrl;
   const conn = new BareMux.BareMuxConnection('/bm/worker.js');
   if ((await conn.getTransport()) !== '/lc/index.mjs') {
     await conn.setTransport('/lc/index.mjs', [{ wisp }]);

@@ -126,7 +126,7 @@ class MenuHandler {
       this.handleDarkMode();
       this.darkModeActive = !this.darkModeActive;
       const span = this.elements.darkmode.querySelector('span');
-      if (span) span.textContent = this.darkModeActive ? 'Dark Mode' : 'Light Mode';
+      if (span) span.textContent = this.darkModeActive ? 'Light Mode' : 'Dark Mode';
       const icon = this.elements.darkmode.querySelector<HTMLElement>('[data-lucide]');
       if (icon) icon.setAttribute('data-lucide', this.darkModeActive ? 'sun' : 'moon');
       replaceIcons(this.elements.darkmode);
@@ -261,11 +261,12 @@ class MenuHandler {
       }
       const script = frame.contentDocument.createElement('script');
       script.src = 'https://cdn.jsdelivr.net/npm/eruda';
-      script.onload = () => win.eruda?.init?.();
+      script.onload = () => {
+        win.eruda?.init?.();
+        win.eruda?.show?.();
+      };
       frame.contentDocument.head.appendChild(script);
-    } catch (err) {
-      console.error('Inspector failed:', err);
-    }
+    } catch {}
   }
 
   private async handlePanic(): Promise<void> {
