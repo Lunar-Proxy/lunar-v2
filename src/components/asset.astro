@@ -10,7 +10,6 @@ interface Game {
   icon: string;
 }
 const { list = [] }: { list?: Game[] } = Astro.props;
-const sorted = [...list].sort((a, b) => a.name.localeCompare(b.name));
 const playsFile = join(process.cwd(), 'plays.json');
 let plays: Record<string, number> = {};
 try {
@@ -25,6 +24,10 @@ const popular = [...list]
   .slice(0, 6);
 const hasRealData = popular.some(g => g.count > 0);
 const finalPopular = hasRealData ? popular : [...list].sort(() => Math.random() - 0.5).slice(0, 6);
+const popularNames = new Set(finalPopular.map(g => g.name));
+const sorted = [...list]
+  .filter(g => !popularNames.has(g.name))
+  .sort((a, b) => a.name.localeCompare(b.name));
 ---
 
 <html lang="en">
@@ -41,28 +44,19 @@ const finalPopular = hasRealData ? popular : [...list].sort(() => Math.random() 
             data-view="grid"
             class="flex h-7 w-7 items-center justify-center rounded bg-[#252537]/60 text-white/70 transition-all duration-150"
           >
-            <i
-              data-lucide="grid-3x3"
-              class="h-3.5 w-3.5"
-            ></i>
+            <i data-lucide="grid-3x3" class="h-3.5 w-3.5"></i>
           </button>
           <button
             data-view="compact"
             class="flex h-7 w-7 items-center justify-center rounded text-white/50 transition-all duration-150"
           >
-            <i
-              data-lucide="layout-grid"
-              class="h-3.5 w-3.5"
-            ></i>
+            <i data-lucide="layout-grid" class="h-3.5 w-3.5"></i>
           </button>
           <button
             data-view="list"
             class="flex h-7 w-7 items-center justify-center rounded text-white/50 transition-all duration-150"
           >
-            <i
-              data-lucide="list"
-              class="h-3.5 w-3.5"
-            ></i>
+            <i data-lucide="list" class="h-3.5 w-3.5"></i>
           </button>
         </div>
       </div>
@@ -71,11 +65,8 @@ const finalPopular = hasRealData ? popular : [...list].sort(() => Math.random() 
         finalPopular.length > 0 && (
           <div>
             <div class="mb-3 flex items-center gap-2">
-              <i
-                data-lucide="flame"
-                class="h-4 w-4 text-orange-400"
-              />
-              <h2 class="text-sm font-semibold tracking-widest text-white/80 uppercase">Popular</h2>
+              <i data-lucide="flame" class="h-4 w-4 text-orange-400" />
+              <h2 class="text-sm font-semibold tracking-widest text-white/80">Popular</h2>
             </div>
             <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
               {finalPopular.map(g => (
@@ -121,31 +112,22 @@ const finalPopular = hasRealData ? popular : [...list].sort(() => Math.random() 
           data-random
           class="flex h-9 items-center gap-2 rounded-md border border-white/[0.08] bg-[#1e1e2f]/40 px-3 text-sm text-white/60 backdrop-blur-sm transition-all duration-150 hover:border-white/[0.15] hover:bg-[#1e1e2f]/60 hover:text-white/80"
         >
-          <i
-            data-lucide="shuffle"
-            class="h-3.5 w-3.5"
-          ></i>
+          <i data-lucide="shuffle" class="h-3.5 w-3.5"></i>
           Random
         </button>
         <button
           data-sort
           class="flex h-9 items-center gap-2 rounded-md border border-white/[0.08] bg-[#1e1e2f]/40 px-3 text-sm text-white/60 backdrop-blur-sm transition-all duration-150 hover:border-white/[0.15] hover:bg-[#1e1e2f]/60 hover:text-white/80"
         >
-          <i
-            data-lucide="arrow-up-down"
-            class="h-3.5 w-3.5"
-          ></i>
+          <i data-lucide="arrow-up-down" class="h-3.5 w-3.5"></i>
           <span>A-Z</span>
         </button>
       </div>
 
       <div>
         <div class="mb-3 flex items-center gap-2">
-          <i
-            data-lucide="grid-2x2"
-            class="h-4 w-4 text-white/40"
-          ></i>
-          <h2 class="text-sm font-semibold tracking-widest text-white/80 uppercase">All Games</h2>
+          <i data-lucide="grid-2x2" class="h-4 w-4 text-white/40"></i>
+          <h2 class="text-sm font-semibold tracking-widest text-white/80">All Games</h2>
         </div>
         <div
           data-container
@@ -172,15 +154,9 @@ const finalPopular = hasRealData ? popular : [...list].sort(() => Math.random() 
         </div>
       </div>
 
-      <div
-        data-empty
-        class="hidden flex-col items-center justify-center py-16 text-center"
-      >
+      <div data-empty class="hidden flex-col items-center justify-center py-16 text-center">
         <div class="rounded-xl border border-white/[0.08] bg-[#1e1e2f]/40 p-10 backdrop-blur-sm">
-          <i
-            data-lucide="inbox"
-            class="mx-auto mb-3 h-10 w-10 text-white/20"
-          ></i>
+          <i data-lucide="inbox" class="mx-auto mb-3 h-10 w-10 text-white/20"></i>
           <h3 class="mb-1 text-base font-semibold text-white/70">Nothing found</h3>
           <p class="text-sm text-white/40">Try a different search term</p>
         </div>

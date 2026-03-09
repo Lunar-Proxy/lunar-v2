@@ -1,17 +1,31 @@
 ---
 import '@/main.css';
 import ImportLucide from '../layouts/lucide.astro';
+import SettingsCard from '../components/opt.astro';
+
+const presets = [
+  { name: 'google', title: 'Google', img: '/a/images/co/go.ico', label: 'Google' },
+  { name: 'drive', title: 'Google Drive', img: '/a/images/co/drei.png', label: 'Drive' },
+  { name: 'classroom', title: 'Home', img: '/a/images/co/class.png', label: 'Class' },
+  { name: 'gmail', title: 'Gmail', img: '/a/images/co/gmail.png', label: 'Gmail' },
+  { name: 'youtube', title: 'YouTube', img: '/a/images/co/yt.png', label: 'YouTube' },
+  { name: 'docs', title: 'Google Docs', img: '/a/images/co/docs.png', label: 'Docs' },
+  { name: 'slack', title: 'Slack', img: '/a/images/co/slack.png', label: 'Slack' },
+  { name: 'canvas', title: 'Dashboard', img: '/a/images/co/canvas.png', label: 'Canvas' },
+];
+
+const engines = [
+  { value: 'https://duckduckgo.com/?q=', img: '/a/images/engines/ddg.ico', title: 'DuckDuckGo' },
+  { value: 'https://www.google.com/search?q=', img: '/a/images/co/go.ico', title: 'Google' },
+  { value: 'https://www.bing.com/search?q=', img: '/a/images/engines/bi.ico', title: 'Bing' },
+  { value: 'https://search.brave.com/search?q=', img: '/a/images/engines/br.jpeg', title: 'Brave' },
+];
 ---
 
 <html lang="en">
   <head>
     <title>Settings</title>
-    <script src="@scripts/of"></script>
-    <script
-      is:inline
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-DQZPCVEF89"
-    ></script>
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-DQZPCVEF89"></script>
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
@@ -21,621 +35,345 @@ import ImportLucide from '../layouts/lucide.astro';
       gtag('config', 'G-DQZPCVEF89');
     </script>
     <style>
-      button,
-      .nav-item,
-      a {
-        transition:
-          transform 0.15s ease,
-          background-color 0.2s ease,
-          border-color 0.2s ease,
-          color 0.2s ease,
-          opacity 0.2s ease;
+      html,
+      body,
+      * {
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
       }
-      button:active,
-      .nav-item:active {
-        transform: scale(0.97);
+      html::-webkit-scrollbar,
+      body::-webkit-scrollbar,
+      *::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        background: transparent !important;
       }
-      .proxy-button:hover,
-      .engine-button:hover,
-      [data-cloak-preset]:hover {
-        transform: translateY(-1px);
-      }
-      .proxy-button:active,
-      .engine-button:active,
-      [data-cloak-preset]:active {
-        transform: translateY(0) scale(0.98);
-      }
-      input {
-        transition:
-          border-color 0.2s ease,
-          opacity 0.2s ease,
-          box-shadow 0.2s ease;
-      }
-      input:focus {
-        box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+      .st .lucide {
+        stroke-width: 2.15;
       }
       .toggle {
-        transition: background-color 0.25s ease;
-      }
-      .toast {
         transition:
-          transform 0.3s ease,
-          opacity 0.3s ease;
-        transform: translateY(10px);
-        opacity: 0;
+          background-color 0.2s ease,
+          box-shadow 0.2s ease;
       }
-      .toast.show {
-        transform: translateY(0);
-        opacity: 1;
-      }
-      section {
-        transition: opacity 0.2s ease;
-      }
-      [data-about-blank]:hover,
-      [data-reset]:hover {
-        transform: translateY(-1px);
-      }
-      [data-about-blank]:active,
-      [data-reset]:active {
-        transform: translateY(0) scale(0.98);
+      .toggle:hover {
+        box-shadow: 0 0 8px rgba(99, 102, 241, 0.2);
       }
     </style>
   </head>
-  <body class="bg-background font-linux text-text-header min-h-screen p-6 md:p-8">
+  <body
+    class="st bg-background font-linux text-text-header min-h-screen p-6 text-sm leading-relaxed md:p-8"
+  >
     <div class="mx-auto max-w-5xl">
       <div class="flex gap-8">
         <nav class="hidden w-48 shrink-0 lg:block">
           <div class="sticky top-6 space-y-1">
-            <header class="mb-8">
-              <h1 class="mb-1 text-2xl font-bold">Settings</h1>
-              <p class="text-text-secondary text-sm">Customize Lunar</p>
+            <header class="mb-6">
+              <h1 class="mb-1 text-xl font-bold">Settings</h1>
+              <p class="text-text-secondary text-xs">Customize Lunar</p>
             </header>
             <a
               href="#privacy"
-              class="nav-item hover:text-text-header flex items-center gap-2.5 rounded-lg bg-[#6366f1]/10 px-3 py-2 text-sm text-[#6366f1] hover:bg-white/5"
+              class="nav-item flex items-center gap-2.5 rounded-lg bg-[#6366f1]/10 px-3 py-2 text-sm text-[#6366f1] transition-colors hover:bg-white/5"
               data-nav="privacy"
             >
-              <i
-                data-lucide="shield"
-                class="h-4 w-4"
-              ></i>Privacy
+              <i data-lucide="shield" class="h-4 w-4"></i>Privacy
             </a>
             <a
               href="#browsing"
-              class="nav-item text-text-secondary hover:text-text-header flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm hover:bg-white/5"
+              class="nav-item text-text-secondary hover:text-text-header flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-white/5"
               data-nav="browsing"
             >
-              <i
-                data-lucide="globe"
-                class="h-4 w-4"
-              ></i>Browsing
+              <i data-lucide="globe" class="h-4 w-4"></i>Browsing
             </a>
             <a
               href="#advanced"
-              class="nav-item text-text-secondary hover:text-text-header flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm hover:bg-white/5"
+              class="nav-item text-text-secondary hover:text-text-header flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-white/5"
               data-nav="advanced"
             >
-              <i
-                data-lucide="wrench"
-                class="h-4 w-4"
-              ></i>Advanced
+              <i data-lucide="wrench" class="h-4 w-4"></i>Advanced
             </a>
             <a
               href="#about"
-              class="nav-item text-text-secondary hover:text-text-header flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm hover:bg-white/5"
+              class="nav-item text-text-secondary hover:text-text-header flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-white/5"
               data-nav="about"
             >
-              <i
-                data-lucide="info"
-                class="h-4 w-4"
-              ></i>About
+              <i data-lucide="info" class="h-4 w-4"></i>About
             </a>
           </div>
         </nav>
-        <main class="flex-1 space-y-10">
-          <section
-            id="privacy"
-            data-section="privacy"
-          >
-            <h2 class="mb-4 flex items-center text-lg font-semibold">
-              <i
-                data-lucide="shield"
-                class="mr-2 h-5 w-5 text-[#6366f1]"
-              ></i>
-              Privacy
+        <main class="flex-1 space-y-8">
+          <section id="privacy" data-section="privacy">
+            <h2 class="mb-4 flex items-center gap-2 text-base font-semibold">
+              <i data-lucide="shield" class="h-5 w-5 text-[#6366f1]"></i>Privacy
             </h2>
             <div class="space-y-3">
-              <div class="bg-background-overlay/60 rounded-xl border border-white/6 p-5">
-                <h3 class="mb-2 font-medium">About:Blank Cloak</h3>
-                <p class="text-text-secondary mb-3 text-sm">
-                  Opens Lunar in a blank tab to hide from history
-                </p>
-                <input
-                  type="text"
-                  data-input="aboutBlankUrl"
-                  class="bg-background/80 mb-3 w-full rounded-lg border border-white/6 px-3 py-2.5 text-sm focus:border-[#6366f1]/40 focus:outline-none"
-                  placeholder="Redirect URL (e.g. https://classroom.google.com)"
-                />
-                <button
-                  data-about-blank
-                  class="bg-background/60 hover:bg-background/80 flex w-full items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm"
-                >
-                  <i
-                    data-lucide="external-link"
-                    class="h-4 w-4"
-                  ></i>Open in About:Blank
-                </button>
-              </div>
-              <div
-                class="bg-background-overlay/60 rounded-xl border border-white/6 p-5"
-                data-cloak-container
+              <SettingsCard
+                type="card"
+                title="About:Blank Cloak"
+                desc="Opens Lunar in a blank tab to hide from history"
               >
-                <div class="mb-4 flex items-center justify-between">
-                  <div>
-                    <h3 class="font-medium">Tab Cloak</h3>
-                    <p class="text-text-secondary text-sm">Change tab title and icon</p>
-                  </div>
-                  <div
-                    class="toggle"
-                    data-toggle="cloak"
-                  >
-                  </div>
-                </div>
-                <div
-                  data-cloak-inputs
-                  class="space-y-3 border-t border-white/6 pt-4"
+                <SettingsCard
+                  type="input"
+                  name="aboutBlankUrl"
+                  placeholder="Redirect URL (e.g. https://classroom.google.com)"
+                  class="mb-3"
+                />
+                <SettingsCard type="btn" icon="external-link" action="about-blank" full
+                  >Open in About:Blank</SettingsCard
                 >
-                  <div class="relative grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3">
-                    <button
-                      data-cloak-preset="google"
-                      data-preset-title="Google"
-                      data-preset-favicon="/a/images/co/go.ico"
-                      class="bg-background/60 hover:bg-background/80 flex w-full items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm"
-                    >
-                      <img
-                        src="/a/images/co/go.ico"
-                        class="h-4 w-4"
-                        alt=""
-                      />Google
-                    </button>
-                    <button
-                      data-cloak-preset="drive"
-                      data-preset-title="Google Drive"
-                      data-preset-favicon="/a/images/co/drei.png"
-                      class="bg-background/60 hover:bg-background/80 flex w-full items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm"
-                    >
-                      <img
-                        src="/a/images/co/drei.png"
-                        class="h-4 w-4"
-                        alt=""
-                      />Drive
-                    </button>
-                    <button
-                      data-cloak-preset="classroom"
-                      data-preset-title="Home"
-                      data-preset-favicon="/a/images/co/class.png"
-                      class="bg-background/60 hover:bg-background/80 flex w-full items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm"
-                    >
-                      <img
-                        src="/a/images/co/class.png"
-                        class="h-4 w-4"
-                        alt=""
-                      />Classroom
-                    </button>
-                    <button
-                      data-cloak-preset="gmail"
-                      data-preset-title="Gmail"
-                      data-preset-favicon="/a/images/co/gmail.png"
-                      class="bg-background/60 hover:bg-background/80 flex w-full items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm"
-                    >
-                      <img
-                        src="/a/images/co/gmail.png"
-                        class="h-4 w-4"
-                        alt=""
-                      />Gmail
-                    </button>
-                    <button
-                      data-cloak-preset="youtube"
-                      data-preset-title="YouTube"
-                      data-preset-favicon="/a/images/co/yt.png"
-                      class="bg-background/60 hover:bg-background/80 flex w-full items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm"
-                    >
-                      <img
-                        src="/a/images/co/yt.png"
-                        class="h-4 w-4"
-                        alt=""
-                      />YouTube
-                    </button>
-                    <button
-                      data-cloak-preset="docs"
-                      data-preset-title="Google Docs"
-                      data-preset-favicon="/a/images/co/docs.png"
-                      class="bg-background/60 hover:bg-background/80 flex w-full items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm"
-                    >
-                      <img
-                        src="/a/images/co/docs.png"
-                        class="h-4 w-4"
-                        alt=""
-                      />Docs
-                    </button>
-                    <button
-                      data-cloak-preset="slack"
-                      data-preset-title="Slack"
-                      data-preset-favicon="/a/images/co/slack.png"
-                      class="bg-background/60 hover:bg-background/80 flex w-full items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm"
-                    >
-                      <img
-                        src="/a/images/co/slack.png"
-                        class="h-4 w-4"
-                        alt=""
-                      />Slack
-                    </button>
-                    <button
-                      data-cloak-preset="canvas"
-                      data-preset-title="Dashboard"
-                      data-preset-favicon="/a/images/co/canvas.png"
-                      class="bg-background/60 hover:bg-background/80 flex w-full items-center justify-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm"
-                    >
-                      <img
-                        src="/a/images/co/canvas.png"
-                        class="h-4 w-4"
-                        alt=""
-                      />Canvas
-                    </button>
+              </SettingsCard>
+
+              <SettingsCard
+                type="toggle"
+                name="cloak"
+                title="Tab Cloak"
+                desc="Change tab title and icon"
+              >
+                <div data-cloak-inputs class="space-y-2.5 border-t border-white/5 pt-3">
+                  <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                    {
+                      presets.map(p => (
+                        <SettingsCard type="preset" name={p.name} title={p.title} img={p.img}>
+                          {p.label}
+                        </SettingsCard>
+                      ))
+                    }
                   </div>
-                  <input
-                    type="text"
-                    data-input="cloakTitle"
+                  <SettingsCard
+                    type="input"
+                    name="cloakTitle"
                     placeholder="Tab title"
                     disabled
-                    class="cloak-input bg-background/80 w-full rounded-lg border border-white/6 px-4 py-2.5 text-sm focus:border-[#6366f1]/40 focus:outline-none disabled:opacity-50"
+                    class="cloak-input"
                   />
-                  <input
-                    type="text"
-                    data-input="cloakFavicon"
+                  <SettingsCard
+                    type="input"
+                    name="cloakFavicon"
                     placeholder="Favicon URL"
                     disabled
-                    class="cloak-input bg-background/80 w-full rounded-lg border border-white/6 px-4 py-2.5 text-sm focus:border-[#6366f1]/40 focus:outline-none disabled:opacity-50"
+                    class="cloak-input"
                   />
                 </div>
-              </div>
-              <div
-                class="bg-background-overlay/60 flex items-center justify-between rounded-xl border border-white/6 p-5"
+              </SettingsCard>
+
+              <SettingsCard
+                type="toggle"
+                name="tabSwitchCloak"
+                title="Tab Switch Cloak"
+                desc="Auto-cloak when you switch tabs"
+              />
+              <SettingsCard
+                type="toggle"
+                name="beforeUnload"
+                title="Anti-close"
+                desc="Confirm prompt before closing"
+              />
+
+              <SettingsCard
+                type="toggle"
+                name="panicKey"
+                title="Panic Key"
+                desc="Quick redirect with a keybind"
               >
-                <div>
-                  <h3 class="font-medium">Tab Switch Cloak</h3>
-                  <p class="text-text-secondary text-sm">Auto-cloak when you switch tabs</p>
-                </div>
-                <div
-                  class="toggle"
-                  data-toggle="tabSwitchCloak"
-                >
-                </div>
-              </div>
-              <div
-                class="bg-background-overlay/60 flex items-center justify-between rounded-xl border border-white/6 p-5"
-              >
-                <div>
-                  <h3 class="font-medium">Anti-close</h3>
-                  <p class="text-text-secondary text-sm">
-                    Show a confirm prompt before closing lunar. Helpful for some filters that
-                    autoclose tabs.
-                  </p>
-                </div>
-                <div
-                  class="toggle"
-                  data-toggle="beforeUnload"
-                >
-                </div>
-              </div>
-              <div
-                class="bg-background-overlay/60 rounded-xl border border-white/6 p-5"
-                data-panic-container
-              >
-                <div class="mb-4 flex items-center justify-between">
-                  <div>
-                    <h3 class="font-medium">Panic Key</h3>
-                    <p class="text-text-secondary text-sm">Quickly redirect with a keybind</p>
-                  </div>
-                  <div
-                    class="toggle"
-                    data-toggle="panicKey"
-                  >
-                  </div>
-                </div>
-                <div
-                  data-panic-inputs
-                  class="grid grid-cols-1 gap-3 sm:grid-cols-2"
-                >
-                  <input
-                    type="text"
-                    data-input="panicLoc"
-                    placeholder="URL to redirect to"
+                <div data-panic-inputs class="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                  <SettingsCard
+                    type="input"
+                    name="panicLoc"
+                    placeholder="Redirect URL"
                     disabled
-                    class="panic-input bg-background/80 w-full rounded-lg border border-white/6 px-4 py-2.5 text-sm focus:border-[#6366f1]/40 focus:outline-none disabled:opacity-50"
+                    class="panic-input"
                   />
-                  <input
-                    type="text"
-                    data-input="panicKeyBind"
+                  <SettingsCard
+                    type="input"
+                    name="panicKeyBind"
                     placeholder="Click to set keybind"
-                    readonly
                     disabled
-                    class="panic-input bg-background/80 w-full cursor-pointer rounded-lg border border-white/6 px-4 py-2.5 text-sm focus:border-[#6366f1]/40 focus:outline-none disabled:opacity-50"
+                    readonly
+                    class="panic-input cursor-pointer"
                   />
                 </div>
-              </div>
+              </SettingsCard>
             </div>
           </section>
-          <section
-            id="browsing"
-            data-section="browsing"
-          >
-            <h2 class="mb-4 flex items-center gap-2 text-lg font-semibold">
-              <i
-                data-lucide="globe"
-                class="h-5 w-5 text-pink-400"
-              ></i>
-              Browsing
+          <section id="browsing" data-section="browsing">
+            <h2 class="mb-4 flex items-center gap-2 text-base font-semibold">
+              <i data-lucide="globe" class="h-5 w-5 text-pink-400"></i>Browsing
             </h2>
             <div class="space-y-3">
-              <div class="bg-background-overlay/60 rounded-xl border border-white/6 p-5">
-                <h3 class="mb-3 font-medium">Proxy Backend</h3>
-                <div class="grid grid-cols-2 gap-3">
+              <SettingsCard type="card" title="Proxy Backend">
+                <div class="grid grid-cols-2 gap-2.5">
+                  <SettingsCard
+                    type="proxy"
+                    name="scramjet"
+                    title="Scramjet"
+                    desc="Experimental, faster"
+                  />
+                  <SettingsCard
+                    type="proxy"
+                    name="ultraviolet"
+                    title="Ultraviolet"
+                    desc="More stable, slower"
+                  />
+                </div>
+              </SettingsCard>
+              <SettingsCard type="card" title="Transport">
+                <div class="grid grid-cols-2 gap-2.5">
                   <button
-                    data-proxy="scramjet"
-                    class="proxy-button bg-background/60 relative rounded-lg border border-white/6 p-4 text-left hover:border-[#6366f1]/30 hover:bg-[#6366f1]/10"
+                    data-transport="ep"
+                    class="bg-background/50 relative w-full rounded-lg border border-white/5 p-3 text-left transition-all duration-150 hover:scale-[1.02] hover:border-indigo-500/20 hover:bg-indigo-500/5 active:scale-[0.98]"
                   >
-                    <div class="text-sm font-medium">Scramjet</div>
-                    <div class="text-text-secondary text-xs">Experimental, faster</div>
-                    <div class="proxy-check absolute top-2 right-2 hidden">
-                      <i
-                        data-lucide="check-circle"
-                        class="h-4 w-4 text-[#6366f1]"
-                      ></i>
-                    </div>
+                    <div class="text-sm font-medium">Epoxy</div>
+                    <div class="text-text-secondary text-xs">Slower</div>
+                    <span class="proxy-check absolute top-2 right-2 hidden">
+                      <i data-lucide="check-circle" class="h-4 w-4 text-[#6366f1]"></i>
+                    </span>
                   </button>
                   <button
-                    data-proxy="ultraviolet"
-                    class="proxy-button bg-background/60 relative rounded-lg border border-white/6 p-4 text-left hover:border-pink-400/30 hover:bg-pink-400/10"
+                    data-transport="lc"
+                    class="bg-background/50 relative w-full rounded-lg border border-white/5 p-3 text-left transition-all duration-150 hover:scale-[1.02] hover:border-indigo-500/20 hover:bg-indigo-500/5 active:scale-[0.98]"
                   >
-                    <div class="text-sm font-medium">Ultraviolet</div>
-                    <div class="text-text-secondary text-xs">More stable, slower</div>
-                    <div class="proxy-check absolute top-2 right-2 hidden">
-                      <i
-                        data-lucide="check-circle"
-                        class="h-4 w-4 text-pink-400"
-                      ></i>
-                    </div>
+                    <div class="text-sm font-medium">Libcurl</div>
+                    <div class="text-text-secondary text-xs">Fastest</div>
+                    <span class="proxy-check absolute top-2 right-2 hidden">
+                      <i data-lucide="check-circle" class="h-4 w-4 text-[#6366f1]"></i>
+                    </span>
                   </button>
                 </div>
-              </div>
-              <div class="bg-background-overlay/60 rounded-xl border border-white/6 p-5">
-                <h3 class="mb-3 font-medium">Search Engine</h3>
-                <div class="mb-4 grid grid-cols-4 gap-2">
-                  <button
-                    data-engine="https://duckduckgo.com/?q="
-                    class="engine-button bg-background/60 relative flex items-center justify-center gap-2 rounded-lg border border-white/6 py-2.5 text-xs hover:bg-[#6366f1]/10"
-                  >
-                    <img
-                      src="/a/images/engines/ddg.ico"
-                      alt="DuckDuckGo"
-                      class="h-4 w-4"
-                    />
-                    DuckDuckGo
-                    <div class="engine-check absolute -top-1 -right-1 hidden">
-                      <i
-                        data-lucide="check-circle"
-                        class="h-3.5 w-3.5 text-[#6366f1]"
-                      ></i>
-                    </div>
-                  </button>
-                  <button
-                    data-engine="https://www.google.com/search?q="
-                    class="engine-button bg-background/60 relative flex items-center justify-center gap-2 rounded-lg border border-white/6 py-2.5 text-xs hover:bg-[#6366f1]/10"
-                  >
-                    <img
-                      src="/a/images/co/go.ico"
-                      alt="Google"
-                      class="h-4 w-4"
-                    />
-                    Google
-                    <div class="engine-check absolute -top-1 -right-1 hidden">
-                      <i
-                        data-lucide="check-circle"
-                        class="h-3.5 w-3.5 text-[#6366f1]"
-                      ></i>
-                    </div>
-                  </button>
-                  <button
-                    data-engine="https://www.bing.com/search?q="
-                    class="engine-button bg-background/60 relative flex items-center justify-center gap-2 rounded-lg border border-white/6 py-2.5 text-xs hover:bg-[#6366f1]/10"
-                  >
-                    <img
-                      src="/a/images/engines/bi.ico"
-                      alt="Bing"
-                      class="h-4 w-4"
-                    />
-                    Bing
-                    <div class="engine-check absolute -top-1 -right-1 hidden">
-                      <i
-                        data-lucide="check-circle"
-                        class="h-3.5 w-3.5 text-[#6366f1]"
-                      ></i>
-                    </div>
-                  </button>
-                  <button
-                    data-engine="https://search.brave.com/search?q="
-                    class="engine-button bg-background/60 relative flex items-center justify-center gap-2 rounded-lg border border-white/6 py-2.5 text-xs hover:bg-[#6366f1]/10"
-                  >
-                    <img
-                      src="/a/images/engines/br.jpeg"
-                      alt="Brave"
-                      class="h-4 w-4"
-                    />
-                    Brave
-                    <div class="engine-check absolute -top-1 -right-1 hidden">
-                      <i
-                        data-lucide="check-circle"
-                        class="h-3.5 w-3.5 text-[#6366f1]"
-                      ></i>
-                    </div>
-                  </button>
+              </SettingsCard>
+              <SettingsCard type="card" title="Search Engine">
+                <div class="mb-3 grid grid-cols-4 gap-2">
+                  {
+                    engines.map(e => (
+                      <SettingsCard type="engine" value={e.value} img={e.img} title={e.title} />
+                    ))
+                  }
                 </div>
-                <input
-                  type="text"
-                  data-input="engine"
-                  placeholder="Custom search URL (ends with ?q= or &q=)"
-                  class="bg-background/80 w-full rounded-lg border border-white/6 px-4 py-2.5 text-sm focus:border-[#6366f1]/40 focus:outline-none"
+                <SettingsCard
+                  type="input"
+                  name="engine"
+                  placeholder="Custom search URL (ends with ?q=)"
                 />
-                <div class="mt-3">
-                  <button
-                    data-reset="engine"
-                    class="bg-background/60 hover:bg-background/80 rounded-lg border border-white/6 px-3 py-2 text-sm"
-                    >Reset Search Engine</button
-                  >
-                </div>
-              </div>
-              <div
-                class="bg-background-overlay/60 flex items-center justify-between rounded-xl border border-white/6 p-5"
-              >
-                <div>
-                  <h3 class="font-medium">Ad Block (experimental)</h3>
-                  <p class="text-text-secondary text-sm">Block ads/trackers while browsing</p>
-                </div>
-                <div
-                  class="toggle"
-                  data-toggle="adBlock"
-                >
-                </div>
-              </div>
+                <SettingsCard type="btn" reset="engine" class="mt-2.5">Reset</SettingsCard>
+              </SettingsCard>
+
+              <SettingsCard
+                type="toggle"
+                name="adBlock"
+                title="Ad Block"
+                desc="Block ads/trackers (experimental)"
+              />
             </div>
           </section>
-          <section
-            id="advanced"
-            data-section="advanced"
-          >
-            <h2 class="mb-4 flex items-center gap-2 text-lg font-semibold">
-              <i
-                data-lucide="wrench"
-                class="h-5 w-5 text-amber-400"
-              ></i>
-              Advanced
+          <section id="advanced" data-section="advanced">
+            <h2 class="mb-4 flex items-center gap-2 text-base font-semibold">
+              <i data-lucide="wrench" class="h-5 w-5 text-amber-400"></i>Advanced
             </h2>
             <div class="space-y-3">
-              <div class="bg-background-overlay/60 rounded-xl border border-white/6 p-5">
-                <h3 class="mb-2 font-medium">Wisp Server</h3>
-                <p class="text-text-secondary mb-3 text-sm">Change the websocket server URL</p>
-                <input
-                  type="text"
-                  data-input="wispUrl"
-                  placeholder="ws://localhost:3000/wisp/"
-                  class="bg-background/80 w-full rounded-lg border border-white/6 px-4 py-2.5 text-sm focus:border-[#6366f1]/40 focus:outline-none"
-                />
-                <div class="mt-3">
-                  <button
-                    data-reset="wisp"
-                    class="bg-background/60 hover:bg-background/80 rounded-lg border border-white/6 px-3 py-2 text-sm"
-                    >Reset Wisp</button
-                  >
-                </div>
-              </div>
-              <div class="bg-background-overlay/60 rounded-xl border border-white/6 p-5">
-                <h3 class="mb-2 flex items-center gap-2 font-medium">
-                  <i
-                    data-lucide="alert-triangle"
-                    class="h-4 w-4 text-orange-400/80"
-                  ></i>
-                  Clear All Data
+              <SettingsCard type="card" title="Wisp Server" desc="Change the websocket server URL">
+                <SettingsCard type="input" name="wispUrl" placeholder="ws://localhost:3000/wisp/" />
+                <SettingsCard type="btn" reset="wisp" class="mt-2.5">Reset</SettingsCard>
+              </SettingsCard>
+
+              <SettingsCard type="card">
+                <h3 class="mb-1.5 flex items-center gap-1.5 text-sm font-medium">
+                  <i data-lucide="alert-triangle" class="h-3.5 w-3.5 text-orange-400/80"></i>
+                  Reset settings to default
                 </h3>
-                <p class="text-text-secondary mb-3 text-sm">This action cannot be undone</p>
-                <button
-                  data-reset="reset"
-                  class="bg-background/60 hover:bg-background/80 rounded-lg border border-white/6 px-4 py-2 text-sm"
-                  >Clear All Data</button
-                >
-              </div>
+                <p class="text-text-secondary mb-2.5 text-xs">This action cannot be undone</p>
+                <SettingsCard type="btn" reset="reset">Reset</SettingsCard>
+              </SettingsCard>
             </div>
           </section>
-          <section
-            id="about"
-            data-section="about"
-          >
-            <h2 class="mb-4 flex items-center gap-2 text-lg font-semibold">
-              <i
-                data-lucide="info"
-                class="h-5 w-5 text-[#6366f1]"
-              ></i>
-              About
+          <section id="about" data-section="about">
+            <h2 class="mb-4 flex items-center gap-2 text-base font-semibold">
+              <i data-lucide="info" class="h-5 w-5 text-[#6366f1]"></i>About Lunar
             </h2>
-            <div class="bg-background-overlay/60 rounded-xl border border-white/6 p-5">
-              <div class="mb-4 flex items-center gap-4">
-                <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-[#6366f1]/20">
-                  <i
-                    data-lucide="moon"
-                    class="h-6 w-6 text-[#6366f1]"
-                  ></i>
-                </div>
-                <div>
-                  <h3 class="text-lg font-semibold">Lunar</h3>
-                  <p class="text-text-secondary text-sm">v{VERSION}</p>
-                </div>
-              </div>
-              <div class="mb-4 space-y-2 text-sm">
-                <div class="flex justify-between">
-                  <span class="text-text-secondary">Developed by</span><span>Bearcattt</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-text-secondary">Built with</span><span
-                    >Astro, TypeScript, Tailwind</span
+            <div class="space-y-3">
+              <SettingsCard type="card">
+                <div class="flex items-center gap-3">
+                  <div
+                    class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#6366f1]/15"
                   >
+                    <i data-lucide="moon" class="h-5 w-5 text-[#6366f1]"></i>
+                  </div>
+                  <h3 class="text-base font-semibold">Lunar v{VERSION}</h3>
                 </div>
-              </div>
-              <div class="flex gap-2">
-                <a
-                  href="https://github.com/lunar-proxy/lunar-v2"
-                  target="_blank"
-                  class="bg-background/60 flex items-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm transition-colors duration-150 hover:border-[#6366f1]/30 hover:bg-[#6366f1]/10 hover:text-[#6366f1]"
-                >
-                  <i
-                    data-lucide="github"
-                    class="h-4 w-4"
-                  ></i>GitHub
-                </a>
-                <a
-                  href="https://discord.gg/fuPtWjYuf8"
-                  target="_blank"
-                  class="bg-background/60 flex items-center gap-2 rounded-lg border border-white/6 px-3 py-2 text-sm transition-colors duration-150 hover:border-pink-400/30 hover:bg-pink-400/10 hover:text-pink-400"
-                >
-                  <i
-                    data-lucide="message-circle"
-                    class="h-4 w-4"
-                  ></i>Discord
-                </a>
-              </div>
+              </SettingsCard>
+
+              <SettingsCard type="card">
+                <h3 class="mb-3 flex items-center gap-1.5 text-xs font-semibold">
+                  <i data-lucide="badge-info" class="h-3.5 w-3.5 text-[#6366f1]"></i>Credits
+                </h3>
+                <div class="space-y-3 text-xs">
+                  <div>
+                    <p
+                      class="text-text-secondary mb-1.5 flex items-center gap-1.5 text-[10px] tracking-wide uppercase"
+                    >
+                      <i data-lucide="users" class="h-3 w-3"></i>Team
+                    </p>
+                    <div class="flex items-center justify-between">
+                      <span>Bearcattt</span>
+                      <span class="text-text-secondary">Owner + Developer</span>
+                    </div>
+                  </div>
+                  <div class="border-t border-white/5 pt-3">
+                    <p
+                      class="text-text-secondary mb-1.5 flex items-center gap-1.5 text-[10px] tracking-wide uppercase"
+                    >
+                      <i data-lucide="package" class="h-3 w-3"></i>Stack
+                    </p>
+                    <div class="space-y-1">
+                      <div class="flex items-center justify-between">
+                        <span>Frontend</span>
+                        <span class="text-text-secondary">Astro, TypeScript, Tailwind</span>
+                      </div>
+                      <div class="flex items-center justify-between">
+                        <span>Icons</span>
+                        <span class="text-text-secondary">Lucide</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </SettingsCard>
             </div>
           </section>
         </main>
       </div>
     </div>
+    <div
+      id="reload-toast"
+      class="bg-background-overlay/90 text-text-header pointer-events-none fixed right-6 bottom-6 translate-y-full rounded-xl border border-white/10 px-4 py-3 opacity-0 backdrop-blur-sm transition-all duration-300 ease-out"
+      style="z-index:9999"
+    >
+      <p class="text-sm font-medium">Settings applied</p>
+      <p class="text-text-secondary text-xs">Reload to apply changes</p>
+    </div>
   </body>
   <ImportLucide />
   <script>
-    import('../utils/st').then(({ SettingsManager }) => SettingsManager.init());
-    import('../utils/config').then(({ default: ConfigAPI }) => {
-      document.querySelector('[data-about-blank]')?.addEventListener('click', async () => {
-        if (top?.location.href === 'about:blank') return;
-        const win = top?.window.open();
-        if (top && top.window) {
-          top.window.location.href = (await ConfigAPI.get('panicLoc')) || 'https://google.com';
+    import('../utils/st').then(({ SettingsManager }) => {
+      SettingsManager.init();
+      let reloadTimeout: ReturnType<typeof setTimeout> | null = null;
+      SettingsManager.notify = function () {
+        const el = document.getElementById('reload-toast');
+        if (!el) return;
+        if (reloadTimeout) {
+          clearTimeout(reloadTimeout);
+          reloadTimeout = null;
         }
-        if (!win) return;
-        const iframe = win.document.createElement('iframe');
-        iframe.style.cssText = 'width:100%;height:100vh;border:0;margin:0;padding:0';
-        iframe.src = location.origin + '/';
-        win.document.body.style.margin = '0';
-        win.document.title = 'about:blank';
-        win.document.body.appendChild(iframe);
-      });
+        el.classList.add('opacity-0', 'pointer-events-none', 'translate-y-full');
+        el.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
+        setTimeout(() => {
+          el.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-full');
+          el.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0');
+          reloadTimeout = setTimeout(() => {
+            el.classList.add('opacity-0', 'pointer-events-none', 'translate-y-full');
+            el.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
+            reloadTimeout = null;
+          }, 5000);
+        }, 40);
+      };
     });
   </script>
 </html>

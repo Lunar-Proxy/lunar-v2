@@ -1,4 +1,5 @@
 import ConfigAPI from './config';
+
 export class SettingsManager {
   private static panicHandler: (e: KeyboardEvent) => void = () => {};
   static async enable(key: string) {
@@ -68,7 +69,7 @@ export class SettingsManager {
       SettingsManager.setCloak(
         true,
         (await ConfigAPI.get('cloakTitle')) as string,
-        (await ConfigAPI.get('cloakFavicon')) as string,
+        (await ConfigAPI.get('cloakFavicon')) as string
       );
     } else {
       SettingsManager.setCloak(false);
@@ -139,6 +140,42 @@ export class SettingsManager {
     const check = btn.querySelector('.proxy-check');
     if (check) check.classList.add('hidden');
   }
+  static highlightTransport(btn: Element) {
+    btn.classList.add('border-[#6366f1]', 'bg-[#6366f1]/10');
+    const check = btn.querySelector('.proxy-check');
+    if (check) check.classList.remove('hidden');
+  }
+  static unhighlightTransport(btn: Element) {
+    btn.classList.remove('border-[#6366f1]', 'bg-[#6366f1]/10');
+    const check = btn.querySelector('.proxy-check');
+    if (check) check.classList.add('hidden');
+  }
+  static initTransport() {
+    const buttons = document.querySelectorAll('[data-transport]');
+    const update = (val: string) => {
+      buttons.forEach(btn => {
+        if (btn.getAttribute('data-transport') === val) {
+          SettingsManager.highlightTransport(btn);
+        } else {
+          SettingsManager.unhighlightTransport(btn);
+        }
+      });
+    };
+    buttons.forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const name = btn.getAttribute('data-transport');
+        if (name === 'ep') {
+          await ConfigAPI.set('transport', 'ep');
+          update('ep');
+        } else if (name === 'lc') {
+          await ConfigAPI.set('transport', 'lc');
+          update('lc');
+        }
+        this.notify();
+      });
+    });
+    ConfigAPI.get('transport').then(val => update(val === 'lc' ? 'lc' : 'ep'));
+  }
   static initNav() {
     const items = document.querySelectorAll('[data-nav]');
     const activate = (item: Element, target: string) => {
@@ -183,7 +220,8 @@ export class SettingsManager {
           current = section.getAttribute('data-section') || current;
         last = section;
       });
-      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 2) {
+      const root = document.documentElement as HTMLElement | null;
+      if (root && window.innerHeight + window.scrollY >= root.scrollHeight - 2) {
         current = (last as unknown as Element)?.getAttribute('data-section') || current;
       }
       if (current !== active) {
@@ -246,10 +284,10 @@ export class SettingsManager {
               cl.classList.remove('active');
               await this.disable('cloak');
               const titleIn = document.querySelector(
-                '[data-input="cloakTitle"]',
+                '[data-input="cloakTitle"]'
               ) as HTMLInputElement;
               const iconIn = document.querySelector(
-                '[data-input="cloakFavicon"]',
+                '[data-input="cloakFavicon"]'
               ) as HTMLInputElement;
               if (titleIn) titleIn.disabled = true;
               if (iconIn) iconIn.disabled = true;
@@ -289,13 +327,13 @@ export class SettingsManager {
         this.setCloak(
           true,
           (document.querySelector('[data-input="cloakTitle"]') as HTMLInputElement)?.value,
-          (document.querySelector('[data-input="cloakFavicon"]') as HTMLInputElement)?.value,
+          (document.querySelector('[data-input="cloakFavicon"]') as HTMLInputElement)?.value
         );
       }
     }
     if (key === 'engine') {
       const matched = Array.from(document.querySelectorAll('[data-engine]')).some(
-        b => b.getAttribute('data-engine') === el.value,
+        b => b.getAttribute('data-engine') === el.value
       );
       if (!matched)
         document.querySelectorAll('[data-engine]').forEach(b => this.unhighlightEngine(b));
@@ -432,7 +470,7 @@ export class SettingsManager {
         this.setCloak(
           true,
           cfg.cloakTitle || 'Google',
-          cfg.cloakFavicon || 'https://www.google.com/favicon.ico',
+          cfg.cloakFavicon || 'https://www.google.com/favicon.ico'
         );
       }
     }
@@ -493,6 +531,7 @@ export class SettingsManager {
     this.initEngines();
     this.initPresets();
     this.initProxyBackend();
+    this.initTransport();
     this.initPanicKey();
     document.querySelector('[data-reset="reset"]')?.addEventListener('click', () => this.reset());
     document.querySelector('[data-reset="wisp"]')?.addEventListener('click', async () => {

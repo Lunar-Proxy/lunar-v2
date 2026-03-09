@@ -2,14 +2,7 @@ import ConfigAPI from './config';
 import { scramjetWrapper, vWrapper } from './pro';
 import { TabManager } from './tb';
 import { validateUrl } from './url';
-
-const $reload = document.getElementById('refresh') as HTMLButtonElement | null;
-const $back = document.getElementById('back') as HTMLButtonElement | null;
-const $fwd = document.getElementById('forward') as HTMLButtonElement | null;
-const $bar = document.getElementById('urlbar') as HTMLInputElement | null;
-const $fav = document.getElementById('fav') as HTMLButtonElement | null;
-const $home = document.getElementById('home') as HTMLElement | null;
-const $side = document.querySelector('aside');
+import { shadow, ready } from './shadow';
 
 const routes: Record<string, string> = {
   'lunar://settings': '/st',
@@ -20,18 +13,25 @@ const routes: Record<string, string> = {
 const byPath = Object.fromEntries(Object.entries(routes).map(([k, v]) => [v, k]));
 
 let wisp: string;
+let reloadBtn: HTMLButtonElement | null = null;
+let backBtn: HTMLButtonElement | null = null;
+let forwardBtn: HTMLButtonElement | null = null;
+let urlBar: HTMLInputElement | null = null;
+let favBtn: HTMLButtonElement | null = null;
+let homeBtn: HTMLElement | null = null;
+let sidebar: Element | null = null;
 
 function frame(): HTMLIFrameElement | null {
   const id = TabManager.activeTabId;
   if (!id) return null;
-  return document.getElementById(`frame-${id}`) as HTMLIFrameElement | null;
+  return shadow.querySelector(`#frame-${id}`) as HTMLIFrameElement | null;
 }
 
 function spin(): void {
-  if (!$reload) return;
-  $reload.style.animation = 'none';
-  $reload.offsetWidth;
-  $reload.style.animation = 'spin 0.4s linear';
+  if (!reloadBtn) return;
+  reloadBtn.style.animation = 'none';
+  reloadBtn.offsetWidth;
+  reloadBtn.style.animation = 'spin 0.4s linear';
 }
 
 function go(url: string): void {
@@ -73,7 +73,7 @@ async function syncFav(): Promise<void> {
   const decoded = await decodeUrl(stripPrefix(f.src));
   const bms: any[] = (await ConfigAPI.get('bm')) || [];
   const saved = bms.some(b => norm(b.redir) === norm(decoded));
-  const svg = $fav?.querySelector('svg');
+  const svg = favBtn?.querySelector('svg');
   if (svg) {
     svg.style.fill = saved ? '#a8a3c7' : 'none';
     svg.style.stroke = saved ? '#a8a3c7' : '';
@@ -82,7 +82,7 @@ async function syncFav(): Promise<void> {
 
 async function toggleFav(): Promise<void> {
   const f = frame();
-  if (!f || !$bar) return;
+  if (!f || !urlBar) return;
   const decoded = await decodeUrl(stripPrefix(f.src));
   const bms: any[] = (await ConfigAPI.get('bm')) || [];
   const idx = bms.findIndex(b => norm(b.redir) === norm(decoded));
@@ -104,8 +104,8 @@ async function toggleFav(): Promise<void> {
 }
 
 async function submit(): Promise<void> {
-  if (!$bar) return;
-  const input = $bar.value.trim();
+  if (!urlBar) return;
+  const input = urlBar.value.trim();
 
   if (routes[input]) {
     spin();
@@ -114,7 +114,10 @@ async function submit(): Promise<void> {
   }
 
   const conn = new BareMux.BareMuxConnection('/bm/worker.js');
-  if ((await conn.getTransport()) !== '/lc/index.mjs') {
+  const transport = await ConfigAPI.get('transport');
+  if (transport === 'ep' && (await conn.getTransport()) !== '/ep/index.mjs') {
+    await conn.setTransport('/ep/index.mjs', [{ wisp }]);
+  } else if (transport === 'lc' && (await conn.getTransport()) !== '/lc/index.mjs') {
     await conn.setTransport('/lc/index.mjs', [{ wisp }]);
   }
 
@@ -132,13 +135,13 @@ async function submit(): Promise<void> {
 
 function onSidebarClick(e: MouseEvent): void {
   const btn = (e.target as HTMLElement).closest('button');
-  if (!btn || !$bar) return;
+  if (!btn || !urlBar) return;
   e.preventDefault();
   e.stopPropagation();
   const dataUrl = btn.dataset.url;
   if (!dataUrl) return;
   const display = (dataUrl === '/' ? 'lunar://new' : byPath[dataUrl]) ?? dataUrl;
-  $bar.value = display;
+  urlBar.value = display;
   spin();
   go(routes[display] ?? dataUrl);
 }
@@ -153,46 +156,56 @@ async function setup(): Promise<void> {
   }
 }
 
-$reload?.addEventListener('click', e => {
-  e.preventDefault();
-  e.stopPropagation();
-  frame()?.contentWindow?.location.reload();
-});
+ready.then(() => {
+  reloadBtn = shadow.querySelector('#refresh') as HTMLButtonElement | null;
+  backBtn = shadow.querySelector('#back') as HTMLButtonElement | null;
+  forwardBtn = shadow.querySelector('#forward') as HTMLButtonElement | null;
+  urlBar = shadow.querySelector('#urlbar') as HTMLInputElement | null;
+  favBtn = shadow.querySelector('#fav') as HTMLButtonElement | null;
+  homeBtn = shadow.querySelector('#home') as HTMLElement | null;
+  sidebar = shadow.querySelector('aside');
 
-$back?.addEventListener('click', e => {
-  e.preventDefault();
-  e.stopPropagation();
-  spin();
-  frame()?.contentWindow?.history.back();
-});
-
-$fwd?.addEventListener('click', e => {
-  e.preventDefault();
-  e.stopPropagation();
-  spin();
-  frame()?.contentWindow?.history.forward();
-});
-
-$home?.addEventListener('click', e => {
-  e.preventDefault();
-  e.stopPropagation();
-  spin();
-  go('/new');
-});
-
-$fav?.addEventListener('click', e => {
-  e.preventDefault();
-  e.stopPropagation();
-  toggleFav();
-});
-
-$bar?.addEventListener('keydown', e => {
-  if (e.key === 'Enter') {
+  reloadBtn?.addEventListener('click', e => {
     e.preventDefault();
-    submit();
-  }
-});
+    e.stopPropagation();
+    frame()?.contentWindow?.location.reload();
+  });
 
-$side?.addEventListener('click', onSidebarClick);
-TabManager.onUrlChange(syncFav);
-setup();
+  backBtn?.addEventListener('click', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    spin();
+    frame()?.contentWindow?.history.back();
+  });
+
+  forwardBtn?.addEventListener('click', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    spin();
+    frame()?.contentWindow?.history.forward();
+  });
+
+  homeBtn?.addEventListener('click', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    spin();
+    go('/new');
+  });
+
+  favBtn?.addEventListener('click', e => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleFav();
+  });
+
+  urlBar?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      submit();
+    }
+  });
+
+  sidebar?.addEventListener('click', onSidebarClick as EventListener);
+  TabManager.onUrlChange(syncFav);
+  setup();
+});

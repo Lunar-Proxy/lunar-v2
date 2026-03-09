@@ -1,53 +1,28 @@
 ---
 import '@/main.css';
-import ImportLucide from '../layouts/lucide.astro';
 ---
 
 <!doctype html>
-<html
-  lang="en"
-  style="background:#11121c;"
->
+<html lang="en" style="background:#11121c;">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-    />
-    <meta
-      name="generator"
-      content={Astro.generator}
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="generator" content={Astro.generator} />
     <title>IXL | Math, Language Arts, Science, Social Studies, and Spanish</title>
     <meta
       name="description"
       content="IXL is the world's most popular subscription-based learning site for K–12. Used by over 17 million students, IXL provides personalized learning in more than 17,000 topics, covering math, language arts, science, social studies, and Spanish. Interactive questions, awards, and certificates keep kids motivated as they master skills."
     />
-    <link
-      rel="icon"
-      type="image/x-icon"
-      href="/favicon.ico"
-    />
+    <script src="@scripts/shadow"></script>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <style>
       html,
       body {
         background: #11121c;
-      }
-      .seo-hidden {
-        position: absolute;
-        left: -9999px;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
+        color: white;
       }
     </style>
-    <script src="@scripts/config"></script>
-    <script src="@scripts/index"></script>
-    <script
-      is:inline
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-DQZPCVEF89"
-    ></script>
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-DQZPCVEF89"></script>
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
@@ -56,56 +31,101 @@ import ImportLucide from '../layouts/lucide.astro';
       gtag('js', new Date());
       gtag('config', 'G-DQZPCVEF89');
     </script>
-    <link
-      rel="preconnect"
-      href="https://fonts.googleapis.com"
-      crossorigin
-    />
-    <link
-      rel="preconnect"
-      href="https://fonts.gstatic.com"
-      crossorigin
-    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   </head>
-  <body
-    class="flex h-screen w-screen overflow-hidden text-gray-900"
-    style="background:#11121c;"
-  >
-    <div class="flex h-dvh flex-1 flex-col">
-      <header class="seo-hidden">
-        <div>
-          <div>IDL</div>
-          <span>Learning Platform</span>
+  <body class="flex h-screen w-screen overflow-hidden text-gray-900" style="background:#11121c;">
+    <div
+      class="flex min-h-screen flex-col bg-gradient-to-br from-indigo-900 via-blue-900 to-purple-900"
+    >
+      <nav
+        class="flex w-full items-center justify-between bg-white/10 px-8 py-4 shadow-lg backdrop-blur-md"
+      >
+        <div class="flex items-center gap-3">
+          <img src="/favicon.ico" alt="Logo" class="h-8 w-8 rounded shadow" />
+          <span class="text-2xl font-bold tracking-wide text-white">Avtau LSchool</span>
         </div>
-        <nav>
-          <span>Math</span>
-          <span>Language Arts</span>
-          <span>Science</span>
-          <span>Social Studies</span>
-          <span>Spanish</span>
-        </nav>
-      </header>
-      <div class="relative flex-1">
-        <div class="seo-hidden">
-          <h1>Personalized Learning for Every Student</h1>
-          <p>
-            Our comprehensive K–12 learning platform provides adaptive practice, real-time
-            analytics, and skill-building exercises aligned to curriculum standards. Students
-            strengthen their understanding in mathematics, reading comprehension, grammar, science,
-            and more.
-          </p>
-          <p>
-            Teachers and parents gain access to actionable insights that support mastery learning
-            and academic growth through targeted skill recommendations.
-          </p>
+        <ul class="flex gap-8 text-sm font-medium text-white">
+          <li><a href="#math" class="transition hover:text-indigo-300">Math</a></li>
+          <li><a href="#ela" class="transition hover:text-indigo-300">Language Arts</a></li>
+          <li><a href="#science" class="transition hover:text-indigo-300">Science</a></li>
+          <li><a href="#social" class="transition hover:text-indigo-300">Social Studies</a></li>
+          <li><a href="#spanish" class="transition hover:text-indigo-300">Spanish</a></li>
+        </ul>
+        <button
+          class="rounded-lg bg-indigo-600 px-4 py-2 font-semibold text-white shadow transition hover:bg-indigo-500"
+          >Sign In</button
+        >
+      </nav>
+      <section class="flex flex-1 flex-col items-center justify-center px-4 py-16 text-center">
+        <h1 class="mb-4 text-4xl font-extrabold text-white drop-shadow-lg md:text-6xl">
+          Personalized K–12 Learning
+        </h1>
+        <h2 class="mb-6 text-xl font-semibold text-indigo-200 md:text-2xl">
+          Math, Science, Reading & More
+        </h2>
+        <p class="mx-auto mb-8 max-w-2xl text-lg text-indigo-100">
+          Avtau LSchool is your all-in-one platform for adaptive practice and mastery in every
+          subject. Real-time analytics, step-by-step guidance, and a vibrant learning community help
+          every student thrive.
+        </p>
+        <div class="mb-10 flex flex-wrap justify-center gap-4">
+          <span class="rounded-full bg-indigo-700/80 px-4 py-2 font-medium text-white shadow"
+            >Math</span
+          >
+          <span class="rounded-full bg-blue-700/80 px-4 py-2 font-medium text-white shadow"
+            >Language Arts</span
+          >
+          <span class="rounded-full bg-purple-700/80 px-4 py-2 font-medium text-white shadow"
+            >Science</span
+          >
+          <span class="rounded-full bg-pink-700/80 px-4 py-2 font-medium text-white shadow"
+            >Social Studies</span
+          >
+          <span class="rounded-full bg-yellow-600/80 px-4 py-2 font-medium text-white shadow"
+            >Spanish</span
+          >
         </div>
-        <iframe
-          id="frame"
-          src="/welcome"
-          class="absolute inset-0 h-full w-full border-none"
-        ></iframe>
-      </div>
+        <a
+          href="#"
+          class="inline-block rounded-lg bg-white px-8 py-3 text-lg font-bold text-indigo-700 shadow-lg transition hover:bg-indigo-100"
+          >Get Started</a
+        >
+      </section>
+
+      <!-- Features Section -->
+      <section class="bg-white/5 px-4 py-12 md:px-0">
+        <div class="mx-auto grid max-w-4xl gap-8 md:grid-cols-3">
+          <div class="flex flex-col items-center rounded-xl bg-indigo-800/80 p-6 text-white shadow">
+            <span class="mb-2 text-3xl">📊</span>
+            <h3 class="mb-2 text-lg font-bold">Real-Time Insights</h3>
+            <p class="text-sm text-indigo-100">
+              Track progress, spot trouble areas, and celebrate mastery with powerful analytics for
+              teachers and parents.
+            </p>
+          </div>
+          <div class="flex flex-col items-center rounded-xl bg-blue-800/80 p-6 text-white shadow">
+            <span class="mb-2 text-3xl">🧮</span>
+            <h3 class="mb-2 text-lg font-bold">Adaptive Practice</h3>
+            <p class="text-sm text-indigo-100">
+              Every question adapts to the student's level, giving targeted practice on exactly the
+              skills they need to grow.
+            </p>
+          </div>
+          <div class="flex flex-col items-center rounded-xl bg-purple-800/80 p-6 text-white shadow">
+            <span class="mb-2 text-3xl">🌟</span>
+            <h3 class="mb-2 text-lg font-bold">Motivating Rewards</h3>
+            <p class="text-sm text-indigo-100">
+              Earn badges, certificates, and more as you master new skills and subjects.
+            </p>
+          </div>
+        </div>
+      </section>
+      <footer
+        class="mt-auto bg-gradient-to-t from-indigo-900/80 to-transparent py-6 text-center text-sm text-indigo-200"
+      >
+        &copy; {new Date().getFullYear()} Ixl. All rights reserved.
+      </footer>
     </div>
-    <ImportLucide />
   </body>
 </html>

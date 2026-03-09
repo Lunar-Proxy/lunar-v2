@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function handleRefreshClick() {
+  function refresh() {
     if (!refreshBtn) return;
     refreshBtn.classList.add('animate-spin');
     updatePing().finally(() => {
@@ -62,13 +62,13 @@ document.addEventListener('DOMContentLoaded', () => {
   function cleanup() {
     if (clockInterval) clearInterval(clockInterval);
     if (spinTimeout) clearTimeout(spinTimeout);
-    refreshBtn?.removeEventListener('click', handleRefreshClick);
+    refreshBtn?.removeEventListener('click', refresh);
   }
 
   clockInterval = setInterval(updateClock, 1000);
   updateClock();
 
-  refreshBtn?.addEventListener('click', handleRefreshClick);
+  refreshBtn?.addEventListener('click', refresh);
 
   updatePing();
 

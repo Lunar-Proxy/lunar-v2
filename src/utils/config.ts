@@ -1,9 +1,4 @@
 import localForage from 'localforage';
-import { nanoid } from 'nanoid';
-
-const prefix = `chunk-${nanoid(8)
-  .toLowerCase()
-  .replace(/[^a-z0-9]/g, 'x')}`;
 
 interface Bookmark {
   name: string;
@@ -15,15 +10,13 @@ interface ConfigDefaults {
   engine: string;
   cloak: 'on' | 'off';
   adBlock: 'on' | 'off';
-  prefix: string;
   cloakTitle: string;
   cloakFavicon: string;
   autoCloak: 'on' | 'off';
   beforeUnload: 'on' | 'off';
   backend: string;
   panicLoc: string;
-  panicKey: 'on' | 'off';
-  panicKeyBind: string;
+  panicKey: string;
   wispUrl: string;
   bm: Bookmark[];
   [key: string]: any;
@@ -43,15 +36,14 @@ const defaults: ConfigDefaults = {
   engine: 'https://duckduckgo.com/?q=',
   cloak: 'off',
   adBlock: 'on',
+  transport: 'lc',
   cloakTitle: 'Google',
   cloakFavicon: 'https://www.google.com/favicon.ico',
   autoCloak: 'off',
   beforeUnload: 'off',
-  prefix: prefix,
   backend: 'sc',
   panicLoc: 'https://google.com',
-  panicKeyBind: '`',
-  panicKey: 'on',
+  panicKey: '`',
   wispUrl: wispUrl(),
   bm: [],
 };
@@ -66,14 +58,15 @@ let initialized = false;
 async function ensureInit(): Promise<void> {
   if (initialized) return;
 
-  await Promise.all(
-    Object.keys(defaults).map(async key => {
-      const existing = await store.getItem(key);
-      if (existing == null) {
-        await store.setItem(key, defaults[key]);
-      }
-    }),
-  );
+  const test = await store.getItem('engine');
+  if (test == null) {
+    const keys = Object.keys(defaults);
+    await Promise.all(
+      keys.map(function (key) {
+        return store.setItem(key, defaults[key]);
+      })
+    );
+  }
 
   initialized = true;
 }
@@ -81,7 +74,7 @@ async function ensureInit(): Promise<void> {
 const ConfigAPI = {
   config: store,
 
-  async get(key: ConfigKey): Promise<any> {
+  async get(key: ConfigKey): Promise<any | null> {
     await ensureInit();
     return store.getItem(key);
   },
@@ -89,11 +82,6 @@ const ConfigAPI = {
   async set(key: ConfigKey, value: any): Promise<any> {
     await ensureInit();
     return store.setItem(key, value);
-  },
-
-  async delete(key: ConfigKey): Promise<void> {
-    await ensureInit();
-    await store.removeItem(key);
   },
 
   async getIndecator(key: ConfigKey): Promise<any> {
@@ -117,12 +105,14 @@ const ConfigAPI = {
   async getAll(): Promise<Record<string, any>> {
     await ensureInit();
     const keys = await store.keys();
+
     const entries = await Promise.all(
-      keys.map(async key => {
+      keys.map(async function (key) {
         const value = await store.getItem(key);
         return [key, value] as const;
-      }),
+      })
     );
+
     return Object.fromEntries(entries);
   },
 };

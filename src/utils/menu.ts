@@ -1,6 +1,6 @@
-import { createIcons, icons } from 'lucide';
 import ConfigAPI from './config';
 import { TabManager } from './tb';
+import { shadow, app, ready, replaceIcons } from './shadow';
 
 interface MenuElements {
   menuButton: HTMLButtonElement;
@@ -126,10 +126,10 @@ class MenuHandler {
       this.handleDarkMode();
       this.darkModeActive = !this.darkModeActive;
       const span = this.elements.darkmode.querySelector('span');
-      if (span) span.textContent = this.darkModeActive ? 'Light Mode' : 'Dark Mode';
+      if (span) span.textContent = this.darkModeActive ? 'Dark Mode' : 'Light Mode';
       const icon = this.elements.darkmode.querySelector<HTMLElement>('[data-lucide]');
       if (icon) icon.setAttribute('data-lucide', this.darkModeActive ? 'sun' : 'moon');
-      createIcons({ icons, nameAttr: 'data-lucide' });
+      replaceIcons(this.elements.darkmode);
       this.hideMenu();
     });
 
@@ -158,12 +158,12 @@ class MenuHandler {
       overlay.style.cssText =
         'position:fixed;inset:0;z-index:40;background:transparent;cursor:default;';
       overlay.addEventListener('mousedown', () => this.hideMenu());
-      document.body.appendChild(overlay);
+      app.appendChild(overlay);
       this.iframeOverlay = overlay;
     }
 
     if (this.outsideListener) {
-      document.removeEventListener('mousedown', this.outsideListener, true);
+      shadow.removeEventListener('mousedown', this.outsideListener as EventListener, true);
     }
 
     this.outsideListener = (e: MouseEvent) => {
@@ -172,7 +172,7 @@ class MenuHandler {
         this.hideMenu();
       }
     };
-    document.addEventListener('mousedown', this.outsideListener, true);
+    shadow.addEventListener('mousedown', this.outsideListener as EventListener, true);
   }
 
   private hideMenu(): void {
@@ -186,27 +186,28 @@ class MenuHandler {
     }
 
     if (this.outsideListener) {
-      document.removeEventListener('mousedown', this.outsideListener, true);
+      shadow.removeEventListener('mousedown', this.outsideListener as EventListener, true);
       this.outsideListener = null;
     }
 
     menu.classList.remove('menu-opening');
     menu.classList.add('menu-closing');
-    menu.addEventListener(
-      'animationend',
-      () => {
-        if (!this.isOpen) {
-          menu.classList.add('hidden');
-          menu.classList.remove('menu-closing');
-        }
-      },
-      { once: true },
-    );
+    let cleaned = false;
+    const cleanup = () => {
+      if (cleaned) return;
+      cleaned = true;
+      if (!this.isOpen) {
+        menu.classList.add('hidden');
+        menu.classList.remove('menu-closing');
+      }
+    };
+    menu.addEventListener('animationend', cleanup, { once: true });
+    setTimeout(cleanup, 200);
   }
 
   private getActiveFrame(): HTMLIFrameElement | null {
     if (!TabManager?.activeTabId) return null;
-    const frame = document.getElementById(`frame-${TabManager.activeTabId}`);
+    const frame = shadow.getElementById(`frame-${TabManager.activeTabId}`);
     return frame instanceof HTMLIFrameElement ? frame : null;
   }
 
@@ -268,10 +269,12 @@ class MenuHandler {
   }
 
   private async handlePanic(): Promise<void> {
-    const panicKey = await this.getConfigValue('panicKey', 'on');
-    if (panicKey !== 'on') return;
     const panicLoc = await this.getConfigValue('panicLoc', 'https://google.com');
-    (window.top || window).location.href = panicLoc;
+    if (window.top) {
+      window.top.location.replace(panicLoc);
+    } else {
+      window.location.replace(panicLoc);
+    }
   }
 
   private async getConfigValue(key: string, fallback: string): Promise<string> {
@@ -318,10 +321,10 @@ class MenuHandler {
   }
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
-  const menuButton = document.querySelector<HTMLButtonElement>('#menubtn');
-  const menuContainer = document.querySelector<HTMLDivElement>('#menu');
-  const menuItems = Array.from(document.querySelectorAll<HTMLButtonElement>('#menu .menu-item'));
+ready.then(async () => {
+  const menuButton = shadow.querySelector<HTMLButtonElement>('#menubtn');
+  const menuContainer = shadow.querySelector<HTMLDivElement>('#menu');
+  const menuItems = Array.from(shadow.querySelectorAll<HTMLButtonElement>('#menu .menu-item'));
 
   if (!menuButton || !menuContainer) {
     console.error('Required menu elements not found');

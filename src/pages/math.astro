@@ -9,17 +9,9 @@ const gList = gaymes.gms;
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Lunar Games</title>
-    <script src="@scripts/of"></script>
-    <script
-      is:inline
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-DQZPCVEF89"
-    ></script>
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-DQZPCVEF89"></script>
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
@@ -28,27 +20,27 @@ const gList = gaymes.gms;
       gtag('js', new Date());
       gtag('config', 'G-DQZPCVEF89');
     </script>
+    <style>
+      html,
+      body,
+      * {
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+      }
+      html::-webkit-scrollbar,
+      body::-webkit-scrollbar,
+      *::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        background: transparent !important;
+      }
+    </style>
   </head>
   <body>
-    <script
-      is:inline
-      src="/bm/index.js"
-    ></script>
-    <script
-      is:inline
-      src="/data/all.js"
-    ></script>
-    <script
-      is:inline
-      src="/tmp/config.js"
-    ></script>
-    <script
-      is:inline
-      src="/tmp/bundle.js"
-    ></script>
-    <GameLayout
-      list={gList}
-      type="games"
-    />
+    <script is:inline src="/bm/index.js"></script>
+    <script is:inline src="/data/all.js"></script>
+    <script is:inline src="/tmp/config.js"></script>
+    <script is:inline src="/tmp/bundle.js"></script>
+    <GameLayout list={gList} type="games" />
   </body>
 </html>
