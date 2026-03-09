@@ -1,5 +1,4 @@
 import ConfigAPI from './config';
 import { SettingsManager } from './st';
 
-await ConfigAPI.init();
-await SettingsManager.init();
+await Promise.all([ConfigAPI.init(), SettingsManager.init()]);

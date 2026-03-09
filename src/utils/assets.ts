@@ -9,16 +9,16 @@ type Card = {
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
-  await scramjetWrapper.init();
   const sj = scramjetWrapper.getConfig();
-  const bare = new BareMux.BareMuxConnection('/bm/worker.js');
+  const uv = vWrapper.getConfig();
   const search = document.querySelector<HTMLInputElement>('[data-input]');
   const grid = document.querySelector<HTMLDivElement>('[data-container]');
   const empty = document.querySelector<HTMLDivElement>('[data-empty]');
   const counter = document.querySelector<HTMLSpanElement>('[data-visible]');
-  const wisp = await ConfigAPI.get('wispUrl');
 
   if (!search || !grid) return;
+
+  const backendP = ConfigAPI.get('backend');
 
   const cardElements = Array.from(document.querySelectorAll<HTMLDivElement>('.card'));
   const cards: Card[] = cardElements.map(el => ({
@@ -159,12 +159,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         body: JSON.stringify({ name: el.dataset.name }),
       });
 
-      if ((await bare.getTransport()) !== '/lc/index.mjs')
-        await bare.setTransport('/lc/index.mjs', [{ wisp }]);
-
-      const backend = await ConfigAPI.get('backend');
-      const encoded = sj.codec.encode(url);
-      const target = backend === 'v' ? vWrapper.getConfig().prefix + encoded : sj.prefix + encoded;
+      const backend = await backendP;
+      const target =
+        backend === 'u' ? uv.prefix + uv.encodeUrl(url) : sj.prefix + sj.codec.encode(url);
 
       window.location.href = target;
     });

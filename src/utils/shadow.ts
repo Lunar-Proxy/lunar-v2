@@ -48,7 +48,7 @@ export function replaceIcons(root: ParentNode = app) {
 
 fetch('/welcome')
   .then(r => r.text())
-  .then(html => {
+  .then(async html => {
     const css = Array.from(document.styleSheets)
       .flatMap(sheet => {
         try {
@@ -95,7 +95,21 @@ fetch('/welcome')
       }
     });
 
-    scripts.forEach(script => app.appendChild(script));
+    const loadPromises: Promise<void>[] = [];
+    for (const script of scripts) {
+      if (script.src) {
+        loadPromises.push(
+          new Promise<void>((resolve, reject) => {
+            script.onload = () => resolve();
+            script.onerror = () => reject(new Error(`Failed to load script: ${script.src}`));
+            app.appendChild(script);
+          })
+        );
+      } else {
+        app.appendChild(script);
+      }
+    }
+    await Promise.all(loadPromises);
 
     replaceIcons();
     app.classList.add('loaded');

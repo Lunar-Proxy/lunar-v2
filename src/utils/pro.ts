@@ -1,5 +1,12 @@
-// @ts-ignore
-const { ScramjetController } = $scramjetLoadController();
+let _ScramjetController: any = null;
+function getScramjetController(): any {
+  if (!_ScramjetController) {
+    // @ts-ignore - $scramjetLoadController is a global from /data/all.js
+    const loaded = $scramjetLoadController();
+    _ScramjetController = loaded.ScramjetController;
+  }
+  return _ScramjetController;
+}
 
 class VWrapper {
   getConfig() {
@@ -8,41 +15,25 @@ class VWrapper {
 }
 
 function encode(url: string): string {
-  const i = url.indexOf('?');
-  const path = i === -1 ? url : url.slice(0, i);
-  const query = i === -1 ? '' : url.slice(i);
-  return (
-    encodeURIComponent(path)
-      .split('')
-      .map(c => {
-        if (c >= 'a' && c <= 'z') {
-          return c === 'z' ? 'a' : String.fromCharCode(c.charCodeAt(0) + 1);
-        } else if (c >= 'A' && c <= 'Z') {
-          return c === 'Z' ? 'A' : String.fromCharCode(c.charCodeAt(0) + 1);
-        } else {
-          return c;
-        }
-      })
-      .join('') + query
-  );
+  if (!url) return url;
+  let out = '';
+  for (let i = 0; i < url.length; i++) {
+    out += i % 2 ? String.fromCharCode(url.charCodeAt(i) ^ 3) : url[i];
+  }
+  return encodeURIComponent(out);
 }
 
 function decode(url: string): string {
-  const i = url.indexOf('?');
-  const path = i === -1 ? url : url.slice(0, i);
-  const query = i === -1 ? '' : url.slice(i);
-  let shifted = '';
-  for (let j = 0; j < path.length; ++j) {
-    const c = path[j];
-    if (c >= 'a' && c <= 'z') {
-      shifted += c === 'a' ? 'z' : String.fromCharCode(c.charCodeAt(0) - 1);
-    } else if (c >= 'A' && c <= 'Z') {
-      shifted += c === 'A' ? 'Z' : String.fromCharCode(c.charCodeAt(0) - 1);
-    } else {
-      shifted += c;
-    }
+  if (!url) return url;
+  const split = url.indexOf('?');
+  const path = split < 0 ? url : url.slice(0, split);
+  const qs = split < 0 ? '' : url.slice(split);
+  const decoded = decodeURIComponent(path);
+  let out = '';
+  for (let i = 0; i < decoded.length; i++) {
+    out += i % 2 ? String.fromCharCode(decoded.charCodeAt(i) ^ 3) : decoded[i];
   }
-  return decodeURIComponent(shifted) + query;
+  return out + qs;
 }
 
 class ScramjetWrapper {
@@ -70,6 +61,7 @@ class ScramjetWrapper {
   }
 
   async init() {
+    const ScramjetController = getScramjetController();
     this.instance = new ScramjetController(this.getConfig());
     await this.instance.init();
     return this.instance;
@@ -79,5 +71,4 @@ class ScramjetWrapper {
 const scramjetWrapper = new ScramjetWrapper();
 const vWrapper = new VWrapper();
 
-console.log(scramjetWrapper.getConfig().prefix);
 export { scramjetWrapper, vWrapper };
