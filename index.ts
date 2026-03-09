@@ -118,7 +118,7 @@ const staticOpts: FastifyStaticOptions = {
       const hashed = /[.\-_][a-f0-9]{8,}\.(js|css|woff2?|png|jpe?g|svg|webp|gif)$/i.test(filePath);
       res.setHeader(
         'Cache-Control',
-        hashed ? 'public, max-age=31536000, immutable' : 'public, max-age=3600',
+        hashed ? 'public, max-age=31536000, immutable' : 'public, max-age=3600'
       );
     }
     res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -214,7 +214,7 @@ app.listen({ host: '0.0.0.0', port }, err => {
   console.log(
     chalk.hex('#8e44ad').bold('│ ') +
       chalk.hex('#f39c12').bold('🌙 Lunar v2 Server Started') +
-      '                │',
+      '                │'
   );
   console.log(chalk.hex('#8e44ad').bold('╰────────────────────────────────────────────╯'));
   console.log();
@@ -222,12 +222,12 @@ app.listen({ host: '0.0.0.0', port }, err => {
   console.log(
     chalk.hex('#bdc3c7')('   ├─ ') +
       chalk.hex('#ecf0f1')('Version: ') +
-      chalk.hex('#f39c12')(`v${version}`),
+      chalk.hex('#f39c12')(`v${version}`)
   );
   console.log(
     chalk.hex('#bdc3c7')('   └─ ') +
       chalk.hex('#ecf0f1')('Up to date: ') +
-      chalk.hex(status.color)(`${status.icon} ${status.text}`),
+      chalk.hex(status.color)(`${status.icon} ${status.text}`)
   );
   if (status.extra) console.log('       ' + status.extra);
   console.log();
@@ -236,28 +236,28 @@ app.listen({ host: '0.0.0.0', port }, err => {
     console.log(
       chalk.hex('#bdc3c7')('   ├─ ') +
         chalk.hex('#ecf0f1')('Deployment URL: ') +
-        chalk.hex('#0984e3').underline(url),
+        chalk.hex('#0984e3').underline(url)
     );
     console.log(
       chalk.hex('#bdc3c7')('   └─ ') +
         chalk.hex('#ecf0f1')('Hosting Method: ') +
-        chalk.hex('#95a5a6')('Cloud Hosting'),
+        chalk.hex('#95a5a6')('Cloud Hosting')
     );
   } else {
     console.log(
       chalk.hex('#bdc3c7')('   ├─ ') +
         chalk.hex('#ecf0f1')('Local: ') +
-        chalk.hex('#00cec9').underline(`http://localhost:${port}`),
+        chalk.hex('#00cec9').underline(`http://localhost:${port}`)
     );
     console.log(
       chalk.hex('#bdc3c7')('   ├─ ') +
         chalk.hex('#ecf0f1')('Network: ') +
-        chalk.hex('#00cec9').underline(`http://127.0.0.1:${port}`),
+        chalk.hex('#00cec9').underline(`http://127.0.0.1:${port}`)
     );
     console.log(
       chalk.hex('#bdc3c7')('   └─ ') +
         chalk.hex('#ecf0f1')('Hosting Method: ') +
-        chalk.hex('#95a5a6')('Self Hosting'),
+        chalk.hex('#95a5a6')('Self Hosting')
     );
   }
   console.log();

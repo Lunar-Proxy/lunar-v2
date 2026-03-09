@@ -42,7 +42,7 @@ function decode(url) {
           })
           .join('')
       );
-    },
+    }
   );
   return decoded + query;
 }

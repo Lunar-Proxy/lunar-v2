@@ -1,6 +1,7 @@
 import node from '@astrojs/node';
 import { baremuxPath } from '@mercuryworkshop/bare-mux/node';
 import { libcurlPath } from '@mercuryworkshop/libcurl-transport';
+import { epoxyPath } from '@mercuryworkshop/epoxy-transport';
 import { scramjetPath } from '@mercuryworkshop/scramjet/path';
 import { server as wisp } from '@mercuryworkshop/wisp-js/server';
 import playformCompress from '@playform/compress';
@@ -15,6 +16,7 @@ import type { Plugin } from 'vite';
 import obfuscatorPlugin from 'vite-plugin-javascript-obfuscator';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { version } from './package.json';
+
 wisp.options.wisp_version = 2;
 
 function WispServer(): Plugin {
@@ -45,7 +47,7 @@ function searchBackend(): Plugin {
         try {
           const response = await fetch(
             `https://duckduckgo.com/ac/?q=${encodeURIComponent(query)}`,
-            { headers: { 'User-Agent': 'Mozilla/5.0', Accept: 'application/json' } },
+            { headers: { 'User-Agent': 'Mozilla/5.0', Accept: 'application/json' } }
           );
           if (!response.ok) {
             res.statusCode = response.status;
@@ -88,7 +90,7 @@ function fontGenerator(): Plugin {
       const opentype = require('opentype.js');
       const font = opentype.loadSync(`public/${src}`);
       const ascii = Array.from({ length: 95 }, (_, i) => String.fromCharCode(i + 32)).filter(
-        ch => !/[0-9]/.test(ch),
+        ch => !/[0-9]/.test(ch)
       );
       const pool = shuffle(Array.from({ length: ascii.length }, (_, i) => 0x4e00 + i));
       const map: Record<string, number> = {};
@@ -105,7 +107,7 @@ function fontGenerator(): Plugin {
             unicode: cp,
             advanceWidth: g.advanceWidth,
             path: g.path,
-          }),
+          })
         );
       }
 
@@ -118,7 +120,7 @@ function fontGenerator(): Plugin {
             unicode: 0x30 + i,
             advanceWidth: g.advanceWidth,
             path: g.path,
-          }),
+          })
         );
       }
       const out = new opentype.Font({
@@ -208,7 +210,7 @@ export default defineConfig({
     },
     plugins: [
       tailwindcss(),
-      fontGenerator(),
+      // uneeded fontGenerator(),
       WispServer(),
       searchBackend(),
       obfuscatorPlugin({
@@ -265,6 +267,7 @@ export default defineConfig({
         targets: [
           { src: normalizePath(`${libcurlPath}/**/*.mjs`), dest: 'lc', overwrite: false },
           { src: normalizePath(`${baremuxPath}/**/*.js`), dest: 'bm', overwrite: false },
+          { src: normalizePath(`${epoxyPath}/**/*.js`), dest: 'ep', overwrite: false },
           {
             src: [normalizePath(`${scramjetPath}/*.js`), normalizePath(`${scramjetPath}/*.wasm`)],
             dest: 'data',

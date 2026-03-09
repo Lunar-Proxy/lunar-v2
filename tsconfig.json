@@ -9,12 +9,5 @@
       "@assets/*": ["public/a/*"]
     }
   },
-  "exclude": [
-    "node_modules",
-    "dist",
-    "public/bundled/**",
-    "lc/**",
-    "bm/**",
-    "tmp/**"
-  ]
+  "exclude": ["node_modules", "dist", "public/bundled/**", "lc/**", "bm/**", "tmp/**"]
 }

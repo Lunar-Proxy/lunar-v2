@@ -20,7 +20,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (!search || !grid) return;
 
-  const cards: Card[] = Array.from(grid.querySelectorAll<HTMLDivElement>('.card')).map(el => ({
+  const cardElements = Array.from(document.querySelectorAll<HTMLDivElement>('.card'));
+  const cards: Card[] = cardElements.map(el => ({
     el,
     name: (el.dataset.name ?? el.querySelector('h2')?.textContent ?? '').toLowerCase(),
     desc: (el.querySelector('p')?.textContent ?? '').toLowerCase(),
@@ -79,7 +80,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.querySelector<HTMLButtonElement>('[data-sort]')?.addEventListener('click', function () {
     flipped = !flipped;
     cards.sort((a, b) =>
-      flipped ? b.sortKey.localeCompare(a.sortKey) : a.sortKey.localeCompare(b.sortKey),
+      flipped ? b.sortKey.localeCompare(a.sortKey) : a.sortKey.localeCompare(b.sortKey)
     );
     this.querySelector('span')!.textContent = flipped ? 'Z-A' : 'A-Z';
     for (const { el } of cards) grid.appendChild(el);
