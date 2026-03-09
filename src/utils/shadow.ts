@@ -46,7 +46,7 @@ export function replaceIcons(root: ParentNode = app) {
   });
 }
 
-fetch('/welcome.html')
+fetch('/welcome')
   .then(r => r.text())
   .then(html => {
     const css = Array.from(document.styleSheets)

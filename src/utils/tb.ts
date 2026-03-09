@@ -24,7 +24,6 @@ const defaultIcon = '/a/moon.svg';
 const faviconApi =
   'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64&url=';
 
-const bmConnection = new baremux.BareMuxConnection(`/bm/worker.js`);
 const bmClient = new baremux.BareClient();
 
 const tabs: Tab[] = [];

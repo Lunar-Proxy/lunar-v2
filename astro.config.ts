@@ -181,7 +181,7 @@ export default defineConfig({
           useShortDoctype: true,
         },
       },
-      Image: true,
+      Image: false,  // gave big fat error fatass
       JavaScript: true,
       JSON: true,
       SVG: true,

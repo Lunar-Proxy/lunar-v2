@@ -1,6 +1,3 @@
-import * as BareMux from '@mercuryworkshop/bare-mux';
-import ConfigAPI from './config';
-
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('[data-short]').forEach(el => {
     el.addEventListener('click', async e => {
