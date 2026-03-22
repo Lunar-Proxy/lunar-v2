@@ -326,8 +326,6 @@ const tabInactiveClass =
 function createTabEl(tab: Tab): HTMLDivElement {
   const el = document.createElement('div');
   el.className = tab.id === activeId ? tabActiveClass : tabInactiveClass;
-
-  // center everything vertically in the tab row
   const left = document.createElement('div');
   left.className = 'flex items-center gap-2 flex-1 min-w-0';
   left.style.cssText = 'height:100%;align-items:center;';
