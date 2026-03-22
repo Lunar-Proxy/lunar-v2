@@ -19,6 +19,9 @@ import { version } from './package.json';
 
 wisp.options.wisp_version = 2;
 const IS_STATIC = process.argv.includes('--static');
+const wispFlag = process.argv.indexOf('--wisp');
+const wispUrl =
+  process.argv.indexOf('--wisp') !== -1 ? process.argv[wispFlag + 1] : 'wss://lunaron.top/w/';
 
 function WispServer(): Plugin {
   return {
@@ -242,6 +245,7 @@ export default defineConfig({
     define: {
       VERSION: JSON.stringify(version),
       STATIC: JSON.stringify(IS_STATIC),
+      WURL: JSON.stringify(wispUrl),
     },
     plugins: [
       tailwindcss(),

@@ -5,9 +5,10 @@ import { execSync } from 'child_process';
 
 const ROUTES = ['/', '/math', '/new', '/st', '/welcome'];
 const OUT_DIR = './dist/client';
+const wisp = 'wss://lunaron.top/w/'; // change to wtv to change wisp server
 
 console.log('Building...\n');
-execSync('pnpm build --static', { stdio: 'inherit' });
+execSync('pnpm build --static --wisp ' + wisp, { stdio: 'inherit' });
 console.log('\nBuild complete, generating pages...\n');
 
 const { handler } = await import('./dist/server/entry.mjs');

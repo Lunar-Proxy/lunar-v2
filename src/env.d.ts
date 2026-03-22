@@ -4,6 +4,7 @@ declare const LAST_UPDATED: string;
 declare const VERSION: string;
 declare const BareMux: any;
 declare const STATIC: boolean;
+declare const WURL: string;
 
 interface Bookmark {
   name: string;
