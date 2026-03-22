@@ -328,7 +328,6 @@ const tabInactiveClass =
 function createTabEl(tab: Tab): HTMLDivElement {
   const el = document.createElement('div');
   el.className = tab.id === activeId ? tabActiveClass : tabInactiveClass;
-
   const left = document.createElement('div');
   left.className = 'flex items-center gap-2 flex-1 min-w-0';
   left.style.cssText =
