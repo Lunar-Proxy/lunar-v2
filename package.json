@@ -11,40 +11,40 @@
     "precommit": "npx astro check && npm run format"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.8",
-    "@astrojs/node": "^10.0.3",
-    "@fastify/compress": "^8.3.1",
+    "@astrojs/check": "^0.9.6",
+    "@astrojs/node": "^9.5.2",
+    "@fastify/compress": "^8.3.0",
     "@fastify/helmet": "^13.0.2",
-    "@fastify/middie": "^9.3.1",
+    "@fastify/middie": "^9.1.0",
     "@fastify/static": "^9.0.0",
     "@mercuryworkshop/bare-mux": "^2.1.8",
     "@mercuryworkshop/libcurl-transport": "^1.5.1",
     "@mercuryworkshop/scramjet": "https://github.com/MercuryWorkshop/scramjet/releases/download/latest/mercuryworkshop-scramjet-2.0.0-alpha.tgz",
     "@mercuryworkshop/wisp-js": "^0.4.1",
-    "@playform/compress": "^0.2.2",
-    "@tailwindcss/vite": "^4.2.2",
+    "@playform/compress": "^0.2.1",
+    "@tailwindcss/vite": "^4.1.18",
     "@titaniumnetwork-dev/ultraviolet": "^3.2.10",
-    "astro": "^6.0.8",
+    "astro": "^5.18.0",
     "chalk": "^5.6.2",
-    "esbuild": "^0.27.4",
-    "fastify": "^5.8.2",
+    "esbuild": "^0.27.2",
+    "fastify": "^5.7.3",
     "localforage": "^1.10.0",
-    "lucide": "^0.577.0",
+    "lucide": "^0.562.0",
     "node-fetch": "^3.3.2",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4.1.18",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
-    "vite": "^8.0.1",
+    "vite": "^7.3.1",
     "vite-plugin-javascript-obfuscator": "^3.1.0",
-    "vite-plugin-static-copy": "^4.0.0"
+    "vite-plugin-static-copy": "^3.2.0"
   },
   "engines": {
     "node": ">=20.x"
   },
   "devDependencies": {
-    "@types/node": "^25.5.0",
-    "prettier": "^3.8.1"
+    "@types/node": "^25.0.9",
+    "prettier": "^3.7.4"
   }
 }
