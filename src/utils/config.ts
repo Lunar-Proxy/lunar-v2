@@ -29,7 +29,7 @@ const isBrowser = typeof location !== 'undefined';
 function wispUrl(): string {
   if (!isBrowser) return '';
   if (STATIC) {
-    return 'wss://lunaron.top/w/'; // change w a
+    return WURL; // change w a
   }
   const isHttps = location.protocol === 'https:';
   return `${isHttps ? 'wss' : 'ws'}://${location.host}/w/`;

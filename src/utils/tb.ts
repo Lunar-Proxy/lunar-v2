@@ -39,10 +39,8 @@ let prevHref = '';
 let onUrlChange: ((href: string) => void) | null = null;
 let tabBar: HTMLDivElement | null = null;
 let frameContainer: HTMLDivElement | null = null;
-
 let urlInput: HTMLInputElement | null = null;
 let loadingBar: HTMLDivElement | null = null;
-
 const faviconCache = new Map<string, string>();
 const pendingFavicons = new Map<string, Promise<string>>();
 let transportReady = false;
@@ -93,7 +91,7 @@ async function encodeProxyUrl(url: string): Promise<string> {
   return url;
 }
 
-const TAB_TITLE_MAX = 20;
+const TAB_TITLE_MAX = 12;
 function truncate(str: string, len = TAB_TITLE_MAX): string {
   return str.length > len ? str.slice(0, len) + '…' : str;
 }
@@ -273,11 +271,15 @@ function createFrame(id: number, src?: string): HTMLIFrameElement {
     'sandbox',
     'allow-scripts allow-popups allow-modals allow-top-navigation allow-pointer-lock allow-same-origin allow-forms'
   );
+
   frame.addEventListener('load', () => {
     try {
       const win = frame.contentWindow;
       const doc = frame.contentDocument;
       if (!win || !doc) return;
+      const pathname = new URL(doc.location.href, location.origin).pathname;
+      const isInternal = Object.values(internalRoutes).includes(pathname) || pathname === '/new';
+      if (isInternal) return;
 
       win.open = (openUrl?: string | URL) => {
         if (!openUrl) return null;
@@ -327,10 +329,10 @@ function createTabEl(tab: Tab): HTMLDivElement {
   const el = document.createElement('div');
   el.className = tab.id === activeId ? tabActiveClass : tabInactiveClass;
 
-  // center everything vertically in the tab row
   const left = document.createElement('div');
   left.className = 'flex items-center gap-2 flex-1 min-w-0';
-  left.style.cssText = 'height:100%;align-items:center;';
+  left.style.cssText =
+    'height:100%;display:flex;align-items:center;min-width:0;overflow:hidden;flex:1;';
 
   const icon = document.createElement('img');
   icon.className = 'tab-favicon flex-shrink-0';
@@ -342,23 +344,31 @@ function createTabEl(tab: Tab): HTMLDivElement {
     'image-rendering:-webkit-optimize-contrast;image-rendering:crisp-edges;flex-shrink:0;';
 
   const title = document.createElement('span');
-  title.className = 'tab-title flex-1 min-w-0';
+  title.className = 'tab-title';
   title.style.cssText =
     'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;' +
-    'line-height:1.4;font-size:12.5px;display:block;';
+    'line-height:1.4;font-size:12.5px;display:block;min-width:0;flex:1;';
   title.textContent = truncate(tab.title, TAB_TITLE_MAX);
 
   left.append(icon, title);
 
   const closeBtn = document.createElement('button');
-  closeBtn.className =
-    'flex items-center justify-center flex-shrink-0 rounded ' +
-    'hover:bg-white/15 text-gray-500 hover:text-gray-200 transition-all duration-150';
   closeBtn.style.cssText =
-    'padding:0;line-height:1;width:16px;height:16px;display:flex;align-items:center;justify-content:center;';
+    'flex-shrink:0;width:18px;height:18px;min-width:18px;min-height:18px;' +
+    'padding:3px;display:flex;align-items:center;justify-content:center;' +
+    'background:none;border:none;cursor:pointer;box-sizing:border-box;' +
+    'border-radius:4px;color:#9ca3af;transition:background 0.15s,color 0.15s;';
+  closeBtn.onmouseenter = () => {
+    closeBtn.style.background = 'rgba(255,255,255,0.15)';
+    closeBtn.style.color = '#e5e7eb';
+  };
+  closeBtn.onmouseleave = () => {
+    closeBtn.style.background = 'none';
+    closeBtn.style.color = '#9ca3af';
+  };
   closeBtn.innerHTML =
     '<svg width="10" height="10" viewBox="0 0 12 12" fill="none" ' +
-    'xmlns="http://www.w3.org/2000/svg" style="display:block;">' +
+    'xmlns="http://www.w3.org/2000/svg" style="display:block;flex-shrink:0;">' +
     '<path d="M2 2L10 10M10 2L2 10" stroke="currentColor" stroke-width="1.75" ' +
     'stroke-linecap="round" stroke-linejoin="round"/></svg>';
   closeBtn.onclick = (e: MouseEvent) => {
