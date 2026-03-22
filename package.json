@@ -11,11 +11,11 @@
     "precommit": "npx astro check && npm run format"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.6",
+    "@astrojs/check": "^0.9.8",
     "@astrojs/node": "^9.5.2",
-    "@fastify/compress": "^8.3.0",
+    "@fastify/compress": "^8.3.1",
     "@fastify/helmet": "^13.0.2",
-    "@fastify/middie": "^9.1.0",
+    "@fastify/middie": "^9.0.3",
     "@fastify/static": "^9.0.0",
     "@mercuryworkshop/bare-mux": "^2.1.8",
     "@mercuryworkshop/libcurl-transport": "^1.5.1",
@@ -26,10 +26,10 @@
     "@titaniumnetwork-dev/ultraviolet": "^3.2.10",
     "astro": "^5.18.0",
     "chalk": "^5.6.2",
-    "esbuild": "^0.27.2",
-    "fastify": "^5.7.4",
+    "esbuild": "^0.27.4",
+    "fastify": "^5.8.2",
     "localforage": "^1.10.0",
-    "lucide": "^0.562.0",
+    "lucide": "^0.577.0",
     "node-fetch": "^3.3.2",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
@@ -38,13 +38,13 @@
     "typescript": "^5.9.3",
     "vite": "^7.3.1",
     "vite-plugin-javascript-obfuscator": "^3.1.0",
-    "vite-plugin-static-copy": "^3.2.0"
+    "vite-plugin-static-copy": "^3.3.0"
   },
   "engines": {
     "node": ">=20.x"
   },
   "devDependencies": {
-    "@types/node": "^25.0.9",
-    "prettier": "^3.7.4"
+    "@types/node": "^25.5.0",
+    "prettier": "^3.8.1"
   }
 }
