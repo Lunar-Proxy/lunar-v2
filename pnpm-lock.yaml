@@ -29,10 +29,10 @@ importers:
         specifier: ^2.1.8
         version: 2.1.8
       '@mercuryworkshop/epoxy-transport':
-        specifier: 2.1.8
-        version: 2.1.8
+        specifier: 2.1.28
+        version: 2.1.28
       '@mercuryworkshop/libcurl-transport':
-        specifier: ^1.5.1
+        specifier: ^1.5.2
         version: 1.5.2
       '@mercuryworkshop/scramjet':
         specifier: https://github.com/MercuryWorkshop/scramjet/releases/download/latest/mercuryworkshop-scramjet-2.0.0-alpha.tgz
@@ -1099,16 +1099,16 @@ packages:
         integrity: sha512-rI3S7Osyr2ZWmG6J6v3MLS1ZT269lx1DrAjM47q0aoBYnfgUZTRvZqY0Globb8ipTi02d5x6dTJBeUBt6dZsag==,
       }
 
-  '@mercuryworkshop/epoxy-tls@2.1.2-1':
+  '@mercuryworkshop/epoxy-tls@2.1.18-1':
     resolution:
       {
-        integrity: sha512-qt6UOEZcVMYblFwOKaNAZHoDHSYN3JZ5Z6BvRHKB6zo1DFMub+cPuYQ+Aauib7LmIabYWZi2cMyfO5VsNLDYoA==,
+        integrity: sha512-2N1BYn/+FJxIbRw+sipbl3mQPinRflqQDB9HGAXJEVj4Ok4FIlTlS4fO2cpXKEq5yoD3oaKb8GyNaQfndNui9w==,
       }
 
-  '@mercuryworkshop/epoxy-transport@2.1.8':
+  '@mercuryworkshop/epoxy-transport@2.1.28':
     resolution:
       {
-        integrity: sha512-quBpEDb3mRxQOl7S6NkT6qFoII+cmBVNOC9/58hN7A4WIg6Q11d+FgAygDLWq5yESgtmDKujZjBVA2XQ6OkLgQ==,
+        integrity: sha512-lv/Kfdn37y8ZCXQaIT3Ebj4OSztBqeXdbR9rchbHQBKIw/fNSQJLGNBHV5ScXSzqt7NCwv8ZiZx7urRyk7Ua/Q==,
       }
 
   '@mercuryworkshop/libcurl-transport@1.5.2':
@@ -6355,11 +6355,11 @@ snapshots:
 
   '@mercuryworkshop/bare-mux@2.1.8': {}
 
-  '@mercuryworkshop/epoxy-tls@2.1.2-1': {}
+  '@mercuryworkshop/epoxy-tls@2.1.18-1': {}
 
-  '@mercuryworkshop/epoxy-transport@2.1.8':
+  '@mercuryworkshop/epoxy-transport@2.1.28':
     dependencies:
-      '@mercuryworkshop/epoxy-tls': 2.1.2-1
+      '@mercuryworkshop/epoxy-tls': 2.1.18-1
 
   '@mercuryworkshop/libcurl-transport@1.5.2':
     dependencies:

@@ -1,7 +1,7 @@
 let _ScramjetController: any = null;
 function getScramjetController(): any {
   if (!_ScramjetController) {
-    // @ts-ignore - $scramjetLoadController is a global from /data/all.js
+    // @ts-ignore
     const loaded = $scramjetLoadController();
     _ScramjetController = loaded.ScramjetController;
   }

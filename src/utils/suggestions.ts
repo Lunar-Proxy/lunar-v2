@@ -90,9 +90,6 @@ function closeSuggestions(): void {
   dropdown.style.opacity = '0';
   dropdown.style.pointerEvents = 'none';
 
-  const backdrop = app.querySelector('#suggestions-backdrop');
-  if (backdrop) backdrop.remove();
-
   setTimeout(() => {
     if (!isOpen) dropdown.remove();
   }, 150);
@@ -111,13 +108,6 @@ function showDropdown(dropdown: HTMLDivElement): void {
   const availableHeight = window.innerHeight - rect.bottom - 16;
   const clampedHeight = Math.min(Math.max(availableHeight, 140), 340);
   dropdown.style.maxHeight = `${clampedHeight}px`;
-
-  if (!app.querySelector('#suggestions-backdrop')) {
-    const backdrop = document.createElement('div');
-    backdrop.id = 'suggestions-backdrop';
-    backdrop.className = 'fixed inset-0 z-40 bg-black/5';
-    app.appendChild(backdrop);
-  }
 
   isOpen = true;
 }
