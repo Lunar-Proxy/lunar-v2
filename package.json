@@ -15,6 +15,7 @@
     "@astrojs/check": "^0.9.8",
     "@astrojs/node": "^10.0.3",
     "@fastify/compress": "^8.3.1",
+    "@mercuryworkshop/epoxy-transport": "2.1.28",
     "@fastify/helmet": "^13.0.2",
     "@fastify/middie": "^9.3.1",
     "@fastify/static": "^9.0.0",
