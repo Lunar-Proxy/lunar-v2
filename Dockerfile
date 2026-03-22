@@ -1,4 +1,4 @@
-FROM node:20
+FROM node:24
 ENV NODE_ENV=production
 ENV PORT=8080
 WORKDIR /app
