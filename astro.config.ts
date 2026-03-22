@@ -9,8 +9,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { uvPath } from '@titaniumnetwork-dev/ultraviolet';
 import { defineConfig } from 'astro/config';
 import type { IncomingMessage, ServerResponse } from 'http';
-import { existsSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
-import { createRequire } from 'node:module';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { normalizePath } from 'vite';
 import type { Plugin } from 'vite';
@@ -19,6 +18,7 @@ import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { version } from './package.json';
 
 wisp.options.wisp_version = 2;
+const IS_STATIC = process.argv.includes('--static');
 
 function WispServer(): Plugin {
   return {
@@ -172,77 +172,6 @@ function playsBackend(): Plugin {
   };
 }
 
-function shuffle<T>(arr: T[]): T[] {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
-function fontGenerator(): Plugin {
-  return {
-    name: 'vite-font-generator',
-    buildStart() {
-      if (existsSync('public/f.ttf')) rmSync('public/f.ttf');
-      if (existsSync('public/map.json')) rmSync('public/map.json');
-      const src = readdirSync('public').find(f => /\.(ttf|otf)$/i.test(f) && f !== 'f.ttf');
-      if (!src) {
-        console.warn('[font] no source .ttf/.otf in public/');
-        return;
-      }
-      const require = createRequire(import.meta.url);
-      const opentype = require('opentype.js');
-      const font = opentype.loadSync(`public/${src}`);
-      const ascii = Array.from({ length: 95 }, (_, i) => String.fromCharCode(i + 32)).filter(
-        ch => !/[0-9]/.test(ch)
-      );
-      const pool = shuffle(Array.from({ length: ascii.length }, (_, i) => 0x4e00 + i));
-      const map: Record<string, number> = {};
-      ascii.forEach((ch, i) => {
-        map[ch] = pool[i];
-      });
-      const glyphs: any[] = [font.glyphs.get(0)];
-      for (const [ch, cp] of Object.entries(map)) {
-        const g = font.charToGlyph(ch);
-        if (!g || g.index === 0) continue;
-        glyphs.push(
-          new opentype.Glyph({
-            name: `u${cp.toString(16)}`,
-            unicode: cp,
-            advanceWidth: g.advanceWidth,
-            path: g.path,
-          })
-        );
-      }
-
-      for (let i = 0; i <= 9; i++) {
-        const g = font.charToGlyph(String(i));
-        if (!g || g.index === 0) continue;
-        glyphs.push(
-          new opentype.Glyph({
-            name: `d${i}`,
-            unicode: 0x30 + i,
-            advanceWidth: g.advanceWidth,
-            path: g.path,
-          })
-        );
-      }
-      const out = new opentype.Font({
-        familyName: 'F',
-        styleName: 'R',
-        unitsPerEm: font.unitsPerEm,
-        ascender: font.ascender,
-        descender: font.descender,
-        glyphs,
-      });
-      writeFileSync('public/f.ttf', Buffer.from(out.toArrayBuffer()));
-      writeFileSync('public/map.json', JSON.stringify(map));
-      console.log(`[font ob] done (${glyphs.length} glyphs)`);
-    },
-  };
-}
-
 const OBFUSCATOR_SEED = Math.floor(Math.random() * 9999999);
 export default defineConfig({
   integrations: [
@@ -312,10 +241,10 @@ export default defineConfig({
     },
     define: {
       VERSION: JSON.stringify(version),
+      STATIC: JSON.stringify(IS_STATIC),
     },
     plugins: [
       tailwindcss(),
-      // uneeded fontGenerator(),
       WispServer(),
       searchBackend(),
       playsBackend(),

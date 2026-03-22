@@ -93,7 +93,8 @@ async function encodeProxyUrl(url: string): Promise<string> {
   return url;
 }
 
-function truncate(str: string, len = 16): string {
+const TAB_TITLE_MAX = 20;
+function truncate(str: string, len = TAB_TITLE_MAX): string {
   return str.length > len ? str.slice(0, len) + '…' : str;
 }
 
@@ -156,7 +157,7 @@ function updateTabEl(tab: Tab, field: 'title' | 'icon'): void {
   if (!tab.el) return;
   if (field === 'title') {
     const span = tab.el.querySelector('.tab-title');
-    if (span) span.textContent = truncate(tab.title);
+    if (span) span.textContent = truncate(tab.title, TAB_TITLE_MAX);
   } else {
     const img = tab.el.querySelector<HTMLImageElement>('.tab-favicon');
     if (img && img.src !== tab.favicon) img.src = tab.favicon;
@@ -326,30 +327,40 @@ function createTabEl(tab: Tab): HTMLDivElement {
   const el = document.createElement('div');
   el.className = tab.id === activeId ? tabActiveClass : tabInactiveClass;
 
+  // center everything vertically in the tab row
   const left = document.createElement('div');
-  left.className = 'flex items-center gap-1.5 flex-1 min-w-0 h-full';
+  left.className = 'flex items-center gap-2 flex-1 min-w-0';
+  left.style.cssText = 'height:100%;align-items:center;';
 
   const icon = document.createElement('img');
   icon.className = 'tab-favicon flex-shrink-0';
   icon.src = tab.favicon;
-  icon.width = 14;
-  icon.height = 14;
-  icon.style.cssText = 'width:14px;height:14px;object-fit:contain;display:block;';
+  icon.width = 15;
+  icon.height = 15;
+  icon.style.cssText =
+    'width:15px;height:15px;object-fit:contain;display:block;' +
+    'image-rendering:-webkit-optimize-contrast;image-rendering:crisp-edges;flex-shrink:0;';
 
   const title = document.createElement('span');
   title.className = 'tab-title flex-1 min-w-0';
   title.style.cssText =
-    'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.2;font-size:11px;';
-  title.textContent = truncate(tab.title, 14);
+    'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;' +
+    'line-height:1.4;font-size:12.5px;display:block;';
+  title.textContent = truncate(tab.title, TAB_TITLE_MAX);
 
   left.append(icon, title);
 
   const closeBtn = document.createElement('button');
   closeBtn.className =
-    'flex items-center justify-center w-4 h-4 flex-shrink-0 rounded hover:bg-white/15 text-gray-500 hover:text-gray-200 transition-all duration-150';
+    'flex items-center justify-center flex-shrink-0 rounded ' +
+    'hover:bg-white/15 text-gray-500 hover:text-gray-200 transition-all duration-150';
+  closeBtn.style.cssText =
+    'padding:0;line-height:1;width:16px;height:16px;display:flex;align-items:center;justify-content:center;';
   closeBtn.innerHTML =
-    '<svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1L7 7M7 1L1 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
-  closeBtn.style.cssText = 'padding:0;line-height:1;';
+    '<svg width="10" height="10" viewBox="0 0 12 12" fill="none" ' +
+    'xmlns="http://www.w3.org/2000/svg" style="display:block;">' +
+    '<path d="M2 2L10 10M10 2L2 10" stroke="currentColor" stroke-width="1.75" ' +
+    'stroke-linecap="round" stroke-linejoin="round"/></svg>';
   closeBtn.onclick = (e: MouseEvent) => {
     e.stopPropagation();
     closeTab(tab.id);

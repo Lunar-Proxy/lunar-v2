@@ -3,6 +3,7 @@
 declare const LAST_UPDATED: string;
 declare const VERSION: string;
 declare const BareMux: any;
+declare const STATIC: boolean;
 
 interface Bookmark {
   name: string;
