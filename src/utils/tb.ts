@@ -41,9 +41,93 @@ let tabBar: HTMLDivElement | null = null;
 let frameContainer: HTMLDivElement | null = null;
 let urlInput: HTMLInputElement | null = null;
 let loadingBar: HTMLDivElement | null = null;
+let hlLayer: HTMLDivElement | null = null;
+let isTyping = false;
 const faviconCache = new Map<string, string>();
 const pendingFavicons = new Map<string, Promise<string>>();
 let transportReady = false;
+
+function escHtml(s: string) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function renderHighlight(raw: string) {
+  if (!hlLayer) return;
+  if (!raw) {
+    hlLayer.innerHTML = '';
+    return;
+  }
+
+  let url: URL;
+  try {
+    url = new URL(raw);
+  } catch {
+    hlLayer.innerHTML = `<span class="hl-dim">${escHtml(raw)}</span>`;
+    return;
+  }
+
+  const full = url.href;
+  const host = url.hostname;
+  const idx = full.indexOf(host);
+  if (idx === -1) {
+    hlLayer.innerHTML = `<span class="hl-dim">${escHtml(full)}</span>`;
+    return;
+  }
+
+  hlLayer.innerHTML =
+    `<span class="hl-dim">${escHtml(full.slice(0, idx))}</span>` +
+    `<span class="hl-host">${escHtml(host)}</span>` +
+    `<span class="hl-dim">${escHtml(full.slice(idx + host.length))}</span>`;
+}
+
+function syncHlScroll() {
+  if (urlInput && hlLayer) hlLayer.scrollLeft = urlInput.scrollLeft;
+}
+
+function setUrlDisplay(val: string) {
+  if (!urlInput) return;
+  urlInput.value = val;
+  renderHighlight(val);
+  syncHlScroll();
+}
+
+function initHighlight() {
+  if (!urlInput) return;
+
+  const style = document.createElement('style');
+  style.textContent = `
+    #url-hl{position:absolute;inset:0;height:28px;padding:0 28px;font-size:.875rem;line-height:28px;pointer-events:none;white-space:pre;overflow:hidden;box-sizing:border-box;font-family:inherit;letter-spacing:inherit;z-index:0}
+    #url-hl .hl-dim{color:#6b6a8a}
+    #url-hl .hl-host{color:#e2e1f0;font-weight:500}
+    #urlbar{position:relative;z-index:1;background:transparent!important;color:transparent!important;caret-color:#fff!important;font-size:.875rem!important;letter-spacing:normal!important}
+    #urlbar::selection{background:rgba(92,89,165,.45);color:transparent}
+    #urlbar:focus{background:rgba(32,30,56,.6)!important;color:#d1d0e0!important}
+    #urlbar:focus::selection{color:#fff}
+  `;
+  shadow.appendChild(style);
+
+  hlLayer = document.createElement('div');
+  hlLayer.id = 'url-hl';
+  hlLayer.setAttribute('aria-hidden', 'true');
+  urlInput.parentElement?.insertBefore(hlLayer, urlInput);
+
+  urlInput.addEventListener('focus', () => {
+    isTyping = true;
+    hlLayer!.style.visibility = 'hidden';
+    urlInput!.select();
+  });
+
+  urlInput.addEventListener('blur', () => {
+    isTyping = false;
+    hlLayer!.style.visibility = 'visible';
+    renderHighlight(urlInput!.value);
+    syncHlScroll();
+  });
+
+  urlInput.addEventListener('scroll', syncHlScroll);
+
+  renderHighlight(urlInput.value);
+}
 
 function decodeProxyUrl(href: string): string {
   let path: string;
@@ -240,7 +324,9 @@ function updateUrlBar(tab: Tab): void {
   try {
     const doc = tab.iframe.contentDocument;
     if (!doc) return;
-    urlInput.value = getDisplayUrl(doc.location.href || '');
+    const val = getDisplayUrl(doc.location.href || '');
+    if (!isTyping) setUrlDisplay(val);
+    else urlInput.value = val;
   } catch {}
 }
 
@@ -489,7 +575,7 @@ function openTab(src?: string): void {
   frameContainer.appendChild(frame);
   switchTab(id);
 
-  if (urlInput && (!src || src === 'new')) urlInput.value = 'lunar://new';
+  if (urlInput && (!src || src === 'new')) setUrlDisplay('lunar://new');
 
   frame.onload = () => {
     handleFrameLoad(tab);
@@ -526,7 +612,9 @@ function switchTab(id: number): void {
       const href = tab.iframe.contentWindow?.location.href;
       if (!href || href === prevHref) return;
       prevHref = href;
-      if (urlInput) urlInput.value = getDisplayUrl(href);
+      const disp = getDisplayUrl(href);
+      if (!isTyping) setUrlDisplay(disp);
+      else if (urlInput) urlInput.value = disp;
       syncTab(tab);
       if (onUrlChange) onUrlChange(href);
     } catch {}
@@ -538,6 +626,8 @@ ready.then(() => {
   frameContainer = shadow.querySelector('#fcontainer') as HTMLDivElement | null;
   urlInput = shadow.querySelector('#urlbar') as HTMLInputElement | null;
   loadingBar = shadow.querySelector('#loading-bar') as HTMLDivElement | null;
+
+  initHighlight();
 
   shadow.querySelector('#add')?.addEventListener('click', () => openTab());
 
