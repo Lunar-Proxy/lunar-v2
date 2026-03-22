@@ -231,16 +231,6 @@ export default defineConfig({
     build: {
       minify: 'esbuild',
       chunkSizeWarningLimit: 1000,
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            'vendor-lucide': ['lucide'],
-          },
-        },
-      },
-    },
-    optimizeDeps: {
-      include: ['lucide'],
     },
     define: {
       VERSION: JSON.stringify(version),
