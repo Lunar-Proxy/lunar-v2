@@ -162,12 +162,17 @@ function updateTabEl(tab: Tab, field: 'title' | 'icon'): void {
   }
 }
 
+function normalizePath(pathname: string): string {
+  return pathname.replace(/\/+$/, '');
+}
+
 function getDisplayUrl(iframeHref: string): string {
   try {
     const url = new URL(iframeHref, location.origin);
-    const fullPath = url.pathname + url.search + url.hash;
+    const pathname = normalizePath(url.pathname);
+    const fullPath = pathname + url.search + url.hash;
     for (const [key, val] of Object.entries(internalRoutes)) {
-      if (val === url.pathname) return key;
+      if (val === pathname) return key;
     }
     return decodeProxyUrl(fullPath) || '';
   } catch {
@@ -186,7 +191,7 @@ function resolveTitle(doc: Document | null, iframeHref: string): string {
   const decoded = getDisplayUrl(iframeHref);
   try {
     const url = new URL(iframeHref, location.origin);
-    if (url.pathname !== '/new' && decoded) return new URL(decoded).hostname;
+    if (normalizePath(url.pathname) !== '/new' && decoded) return new URL(decoded).hostname;
   } catch {}
   return 'New Tab';
 }
@@ -277,7 +282,7 @@ function createFrame(id: number, src?: string): HTMLIFrameElement {
       const win = frame.contentWindow;
       const doc = frame.contentDocument;
       if (!win || !doc) return;
-      const pathname = new URL(doc.location.href, location.origin).pathname;
+      const pathname = normalizePath(new URL(doc.location.href, location.origin).pathname);
       const isInternal = Object.values(internalRoutes).includes(pathname) || pathname === '/new';
       if (isInternal) return;
 

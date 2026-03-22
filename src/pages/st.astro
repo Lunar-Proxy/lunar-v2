@@ -20,6 +20,13 @@ const engines = [
   { value: 'https://www.bing.com/search?q=', img: '/a/images/engines/bi.ico', title: 'Bing' },
   { value: 'https://search.brave.com/search?q=', img: '/a/images/engines/br.jpeg', title: 'Brave' },
 ];
+
+let NAME: string;
+if (STATIC) {
+  NAME = "Lunar Static";
+} else {
+ NAME = "Lunar";
+}
 ---
 
 <html lang="en">
@@ -70,7 +77,7 @@ const engines = [
           <div class="sticky top-6 space-y-1">
             <header class="mb-6">
               <h1 class="mb-1 text-xl font-bold">Settings</h1>
-              <p class="text-text-secondary text-xs">Customize Lunar</p>
+              <p class="text-text-secondary text-xs">Customize {NAME}</p>
             </header>
             <a
               href="#privacy"
@@ -287,7 +294,7 @@ const engines = [
           </section>
           <section id="about" data-section="about">
             <h2 class="mb-4 flex items-center gap-2 text-base font-semibold">
-              <i data-lucide="info" class="h-5 w-5 text-[#6366f1]"></i>About Lunar
+              <i data-lucide="info" class="h-5 w-5 text-[#6366f1]"></i>About {NAME}
             </h2>
             <div class="space-y-3">
               <SettingsCard type="card">
@@ -297,7 +304,7 @@ const engines = [
                   >
                     <i data-lucide="moon" class="h-5 w-5 text-[#6366f1]"></i>
                   </div>
-                  <h3 class="text-base font-semibold">Lunar v{VERSION}</h3>
+                  <h3 class="text-base font-semibold">{NAME} v{VERSION}</h3>
                 </div>
               </SettingsCard>
 
