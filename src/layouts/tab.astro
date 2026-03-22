@@ -107,7 +107,7 @@ const menuSections = [
             id="add"
             class="mb-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded text-gray-500 transition hover:bg-white/10 hover:text-white"
           >
-            <i data-lucide="plus" class="h-3 w-3"></i>
+            <i data-lucide="plus" class="h-4 w-4"></i>
           </button>
         </div>
       </div>
@@ -138,14 +138,25 @@ const menuSections = [
             <span
               class="pointer-events-none absolute top-1/2 left-2.5 z-10 flex -translate-y-1/2 items-center"
             >
-              <i data-lucide="lock" class="h-3 w-3 text-green-500"></i>
+              <i
+                data-lucide="lock"
+                class="h-3.5 w-3.5 text-green-500"
+                style="shape-rendering: geometricPrecision;"></i>
             </span>
+            <div
+              id="url-highlight"
+              aria-hidden="true"
+              class="pointer-events-none absolute inset-0 h-7 overflow-hidden pr-7 pl-7 text-sm leading-7 whitespace-pre"
+              style="font: inherit;"
+            >
+            </div>
 
             <input
               id="urlbar"
               type="text"
               autocomplete="off"
-              class="h-7 w-full rounded-md border border-white/[0.07] bg-[#23213a] pr-7 pl-7 text-xs text-gray-300 transition placeholder:text-gray-600 hover:border-white/[0.14] hover:text-white focus:rounded-b-none focus:border-[#5c59a5]/50 focus:bg-[#201e38] focus:outline-none"
+              spellcheck="false"
+              class="relative h-7 w-full rounded-md border border-white/[0.07] bg-transparent pr-7 pl-7 text-sm text-transparent caret-white placeholder:text-xs placeholder:text-gray-600 hover:border-white/[0.14] focus:rounded-b-none focus:border-[#5c59a5]/50 focus:bg-[#201e38]/50 focus:text-transparent focus:outline-none"
               placeholder="Search or enter address"
             />
 
@@ -171,7 +182,7 @@ const menuSections = [
           id="menubtn"
           class="flex h-7 w-7 shrink-0 items-center justify-center rounded text-gray-500 transition hover:bg-white/10 hover:text-white"
         >
-          <i data-lucide="menu" class="h-3.5 w-3.5"></i>
+          <i data-lucide="menu" class="h-4 w-4" style="shape-rendering: geometricPrecision;"></i>
         </button>
 
         <div

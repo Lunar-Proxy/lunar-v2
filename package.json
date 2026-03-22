@@ -11,7 +11,7 @@
     "revert": "git reset HEAD --hard && git clean -fd",
     "precommit": "npx astro check && npm run format"
   },
-    "dependencies": {
+  "dependencies": {
     "@astrojs/check": "^0.9.8",
     "@astrojs/node": "^10.0.3",
     "@fastify/compress": "^8.3.1",
