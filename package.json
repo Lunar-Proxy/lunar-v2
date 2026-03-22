@@ -6,6 +6,7 @@
     "dev": "npx astro dev --host 0.0.0.0",
     "start": "node --trace-warnings --enable-source-maps --import tsx index.ts",
     "build": "astro telemetry disable && npx astro check && npx astro build",
+    "build:static": "node static-build.mjs",
     "format": "npx prettier . --write",
     "revert": "git reset HEAD --hard && git clean -fd",
     "precommit": "npx astro check && npm run format"
