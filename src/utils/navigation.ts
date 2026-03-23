@@ -106,12 +106,13 @@ async function toggleFav(): Promise<void> {
 async function submit(): Promise<void> {
   if (!urlBar) return;
   const input = urlBar.value.trim();
-
+  urlBar.blur();
   if (routes[input]) {
     spin();
     go(routes[input]);
     return;
   }
+
 
   const conn = new BareMux.BareMuxConnection('/bm/worker.js');
   const transport = await ConfigAPI.get('transport');

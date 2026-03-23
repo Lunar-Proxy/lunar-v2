@@ -179,9 +179,57 @@ function playsBackend(): Plugin {
 }
 
 function copyClientAssets(): AstroIntegration {
+  const assetMap: {
+    pattern: string | string[];
+    dest: string;
+    rename?: (f: string) => string | null;
+  }[] = [
+    { pattern: normalizePath(`${libcurlPath}/**/*.mjs`), dest: 'lc' },
+    { pattern: normalizePath(`${baremuxPath}/**/*.js`), dest: 'bm' },
+    { pattern: normalizePath(`${epoxyPath}/**/*.js`), dest: 'ep' },
+    {
+      pattern: [normalizePath(`${scramjetPath}/*.js`), normalizePath(`${scramjetPath}/*.wasm`)],
+      dest: 'data',
+      rename: f => f.replace(/^scramjet\./, ''),
+    },
+    {
+      pattern: normalizePath(`${uvPath}/*.js`),
+      dest: 'tmp',
+      rename: f => {
+        if (f === 'sw.js' || f === 'uv.config.js') return null;
+        return f.replace(/^uv\./, '');
+      },
+    },
+  ];
+
   return {
     name: 'copy-client-assets',
     hooks: {
+      'astro:server:setup': ({ server }) => {
+        server.middlewares.use((req: IncomingMessage, res: ServerResponse, next: () => void) => {
+          const url = req.url ?? '';
+          for (const { pattern, dest, rename } of assetMap) {
+            if (!url.startsWith(`/${dest}/`)) continue;
+            const requestedFile = url.slice(`/${dest}/`.length).split('?')[0];
+            const files = globSync(pattern);
+            for (const file of files) {
+              const original = basename(file);
+              const final = rename ? rename(original) : original;
+              if (final === requestedFile) {
+                const content = readFileSync(file);
+                const ext = file.split('.').pop();
+                const mime =
+                  ext === 'wasm' ? 'application/wasm' : 'text/javascript';
+                res.setHeader('Content-Type', mime);
+                res.end(content);
+                return;
+              }
+            }
+          }
+          next();
+        });
+      },
+
       'astro:build:done': ({ dir }) => {
         const clientDir = fileURLToPath(dir);
 
@@ -201,20 +249,9 @@ function copyClientAssets(): AstroIntegration {
           }
         };
 
-        copy(normalizePath(`${libcurlPath}/**/*.mjs`), 'lc');
-        copy(normalizePath(`${baremuxPath}/**/*.js`), 'bm');
-        copy(normalizePath(`${epoxyPath}/**/*.js`), 'ep');
-
-        copy(
-          [normalizePath(`${scramjetPath}/*.js`), normalizePath(`${scramjetPath}/*.wasm`)],
-          'data',
-          f => f.replace(/^scramjet\./, '')
-        );
-
-        copy(normalizePath(`${uvPath}/*.js`), 'tmp', f => {
-          if (f === 'sw.js' || f === 'uv.config.js') return null;
-          return f.replace(/^uv\./, '');
-        });
+        for (const { pattern, dest, rename } of assetMap) {
+          copy(pattern, dest, rename);
+        }
       },
     },
   };
