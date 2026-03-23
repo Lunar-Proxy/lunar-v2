@@ -136,27 +136,22 @@ const menuSections = [
         <div class="relative z-50 min-w-0 flex-1">
           <div class="relative w-full">
             <span
-              class="pointer-events-none absolute top-1/2 left-2.5 z-10 flex -translate-y-1/2 items-center"
+              class="pointer-events-none absolute top-1/2 left-1.5 z-10 flex -translate-y-1/2 items-center"
             >
               <i
                 data-lucide="lock"
                 class="h-3.5 w-3.5 text-green-500"
                 style="shape-rendering: geometricPrecision;"></i>
             </span>
-            <div
-              id="url-highlight"
-              aria-hidden="true"
-              class="pointer-events-none absolute inset-0 h-7 overflow-hidden pr-7 pl-7 text-sm leading-7 whitespace-pre"
-              style="font: inherit;"
-            >
-            </div>
+
+            <div id="url-highlight" aria-hidden="true"></div>
 
             <input
               id="urlbar"
               type="text"
               autocomplete="off"
               spellcheck="false"
-              class="relative h-7 w-full rounded-md border border-white/[0.07] bg-transparent pr-7 pl-7 text-sm text-transparent caret-white placeholder:text-xs placeholder:text-gray-600 hover:border-white/[0.14] focus:rounded-b-none focus:border-[#5c59a5]/50 focus:bg-[#201e38]/50 focus:text-transparent focus:outline-none"
+              class="relative h-7 w-full rounded-md border border-white/[0.07] bg-transparent pr-7 pl-7 text-sm caret-white placeholder:text-sm placeholder:text-gray-600 hover:border-white/[0.14] focus:outline-none"
               placeholder="Search or enter address"
             />
 

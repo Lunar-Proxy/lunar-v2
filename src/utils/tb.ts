@@ -24,10 +24,7 @@ const faviconApi =
   'https://t2.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&size=64&url=';
 
 let bmClient: any = null;
-function getBmClient() {
-  if (!bmClient) bmClient = new BareMux.BareClient();
-  return bmClient;
-}
+const getBmClient = () => bmClient ?? (bmClient = new BareMux.BareClient());
 
 const tabs: Tab[] = [];
 let activeId: number | null = null;
@@ -46,13 +43,16 @@ let isTyping = false;
 const faviconCache = new Map<string, string>();
 const pendingFavicons = new Map<string, Promise<string>>();
 let transportReady = false;
+let transportInitPromise: Promise<void> | null = null;
 
-function escHtml(s: string) {
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
+const ESC: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;' };
+const escHtml = (s: string) => s.replace(/[&<>]/g, c => ESC[c]);
 
+let lastHighlightVal = '';
 function renderHighlight(raw: string) {
-  if (!hlLayer) return;
+  if (!hlLayer || raw === lastHighlightVal) return;
+  lastHighlightVal = raw;
+
   if (!raw) {
     hlLayer.innerHTML = '';
     return;
@@ -66,23 +66,22 @@ function renderHighlight(raw: string) {
     return;
   }
 
-  const full = url.href;
   const host = url.hostname;
-  const idx = full.indexOf(host);
+  const idx = raw.indexOf(host);
   if (idx === -1) {
-    hlLayer.innerHTML = `<span class="hl-dim">${escHtml(full)}</span>`;
+    hlLayer.innerHTML = `<span class="hl-dim">${escHtml(raw)}</span>`;
     return;
   }
 
   hlLayer.innerHTML =
-    `<span class="hl-dim">${escHtml(full.slice(0, idx))}</span>` +
+    `<span class="hl-dim">${escHtml(raw.slice(0, idx))}</span>` +
     `<span class="hl-host">${escHtml(host)}</span>` +
-    `<span class="hl-dim">${escHtml(full.slice(idx + host.length))}</span>`;
+    `<span class="hl-dim">${escHtml(raw.slice(idx + host.length))}</span>`;
 }
 
-function syncHlScroll() {
+const syncHlScroll = () => {
   if (urlInput && hlLayer) hlLayer.scrollLeft = urlInput.scrollLeft;
-}
+};
 
 function setUrlDisplay(val: string) {
   if (!urlInput) return;
@@ -96,36 +95,46 @@ function initHighlight() {
 
   const style = document.createElement('style');
   style.textContent = `
-    #url-hl{position:absolute;inset:0;height:28px;padding:0 28px;font-size:.875rem;line-height:28px;pointer-events:none;white-space:pre;overflow:hidden;box-sizing:border-box;font-family:inherit;letter-spacing:inherit;z-index:0}
-    #url-hl .hl-dim{color:#6b6a8a}
-    #url-hl .hl-host{color:#e2e1f0;font-weight:500}
-    #urlbar{position:relative;z-index:1;background:transparent!important;color:transparent!important;caret-color:#fff!important;font-size:.875rem!important;letter-spacing:normal!important}
-    #urlbar::selection{background:rgba(92,89,165,.45);color:transparent}
-    #urlbar:focus{background:rgba(32,30,56,.6)!important;color:#d1d0e0!important}
-    #urlbar:focus::selection{color:#fff}
+    #url-highlight {
+      position:absolute;inset:0;display:flex;align-items:center;
+      padding:0 28px;font-size:0.875rem;pointer-events:none;
+      white-space:pre;overflow:hidden;box-sizing:border-box;
+      font-family:inherit;letter-spacing:inherit;z-index:0;
+      height:28px;line-height:28px;
+    }
+    #url-highlight .hl-dim { color:#6b6a8a; }
+    #url-highlight .hl-host { color:#e2e1f0;font-weight:500; }
+    #urlbar {
+      position:relative;z-index:1;background:transparent!important;
+      color:transparent!important;caret-color:#fff!important;
+    }
+    #urlbar::selection { background:rgba(92,89,165,0.45);color:transparent; }
   `;
   shadow.appendChild(style);
 
-  hlLayer = document.createElement('div');
-  hlLayer.id = 'url-hl';
-  hlLayer.setAttribute('aria-hidden', 'true');
-  urlInput.parentElement?.insertBefore(hlLayer, urlInput);
+  hlLayer = shadow.querySelector('#url-highlight') as HTMLDivElement | null;
+  if (!hlLayer) {
+    hlLayer = document.createElement('div');
+    hlLayer.id = 'url-highlight';
+    hlLayer.setAttribute('aria-hidden', 'true');
+    urlInput.parentElement?.insertBefore(hlLayer, urlInput);
+  }
 
   urlInput.addEventListener('focus', () => {
     isTyping = true;
-    hlLayer!.style.visibility = 'hidden';
-    urlInput!.select();
   });
-
   urlInput.addEventListener('blur', () => {
     isTyping = false;
-    hlLayer!.style.visibility = 'visible';
+    lastHighlightVal = '';
     renderHighlight(urlInput!.value);
     syncHlScroll();
   });
-
+  urlInput.addEventListener('input', () => {
+    lastHighlightVal = '';
+    renderHighlight(urlInput!.value);
+    syncHlScroll();
+  });
   urlInput.addEventListener('scroll', syncHlScroll);
-
   renderHighlight(urlInput.value);
 }
 
@@ -158,7 +167,6 @@ function decodeProxyUrl(href: string): string {
       return '';
     }
   }
-
   return '';
 }
 
@@ -175,25 +183,24 @@ async function encodeProxyUrl(url: string): Promise<string> {
   return url;
 }
 
-const TAB_TITLE_MAX = 12;
-function truncate(str: string, len = TAB_TITLE_MAX): string {
-  return str.length > len ? str.slice(0, len) + '…' : str;
-}
-
 async function ensureTransport(): Promise<void> {
   if (transportReady) return;
-  const conn = new BareMux.BareMuxConnection('/bm/worker.js');
-  const [transport, wisp] = await Promise.all([
-    ConfigAPI.get('transport'),
-    ConfigAPI.get('wispUrl'),
-  ]);
-  const current = await conn.getTransport();
-  if (transport === 'ep' && current !== '/ep/index.mjs') {
-    await conn.setTransport('/ep/index.mjs', [{ wisp }]);
-  } else if (transport === 'lc' && current !== '/lc/index.mjs') {
-    await conn.setTransport('/lc/index.mjs', [{ wisp }]);
-  }
-  transportReady = true;
+  if (transportInitPromise) return transportInitPromise;
+  transportInitPromise = (async () => {
+    const conn = new BareMux.BareMuxConnection('/bm/worker.js');
+    const [transport, wisp] = await Promise.all([
+      ConfigAPI.get('transport'),
+      ConfigAPI.get('wispUrl'),
+    ]);
+    const current = await conn.getTransport();
+    if (transport === 'ep' && current !== '/ep/index.mjs') {
+      await conn.setTransport('/ep/index.mjs', [{ wisp }]);
+    } else if (transport === 'lc' && current !== '/lc/index.mjs') {
+      await conn.setTransport('/lc/index.mjs', [{ wisp }]);
+    }
+    transportReady = true;
+  })();
+  return transportInitPromise;
 }
 
 async function fetchFavicon(url: string): Promise<string> {
@@ -235,20 +242,21 @@ async function fetchFavicon(url: string): Promise<string> {
   return p;
 }
 
+const TAB_TITLE_MAX = 12;
+const truncate = (s: string, len = TAB_TITLE_MAX) => (s.length > len ? s.slice(0, len) + '…' : s);
+
 function updateTabEl(tab: Tab, field: 'title' | 'icon'): void {
   if (!tab.el) return;
   if (field === 'title') {
     const span = tab.el.querySelector('.tab-title');
-    if (span) span.textContent = truncate(tab.title, TAB_TITLE_MAX);
+    if (span) span.textContent = truncate(tab.title);
   } else {
     const img = tab.el.querySelector<HTMLImageElement>('.tab-favicon');
     if (img && img.src !== tab.favicon) img.src = tab.favicon;
   }
 }
 
-function normalizePath(pathname: string): string {
-  return pathname.replace(/\/+$/, '');
-}
+const normalizePath = (p: string) => p.replace(/\/+$/, '');
 
 function getDisplayUrl(iframeHref: string): string {
   try {
@@ -265,11 +273,12 @@ function getDisplayUrl(iframeHref: string): string {
 }
 
 function resolveTitle(doc: Document | null, iframeHref: string): string {
-  let title = doc?.title || '';
+  let title = '';
   try {
-    title = decodeURIComponent(title);
-  } catch {}
-  title = title.trim();
+    title = decodeURIComponent(doc?.title || '').trim();
+  } catch {
+    title = (doc?.title || '').trim();
+  }
   if (title) return title;
 
   const decoded = getDisplayUrl(iframeHref);
@@ -284,8 +293,8 @@ function syncTab(tab: Tab): void {
   try {
     const doc = tab.iframe.contentDocument;
     if (!doc) return;
-
     const href = doc.location.href || '';
+
     const title = resolveTitle(doc, href);
     if (title !== tab.title) {
       tab.title = title;
@@ -312,13 +321,6 @@ function pollTitle(tab: Tab): void {
   tab.titleTimer = window.setInterval(() => syncTab(tab), 2000);
 }
 
-function handleFrameLoad(tab: Tab): void {
-  syncTab(tab);
-  pollTitle(tab);
-  tab.isReady = true;
-  updateUrlBar(tab);
-}
-
 function updateUrlBar(tab: Tab): void {
   if (tab.id !== activeId || !urlInput) return;
   try {
@@ -330,20 +332,19 @@ function updateUrlBar(tab: Tab): void {
   } catch {}
 }
 
-function leavesTab(el: HTMLElement): boolean {
-  if (el.tagName === 'A' || el.tagName === 'AREA') {
-    const t = (el as HTMLAnchorElement).target;
-    return t === '_blank' || t === '_new';
-  }
-  return false;
-}
+// ─── Link interception ────────────────────────────────────────────────────────
+
+const isBlankTarget = (el: HTMLElement) => {
+  if (el.tagName !== 'A' && el.tagName !== 'AREA') return false;
+  const t = (el as HTMLAnchorElement).target;
+  return t === '_blank' || t === '_new';
+};
 
 function interceptLink(el: HTMLElement): void {
-  if (!leavesTab(el) || (el as any).__lr) return;
+  if (!isBlankTarget(el) || (el as any).__lr) return;
   (el as any).__lr = true;
-  if (location.href === location.origin + '/welcome') return;
   el.addEventListener('click', e => {
-    if (!leavesTab(el)) return;
+    if (!isBlankTarget(el)) return;
     e.preventDefault();
     const href = (el as HTMLAnchorElement).href;
     if (href) encodeProxyUrl(href).then(u => openTab(u));
@@ -352,6 +353,87 @@ function interceptLink(el: HTMLElement): void {
 
 const linkSelector =
   'a[target="_blank"], a[target="_new"], area[target="_blank"], area[target="_new"]';
+
+// ─── Tab DOM ──────────────────────────────────────────────────────────────────
+
+const tabBaseClass =
+  'tab flex items-center justify-between h-[34px] min-w-[160px] max-w-[220px] px-3 rounded-t-lg cursor-pointer select-none transition-all duration-200 relative z-10 border border-b-0 border-[color:var(--border)] gap-2 text-[12px]';
+const tabActiveClass =
+  tabBaseClass +
+  ' bg-[color:var(--background)] shadow-[0_2px_12px_#23213640] text-[color:var(--text-header)]';
+const tabInactiveClass =
+  tabBaseClass +
+  ' bg-[color:var(--background-overlay)] hover:bg-[color:var(--background)] text-[color:var(--text-secondary)] opacity-60 hover:opacity-85';
+
+function createTabEl(tab: Tab): HTMLDivElement {
+  const el = document.createElement('div');
+  el.className = tab.id === activeId ? tabActiveClass : tabInactiveClass;
+
+  const left = document.createElement('div');
+  left.style.cssText =
+    'height:100%;display:flex;align-items:center;min-width:0;overflow:hidden;flex:1;gap:8px;';
+
+  const icon = document.createElement('img');
+  icon.className = 'tab-favicon';
+  icon.src = tab.favicon;
+  icon.style.cssText =
+    'width:15px;height:15px;object-fit:contain;display:block;flex-shrink:0;' +
+    'image-rendering:-webkit-optimize-contrast;image-rendering:crisp-edges;';
+
+  const title = document.createElement('span');
+  title.className = 'tab-title';
+  title.style.cssText =
+    'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;' +
+    'line-height:1.4;font-size:12.5px;display:block;min-width:0;flex:1;';
+  title.textContent = truncate(tab.title);
+
+  const closeBtn = document.createElement('button');
+  closeBtn.style.cssText =
+    'flex-shrink:0;width:18px;height:18px;padding:3px;display:flex;align-items:center;' +
+    'justify-content:center;background:none;border:none;cursor:pointer;box-sizing:border-box;' +
+    'border-radius:4px;color:#9ca3af;transition:background 0.15s,color 0.15s;';
+  closeBtn.onmouseenter = () => {
+    closeBtn.style.background = 'rgba(255,255,255,0.15)';
+    closeBtn.style.color = '#e5e7eb';
+  };
+  closeBtn.onmouseleave = () => {
+    closeBtn.style.background = 'none';
+    closeBtn.style.color = '#9ca3af';
+  };
+  closeBtn.innerHTML =
+    '<svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;flex-shrink:0;">' +
+    '<path d="M2 2L10 10M10 2L2 10" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  closeBtn.onclick = (e: MouseEvent) => {
+    e.stopPropagation();
+    closeTab(tab.id);
+  };
+
+  left.append(icon, title);
+  el.append(left, closeBtn);
+  el.onclick = () => switchTab(tab.id);
+  tab.el = el;
+  return el;
+}
+
+function updateActive(): void {
+  for (const tab of tabs) {
+    if (tab.el) tab.el.className = tab.id === activeId ? tabActiveClass : tabInactiveClass;
+  }
+}
+
+function renderTabs(): void {
+  if (!tabBar) return;
+  const keep = new Set<Node>();
+  for (const tab of tabs) {
+    if (!tab.el) createTabEl(tab);
+    keep.add(tab.el!);
+    tabBar.appendChild(tab.el!);
+  }
+  for (let i = tabBar.children.length - 1; i >= 0; i--) {
+    const child = tabBar.children[i];
+    if (!keep.has(child)) child.remove();
+  }
+}
 
 function createFrame(id: number, src?: string): HTMLIFrameElement {
   const frame = document.createElement('iframe');
@@ -369,23 +451,19 @@ function createFrame(id: number, src?: string): HTMLIFrameElement {
       const doc = frame.contentDocument;
       if (!win || !doc) return;
       const pathname = normalizePath(new URL(doc.location.href, location.origin).pathname);
-      const isInternal = Object.values(internalRoutes).includes(pathname) || pathname === '/new';
-      if (isInternal) return;
+      if (Object.values(internalRoutes).includes(pathname) || pathname === '/new') return;
 
       win.open = (openUrl?: string | URL) => {
-        if (!openUrl) return null;
-        encodeProxyUrl(openUrl.toString()).then(u => openTab(u));
+        if (openUrl) encodeProxyUrl(openUrl.toString()).then(u => openTab(u));
         return null;
       };
 
       doc.querySelectorAll<HTMLElement>(linkSelector).forEach(interceptLink);
 
       new MutationObserver(muts => {
-        for (let i = 0; i < muts.length; i++) {
-          const m = muts[i];
+        for (const m of muts) {
           if (m.type === 'childList') {
-            for (let j = 0; j < m.addedNodes.length; j++) {
-              const node = m.addedNodes[j];
+            for (const node of m.addedNodes) {
               if (node.nodeType !== 1) continue;
               const el = node as HTMLElement;
               if (el.matches('a, area')) interceptLink(el);
@@ -404,116 +482,8 @@ function createFrame(id: number, src?: string): HTMLIFrameElement {
       });
     } catch {}
   });
+
   return frame;
-}
-
-const tabBaseClass =
-  'tab flex items-center justify-between h-[34px] min-w-[160px] max-w-[220px] px-3 rounded-t-lg cursor-pointer select-none transition-all duration-200 relative z-10 border border-b-0 border-[color:var(--border)] gap-2 text-[12px]';
-const tabActiveClass =
-  tabBaseClass +
-  ' bg-[color:var(--background)] shadow-[0_2px_12px_#23213640] text-[color:var(--text-header)]';
-const tabInactiveClass =
-  tabBaseClass +
-  ' bg-[color:var(--background-overlay)] hover:bg-[color:var(--background)] text-[color:var(--text-secondary)] opacity-60 hover:opacity-85';
-
-function createTabEl(tab: Tab): HTMLDivElement {
-  const el = document.createElement('div');
-  el.className = tab.id === activeId ? tabActiveClass : tabInactiveClass;
-  const left = document.createElement('div');
-  left.className = 'flex items-center gap-2 flex-1 min-w-0';
-  left.style.cssText =
-    'height:100%;display:flex;align-items:center;min-width:0;overflow:hidden;flex:1;';
-
-  const icon = document.createElement('img');
-  icon.className = 'tab-favicon flex-shrink-0';
-  icon.src = tab.favicon;
-  icon.width = 15;
-  icon.height = 15;
-  icon.style.cssText =
-    'width:15px;height:15px;object-fit:contain;display:block;' +
-    'image-rendering:-webkit-optimize-contrast;image-rendering:crisp-edges;flex-shrink:0;';
-
-  const title = document.createElement('span');
-  title.className = 'tab-title';
-  title.style.cssText =
-    'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;' +
-    'line-height:1.4;font-size:12.5px;display:block;min-width:0;flex:1;';
-  title.textContent = truncate(tab.title, TAB_TITLE_MAX);
-
-  left.append(icon, title);
-
-  const closeBtn = document.createElement('button');
-  closeBtn.style.cssText =
-    'flex-shrink:0;width:18px;height:18px;min-width:18px;min-height:18px;' +
-    'padding:3px;display:flex;align-items:center;justify-content:center;' +
-    'background:none;border:none;cursor:pointer;box-sizing:border-box;' +
-    'border-radius:4px;color:#9ca3af;transition:background 0.15s,color 0.15s;';
-  closeBtn.onmouseenter = () => {
-    closeBtn.style.background = 'rgba(255,255,255,0.15)';
-    closeBtn.style.color = '#e5e7eb';
-  };
-  closeBtn.onmouseleave = () => {
-    closeBtn.style.background = 'none';
-    closeBtn.style.color = '#9ca3af';
-  };
-  closeBtn.innerHTML =
-    '<svg width="10" height="10" viewBox="0 0 12 12" fill="none" ' +
-    'xmlns="http://www.w3.org/2000/svg" style="display:block;flex-shrink:0;">' +
-    '<path d="M2 2L10 10M10 2L2 10" stroke="currentColor" stroke-width="1.75" ' +
-    'stroke-linecap="round" stroke-linejoin="round"/></svg>';
-  closeBtn.onclick = (e: MouseEvent) => {
-    e.stopPropagation();
-    closeTab(tab.id);
-  };
-
-  el.append(left, closeBtn);
-  el.onclick = () => switchTab(tab.id);
-  tab.el = el;
-  return el;
-}
-
-function renderTabs(): void {
-  if (!tabBar) return;
-  const keep = new Set<Node>();
-  for (const tab of tabs) {
-    const el = tab.el ?? createTabEl(tab);
-    keep.add(el);
-    tabBar.appendChild(el);
-  }
-  for (let i = tabBar.children.length - 1; i >= 0; i--) {
-    const child = tabBar.children[i];
-    if (!keep.has(child)) child.remove();
-  }
-}
-
-function updateActive(): void {
-  for (const tab of tabs) {
-    if (tab.el) tab.el.className = tab.id === activeId ? tabActiveClass : tabInactiveClass;
-  }
-}
-
-function closeTab(id: number): void {
-  const idx = tabs.findIndex(t => t.id === id);
-  if (idx === -1) return;
-
-  if (tabs.length === 1) {
-    openTab();
-    requestAnimationFrame(() => {
-      const [removed] = tabs.splice(idx, 1);
-      if (removed.titleTimer) clearInterval(removed.titleTimer);
-      removed.iframe.remove();
-      if (removed.el) removed.el.remove();
-      renderTabs();
-    });
-    return;
-  }
-
-  const [removed] = tabs.splice(idx, 1);
-  if (removed.titleTimer) clearInterval(removed.titleTimer);
-  removed.iframe.remove();
-  if (removed.el) removed.el.remove();
-  if (activeId === id && tabs.length) switchTab(tabs[Math.max(0, idx - 1)].id);
-  renderTabs();
 }
 
 function showLoader(): void {
@@ -567,48 +537,57 @@ function openTab(src?: string): void {
   };
   tabs.push(tab);
 
-  const tabEl = createTabEl(tab);
-  if (tabBar) tabBar.appendChild(tabEl);
-
   const frame = createFrame(id, src);
   tab.iframe = frame;
   frameContainer.appendChild(frame);
+
+  createTabEl(tab);
+  if (tabBar) tabBar.appendChild(tab.el!);
+
   switchTab(id);
+  if (!src || src === 'new') setUrlDisplay('lunar://new');
 
-  if (urlInput && (!src || src === 'new')) setUrlDisplay('lunar://new');
-
-  frame.onload = () => {
-    handleFrameLoad(tab);
-    resetLoader();
-  };
-  frame.onerror = resetLoader;
+  frame.addEventListener(
+    'load',
+    () => {
+      const t = tabs.find(t => t.id === id);
+      if (!t) return;
+      t.isReady = true;
+      syncTab(t);
+      pollTitle(t);
+      updateUrlBar(t);
+      resetLoader();
+    },
+    { once: false }
+  );
 }
 
 function switchTab(id: number): void {
-  activeId = id;
   if (urlWatcher) {
     clearInterval(urlWatcher);
     urlWatcher = null;
   }
+
+  activeId = id;
   prevHref = '';
 
   for (const tab of tabs) {
-    if (tab.iframe) tab.iframe.classList.toggle('hidden', tab.id !== id);
+    tab.iframe.classList.toggle('hidden', tab.id !== id);
   }
   updateActive();
-  resetLoader();
 
-  const active = tabs.find(t => t.id === id);
-  if (active?.isReady) {
-    syncTab(active);
-    updateUrlBar(active);
+  const tab = tabs.find(t => t.id === id);
+  if (!tab) return;
+
+  if (tab.isReady) {
+    syncTab(tab);
+    updateUrlBar(tab);
   }
 
   urlWatcher = setInterval(() => {
     if (activeId !== id) return;
     try {
-      const tab = tabs.find(t => t.id === id);
-      if (!tab?.iframe) return;
+      if (!tab.iframe) return;
       const href = tab.iframe.contentWindow?.location.href;
       if (!href || href === prevHref) return;
       prevHref = href;
@@ -619,6 +598,25 @@ function switchTab(id: number): void {
       if (onUrlChange) onUrlChange(href);
     } catch {}
   }, 250);
+}
+
+function closeTab(id: number): void {
+  const idx = tabs.findIndex(t => t.id === id);
+  if (idx === -1) return;
+
+  if (tabs.length === 1) {
+    openTab();
+  }
+
+  const [removed] = tabs.splice(idx, 1);
+  if (removed.titleTimer) clearInterval(removed.titleTimer);
+  removed.iframe.remove();
+  removed.el?.remove();
+
+  if (activeId === id && tabs.length) {
+    switchTab(tabs[Math.max(0, idx - 1)].id);
+  }
+  renderTabs();
 }
 
 ready.then(() => {
@@ -634,6 +632,8 @@ ready.then(() => {
   urlInput?.addEventListener('keydown', (e: KeyboardEvent) => {
     if (e.key === 'Enter') showLoader();
   });
+
+  ensureTransport().catch(() => {});
 
   setInterval(() => {
     if (!isLoading) return;

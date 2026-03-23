@@ -218,8 +218,7 @@ function copyClientAssets(): AstroIntegration {
               if (final === requestedFile) {
                 const content = readFileSync(file);
                 const ext = file.split('.').pop();
-                const mime =
-                  ext === 'wasm' ? 'application/wasm' : 'text/javascript';
+                const mime = ext === 'wasm' ? 'application/wasm' : 'text/javascript';
                 res.setHeader('Content-Type', mime);
                 res.end(content);
                 return;
