@@ -332,8 +332,6 @@ function updateUrlBar(tab: Tab): void {
   } catch {}
 }
 
-// ─── Link interception ────────────────────────────────────────────────────────
-
 const isBlankTarget = (el: HTMLElement) => {
   if (el.tagName !== 'A' && el.tagName !== 'AREA') return false;
   const t = (el as HTMLAnchorElement).target;
@@ -353,8 +351,6 @@ function interceptLink(el: HTMLElement): void {
 
 const linkSelector =
   'a[target="_blank"], a[target="_new"], area[target="_blank"], area[target="_new"]';
-
-// ─── Tab DOM ──────────────────────────────────────────────────────────────────
 
 const tabBaseClass =
   'tab flex items-center justify-between h-[34px] min-w-[160px] max-w-[220px] px-3 rounded-t-lg cursor-pointer select-none transition-all duration-200 relative z-10 border border-b-0 border-[color:var(--border)] gap-2 text-[12px]';
