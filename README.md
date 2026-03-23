@@ -110,3 +110,5 @@ Huge thanks to everyone who has contributed to Lunar.
     <img src="https://contrib.rocks/image?repo=lunar-proxy/lunar-v2" alt="Contributors">
   </a>
 </p>
+
+Lunar is a suborganisation of [Night Network](https://github.com/Night-N3twork/).  
