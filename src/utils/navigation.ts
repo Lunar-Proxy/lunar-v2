@@ -113,7 +113,6 @@ async function submit(): Promise<void> {
     return;
   }
 
-
   const conn = new BareMux.BareMuxConnection('/bm/worker.js');
   const transport = await ConfigAPI.get('transport');
   if (transport === 'ep' && (await conn.getTransport()) !== '/ep/index.mjs') {

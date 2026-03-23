@@ -3,12 +3,14 @@ import '@/main.css';
 import ImportLucide from '../layouts/lucide.astro';
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+
 interface Game {
   name: string;
   desc: string;
   url: string;
   icon: string;
 }
+
 const { list = [] }: { list?: Game[] } = Astro.props;
 const playsFile = join(process.cwd(), 'plays.json');
 let plays: Record<string, number> = {};
@@ -18,10 +20,12 @@ try {
     if (typeof parsed === 'object' && !Array.isArray(parsed)) plays = parsed;
   }
 } catch {}
+
 const popular = [...list]
   .map(g => ({ ...g, count: plays[g.name] || 0 }))
   .sort((a, b) => b.count - a.count)
   .slice(0, 6);
+
 const hasRealData = popular.some(g => g.count > 0);
 const finalPopular = hasRealData ? popular : [...list].sort(() => Math.random() - 0.5).slice(0, 6);
 const popularNames = new Set(finalPopular.map(g => g.name));
@@ -34,12 +38,8 @@ const sorted = [...list]
   <body class="bg-background font-linux text-text-header min-h-screen">
     <div class="mx-auto max-w-7xl space-y-8 p-5">
       <div class="flex items-center justify-between">
-        <div>
-          <h1 class="text-2xl font-bold tracking-tight">Lunar Games</h1>
-        </div>
-        <div
-          class="flex gap-0.5 rounded-md border border-white/[0.08] bg-[#1e1e2f]/50 p-0.5 backdrop-blur-sm"
-        >
+        <h1 class="text-2xl font-bold tracking-tight">Lunar Games</h1>
+        <div class="flex gap-0.5 rounded-md border border-white/[0.08] bg-[#1e1e2f]/50 p-0.5">
           <button
             data-view="grid"
             class="flex h-7 w-7 items-center justify-center rounded bg-[#252537]/60 text-white/70 transition-all duration-150"
@@ -74,19 +74,17 @@ const sorted = [...list]
                   data-href={g.url}
                   data-name={g.name}
                   data-bg={g.icon}
-                  class="card card-loading group relative flex h-28 cursor-pointer flex-col justify-end overflow-hidden rounded-xl border border-white/[0.08] bg-[#1e1e2f]/40 backdrop-blur-sm transition-all duration-200 hover:scale-[1.03] hover:shadow-lg"
+                  class="card card-loading group relative flex h-28 cursor-pointer flex-col justify-end overflow-hidden rounded-xl border border-white/[0.08] transition-all duration-200 hover:scale-[1.03] hover:shadow-lg hover:shadow-black/40"
                 >
-                  <div class="card-bg absolute inset-0 bg-cover bg-center opacity-60 transition-opacity group-hover:opacity-80" />
-                  <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+                  <div class="card-bg absolute inset-0 bg-cover bg-center opacity-70 transition-opacity duration-200 group-hover:opacity-90" />
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
                   <div class="absolute top-1.5 right-1.5 z-10">
-                    <span class="rounded-full bg-orange-500/80 px-1.5 py-0.5 text-[9px] font-bold tracking-wider text-white uppercase backdrop-blur-sm">
+                    <span class="rounded-full bg-orange-500/90 px-1.5 py-0.5 text-[9px] font-bold tracking-wider text-white uppercase">
                       Hot
                     </span>
                   </div>
                   <div class="relative z-10 p-2.5">
-                    <h2 class="truncate text-xs font-semibold text-white drop-shadow-lg">
-                      {g.name}
-                    </h2>
+                    <h2 class="truncate text-xs font-semibold text-white drop-shadow">{g.name}</h2>
                   </div>
                 </div>
               ))}
@@ -105,19 +103,19 @@ const sorted = [...list]
             type="text"
             data-input
             placeholder="Search games..."
-            class="h-9 w-full rounded-md border border-white/[0.08] bg-[#1e1e2f]/40 pr-3 pl-9 text-sm text-white/80 placeholder-white/40 backdrop-blur-sm transition-colors focus:border-white/[0.15] focus:outline-none"
+            class="h-9 w-full rounded-md border border-white/[0.08] bg-[#1e1e2f]/60 pr-3 pl-9 text-sm text-white/80 placeholder-white/40 transition-colors focus:border-white/[0.18] focus:outline-none"
           />
         </div>
         <button
           data-random
-          class="flex h-9 items-center gap-2 rounded-md border border-white/[0.08] bg-[#1e1e2f]/40 px-3 text-sm text-white/60 backdrop-blur-sm transition-all duration-150 hover:border-white/[0.15] hover:bg-[#1e1e2f]/60 hover:text-white/80"
+          class="flex h-9 items-center gap-2 rounded-md border border-white/[0.08] bg-[#1e1e2f]/60 px-3 text-sm text-white/60 transition-all duration-150 hover:border-white/[0.15] hover:text-white/80"
         >
           <i data-lucide="shuffle" class="h-3.5 w-3.5"></i>
           Random
         </button>
         <button
           data-sort
-          class="flex h-9 items-center gap-2 rounded-md border border-white/[0.08] bg-[#1e1e2f]/40 px-3 text-sm text-white/60 backdrop-blur-sm transition-all duration-150 hover:border-white/[0.15] hover:bg-[#1e1e2f]/60 hover:text-white/80"
+          class="flex h-9 items-center gap-2 rounded-md border border-white/[0.08] bg-[#1e1e2f]/60 px-3 text-sm text-white/60 transition-all duration-150 hover:border-white/[0.15] hover:text-white/80"
         >
           <i data-lucide="arrow-up-down" class="h-3.5 w-3.5"></i>
           <span>A-Z</span>
@@ -139,14 +137,14 @@ const sorted = [...list]
                 data-href={g.url}
                 data-name={g.name}
                 data-bg={g.icon}
-                class="card card-loading group relative flex h-40 cursor-pointer flex-col justify-end overflow-hidden rounded-xl border border-white/[0.08] bg-[#1e1e2f]/40 backdrop-blur-sm transition-all duration-200 hover:scale-[1.02] hover:border-white/[0.15] hover:shadow-lg hover:shadow-black/30"
+                class="card card-loading group relative flex h-40 cursor-pointer flex-col justify-end overflow-hidden rounded-xl border border-white/[0.08] transition-all duration-200 hover:scale-[1.02] hover:border-white/[0.15] hover:shadow-lg hover:shadow-black/30"
                 style="animation: fadeIn 0.3s ease-out"
               >
-                <div class="card-bg absolute inset-0 bg-cover bg-center opacity-60 transition-opacity group-hover:opacity-75" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
+                <div class="card-bg absolute inset-0 bg-cover bg-center opacity-70 transition-opacity duration-200 group-hover:opacity-85" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
                 <div class="relative z-10 p-3.5">
-                  <h2 class="mb-1 text-sm font-semibold text-white drop-shadow-lg">{g.name}</h2>
-                  <p class="line-clamp-2 text-xs text-gray-300/90 drop-shadow-md">{g.desc}</p>
+                  <h2 class="mb-1 text-sm font-semibold text-white drop-shadow">{g.name}</h2>
+                  <p class="line-clamp-2 text-xs text-gray-300/80 drop-shadow">{g.desc}</p>
                 </div>
               </div>
             ))
@@ -155,7 +153,7 @@ const sorted = [...list]
       </div>
 
       <div data-empty class="hidden flex-col items-center justify-center py-16 text-center">
-        <div class="rounded-xl border border-white/[0.08] bg-[#1e1e2f]/40 p-10 backdrop-blur-sm">
+        <div class="rounded-xl border border-white/[0.08] bg-[#1e1e2f]/40 p-10">
           <i data-lucide="inbox" class="mx-auto mb-3 h-10 w-10 text-white/20"></i>
           <h3 class="mb-1 text-base font-semibold text-white/70">Nothing found</h3>
           <p class="text-sm text-white/40">Try a different search term</p>
@@ -169,7 +167,7 @@ const sorted = [...list]
       @keyframes fadeIn {
         from {
           opacity: 0;
-          transform: translateY(10px);
+          transform: translateY(8px);
         }
         to {
           opacity: 1;
