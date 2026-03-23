@@ -105,7 +105,6 @@ await app.register(fastifyHelmet, {
   crossOriginEmbedderPolicy: { policy: 'require-corp' },
   crossOriginOpenerPolicy: { policy: 'same-origin' },
   contentSecurityPolicy: false,
-  xPoweredBy: false,
 });
 
 await app.register(fastifyCompress, { encodings: ['gzip', 'deflate', 'br'] });

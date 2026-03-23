@@ -7,14 +7,16 @@ import { server as wisp } from '@mercuryworkshop/wisp-js/server';
 import playformCompress from '@playform/compress';
 import tailwindcss from '@tailwindcss/vite';
 import { uvPath } from '@titaniumnetwork-dev/ultraviolet';
+import type { AstroIntegration } from 'astro';
 import { defineConfig } from 'astro/config';
 import type { IncomingMessage, ServerResponse } from 'http';
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { cpSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { basename, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { globSync } from 'tinyglobby';
 import { normalizePath } from 'vite';
 import type { Plugin } from 'vite';
 import obfuscatorPlugin from 'vite-plugin-javascript-obfuscator';
-import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { version } from './package.json';
 
 wisp.options.wisp_version = 2;
@@ -35,6 +37,7 @@ function WispServer(): Plugin {
     },
   };
 }
+
 function searchBackend(): Plugin {
   return {
     name: 'search-suggestions-vite',
@@ -175,9 +178,52 @@ function playsBackend(): Plugin {
   };
 }
 
+function copyClientAssets(): AstroIntegration {
+  return {
+    name: 'copy-client-assets',
+    hooks: {
+      'astro:build:done': ({ dir }) => {
+        const clientDir = fileURLToPath(dir);
+
+        const copy = (
+          pattern: string | string[],
+          dest: string,
+          rename?: (filename: string) => string | null
+        ) => {
+          const destDir = join(clientDir, dest);
+          mkdirSync(destDir, { recursive: true });
+          const files = globSync(pattern);
+          for (const file of files) {
+            const original = basename(file);
+            const final = rename ? rename(original) : original;
+            if (!final) continue;
+            cpSync(file, join(destDir, final));
+          }
+        };
+
+        copy(normalizePath(`${libcurlPath}/**/*.mjs`), 'lc');
+        copy(normalizePath(`${baremuxPath}/**/*.js`), 'bm');
+        copy(normalizePath(`${epoxyPath}/**/*.js`), 'ep');
+
+        copy(
+          [normalizePath(`${scramjetPath}/*.js`), normalizePath(`${scramjetPath}/*.wasm`)],
+          'data',
+          f => f.replace(/^scramjet\./, '')
+        );
+
+        copy(normalizePath(`${uvPath}/*.js`), 'tmp', f => {
+          if (f === 'sw.js' || f === 'uv.config.js') return null;
+          return f.replace(/^uv\./, '');
+        });
+      },
+    },
+  };
+}
+
 const OBFUSCATOR_SEED = Math.floor(Math.random() * 9999999);
 export default defineConfig({
   integrations: [
+    copyClientAssets(),
     playformCompress({
       CSS: true,
       HTML: {
@@ -218,7 +264,7 @@ export default defineConfig({
           useShortDoctype: true,
         },
       },
-      Image: false, // gave big fat error fatass
+      Image: false,
       JavaScript: true,
       JSON: true,
       SVG: true,
@@ -229,7 +275,7 @@ export default defineConfig({
   prefetch: { prefetchAll: true, defaultStrategy: 'load' },
   vite: {
     build: {
-      minify: 'esbuild',
+      minify: true,
       chunkSizeWarningLimit: 1000,
     },
     define: {
@@ -292,28 +338,6 @@ export default defineConfig({
           unicodeEscapeSequence: false,
         },
       }),
-      viteStaticCopy({
-        targets: [
-          { src: normalizePath(`${libcurlPath}/**/*.mjs`), dest: 'lc', overwrite: false },
-          { src: normalizePath(`${baremuxPath}/**/*.js`), dest: 'bm', overwrite: false },
-          { src: normalizePath(`${epoxyPath}/**/*.js`), dest: 'ep', overwrite: false },
-          {
-            src: [normalizePath(`${scramjetPath}/*.js`), normalizePath(`${scramjetPath}/*.wasm`)],
-            dest: 'data',
-            rename: (name: string) => {
-              const ending = name.endsWith('.wasm') ? '.wasm' : '.js';
-              return `${name.replace(/^scramjet\./, '')}${ending}`;
-            },
-            overwrite: false,
-          },
-          {
-            src: [normalizePath(`${uvPath}/*.js`), '!' + normalizePath(`${uvPath}/sw.js`)],
-            dest: 'tmp',
-            rename: (name: string) => `${name.replace(/^uv\./, '')}.js`,
-            overwrite: false,
-          },
-        ],
-      }) as any, // DO NOT REMOVE "AS ANY"
     ],
     server: {
       host: true,
