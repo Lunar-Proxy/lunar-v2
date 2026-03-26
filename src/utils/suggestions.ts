@@ -1,4 +1,4 @@
-import { shadow, app, ready, replaceIcons } from './shadow';
+import { shadow, ready, replaceIcons } from './shadow';
 
 let urlbar: HTMLInputElement | null = null;
 

@@ -15,7 +15,6 @@ import { basename, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { globSync } from 'tinyglobby';
 import { normalizePath } from 'vite';
-import type { Plugin } from 'vite';
 import obfuscatorPlugin from 'vite-plugin-javascript-obfuscator';
 import { version } from './package.json';
 
@@ -25,7 +24,7 @@ const wispFlag = process.argv.indexOf('--wisp');
 const wispUrl =
   process.argv.indexOf('--wisp') !== -1 ? process.argv[wispFlag + 1] : 'wss://lunaron.top/w/';
 
-function WispServer(): Plugin {
+function WispServer(): any {
   return {
     name: 'vite-wisp-server',
     configureServer(server: any) {
@@ -38,10 +37,10 @@ function WispServer(): Plugin {
   };
 }
 
-function searchBackend(): Plugin {
+function searchBackend(): any {
   return {
     name: 'search-suggestions-vite',
-    configureServer({ middlewares }) {
+    configureServer({ middlewares }: any) {
       middlewares.use('/api/query', async (req: IncomingMessage, res: ServerResponse) => {
         const urlObj = new URL(req.url ?? '', 'http://localhost');
         const query = urlObj.searchParams.get('q');
@@ -74,7 +73,7 @@ function searchBackend(): Plugin {
   };
 }
 
-function playsBackend(): Plugin {
+function playsBackend(): any {
   const playsFile = join(process.cwd(), 'plays.json');
   const hits = new Map<string, { count: number; resetAt: number }>();
   let lastPrune = Date.now();
@@ -113,7 +112,7 @@ function playsBackend(): Plugin {
 
   return {
     name: 'vite-plays-backend',
-    configureServer({ middlewares }) {
+    configureServer({ middlewares }: any) {
       middlewares.use('/api/plays', async (req: IncomingMessage, res: ServerResponse) => {
         if (req.method === 'GET') {
           res.setHeader('Content-Type', 'application/json');
