@@ -384,10 +384,30 @@ function createTabEl(tab: Tab): HTMLDivElement {
   title.textContent = truncate(tab.title);
 
   const closeBtn = document.createElement('button');
-  closeBtn.style.cssText =
-    'flex-shrink:0;width:18px;height:18px;padding:3px;display:flex;align-items:center;' +
-    'justify-content:center;background:none;border:none;cursor:pointer;box-sizing:border-box;' +
-    'border-radius:4px;color:#9ca3af;transition:background 0.15s,color 0.15s;';
+
+closeBtn.style.cssText = `
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #9ca3af;
+  transition: all 0.15s ease;
+  margin-left: 4px;
+  outline: none;
+`;
+
+closeBtn.innerHTML = `
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:block;">
+    <line x1="18" y1="6" x2="6" y2="18"></line>
+    <line x1="6" y1="6" x2="18" y2="18"></line>
+  </svg>
+`;
   closeBtn.onmouseenter = () => {
     closeBtn.style.background = 'rgba(255,255,255,0.15)';
     closeBtn.style.color = '#e5e7eb';
