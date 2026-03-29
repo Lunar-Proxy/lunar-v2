@@ -27,6 +27,3 @@ Disallow: /
 
 User-agent: meta-externalagent
 Disallow: /
-
-User-agent: epstein-bot-5million-roblox
-Disallow: /
