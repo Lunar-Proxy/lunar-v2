@@ -9,6 +9,9 @@
   --color-border-default: var(--border);
   --color-text-header: var(--text-header);
   --color-text-secondary: var(--text-secondary);
+  --color-accent: var(--accent);
+  --color-accent-light: var(--accent-light);
+  --color-accent-dark: var(--accent-dark);
   --animate-spin: spin 1s linear 1;
 
   @keyframes spin {
@@ -29,6 +32,13 @@
     --text-header: #e0def4;
     --text-secondary: #a19eb3;
     --background-disabled: #2a2b3c;
+    --accent: #6366f1;
+    --accent-light: #818cf8;
+    --accent-dark: #4f46e5;
+    --background-rgb: 35, 33, 54;
+    --background-overlay-rgb: 31, 29, 46;
+    --accent-rgb: 99, 102, 241;
+    --background-disabled-rgb: 42, 43, 60;
   }
 
   html {
@@ -89,8 +99,8 @@
   }
 
   .toggle.active {
-    background: #6366f1;
-    border-color: #6366f1;
+    background: var(--accent);
+    border-color: var(--accent);
   }
 
   .toggle.active::after {

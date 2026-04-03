@@ -6,6 +6,7 @@ type Card = {
   name: string;
   desc: string;
   sortKey: string;
+  popular: boolean;
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -19,14 +20,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (!search || !grid) return;
 
   const backendP = ConfigAPI.get('backend');
-
-  const cardElements = Array.from(document.querySelectorAll<HTMLDivElement>('.card'));
-  const cards: Card[] = cardElements.map(el => ({
+  const allCardEls = Array.from(document.querySelectorAll<HTMLDivElement>('.card'));
+  const cards: Card[] = allCardEls.map(el => ({
     el,
     name: (el.dataset.name ?? el.querySelector('h2')?.textContent ?? '').toLowerCase(),
     desc: (el.querySelector('p')?.textContent ?? '').toLowerCase(),
     sortKey: (el.dataset.name ?? '').toLowerCase(),
+    popular: el.dataset.popular === 'true',
   }));
+
+  const gridCards = cards.filter(c => !c.popular);
 
   let imgTimer: number;
 
@@ -56,7 +59,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   window.addEventListener('resize', queueImgs, { passive: true });
 
   const refresh = () => {
-    const shown = cards.filter(({ el }) => el.style.display !== 'none').length;
+    const shown = gridCards.filter(({ el }) => el.style.display !== 'none').length;
     if (counter) counter.textContent = String(shown);
     const noResults = shown === 0 && search.value.trim() !== '';
     empty?.classList.toggle('hidden', !noResults);
@@ -66,31 +69,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   search.addEventListener('input', () => {
     const q = search.value.toLowerCase().trim();
-    for (const { el, name, desc } of cards)
-      el.style.display = name.includes(q) || desc.includes(q) ? '' : 'none';
+    for (const { el, name, desc } of gridCards)
+      el.style.display = !q || name.includes(q) || desc.includes(q) ? '' : 'none';
     refresh();
   });
 
   document.querySelector<HTMLButtonElement>('[data-random]')?.addEventListener('click', () => {
-    const pool = cards.filter(({ el }) => el.style.display !== 'none');
+    const pool = gridCards.filter(({ el }) => el.style.display !== 'none');
     if (pool.length) pool[Math.floor(Math.random() * pool.length)].el.click();
   });
 
   let flipped = false;
   document.querySelector<HTMLButtonElement>('[data-sort]')?.addEventListener('click', function () {
     flipped = !flipped;
-    cards.sort((a, b) =>
+    gridCards.sort((a, b) =>
       flipped ? b.sortKey.localeCompare(a.sortKey) : a.sortKey.localeCompare(b.sortKey)
     );
     this.querySelector('span')!.textContent = flipped ? 'Z-A' : 'A-Z';
-    for (const { el } of cards) grid.appendChild(el);
+    for (const { el } of gridCards) grid.appendChild(el);
     queueImgs();
-  });
-
-  document.querySelector<HTMLButtonElement>('[data-clear]')?.addEventListener('click', () => {
-    search.value = '';
-    for (const { el } of cards) el.style.display = '';
-    refresh();
   });
 
   const setView = (active: HTMLButtonElement) => {
@@ -103,67 +100,66 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   };
 
-  document
-    .querySelector<HTMLButtonElement>('[data-view="grid"]')
-    ?.addEventListener('click', function () {
-      for (const { el } of cards) {
-        el.classList.replace('h-32', 'h-40') ||
-          el.classList.replace('h-36', 'h-40') ||
-          el.classList.add('h-40');
-        const p = el.querySelector<HTMLElement>('p');
-        if (p) p.style.display = '';
-      }
-      grid.className = 'grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4';
-      setView(this);
-      queueImgs();
+  document.querySelector<HTMLButtonElement>('[data-view="grid"]')?.addEventListener('click', function () {
+    for (const { el } of gridCards) {
+      el.classList.replace('h-32', 'h-40') || el.classList.replace('h-36', 'h-40') || el.classList.add('h-40');
+      const p = el.querySelector<HTMLElement>('p');
+      if (p) p.style.display = '';
+    }
+    grid.className = 'grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4';
+    setView(this);
+    queueImgs();
+  });
+
+  document.querySelector<HTMLButtonElement>('[data-view="compact"]')?.addEventListener('click', function () {
+    for (const { el } of gridCards) {
+      el.classList.replace('h-40', 'h-32') || el.classList.replace('h-36', 'h-32') || el.classList.add('h-32');
+      const p = el.querySelector<HTMLElement>('p');
+      if (p) p.style.display = 'none';
+    }
+    grid.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3';
+    setView(this);
+    queueImgs();
+  });
+
+  document.querySelector<HTMLButtonElement>('[data-view="list"]')?.addEventListener('click', function () {
+    for (const { el } of gridCards) {
+      el.classList.replace('h-40', 'h-36') || el.classList.replace('h-32', 'h-36') || el.classList.add('h-36');
+      const p = el.querySelector<HTMLElement>('p');
+      if (p) p.style.display = '';
+    }
+    grid.className = 'flex flex-col gap-3';
+    setView(this);
+    queueImgs();
+  });
+
+  const navigate = async (url: string, name: string) => {
+    fetch('/api/plays', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name }),
     });
 
-  document
-    .querySelector<HTMLButtonElement>('[data-view="compact"]')
-    ?.addEventListener('click', function () {
-      for (const { el } of cards) {
-        el.classList.replace('h-40', 'h-32') ||
-          el.classList.replace('h-36', 'h-32') ||
-          el.classList.add('h-32');
-        const p = el.querySelector<HTMLElement>('p');
-        if (p) p.style.display = 'none';
-      }
-      grid.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3';
-      setView(this);
-      queueImgs();
-    });
+    const backend = await backendP;
+    const target =
+      backend === 'u' ? uv.prefix + uv.encodeUrl(url) : sj.prefix + sj.codec.encode(url);
+    window.location.href = target;
+  };
 
-  document
-    .querySelector<HTMLButtonElement>('[data-view="list"]')
-    ?.addEventListener('click', function () {
-      for (const { el } of cards) {
-        el.classList.replace('h-40', 'h-36') ||
-          el.classList.replace('h-32', 'h-36') ||
-          el.classList.add('h-36');
-        const p = el.querySelector<HTMLElement>('p');
-        if (p) p.style.display = '';
-      }
-      grid.className = 'flex flex-col gap-3';
-      setView(this);
-      queueImgs();
-    });
-
-  for (const { el } of cards) {
-    el.addEventListener('click', async () => {
+  for (const { el, popular } of cards) {
+    if (!popular) continue;
+    el.addEventListener('click', () => {
       const url = el.dataset.href;
-      if (!url) return;
+      const name = el.dataset.name;
+      if (url && name) navigate(url, name);
+    });
+  }
 
-      fetch('/api/plays', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: el.dataset.name }),
-      });
-
-      const backend = await backendP;
-      const target =
-        backend === 'u' ? uv.prefix + uv.encodeUrl(url) : sj.prefix + sj.codec.encode(url);
-
-      window.location.href = target;
+  for (const { el } of gridCards) {
+    el.addEventListener('click', () => {
+      const url = el.dataset.href;
+      const name = el.dataset.name;
+      if (url && name) navigate(url, name);
     });
   }
 

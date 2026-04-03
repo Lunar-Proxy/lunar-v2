@@ -257,6 +257,10 @@ function copyClientAssets(): AstroIntegration {
 
 const OBFUSCATOR_SEED = Math.floor(Math.random() * 9999999);
 export default defineConfig({
+  prefetch: {
+  prefetchAll: true,
+  defaultStrategy: 'viewport'
+},
   integrations: [
     copyClientAssets(),
     playformCompress({
@@ -307,7 +311,6 @@ export default defineConfig({
   ],
   output: 'server',
   adapter: node({ mode: 'middleware' }),
-  prefetch: { prefetchAll: true, defaultStrategy: 'load' },
   vite: {
     build: {
       minify: true,
