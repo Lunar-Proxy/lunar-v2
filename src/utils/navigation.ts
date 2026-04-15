@@ -28,16 +28,21 @@ const hist = new Map<string, { stack: string[]; idx: number }>();
 
 let wisp: string;
 
+async function ensureTransport() {
+  if (!wisp) wisp = await ConfigAPI.get('wispUrl');
+  const conn = new BareMux.BareMuxConnection('/bm/worker.js');
+  try {
+    const trans = await conn.getTransport();
+    if (trans === '/lc/index.mjs') return;
+  } catch {}
+  await conn.setTransport('/lc/index.mjs', [{ wisp }]);
+}
+
 async function setup() {
   wisp = await ConfigAPI.get('wispUrl');
   scramjetWrapper.init();
   await navigator.serviceWorker.register('./sw.js');
-  
-  const conn = new BareMux.BareMuxConnection('/bm/worker.js');
-  const trans = await conn.getTransport();
-  if (trans !== '/lc/index.mjs') {
-    await conn.setTransport('/lc/index.mjs', [{ wisp }]);
-  }
+  await ensureTransport();
 }
 
 function frame(): HTMLIFrameElement | null {
@@ -193,12 +198,8 @@ async function submit() {
     return;
   }
   
-  const conn = new BareMux.BareMuxConnection('/bm/worker.js');
-  const trans = await conn.getTransport();
-  if (trans !== '/lc/index.mjs') {
-    await conn.setTransport('/lc/index.mjs', [{ wisp }]);
-  }
-  
+  await ensureTransport();
+
   const val = await validateUrl(v);
   const backend = await ConfigAPI.get('backend');
   
@@ -294,3 +295,5 @@ if (sidebar) {
 TabManager.onUrlChange(sync);
 
 setup();
+
+export { ensureTransport };

@@ -141,6 +141,12 @@ async function restoreTabs(): Promise<void> {
       return;
     }
 
+    // Ensure transport is ready before loading any proxy content
+    try {
+      const { ensureTransport } = await import('./navigation');
+      await ensureTransport();
+    } catch {}
+
     const savedIndex = (await ConfigAPI.get('activeTabIndex')) as number | null;
     const activeIdx = typeof savedIndex === 'number' && savedIndex < entries.length ? savedIndex : 0;
 
@@ -589,12 +595,18 @@ function switchTab(id: number) {
     const pending = lazyTab.pendingSrc;
     delete lazyTab.pendingSrc;
 
-    resolveRestoredUrl(pending).then(resolved => {
+    // Ensure transport is ready before loading proxy content
+    (async () => {
+      try {
+        const { ensureTransport } = await import('./navigation');
+        await ensureTransport();
+      } catch {}
+      const resolved = await resolveRestoredUrl(pending);
       if (!frameContainer) return;
       const frame = createFrame(id, resolved);
       lazyTab.iframe = frame;
       frameContainer.appendChild(frame);
-      frame.classList.remove('hidden'); // show immediately since it's active
+      frame.classList.remove('hidden');
 
       frame.onload = () => {
         handleFrameLoad(lazyTab);
@@ -603,7 +615,7 @@ function switchTab(id: number) {
       };
       frame.onerror = resetLoader;
       showLoader();
-    });
+    })();
   }
 
   for (const tab of tabs) {
