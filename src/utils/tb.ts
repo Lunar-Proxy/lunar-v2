@@ -10,6 +10,13 @@ interface Tab {
   el?: HTMLDivElement;
   titleTimer?: number;
   isReady: boolean;
+  pendingSrc?: string; // lazy load: URL to load when tab is first activated
+}
+
+interface SavedTab {
+  url: string;
+  title: string;
+  favicon: string;
 }
 
 const internalRoutes: Record<string, string> = {
@@ -86,13 +93,21 @@ async function resolveRestoredUrl(saved: string): Promise<string> {
 async function saveTabs(): Promise<void> {
   if (isRestoring) return;
   try {
-    const urls: string[] = [];
+    const saved: SavedTab[] = [];
     for (const tab of tabs) {
-      const url = getPersistableUrl(tab);
-      if (url) urls.push(url);
+      const url = tab.pendingSrc
+        ? tab.pendingSrc // lazy tab — save the pending URL as-is (already canonical)
+        : getPersistableUrl(tab);
+      if (url) {
+        saved.push({
+          url,
+          title: tab.title || 'New Tab',
+          favicon: tab.favicon || defaultIcon,
+        });
+      }
     }
     const activeIndex = tabs.findIndex(t => t.id === activeId);
-    await ConfigAPI.set('savedTabs', urls);
+    await ConfigAPI.set('savedTabs', saved);
     await ConfigAPI.set('activeTabIndex', Math.max(0, activeIndex));
   } catch (err) {
     console.warn('[Lunar] Failed to save tabs:', err);
@@ -108,37 +123,52 @@ async function restoreTabs(): Promise<void> {
       return;
     }
 
-    const validUrls = saved.filter(
-      (u: unknown) => typeof u === 'string' && u.length > 0,
-    ) as string[];
+    // Support both old format (string[]) and new format (SavedTab[])
+    const entries: SavedTab[] = saved
+      .map((entry: unknown) => {
+        if (typeof entry === 'string') {
+          let title = entry;
+          try { title = entry.startsWith('lunar://') ? entry : new URL(entry).hostname; } catch {}
+          return { url: entry, title, favicon: defaultIcon };
+        }
+        if (entry && typeof entry === 'object' && 'url' in entry) return entry as SavedTab;
+        return null;
+      })
+      .filter((e): e is SavedTab => e !== null && typeof e.url === 'string' && e.url.length > 0);
 
-    if (validUrls.length === 0) {
+    if (entries.length === 0) {
       openTab();
       return;
     }
 
-    for (const url of validUrls) {
+    const savedIndex = (await ConfigAPI.get('activeTabIndex')) as number | null;
+    const activeIdx = typeof savedIndex === 'number' && savedIndex < entries.length ? savedIndex : 0;
+
+    for (let i = 0; i < entries.length; i++) {
+      const { url, title, favicon } = entries[i];
+      const isActive = i === activeIdx;
+
       try {
-        const resolved = await resolveRestoredUrl(url);
-        // Show domain or route name while loading instead of "New Tab"
-        let title = url;
-        try {
-          title = url.startsWith('lunar://') ? url : new URL(url).hostname;
-        } catch {}
-        openTab(resolved, { activate: false, persist: false, initialTitle: title });
+        if (isActive) {
+          // Active tab: load immediately
+          const resolved = await resolveRestoredUrl(url);
+          openTab(resolved, { activate: true, persist: false, initialTitle: title, initialFavicon: favicon });
+        } else {
+          // Inactive tabs: create lazy — don't load until clicked
+          openTab(undefined, {
+            activate: false,
+            persist: false,
+            initialTitle: title,
+            initialFavicon: favicon,
+            lazySrc: url,
+          });
+        }
       } catch {
-        // Skip invalid tab, continue restoring others
+        // Skip invalid tab
       }
     }
 
-    // Restore active tab
-    if (tabs.length > 0) {
-      const savedIndex = (await ConfigAPI.get('activeTabIndex')) as number | null;
-      const idx = typeof savedIndex === 'number' && savedIndex < tabs.length ? savedIndex : 0;
-      switchTab(tabs[idx].id);
-    } else {
-      openTab();
-    }
+    if (tabs.length === 0) openTab();
   } catch (err) {
     console.warn('[Lunar] Failed to restore tabs:', err);
     if (tabs.length === 0) openTab();
@@ -471,10 +501,18 @@ interface OpenTabOpts {
   activate?: boolean;
   persist?: boolean;
   initialTitle?: string;
+  initialFavicon?: string;
+  lazySrc?: string; // canonical URL to load when tab is first activated
 }
 
 function openTab(src?: string, opts?: OpenTabOpts) {
-  const { activate = true, persist = true, initialTitle = 'New Tab' } = opts ?? {};
+  const {
+    activate = true,
+    persist = true,
+    initialTitle = 'New Tab',
+    initialFavicon = defaultIcon,
+    lazySrc,
+  } = opts ?? {};
   const id = nextId();
 
   if (!frameContainer) {
@@ -485,9 +523,10 @@ function openTab(src?: string, opts?: OpenTabOpts) {
   const tab: Tab = {
     id,
     title: initialTitle,
-    favicon: defaultIcon,
+    favicon: initialFavicon,
     iframe: null as any,
     isReady: false,
+    ...(lazySrc ? { pendingSrc: lazySrc } : {}),
   };
 
   tabs.push(tab);
@@ -505,6 +544,12 @@ function openTab(src?: string, opts?: OpenTabOpts) {
       wrapper.appendChild(container);
       tabBar.appendChild(wrapper);
     }
+  }
+
+  // Lazy tabs: don't create iframe until activated
+  if (lazySrc && !activate) {
+    // Tab element is in the tab bar but no iframe yet — will load on switchTab
+    return;
   }
 
   requestAnimationFrame(() => {
@@ -537,6 +582,29 @@ function switchTab(id: number) {
   }
 
   prevHref = '';
+
+  // Lazy load: if this tab has a pending URL but no iframe yet, create it now
+  const lazyTab = tabs.find(t => t.id === id);
+  if (lazyTab && lazyTab.pendingSrc && !lazyTab.iframe) {
+    const pending = lazyTab.pendingSrc;
+    delete lazyTab.pendingSrc;
+
+    resolveRestoredUrl(pending).then(resolved => {
+      if (!frameContainer) return;
+      const frame = createFrame(id, resolved);
+      lazyTab.iframe = frame;
+      frameContainer.appendChild(frame);
+      frame.classList.remove('hidden'); // show immediately since it's active
+
+      frame.onload = () => {
+        handleFrameLoad(lazyTab);
+        resetLoader();
+        void saveTabs();
+      };
+      frame.onerror = resetLoader;
+      showLoader();
+    });
+  }
 
   for (const tab of tabs) {
     if (tab.iframe) tab.iframe.classList.toggle('hidden', tab.id !== id);
