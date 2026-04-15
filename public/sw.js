@@ -26,20 +26,10 @@ const BLOCK_RULES = [
   '**://*.amazon-adsystem.com/**',
   '**://*.adcolony.com/**',
   '**://*.unityads.unity3d.com/**',
-  '**://*.facebook.com/**',
-  '**://*.facebook.net/**',
+  '**://pixel.facebook.com/**',
+  '**://connect.facebook.net/*/fbevents.js',
   '**://*.ads-twitter.com/**',
   '**://ads-api.twitter.com/**',
-  '**://*.linkedin.com/**',
-  '**://*.pinterest.com/**',
-  '**://*.reddit.com/**',
-  '**://*.redditmedia.com/**',
-  '**://*.tiktok.com/**',
-  '**://*.byteoversea.com/**',
-  '**://*.yahoo.com/**',
-  '**://*.yahooinc.com/**',
-  '**://*.yandex.ru/**',
-  '**://*.yandex.net/**',
   '**://*.hotjar.com/**',
   '**://*.hotjar.io/**',
   '**://*.mouseflow.com/**',
@@ -49,20 +39,7 @@ const BLOCK_RULES = [
   '**://*.bugsnag.com/**',
   '**://*.sentry.io/**',
   '**://*.sentry-cdn.com/**',
-  '**://*.realme.com/**',
-  '**://*.realmemobile.com/**',
-  '**://*.xiaomi.com/**',
-  '**://*.miui.com/**',
-  '**://*.oppomobile.com/**',
-  '**://*.hicloud.com/**',
-  '**://*.oneplus.net/**',
-  '**://*.oneplus.cn/**',
-  '**://*.samsung.com/**',
   '**://*.2o7.net/**',
-  '**://*.apple.com/**',
-  '**://*.icloud.com/**',
-  '**/cdn-cgi/**',
-  '**://*.mzstatic.com/**',
   '**://*.google-analytics.com/**',
   '**://analytics.google.com/**',
   '**://ssl.google-analytics.com/**',
@@ -123,8 +100,7 @@ function isAdRequest(url, request) {
 async function handleFetch(event) {
   await scramjet.loadConfig();
   const url = event.request.url;
-  const cdnCgiRegex = /\/cdn-cgi\//i;
-  if ((adblockEnabled && isAdRequest(url, event.request)) || cdnCgiRegex.test(url)) {
+  if (adblockEnabled && isAdRequest(url, event.request)) {
     return new Response(null, { status: 204 });
   }
 
