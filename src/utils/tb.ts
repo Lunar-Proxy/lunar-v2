@@ -46,18 +46,28 @@ function getPersistableUrl(tab: Tab): string | null {
     const href = tab.iframe?.contentWindow?.location.href || tab.iframe?.src;
     if (!href) return null;
 
-    const pathname = new URL(href, location.origin).pathname;
+    const url = new URL(href, location.origin);
+    const pathname = url.pathname;
 
     // Check internal routes
     const route = reverseInternalRoutes[pathname];
     if (route) return route;
 
-    // Decode proxy URL to canonical form
-    const decoded = decodeProxyUrl(pathname);
-    if (decoded) return decoded;
-
-    // Skip blank/new tabs
+    // Skip blank/new tabs early
     if (pathname === '/new' || pathname === '/' || href === 'about:blank') return null;
+
+    // Only attempt decode if it looks like a proxy path
+    const scPrefix = scramjetWrapper.getConfig().prefix;
+    const uvPrefix = vWrapper.getConfig().prefix;
+    const isProxyPath = pathname.startsWith(scPrefix) || pathname.startsWith(uvPrefix);
+
+    if (isProxyPath) {
+      const decoded = decodeProxyUrl(pathname);
+      // Only persist if we got a valid canonical URL back
+      if (decoded && /^https?:\/\//.test(decoded)) return decoded;
+      // Could not decode — don't persist garbage
+      return null;
+    }
 
     return null;
   } catch {
@@ -110,7 +120,12 @@ async function restoreTabs(): Promise<void> {
     for (const url of validUrls) {
       try {
         const resolved = await resolveRestoredUrl(url);
-        openTab(resolved, { activate: false, persist: false });
+        // Show domain or route name while loading instead of "New Tab"
+        let title = url;
+        try {
+          title = url.startsWith('lunar://') ? url : new URL(url).hostname;
+        } catch {}
+        openTab(resolved, { activate: false, persist: false, initialTitle: title });
       } catch {
         // Skip invalid tab, continue restoring others
       }
@@ -137,15 +152,19 @@ function nextId() {
 }
 
 function decodeProxyUrl(path: string): string {
-  const scPrefix = scramjetWrapper.getConfig().prefix;
-  const uvPrefix = vWrapper.getConfig().prefix;
-  if (path.startsWith(scPrefix)) {
-    const encoded = path.slice(scPrefix.length);
-    return decodeURIComponent(scramjetWrapper.getConfig().codec.decode(encoded) || '');
-  }
-  if (path.startsWith(uvPrefix)) {
-    return vWrapper.getConfig().decodeUrl(path.slice(uvPrefix.length));
-  }
+  try {
+    const scPrefix = scramjetWrapper.getConfig().prefix;
+    const uvPrefix = vWrapper.getConfig().prefix;
+    if (path.startsWith(scPrefix)) {
+      const encoded = path.slice(scPrefix.length);
+      // codec.decode already calls decodeURIComponent — don't double-decode
+      const decoded = scramjetWrapper.getConfig().codec.decode(encoded);
+      return decoded || '';
+    }
+    if (path.startsWith(uvPrefix)) {
+      return vWrapper.getConfig().decodeUrl(path.slice(uvPrefix.length));
+    }
+  } catch {}
   return '';
 }
 
@@ -451,10 +470,11 @@ function resetLoader() {
 interface OpenTabOpts {
   activate?: boolean;
   persist?: boolean;
+  initialTitle?: string;
 }
 
 function openTab(src?: string, opts?: OpenTabOpts) {
-  const { activate = true, persist = true } = opts ?? {};
+  const { activate = true, persist = true, initialTitle = 'New Tab' } = opts ?? {};
   const id = nextId();
 
   if (!frameContainer) {
@@ -464,7 +484,7 @@ function openTab(src?: string, opts?: OpenTabOpts) {
 
   const tab: Tab = {
     id,
-    title: 'New Tab',
+    title: initialTitle,
     favicon: defaultIcon,
     iframe: null as any,
     isReady: false,
