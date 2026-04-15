@@ -73,9 +73,10 @@ function record(url: string) {
 function nav(url: string, save = true) {
   const f = frame();
   if (!f) return;
-  
+
   if (save) record(url);
   f.src = url;
+  void TabManager.saveTabs();
 }
 
 function back() {
@@ -133,19 +134,21 @@ function norm(url: string): string {
 async function sync() {
   const f = frame();
   if (!f) return;
-  
+
   record(f.src);
-  
+
   const s = strip(f.src);
   const d = await decode(s);
   const bm = (await ConfigAPI.get('bm')) || [];
   const active = bm.some((b: any) => norm(b.redir) === norm(d));
-  
+
   const svg = favBtn?.querySelector('svg');
   if (svg) {
     svg.style.fill = active ? '#a8a3c7' : 'none';
     svg.style.stroke = active ? '#a8a3c7' : '';
   }
+
+  void TabManager.saveTabs();
 }
 
 async function toggleFav() {

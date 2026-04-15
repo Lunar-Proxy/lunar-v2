@@ -19,6 +19,8 @@ interface ConfigDefaults {
   panicKey: string;
   wispUrl: string;
   bm: Bookmark[];
+  savedTabs: string[];
+  activeTabIndex: number;
   [key: string]: any;
 }
 
@@ -45,6 +47,8 @@ const defaults: ConfigDefaults = {
   panicKey: '`',
   wispUrl: wispUrl(),
   bm: [],
+  savedTabs: [],
+  activeTabIndex: 0,
 };
 
 const store = localForage.createInstance({
