@@ -75,8 +75,8 @@ async function syncFav(): Promise<void> {
   const saved = bms.some(b => norm(b.redir) === norm(decoded));
   const svg = favBtn?.querySelector('svg');
   if (svg) {
-    svg.style.fill = saved ? 'var(--accent)' : 'none';
-    svg.style.stroke = saved ? 'var(--accent)' : '';
+    svg.style.fill = saved ? '#a8a3c7' : 'none';
+    svg.style.stroke = saved ? '#a8a3c7' : '';
   }
 }
 

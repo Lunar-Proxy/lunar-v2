@@ -40,10 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (result.ok) {
       const color =
         result.latency >= 300
-          ? 'text-[#eb6f92]'
+          ? 'text-red-500'
           : result.latency >= 100
-            ? 'text-[#f6c177]'
-            : 'text-[#9ccfd8]';
+            ? 'text-yellow-400'
+            : 'text-green-400';
       serverEl.innerHTML = `Server: <span class="${color} ml-1">${result.latency}ms</span>`;
     } else {
       serverEl.textContent = 'Offline';

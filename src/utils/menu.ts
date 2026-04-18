@@ -71,7 +71,7 @@ class MenuHandler {
     if (!label) return;
     const badge = document.createElement('span');
     badge.className =
-      'text-text-secondary/80 bg-background-disabled/85 ml-auto shrink-0 rounded px-1 py-0.5 text-[10px] leading-none font-mono';
+      'ml-auto shrink-0 text-[10px] text-gray-600 bg-white/5 rounded px-1 py-0.5 font-mono leading-none';
     badge.textContent = label;
     element.appendChild(badge);
   }

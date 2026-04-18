@@ -117,7 +117,7 @@ function setActiveItem(dropdown: HTMLDivElement, index: number): void {
 
   items.forEach((el, i) => {
     const active = i === index;
-    el.classList.toggle('bg-background-disabled/80', active);
+    el.classList.toggle('bg-[#2a293f]', active);
     if (active) el.scrollIntoView({ block: 'nearest' });
   });
 }
@@ -147,7 +147,7 @@ function buildRow(
   value: string,
   trailing?: string
 ): string {
-  const base = `<div class="text-text-muted hover:text-text-header flex items-center ${trailing ? 'justify-between' : 'space-x-3'} cursor-pointer px-3 py-2 text-sm transition-colors hover:bg-panel-hover/85" data-value="${escapeHtml(value)}">`;
+  const base = `<div class="flex items-center ${trailing ? 'justify-between' : 'space-x-3'} px-3 py-2 text-sm text-white/90 cursor-pointer hover:bg-[#2a293f] transition-colors" data-value="${escapeHtml(value)}">`;
   const iconEl = `<i data-lucide="${icon}" class="${iconClass}"></i>`;
   const labelEl = `<span>${escapeHtml(label)}</span>`;
 
@@ -155,7 +155,7 @@ function buildRow(
     return (
       base +
       `<div class="flex items-center space-x-3">${iconEl}${labelEl}</div>` +
-      `<span class="text-text-secondary/90 text-xs">${escapeHtml(trailing)}</span></div>`
+      `<span class="text-xs text-white/55">${escapeHtml(trailing)}</span></div>`
     );
   }
 
@@ -181,7 +181,7 @@ function renderSuggestions(
   const dropdown = document.createElement('div');
   dropdown.id = 'suggestions';
   dropdown.className =
-    'border-border-default/90 absolute top-full z-50 mt-0 w-full overflow-y-auto rounded-b-xl border-x border-b bg-[#1f1d2e]/98 shadow-2xl backdrop-blur-xl transition-opacity duration-150';
+    'absolute top-full z-50 mt-0 w-full rounded-b-xl border-x border-b border-[#3a3758] bg-[#1f1f30]/95 shadow-2xl backdrop-blur-xl overflow-y-auto transition-opacity duration-150';
   dropdown.style.opacity = '0';
   dropdown.style.pointerEvents = 'none';
 
@@ -190,27 +190,27 @@ function renderSuggestions(
   const rows: string[] = [];
 
   if (mathResult) {
-    rows.push(buildRow('calculator', 'text-accent h-4 w-4', mathResult, mathResult));
+    rows.push(buildRow('calculator', 'h-4 w-4 text-green-400', mathResult, mathResult));
   }
 
   if (topSuggestions.length) {
     rows.push(
-      `<div class="text-text-secondary/90 px-3 py-2 text-[11px] font-semibold uppercase tracking-wider">` +
-        `Suggestions for <span class="text-text-header">"${escapeHtml(query)}"</span></div>`
+      `<div class="px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-white/45">` +
+        `Suggestions for <span class="text-white">"${escapeHtml(query)}"</span></div>`
     );
 
     for (const s of topSuggestions) {
-      rows.push(buildRow('search', 'text-text-secondary h-3.5 w-3.5', s, s));
+      rows.push(buildRow('search', 'h-3.5 w-3.5 text-white/45', s, s));
     }
   }
 
   if (hasQuickLinks && quickMatches.length) {
     rows.push(
-      `<div class="text-text-secondary/90 border-border-default/75 px-3 py-2 text-[11px] font-semibold uppercase tracking-wider border-t">Lunar Links</div>`
+      `<div class="px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-white/45 border-t border-[#3a3758]">Lunar Links</div>`
     );
 
     for (const [link, description] of quickMatches) {
-      rows.push(buildRow('globe', 'text-accent-light h-4 w-4', link, link, description));
+      rows.push(buildRow('globe', 'h-4 w-4 text-purple-400', link, link, description));
     }
   }
 

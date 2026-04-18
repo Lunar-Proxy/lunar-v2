@@ -94,9 +94,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     for (const v of ['grid', 'compact', 'list']) {
       const btn = document.querySelector<HTMLButtonElement>(`[data-view="${v}"]`);
       if (!btn) continue;
-      btn.classList.toggle('bg-background-disabled/75', btn === active);
-      btn.classList.toggle('text-text-header', btn === active);
-      btn.classList.toggle('text-text-secondary/75', btn !== active);
+      btn.classList.toggle('bg-[#252537]/60', btn === active);
+      btn.classList.toggle('text-white/70', btn === active);
+      btn.classList.toggle('text-white/50', btn !== active);
     }
   };
 

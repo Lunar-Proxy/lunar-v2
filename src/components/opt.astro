@@ -40,7 +40,7 @@ const hasSlot = Astro.slots.has('default');
   type === 'toggle' && (
     <div
       class:list={[
-        'bg-panel/72 rounded-xl border border-border-default/70 p-4 transition-colors duration-150 hover:border-border-default/95',
+        'bg-background-overlay/50 rounded-xl border border-white/5 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/20',
         !hasSlot && 'flex items-center justify-between',
         cls,
       ]}
@@ -78,8 +78,8 @@ const hasSlot = Astro.slots.has('default');
       disabled={disabled}
       readonly={readonly}
       class:list={[
-        'bg-background/75 text-text-header placeholder:text-text-secondary/85 w-full rounded-lg border border-border-default/70 px-3 py-2 text-sm transition-colors duration-150 hover:border-border-default/95 focus:border-accent/45 focus:ring-2 focus:ring-accent/10 focus:outline-none',
-        disabled && 'disabled:opacity-55 disabled:hover:border-border-default/70',
+        'bg-background/70 w-full rounded-lg border border-white/5 px-3 py-2 text-sm transition-all duration-150 hover:border-indigo-500/30 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/10 focus:outline-none',
+        disabled && 'disabled:opacity-40 disabled:hover:border-white/5',
         cls,
       ]}
     />
@@ -92,7 +92,7 @@ const hasSlot = Astro.slots.has('default');
       data-reset={reset}
       data-action={action}
       class:list={[
-        'bg-panel/68 hover:bg-panel-hover/75 rounded-lg border border-border-default/70 transition-colors duration-150 hover:border-border-default/95',
+        'bg-background/50 hover:bg-background/70 rounded-lg border border-white/5 transition-all duration-150 hover:-translate-y-px hover:scale-[1.01] active:translate-y-0 active:scale-[0.98]',
         full
           ? 'flex w-full items-center justify-center gap-2 px-3 py-2 text-sm'
           : 'px-3 py-1.5 text-xs',
@@ -109,7 +109,7 @@ const hasSlot = Astro.slots.has('default');
   type === 'card' && (
     <div
       class:list={[
-        'bg-panel/72 rounded-xl border border-border-default/70 p-4 transition-colors duration-150 hover:border-border-default/95',
+        'bg-background-overlay/50 rounded-xl border border-white/5 p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-black/20',
         cls,
       ]}
     >
@@ -124,12 +124,12 @@ const hasSlot = Astro.slots.has('default');
   type === 'proxy' && (
     <button
       data-proxy={name}
-      class="bg-background/75 relative rounded-lg border border-border-default/70 p-3 text-left transition-colors duration-150 hover:border-accent/35 hover:bg-accent/12"
+      class="bg-background/50 relative rounded-lg border border-white/5 p-3 text-left transition-all duration-150 hover:scale-[1.02] hover:border-indigo-500/20 hover:bg-indigo-500/5 active:scale-[0.98]"
     >
       <div class="text-sm font-medium">{title}</div>
       <div class="text-text-secondary text-xs">{desc}</div>
       <div class="proxy-check absolute top-2 right-2 hidden">
-        <i data-lucide="check-circle" class="h-3.5 w-3.5 text-accent" />
+        <i data-lucide="check-circle" class="h-3.5 w-3.5 text-[#6366f1]" />
       </div>
     </button>
   )
@@ -139,12 +139,12 @@ const hasSlot = Astro.slots.has('default');
   type === 'engine' && (
     <button
       data-engine={value}
-      class="bg-background/75 relative flex items-center justify-center gap-1.5 rounded-lg border border-border-default/70 py-2 text-xs transition-colors duration-150 hover:border-accent/35 hover:bg-accent/12"
+      class="bg-background/50 relative flex items-center justify-center gap-1.5 rounded-lg border border-white/5 py-2 text-xs transition-all duration-150 hover:scale-[1.03] hover:bg-indigo-500/5 active:scale-[0.97]"
     >
       {img && <img src={img} alt="" class="h-3.5 w-3.5" />}
       {title}
       <div class="engine-check absolute -top-1 -right-1 hidden">
-        <i data-lucide="check-circle" class="h-3 w-3 text-accent" />
+        <i data-lucide="check-circle" class="h-3 w-3 text-[#6366f1]" />
       </div>
     </button>
   )
@@ -156,7 +156,7 @@ const hasSlot = Astro.slots.has('default');
       data-cloak-preset={name}
       data-preset-title={title}
       data-preset-favicon={img}
-      class="bg-background/75 hover:bg-panel-hover/70 flex items-center justify-center gap-1.5 rounded-lg border border-border-default/70 px-2 py-1.5 text-xs transition-colors duration-150 hover:border-border-default/95"
+      class="bg-background/50 hover:bg-background/70 flex items-center justify-center gap-1.5 rounded-lg border border-white/5 px-2 py-1.5 text-xs transition-all duration-150 hover:scale-[1.03] active:scale-[0.97]"
     >
       {img && <img src={img} class="h-3.5 w-3.5" alt="" />}
       <slot />

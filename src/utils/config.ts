@@ -26,52 +26,13 @@ type ConfigKey = string;
 
 const isBrowser = typeof location !== 'undefined';
 
-async function getWispUrl(): Promise<string> {
-  if (!isBrowser) {
-    return 'wss://nightwisp.me.cdn.cloudflare.net/wisp/';
+function wispUrl(): string {
+  if (!isBrowser) return '';
+  if (STATIC) {
+    return WURL;
   }
-
-  const wsUrl = `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/w/`;
-  const isUp = await new Promise<boolean>(function (resolve) {
-
-    let done = false;
-    const socket = new WebSocket(wsUrl);
-
-    function finish(ok: boolean): void {
-      if (done) return;
-      done = true;
-      clearTimeout(timer);
-      resolve(ok);
-    }
-
-    socket.onopen = function () {
-      finish(true);
-      try {
-        socket.close();
-      } catch {}
-    };
-
-    socket.onerror = function () {
-      finish(false);
-    };
-
-    socket.onclose = function () {
-      if (!done) finish(false);
-    };
-
-    const timer = setTimeout(function () {
-      finish(false);
-      try {
-        socket.close();
-      } catch {}
-    }, 2500);
-  });
-
-  if (isUp) return wsUrl;
-
-  console.warn('Fallback to static');
-  const random = Math.random().toString(36).substring(2, 8);
-  return `wss://${random}.nightwisp.me.cdn.cloudflare.net/wisp/`;
+  const isHttps = location.protocol === 'https:';
+  return `${isHttps ? 'wss' : 'ws'}://${location.host}/w/`;
 }
 
 const defaults: ConfigDefaults = {
@@ -86,7 +47,7 @@ const defaults: ConfigDefaults = {
   backend: 'sc',
   panicLoc: 'https://google.com',
   panicKey: '`',
-  wispUrl: '',
+  wispUrl: wispUrl(),
   bm: [],
 };
 
@@ -99,10 +60,6 @@ let initialized = false;
 
 async function ensureInit(): Promise<void> {
   if (initialized) return;
-
-  if (isBrowser && !defaults.wispUrl) {
-    defaults.wispUrl = await getWispUrl();
-  }
 
   const test = await store.getItem('engine');
   if (test == null) {

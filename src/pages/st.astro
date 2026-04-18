@@ -64,7 +64,7 @@ if (STATIC) {
           box-shadow 0.2s ease;
       }
       .toggle:hover {
-        box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.22);
+        box-shadow: 0 0 8px rgba(99, 102, 241, 0.2);
       }
     </style>
   </head>
@@ -81,28 +81,28 @@ if (STATIC) {
             </header>
             <a
               href="#privacy"
-              class="nav-item flex items-center gap-2.5 rounded-lg bg-accent/12 px-3 py-2 text-sm text-accent transition-colors hover:bg-panel-hover/65"
+              class="nav-item flex items-center gap-2.5 rounded-lg bg-[#6366f1]/10 px-3 py-2 text-sm text-[#6366f1] transition-colors hover:bg-white/5"
               data-nav="privacy"
             >
               <i data-lucide="shield" class="h-4 w-4"></i>Privacy
             </a>
             <a
               href="#browsing"
-              class="nav-item text-text-secondary hover:text-text-header flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-panel-hover/65"
+              class="nav-item text-text-secondary hover:text-text-header flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-white/5"
               data-nav="browsing"
             >
               <i data-lucide="globe" class="h-4 w-4"></i>Browsing
             </a>
             <a
               href="#advanced"
-              class="nav-item text-text-secondary hover:text-text-header flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-panel-hover/65"
+              class="nav-item text-text-secondary hover:text-text-header flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-white/5"
               data-nav="advanced"
             >
               <i data-lucide="wrench" class="h-4 w-4"></i>Advanced
             </a>
             <a
               href="#about"
-              class="nav-item text-text-secondary hover:text-text-header flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-panel-hover/65"
+              class="nav-item text-text-secondary hover:text-text-header flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-white/5"
               data-nav="about"
             >
               <i data-lucide="info" class="h-4 w-4"></i>About
@@ -112,7 +112,7 @@ if (STATIC) {
         <main class="flex-1 space-y-8">
           <section id="privacy" data-section="privacy">
             <h2 class="mb-4 flex items-center gap-2 text-base font-semibold">
-              <i data-lucide="shield" class="h-5 w-5 text-accent"></i>Privacy
+              <i data-lucide="shield" class="h-5 w-5 text-[#6366f1]"></i>Privacy
             </h2>
             <div class="space-y-3">
               <SettingsCard
@@ -137,7 +137,7 @@ if (STATIC) {
                 title="Tab Cloak"
                 desc="Change tab title and icon"
               >
-                <div data-cloak-inputs class="border-border-default/65 space-y-2.5 border-t pt-3">
+                <div data-cloak-inputs class="space-y-2.5 border-t border-white/5 pt-3">
                   <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
                     {
                       presets.map(p => (
@@ -205,7 +205,7 @@ if (STATIC) {
           </section>
           <section id="browsing" data-section="browsing">
             <h2 class="mb-4 flex items-center gap-2 text-base font-semibold">
-              <i data-lucide="globe" class="h-5 w-5 text-accent"></i>Browsing
+              <i data-lucide="globe" class="h-5 w-5 text-pink-400"></i>Browsing
             </h2>
             <div class="space-y-3">
               <SettingsCard type="card" title="Proxy Backend">
@@ -228,22 +228,22 @@ if (STATIC) {
                 <div class="grid grid-cols-2 gap-2.5">
                   <button
                     data-transport="ep"
-                    class="bg-background/75 border-border-default/70 relative w-full rounded-lg border p-3 text-left transition-all duration-150 hover:scale-[1.02] hover:border-accent/35 hover:bg-accent/12 active:scale-[0.98]"
+                    class="bg-background/50 relative w-full rounded-lg border border-white/5 p-3 text-left transition-all duration-150 hover:scale-[1.02] hover:border-indigo-500/20 hover:bg-indigo-500/5 active:scale-[0.98]"
                   >
                     <div class="text-sm font-medium">Epoxy</div>
                     <div class="text-text-secondary text-xs">Slower</div>
                     <span class="proxy-check absolute top-2 right-2 hidden">
-                      <i data-lucide="check-circle" class="h-4 w-4 text-accent"></i>
+                      <i data-lucide="check-circle" class="h-4 w-4 text-[#6366f1]"></i>
                     </span>
                   </button>
                   <button
                     data-transport="lc"
-                    class="bg-background/75 border-border-default/70 relative w-full rounded-lg border p-3 text-left transition-all duration-150 hover:scale-[1.02] hover:border-accent/35 hover:bg-accent/12 active:scale-[0.98]"
+                    class="bg-background/50 relative w-full rounded-lg border border-white/5 p-3 text-left transition-all duration-150 hover:scale-[1.02] hover:border-indigo-500/20 hover:bg-indigo-500/5 active:scale-[0.98]"
                   >
                     <div class="text-sm font-medium">Libcurl</div>
                     <div class="text-text-secondary text-xs">Fastest</div>
                     <span class="proxy-check absolute top-2 right-2 hidden">
-                      <i data-lucide="check-circle" class="h-4 w-4 text-accent"></i>
+                      <i data-lucide="check-circle" class="h-4 w-4 text-[#6366f1]"></i>
                     </span>
                   </button>
                 </div>
@@ -274,7 +274,7 @@ if (STATIC) {
           </section>
           <section id="advanced" data-section="advanced">
             <h2 class="mb-4 flex items-center gap-2 text-base font-semibold">
-              <i data-lucide="wrench" class="h-5 w-5 text-accent"></i>Advanced
+              <i data-lucide="wrench" class="h-5 w-5 text-amber-400"></i>Advanced
             </h2>
             <div class="space-y-3">
               <SettingsCard type="card" title="Wisp Server" desc="Change the websocket server URL">
@@ -284,7 +284,7 @@ if (STATIC) {
 
               <SettingsCard type="card">
                 <h3 class="mb-1.5 flex items-center gap-1.5 text-sm font-medium">
-                  <i data-lucide="alert-triangle" class="h-3.5 w-3.5 text-accent-light"></i>
+                  <i data-lucide="alert-triangle" class="h-3.5 w-3.5 text-orange-400/80"></i>
                   Reset settings to default
                 </h3>
                 <p class="text-text-secondary mb-2.5 text-xs">This action cannot be undone</p>
@@ -294,15 +294,15 @@ if (STATIC) {
           </section>
           <section id="about" data-section="about">
             <h2 class="mb-4 flex items-center gap-2 text-base font-semibold">
-              <i data-lucide="info" class="h-5 w-5 text-accent"></i>About
+              <i data-lucide="info" class="h-5 w-5 text-[#6366f1]"></i>About
             </h2>
             <div class="space-y-3">
               <SettingsCard type="card">
                 <div class="flex items-center gap-3">
                   <div
-                    class="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/15"
+                    class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#6366f1]/15"
                   >
-                    <i data-lucide="moon" class="h-5 w-5 text-accent"></i>
+                    <i data-lucide="moon" class="h-5 w-5 text-[#6366f1]"></i>
                   </div>
                   <h3 class="text-base font-semibold">{NAME} v{VERSION}</h3>
                 </div>
@@ -310,7 +310,7 @@ if (STATIC) {
 
               <SettingsCard type="card">
                 <h3 class="mb-3 flex items-center gap-1.5 text-xs font-semibold">
-                  <i data-lucide="badge-info" class="h-3.5 w-3.5 text-accent"></i>Credits
+                  <i data-lucide="badge-info" class="h-3.5 w-3.5 text-[#6366f1]"></i>Credits
                 </h3>
                 <div class="space-y-3 text-xs">
                   <div>
@@ -325,7 +325,7 @@ if (STATIC) {
                           href="https://github.com/bearcattt"
                           target="_blank"
                           rel="noopener noreferrer"
-                          class="transition-colors hover:text-accent">Bearcattt</a
+                          class="transition-colors hover:text-[#6366f1]">Bearcattt</a
                         >
                         <span class="text-text-secondary">Founder</span>
                       </div>
@@ -334,7 +334,7 @@ if (STATIC) {
                           href="https://github.com/cattreats"
                           target="_blank"
                           rel="noopener noreferrer"
-                          class="transition-colors hover:text-accent">Shade</a
+                          class="transition-colors hover:text-[#6366f1]">Shade</a
                         >
                         <span class="text-text-secondary">Owner & Moral Support</span>
                       </div>
@@ -343,13 +343,13 @@ if (STATIC) {
                           href="https://github.com/not-amplify"
                           target="_blank"
                           rel="noopener noreferrer"
-                          class="transition-colors hover:text-accent">Amplify</a
+                          class="transition-colors hover:text-[#6366f1]">Amplify</a
                         >
                         <span class="text-text-secondary">Co Owner & VPS host</span>
                       </div>
                     </div>
                   </div>
-                  <div class="border-border-default/65 border-t pt-3">
+                  <div class="border-t border-white/5 pt-3">
                     <p
                       class="text-text-secondary mb-1.5 flex items-center gap-1.5 text-[10px] tracking-wide uppercase"
                     >
@@ -375,7 +375,7 @@ if (STATIC) {
     </div>
     <div
       id="reload-toast"
-      class="bg-panel/90 border-border-default/75 text-text-header pointer-events-none fixed right-6 bottom-6 translate-y-full rounded-xl border px-4 py-3 opacity-0 backdrop-blur-sm transition-all duration-300 ease-out"
+      class="bg-background-overlay/90 text-text-header pointer-events-none fixed right-6 bottom-6 translate-y-full rounded-xl border border-white/10 px-4 py-3 opacity-0 backdrop-blur-sm transition-all duration-300 ease-out"
       style="z-index:9999"
     >
       <p class="text-sm font-medium">Settings applied</p>

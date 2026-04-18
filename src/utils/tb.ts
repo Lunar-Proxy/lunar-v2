@@ -102,13 +102,13 @@ function initHighlight() {
       font-family:inherit;letter-spacing:inherit;z-index:0;
       height:28px;line-height:28px;
     }
-    #url-highlight .hl-dim { color: var(--text-secondary); }
-    #url-highlight .hl-host { color: var(--text-header); font-weight:500; }
+    #url-highlight .hl-dim { color:#6b6a8a; }
+    #url-highlight .hl-host { color:#e2e1f0;font-weight:500; }
     #urlbar {
       position:relative;z-index:1;background:transparent!important;
-      color:transparent!important;caret-color:var(--accent)!important;
+      color:transparent!important;caret-color:#fff!important;
     }
-    #urlbar::selection { background:rgba(var(--accent-rgb),0.3);color:transparent; }
+    #urlbar::selection { background:rgba(92,89,165,0.45);color:transparent; }
   `;
   shadow.appendChild(style);
 
@@ -356,7 +356,7 @@ const tabBaseClass =
   'tab flex items-center justify-between h-[34px] min-w-[160px] max-w-[220px] px-3 rounded-t-lg cursor-pointer select-none transition-all duration-200 relative z-10 border border-b-0 border-[color:var(--border)] gap-2 text-[12px]';
 const tabActiveClass =
   tabBaseClass +
-  ' bg-[color:var(--background)] shadow-[0_2px_12px_rgba(var(--background-rgb),0.45)] text-[color:var(--text-header)]';
+  ' bg-[color:var(--background)] shadow-[0_2px_12px_#23213640] text-[color:var(--text-header)]';
 const tabInactiveClass =
   tabBaseClass +
   ' bg-[color:var(--background-overlay)] hover:bg-[color:var(--background)] text-[color:var(--text-secondary)] opacity-60 hover:opacity-85';
@@ -396,7 +396,7 @@ closeBtn.style.cssText = `
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  color: var(--text-secondary);
+  color: #9ca3af;
   transition: all 0.15s ease;
   margin-left: 4px;
   outline: none;
@@ -409,12 +409,12 @@ closeBtn.innerHTML = `
   </svg>
 `;
   closeBtn.onmouseenter = () => {
-    closeBtn.style.background = 'rgba(var(--background-disabled-rgb),0.8)';
-    closeBtn.style.color = 'var(--text-header)';
+    closeBtn.style.background = 'rgba(255,255,255,0.15)';
+    closeBtn.style.color = '#e5e7eb';
   };
   closeBtn.onmouseleave = () => {
     closeBtn.style.background = 'none';
-    closeBtn.style.color = 'var(--text-secondary)';
+    closeBtn.style.color = '#9ca3af';
   };
   closeBtn.innerHTML =
     '<svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;flex-shrink:0;">' +

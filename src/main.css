@@ -12,9 +12,6 @@
   --color-accent: var(--accent);
   --color-accent-light: var(--accent-light);
   --color-accent-dark: var(--accent-dark);
-  --color-panel: var(--panel);
-  --color-panel-hover: var(--panel-hover);
-  --color-text-muted: var(--text-muted);
   --animate-spin: spin 1s linear 1;
 
   @keyframes spin {
@@ -30,21 +27,18 @@
 @layer base {
   :root {
     --background: #232136;
-    --background-overlay: #2a273f;
-    --border: #44415a;
+    --background-overlay: #1f1d2e;
+    --border: #374151;
     --text-header: #e0def4;
-    --text-secondary: #908caa;
-    --background-disabled: #393552;
-    --accent: #c4a7e7;
-    --accent-light: #9ccfd8;
-    --accent-dark: #3e8fb0;
-    --panel: #1f1d2e;
-    --panel-hover: #2e2a45;
-    --text-muted: #b4b0cf;
+    --text-secondary: #a19eb3;
+    --background-disabled: #2a2b3c;
+    --accent: #6366f1;
+    --accent-light: #818cf8;
+    --accent-dark: #4f46e5;
     --background-rgb: 35, 33, 54;
-    --background-overlay-rgb: 42, 39, 63;
-    --accent-rgb: 196, 167, 231;
-    --background-disabled-rgb: 57, 53, 82;
+    --background-overlay-rgb: 31, 29, 46;
+    --accent-rgb: 99, 102, 241;
+    --background-disabled-rgb: 42, 43, 60;
   }
 
   html {
@@ -111,7 +105,7 @@
 
   .toggle.active::after {
     left: 20px;
-    background: #e0def4;
+    background: #fff;
   }
 
   .toast {

@@ -121,32 +121,32 @@ export class SettingsManager {
     doc.addEventListener('keydown', this.panicHandler);
   }
   static highlightEngine(btn: Element) {
-    btn.classList.add('bg-accent/15', 'border-accent/50');
+    btn.classList.add('bg-[#6366f1]/15', 'border-[#6366f1]/50');
     const check = btn.querySelector('.engine-check');
     if (check) check.classList.remove('hidden');
   }
   static unhighlightEngine(btn: Element) {
-    btn.classList.remove('bg-accent/15', 'border-accent/50');
+    btn.classList.remove('bg-[#6366f1]/15', 'border-[#6366f1]/50');
     const check = btn.querySelector('.engine-check');
     if (check) check.classList.add('hidden');
   }
   static highlightProxy(btn: Element) {
-    btn.classList.add('border-accent', 'bg-accent/10');
+    btn.classList.add('border-[#6366f1]', 'bg-[#6366f1]/10');
     const check = btn.querySelector('.proxy-check');
     if (check) check.classList.remove('hidden');
   }
   static unhighlightProxy(btn: Element) {
-    btn.classList.remove('border-accent', 'bg-accent/10');
+    btn.classList.remove('border-[#6366f1]', 'bg-[#6366f1]/10');
     const check = btn.querySelector('.proxy-check');
     if (check) check.classList.add('hidden');
   }
   static highlightTransport(btn: Element) {
-    btn.classList.add('border-accent', 'bg-accent/10');
+    btn.classList.add('border-[#6366f1]', 'bg-[#6366f1]/10');
     const check = btn.querySelector('.proxy-check');
     if (check) check.classList.remove('hidden');
   }
   static unhighlightTransport(btn: Element) {
-    btn.classList.remove('border-accent', 'bg-accent/10');
+    btn.classList.remove('border-[#6366f1]', 'bg-[#6366f1]/10');
     const check = btn.querySelector('.proxy-check');
     if (check) check.classList.add('hidden');
   }
@@ -180,11 +180,11 @@ export class SettingsManager {
     const items = document.querySelectorAll('[data-nav]');
     const activate = (item: Element, target: string) => {
       items.forEach(n => {
-        n.classList.remove('bg-accent/10', 'text-accent');
+        n.classList.remove('bg-[#6366f1]/10', 'text-[#6366f1]');
         n.classList.add('text-text-secondary');
       });
       item.classList.remove('text-text-secondary');
-      item.classList.add('bg-accent/10', 'text-accent');
+      item.classList.add('bg-[#6366f1]/10', 'text-[#6366f1]');
       const section = document.querySelector(`[data-section="${target}"]`);
       if (!section) return;
       window.scrollTo({
@@ -229,9 +229,9 @@ export class SettingsManager {
         items.forEach(item => {
           if (item.getAttribute('data-nav') === active) {
             item.classList.remove('text-text-secondary');
-            item.classList.add('bg-accent/10', 'text-accent');
+            item.classList.add('bg-[#6366f1]/10', 'text-[#6366f1]');
           } else {
-            item.classList.remove('bg-accent/10', 'text-accent');
+            item.classList.remove('bg-[#6366f1]/10', 'text-[#6366f1]');
             item.classList.add('text-text-secondary');
           }
         });
@@ -410,7 +410,7 @@ export class SettingsManager {
     input.addEventListener('focus', () => {
       recording = true;
       input.value = 'Press keys...';
-      input.classList.add('border-accent/50', 'ring-2', 'ring-accent/20');
+      input.classList.add('border-[#6366f1]/50', 'ring-2', 'ring-[#6366f1]/20');
     });
     input.addEventListener('keydown', async e => {
       if (!recording) return;
@@ -441,7 +441,7 @@ export class SettingsManager {
     });
     input.addEventListener('blur', () => {
       recording = false;
-      input.classList.remove('border-accent/50', 'ring-2', 'ring-accent/20');
+      input.classList.remove('border-[#6366f1]/50', 'ring-2', 'ring-[#6366f1]/20');
       if (input.value === 'Press keys...') {
         ConfigAPI.get('panicKeyBind').then(saved => {
           input.value = saved ? this.formatKeybind(saved as string) : '';

@@ -8,33 +8,44 @@ const randomQuote = quotes[randomIndex]?.quote || '';
 ---
 
 <!doctype html>
-<html lang="en" style="background:#232136;">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <title>New Tab</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <style>
-      html,
-      body {
-        background: #232136;
-        color: #e0def4;
+      @keyframes drift1 {
+        from {
+          transform: translateX(-55%) translateY(0);
+        }
+        to {
+          transform: translateX(-45%) translateY(30px);
+        }
+      }
+      @keyframes drift2 {
+        from {
+          transform: translateY(0);
+        }
+        to {
+          transform: translateY(-25px);
+        }
       }
     </style>
   </head>
 
   <body
-    class="font-linux bg-background text-text-header relative flex h-screen w-screen flex-col items-center justify-center overflow-hidden"
+    class="font-linux bg-background relative flex h-screen w-screen flex-col items-center justify-center overflow-hidden text-white"
   >
     <div class="pointer-events-none absolute inset-0 z-0 overflow-hidden">
       <div
-        class="absolute -top-24 left-1/2 h-125 w-175 rounded-full opacity-[0.08]"
-        style="background: radial-gradient(ellipse, rgba(var(--accent-rgb), 0.28) 0%, transparent 72%);"
+        class="absolute -top-24 left-1/2 h-[500px] w-[700px] rounded-full opacity-[0.13]"
+        style="background: radial-gradient(ellipse, #5064f0 0%, transparent 70%); animation: drift1 12s ease-in-out infinite alternate;"
       >
       </div>
       <div
-        class="absolute right-[10%] -bottom-20 h-100 w-125 opacity-[0.06]"
-        style="background: radial-gradient(ellipse, rgba(var(--accent-rgb), 0.2) 0%, transparent 72%);"
+        class="absolute right-[10%] -bottom-20 h-[400px] w-[500px] opacity-[0.08]"
+        style="background: radial-gradient(ellipse, #8c50f0 0%, transparent 70%); animation: drift2 15s ease-in-out infinite alternate;"
       >
       </div>
     </div>
@@ -43,36 +54,36 @@ const randomQuote = quotes[randomIndex]?.quote || '';
       <div id="clock" class="flex items-baseline space-x-1 select-none">
         <span
           id="hours"
-          class="text-[clamp(2.75rem,9vw,6rem)] leading-none font-extrabold tracking-tight text-text-header"
-          >12</span
+          class="text-[clamp(2.75rem,9vw,6rem)] leading-none font-extrabold tracking-tight text-white"
+          style="text-shadow: 0 0 35px rgba(255,255,255,0.1);">12</span
         >
         <span
-          class="text-text-secondary/55 text-[clamp(2.75rem,9vw,6rem)] leading-none font-extrabold tracking-tight"
+          class="text-[clamp(2.75rem,9vw,6rem)] leading-none font-extrabold tracking-tight opacity-35"
           >:</span
         >
         <span
           id="minutes"
-          class="text-[clamp(2.75rem,9vw,6rem)] leading-none font-extrabold tracking-tight text-text-header"
-          >59</span
+          class="text-[clamp(2.75rem,9vw,6rem)] leading-none font-extrabold tracking-tight text-white"
+          style="text-shadow: 0 0 35px rgba(255,255,255,0.1);">59</span
         >
         <span
-          class="text-text-secondary/55 text-[clamp(2.75rem,9vw,6rem)] leading-none font-extrabold tracking-tight"
+          class="text-[clamp(2.75rem,9vw,6rem)] leading-none font-extrabold tracking-tight opacity-35"
           >:</span
         >
         <span
           id="seconds"
-          class="text-text-secondary/75 text-[clamp(2.75rem,9vw,6rem)] leading-none font-extrabold tracking-tight"
-          >48</span
+          class="text-[clamp(2.75rem,9vw,6rem)] leading-none font-extrabold tracking-tight text-white opacity-45"
+          style="text-shadow: 0 0 35px rgba(255,255,255,0.1);">48</span
         >
         <span
           id="ampm"
-          class="text-text-secondary/65 mt-1.5 ml-2 self-start text-[clamp(0.75rem,2.2vw,1.1rem)] font-semibold"
+          class="mt-1.5 ml-2 self-start text-[clamp(0.75rem,2.2vw,1.1rem)] font-semibold text-white opacity-35"
           >AM</span
         >
       </div>
 
       <div class="max-w-lg px-6 text-center">
-        <span class="text-text-secondary/90 text-base font-normal">
+        <span class="text-base font-normal text-white/60">
           {randomQuote}
         </span>
       </div>
@@ -81,34 +92,42 @@ const randomQuote = quotes[randomIndex]?.quote || '';
     <Shortcuts />
 
     <div
-      class="bg-panel/88 border-border-default/70 fixed right-5 bottom-5 z-50 flex items-center gap-2.5 rounded-lg border px-3 py-2 backdrop-blur-md"
+      class="fixed right-5 bottom-5 z-50 flex items-center gap-2.5 rounded-lg border border-white/5 bg-[#1a1a2e]/60 px-3 py-2 backdrop-blur-md"
     >
-      <span class="text-text-secondary/75 text-xs font-medium">v{VERSION}</span>
-      <span class="bg-border-default/70 h-3 w-px"></span>
+      <span class="text-xs font-medium text-white/50">v{VERSION}</span>
+      <span class="h-3 w-px bg-white/15"></span>
       <a
         href="https://github.com/Lunar-Proxy/lunar-v2"
         target="_blank"
-        class="text-text-secondary/75 hover:text-text-header text-xs font-medium transition-colors"
+        class="text-xs font-medium text-white/50 transition-colors hover:text-white/80"
       >
         GitHub
       </a>
-      <span class="bg-border-default/70 h-3 w-px"></span>
+      <span class="h-3 w-px bg-white/15"></span>
       <a
         href="https://discord.gg/fuPtWjYuf8"
         target="_blank"
-        class="text-text-secondary/75 hover:text-text-header text-xs font-medium transition-colors"
+        class="text-xs font-medium text-white/50 transition-colors hover:text-white/80"
       >
-        Discord
+        Our Discord
+      </a>
+      <span class="h-3 w-px bg-white/15"></span>
+      <a
+        href="https://discord.gg/fuPtWjYuf8"
+        target="_blank"
+        class="text-xs font-medium text-white/50 transition-colors hover:text-white/80"
+      >
+        Night Network Discord
       </a>
     </div>
     <div
-      class="bg-panel/88 border-border-default/70 fixed bottom-5 left-5 z-50 flex items-center gap-3 rounded-lg border px-3 py-2 backdrop-blur-md"
+      class="fixed bottom-5 left-5 z-50 flex items-center gap-3 rounded-lg border border-white/5 bg-[#1a1a2e]/60 px-3 py-2 backdrop-blur-md"
     >
-      <span id="sl" class="text-text-secondary/75 text-xs font-medium tabular-nums">...</span>
-      <div class="bg-border-default/70 h-3 w-px"></div>
+      <span id="sl" class="text-xs font-medium text-white/50 tabular-nums">...</span>
+      <div class="h-3 w-px bg-white/15"></div>
       <button
         id="refresh"
-        class="text-text-secondary/75 hover:text-text-header transition-all duration-300 hover:rotate-180 focus:outline-none"
+        class="text-white/50 transition-all duration-300 hover:rotate-180 hover:text-white/80 focus:outline-none"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
