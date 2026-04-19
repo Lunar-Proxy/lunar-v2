@@ -5,7 +5,7 @@ import { execSync } from 'child_process';
 import fs from 'node:fs';
 
 const ROUTES = ['/', '/math', '/new', '/st', '/welcome'];
-const OUT_DIR = './dist/client';
+const OUT_DIR = './dist/static';
 const wisp = 'wss://lunaron.top/w/'; // change to wtv to change wisp server
 
 if (!fs.existsSync('dist')) {
@@ -22,6 +22,7 @@ const server = http.createServer(handler);
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
 const { port } = server.address();
 console.log(`Server on port ${port}, generating pages...\n`);
+mkdirSync(OUT_DIR, { recursive: true });
 
 function fetchPage(route) {
   return new Promise((resolve, reject) => {
@@ -42,9 +43,9 @@ for (const route of ROUTES) {
       console.error(`✗ ${route}: empty`);
       continue;
     }
-    const dir = route === '/' ? OUT_DIR : join(OUT_DIR, route);
-    mkdirSync(dir, { recursive: true });
-    const filePath = join(dir, 'index.html');
+    const slug = route.replace(/^\/+|\/+$/g, '');
+    const fileName = slug ? `${slug.replace(/\//g, '-')}.html` : 'index.html';
+    const filePath = join(OUT_DIR, fileName);
     writeFileSync(filePath, html, 'utf-8');
     console.log(`✓ ${route} → ${filePath} (${html.length} bytes)`);
   } catch (e) {
