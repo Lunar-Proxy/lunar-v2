@@ -97,15 +97,15 @@ const menuSections = [
     </style>
   </head>
 
-  <body class="m-0 h-screen overflow-hidden bg-gray-900 p-0 font-sans text-white">
+  <body class="bg-background text-text-header m-0 h-screen overflow-hidden p-0 font-sans">
     <div class="flex h-screen w-screen flex-col">
-      <div id="tab-wrapper" class="flex h-11 items-end bg-[#18172a] px-2 pt-1.5">
+      <div id="tab-wrapper" class="bg-background flex h-11 items-end px-2 pt-1.5">
         <div class="flex w-full items-center gap-1">
           <div id="tcontainer" class="flex min-w-0 flex-nowrap items-end gap-0.5 overflow-x-auto">
           </div>
           <button
             id="add"
-            class="mb-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded text-gray-500 transition hover:bg-white/10 hover:text-white"
+            class="text-text-secondary mb-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded transition hover:bg-panel-hover/75 hover:text-text-header"
           >
             <i data-lucide="plus" class="h-4 w-4"></i>
           </button>
@@ -113,7 +113,7 @@ const menuSections = [
       </div>
 
       <div
-        class="relative flex h-10 items-center gap-1.5 border-t border-white/[0.06] bg-[#1c1a2b] px-3"
+        class="bg-background-overlay border-border-default/65 relative flex h-10 items-center gap-1.5 border-t px-3"
       >
         <div class="flex items-center gap-0.5">
           {
@@ -121,7 +121,7 @@ const menuSections = [
               <button
                 id={id}
                 class:list={[
-                  'flex h-7 w-7 items-center justify-center rounded text-gray-500 transition hover:bg-white/10 hover:text-white',
+                  'text-text-secondary flex h-7 w-7 items-center justify-center rounded transition hover:bg-panel-hover/75 hover:text-text-header',
                   btnClass,
                 ]}
               >
@@ -131,7 +131,7 @@ const menuSections = [
           }
         </div>
 
-        <div class="mx-0.5 h-4 w-px shrink-0 bg-white/[0.12]"></div>
+        <div class="bg-border-default/70 mx-0.5 h-4 w-px shrink-0"></div>
 
         <div class="relative z-50 min-w-0 flex-1">
           <div class="relative w-full">
@@ -140,7 +140,7 @@ const menuSections = [
             >
               <i
                 data-lucide="lock"
-                class="h-3.5 w-3.5 text-green-500"
+                class="text-accent h-3.5 w-3.5"
                 style="shape-rendering: geometricPrecision;"></i>
             </span>
 
@@ -151,13 +151,13 @@ const menuSections = [
               type="text"
               autocomplete="off"
               spellcheck="false"
-              class="relative h-7 w-full rounded-md border border-white/[0.07] bg-transparent pr-7 pl-7 text-sm caret-white placeholder:text-sm placeholder:text-gray-600 hover:border-white/[0.14] focus:outline-none"
+              class="border-border-default/55 text-text-header placeholder:text-text-secondary/60 relative h-7 w-full rounded-md border bg-transparent pr-7 pl-7 text-sm caret-white placeholder:text-sm hover:border-border-default/90 focus:outline-none"
               placeholder="Search or enter address"
             />
 
             <button
               id="fav"
-              class="absolute top-1/2 right-1 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded text-gray-500 transition hover:bg-white/10 hover:text-white"
+              class="text-text-secondary absolute top-1/2 right-1 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded transition hover:bg-panel-hover/75 hover:text-text-header"
               style="z-index: 10; pointer-events: all;"
             >
               <i data-lucide="bookmark" class="h-3.5 w-3.5"></i>
@@ -165,25 +165,25 @@ const menuSections = [
 
             <div
               id="suggestions"
-              class="absolute top-full right-0 left-0 z-50 -mt-px hidden overflow-hidden rounded-b-lg border border-t-0 border-[#3a3758] bg-[#23213a] shadow-lg"
+              class="border-border-default/90 absolute top-full right-0 left-0 z-50 -mt-px hidden overflow-hidden rounded-b-lg border border-t-0 bg-[color:var(--background-overlay)] shadow-lg"
             >
               <div id="suggestions-container" class="py-1"></div>
             </div>
           </div>
         </div>
 
-        <div class="mx-0.5 h-4 w-px shrink-0 bg-white/[0.12]"></div>
+        <div class="bg-border-default/70 mx-0.5 h-4 w-px shrink-0"></div>
 
         <button
           id="menubtn"
-          class="flex h-7 w-7 shrink-0 items-center justify-center rounded text-gray-500 transition hover:bg-white/10 hover:text-white"
+          class="text-text-secondary flex h-7 w-7 shrink-0 items-center justify-center rounded transition hover:bg-panel-hover/75 hover:text-text-header"
         >
           <i data-lucide="menu" class="h-4 w-4" style="shape-rendering: geometricPrecision;"></i>
         </button>
 
         <div
           id="loading-bar"
-          class="pointer-events-none absolute right-0 bottom-0 left-0 z-50 hidden h-0.5 w-full bg-[#5c59a5] opacity-0 transition-opacity duration-200"
+          class="bg-accent pointer-events-none absolute right-0 bottom-0 left-0 z-50 hidden h-0.5 w-full opacity-0 transition-opacity duration-200"
         >
         </div>
       </div>
@@ -191,13 +191,13 @@ const menuSections = [
       <div class="relative flex-1 overflow-hidden">
         <div
           id="menu"
-          class="absolute top-2 right-3 z-50 hidden w-64 overflow-hidden rounded-lg border border-[#3a3758] bg-[#1f1f30] shadow-2xl"
+          class="border-border-default/90 absolute top-2 right-3 z-50 hidden w-64 overflow-hidden rounded-lg border bg-[color:var(--background-overlay)] shadow-2xl"
         >
           {
             menuSections.map((section, i) => (
-              <div class:list={['flex flex-col', i !== 0 ? 'border-t border-[#3a3758]' : '']}>
+              <div class:list={['flex flex-col', i !== 0 ? 'border-border-default border-t' : '']}>
                 {section.map(({ icon, label }) => (
-                  <button class="menu-item flex w-full items-center gap-2.5 px-3 py-2 text-gray-300 transition hover:bg-white/8 hover:text-white">
+                  <button class="menu-item text-text-secondary/90 hover:text-text-header flex w-full items-center gap-2.5 px-3 py-2 transition hover:bg-panel-hover/80">
                     <i data-lucide={icon} class="h-3.5 w-3.5 shrink-0" />
                     <span class="text-xs">{label}</span>
                   </button>
@@ -207,7 +207,7 @@ const menuSections = [
           }
         </div>
 
-        <div id="fcontainer" class="h-full w-full bg-[#1c1a2b]"></div>
+        <div id="fcontainer" class="bg-background-overlay h-full w-full"></div>
       </div>
 
       <ImportLucide />

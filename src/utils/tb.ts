@@ -40,6 +40,7 @@ let urlInput: HTMLInputElement | null = null;
 let loadingBar: HTMLDivElement | null = null;
 let hlLayer: HTMLDivElement | null = null;
 let isTyping = false;
+let queuedDisplay: string | null = null;
 const faviconCache = new Map<string, string>();
 const pendingFavicons = new Map<string, Promise<string>>();
 let transportReady = false;
@@ -50,26 +51,47 @@ const escHtml = (s: string) => s.replace(/[&<>]/g, c => ESC[c]);
 
 let lastHighlightVal = '';
 function renderHighlight(raw: string) {
-  if (!hlLayer || raw === lastHighlightVal) return;
+  if (!hlLayer) return;
+  if (!raw) {
+    lastHighlightVal = '';
+    hlLayer.innerHTML = '';
+    return;
+  }
+  if (raw === lastHighlightVal) return;
   lastHighlightVal = raw;
 
-  if (!raw) {
+  const trimmed = raw.trim();
+  if (!trimmed) {
     hlLayer.innerHTML = '';
     return;
   }
 
-  let url: URL;
-  try {
-    url = new URL(raw);
-  } catch {
-    hlLayer.innerHTML = `<span class="hl-dim">${escHtml(raw)}</span>`;
+  const hasScheme = /^[a-zA-Z][a-zA-Z\d+.-]*:\/\//.test(trimmed);
+  const looksLikeHost =
+    !/\s/.test(trimmed) && (trimmed.includes('.') || trimmed.startsWith('localhost') || trimmed.includes(':'));
+
+  let url: URL | null = null;
+  if (hasScheme) {
+    try {
+      url = new URL(trimmed);
+    } catch {}
+  }
+  if (!url && looksLikeHost) {
+    try {
+      url = new URL(`https://${trimmed}`);
+    } catch {}
+  }
+
+  if (!url || !url.hostname) {
+    hlLayer.innerHTML = `<span class="hl-host">${escHtml(raw)}</span>`;
     return;
   }
 
   const host = url.hostname;
-  const idx = raw.indexOf(host);
+  const lower = raw.toLowerCase();
+  const idx = lower.indexOf(host.toLowerCase());
   if (idx === -1) {
-    hlLayer.innerHTML = `<span class="hl-dim">${escHtml(raw)}</span>`;
+    hlLayer.innerHTML = `<span class="hl-host">${escHtml(raw)}</span>`;
     return;
   }
 
@@ -83,9 +105,18 @@ const syncHlScroll = () => {
   if (urlInput && hlLayer) hlLayer.scrollLeft = urlInput.scrollLeft;
 };
 
+const syncHighlight = () => {
+  if (!urlInput || isTyping) return;
+  if (urlInput.value === lastHighlightVal) return;
+  lastHighlightVal = '';
+  renderHighlight(urlInput.value);
+  syncHlScroll();
+};
+
 function setUrlDisplay(val: string) {
   if (!urlInput) return;
   urlInput.value = val;
+  lastHighlightVal = '';
   renderHighlight(val);
   syncHlScroll();
 }
@@ -101,14 +132,15 @@ function initHighlight() {
       white-space:pre;overflow:hidden;box-sizing:border-box;
       font-family:inherit;letter-spacing:inherit;z-index:0;
       height:28px;line-height:28px;
+      font-variant-ligatures: none;
     }
-    #url-highlight .hl-dim { color:#6b6a8a; }
-    #url-highlight .hl-host { color:#e2e1f0;font-weight:500; }
+    #url-highlight .hl-dim { color: var(--text-secondary); }
+    #url-highlight .hl-host { color: var(--text-header); font-weight:500; }
     #urlbar {
       position:relative;z-index:1;background:transparent!important;
-      color:transparent!important;caret-color:#fff!important;
+      color:transparent!important;caret-color:var(--accent)!important;
     }
-    #urlbar::selection { background:rgba(92,89,165,0.45);color:transparent; }
+    #urlbar::selection { background:rgba(var(--accent-rgb),0.35);color:transparent; }
   `;
   shadow.appendChild(style);
 
@@ -125,6 +157,27 @@ function initHighlight() {
   });
   urlInput.addEventListener('blur', () => {
     isTyping = false;
+    const pending = queuedDisplay;
+    queuedDisplay = null;
+    if (pending !== null) {
+      setUrlDisplay(pending);
+      return;
+    }
+    lastHighlightVal = '';
+    renderHighlight(urlInput!.value);
+    syncHlScroll();
+  });
+  urlInput.addEventListener('compositionstart', () => {
+    isTyping = true;
+  });
+  urlInput.addEventListener('compositionend', () => {
+    isTyping = false;
+    const pending = queuedDisplay;
+    queuedDisplay = null;
+    if (pending !== null) {
+      setUrlDisplay(pending);
+      return;
+    }
     lastHighlightVal = '';
     renderHighlight(urlInput!.value);
     syncHlScroll();
@@ -327,8 +380,12 @@ function updateUrlBar(tab: Tab): void {
     const doc = tab.iframe.contentDocument;
     if (!doc) return;
     const val = getDisplayUrl(doc.location.href || '');
-    if (!isTyping) setUrlDisplay(val);
-    else urlInput.value = val;
+    if (!isTyping) {
+      queuedDisplay = null;
+      setUrlDisplay(val);
+      return;
+    }
+    if (queuedDisplay !== val) queuedDisplay = val;
   } catch {}
 }
 
@@ -396,7 +453,7 @@ closeBtn.style.cssText = `
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  color: #9ca3af;
+  color: var(--text-secondary);
   transition: all 0.15s ease;
   margin-left: 4px;
   outline: none;
@@ -409,12 +466,12 @@ closeBtn.innerHTML = `
   </svg>
 `;
   closeBtn.onmouseenter = () => {
-    closeBtn.style.background = 'rgba(255,255,255,0.15)';
-    closeBtn.style.color = '#e5e7eb';
+    closeBtn.style.background = 'rgba(var(--background-disabled-rgb),0.75)';
+    closeBtn.style.color = 'var(--text-header)';
   };
   closeBtn.onmouseleave = () => {
     closeBtn.style.background = 'none';
-    closeBtn.style.color = '#9ca3af';
+    closeBtn.style.color = 'var(--text-secondary)';
   };
   closeBtn.innerHTML =
     '<svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block;flex-shrink:0;">' +
@@ -604,12 +661,17 @@ function switchTab(id: number): void {
     if (activeId !== id) return;
     try {
       if (!tab.iframe) return;
+      syncHighlight();
       const href = tab.iframe.contentWindow?.location.href;
       if (!href || href === prevHref) return;
       prevHref = href;
       const disp = getDisplayUrl(href);
-      if (!isTyping) setUrlDisplay(disp);
-      else if (urlInput) urlInput.value = disp;
+      if (!isTyping) {
+        queuedDisplay = null;
+        setUrlDisplay(disp);
+      } else if (queuedDisplay !== disp) {
+        queuedDisplay = disp;
+      }
       syncTab(tab);
       if (onUrlChange) onUrlChange(href);
     } catch {}

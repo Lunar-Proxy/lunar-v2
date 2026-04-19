@@ -27,18 +27,18 @@
 @layer base {
   :root {
     --background: #232136;
-    --background-overlay: #1f1d2e;
-    --border: #374151;
+    --background-overlay: #2a273f;
+    --border: #44415a;
     --text-header: #e0def4;
-    --text-secondary: #a19eb3;
-    --background-disabled: #2a2b3c;
-    --accent: #6366f1;
-    --accent-light: #818cf8;
-    --accent-dark: #4f46e5;
+    --text-secondary: #908caa;
+    --background-disabled: #393552;
+    --accent: #c4a7e7;
+    --accent-light: #9ccfd8;
+    --accent-dark: #3e8fb0;
     --background-rgb: 35, 33, 54;
-    --background-overlay-rgb: 31, 29, 46;
-    --accent-rgb: 99, 102, 241;
-    --background-disabled-rgb: 42, 43, 60;
+    --background-overlay-rgb: 42, 39, 63;
+    --accent-rgb: 196, 167, 231;
+    --background-disabled-rgb: 57, 53, 82;
   }
 
   html {
@@ -83,7 +83,7 @@
     border-radius: 11px;
     cursor: pointer;
     position: relative;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border);
   }
 
   .toggle::after {
@@ -105,7 +105,7 @@
 
   .toggle.active::after {
     left: 20px;
-    background: #fff;
+    background: var(--text-header);
   }
 
   .toast {

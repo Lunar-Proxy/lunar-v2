@@ -64,7 +64,7 @@ if (STATIC) {
           box-shadow 0.2s ease;
       }
       .toggle:hover {
-        box-shadow: 0 0 8px rgba(99, 102, 241, 0.2);
+        box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.22);
       }
     </style>
   </head>
@@ -80,25 +80,32 @@ if (STATIC) {
               <p class="text-text-secondary text-xs">Customize {NAME}</p>
             </header>
             <a
-              href="#privacy"
-              class="nav-item flex items-center gap-2.5 rounded-lg bg-[#6366f1]/10 px-3 py-2 text-sm text-[#6366f1] transition-colors hover:bg-white/5"
-              data-nav="privacy"
+              href="#cloaking"
+              class="nav-item flex items-center gap-2.5 rounded-lg bg-[color:var(--accent)]/10 px-3 py-2 text-sm text-[color:var(--accent)] transition-colors hover:bg-white/5"
+              data-nav="cloaking"
             >
-              <i data-lucide="shield" class="h-4 w-4"></i>Privacy
+              <i data-lucide="shield" class="h-4 w-4"></i>Cloaking
+            </a>
+            <a
+              href="#controls"
+              class="nav-item text-text-secondary hover:text-text-header flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-white/5"
+              data-nav="controls"
+            >
+              <i data-lucide="key" class="h-4 w-4"></i>Controls
             </a>
             <a
               href="#browsing"
               class="nav-item text-text-secondary hover:text-text-header flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-white/5"
               data-nav="browsing"
             >
-              <i data-lucide="globe" class="h-4 w-4"></i>Browsing
+              <i data-lucide="globe" class="h-4 w-4"></i>Browse & Search
             </a>
             <a
-              href="#advanced"
+              href="#system"
               class="nav-item text-text-secondary hover:text-text-header flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-white/5"
-              data-nav="advanced"
+              data-nav="system"
             >
-              <i data-lucide="wrench" class="h-4 w-4"></i>Advanced
+              <i data-lucide="wrench" class="h-4 w-4"></i>System
             </a>
             <a
               href="#about"
@@ -110,9 +117,9 @@ if (STATIC) {
           </div>
         </nav>
         <main class="flex-1 space-y-8">
-          <section id="privacy" data-section="privacy">
+          <section id="cloaking" data-section="cloaking">
             <h2 class="mb-4 flex items-center gap-2 text-base font-semibold">
-              <i data-lucide="shield" class="h-5 w-5 text-[#6366f1]"></i>Privacy
+              <i data-lucide="shield" class="h-5 w-5 text-[color:var(--accent)]"></i>Cloaking
             </h2>
             <div class="space-y-3">
               <SettingsCard
@@ -170,13 +177,13 @@ if (STATIC) {
                 title="Tab Switch Cloak"
                 desc="Auto-cloak when you switch tabs"
               />
-              <SettingsCard
-                type="toggle"
-                name="beforeUnload"
-                title="Anti-close"
-                desc="Confirm prompt before closing"
-              />
-
+            </div>
+          </section>
+          <section id="controls" data-section="controls">
+            <h2 class="mb-4 flex items-center gap-2 text-base font-semibold">
+              <i data-lucide="key" class="h-5 w-5 text-[color:var(--accent-dark)]"></i>Controls
+            </h2>
+            <div class="space-y-3">
               <SettingsCard
                 type="toggle"
                 name="panicKey"
@@ -201,11 +208,17 @@ if (STATIC) {
                   />
                 </div>
               </SettingsCard>
+              <SettingsCard
+                type="toggle"
+                name="beforeUnload"
+                title="Anti-close"
+                desc="Confirm prompt before closing"
+              />
             </div>
           </section>
           <section id="browsing" data-section="browsing">
             <h2 class="mb-4 flex items-center gap-2 text-base font-semibold">
-              <i data-lucide="globe" class="h-5 w-5 text-pink-400"></i>Browsing
+              <i data-lucide="globe" class="h-5 w-5 text-[color:var(--accent-light)]"></i>Browsing & Search
             </h2>
             <div class="space-y-3">
               <SettingsCard type="card" title="Proxy Backend">
@@ -228,22 +241,22 @@ if (STATIC) {
                 <div class="grid grid-cols-2 gap-2.5">
                   <button
                     data-transport="ep"
-                    class="bg-background/50 relative w-full rounded-lg border border-white/5 p-3 text-left transition-all duration-150 hover:scale-[1.02] hover:border-indigo-500/20 hover:bg-indigo-500/5 active:scale-[0.98]"
+                    class="bg-background/50 relative w-full rounded-lg border border-white/5 p-3 text-left transition-colors duration-150 hover:border-border-default/70 hover:bg-background/70"
                   >
                     <div class="text-sm font-medium">Epoxy</div>
                     <div class="text-text-secondary text-xs">Slower</div>
                     <span class="proxy-check absolute top-2 right-2 hidden">
-                      <i data-lucide="check-circle" class="h-4 w-4 text-[#6366f1]"></i>
+                      <i data-lucide="check-circle" class="h-4 w-4 text-[color:var(--accent)]"></i>
                     </span>
                   </button>
                   <button
                     data-transport="lc"
-                    class="bg-background/50 relative w-full rounded-lg border border-white/5 p-3 text-left transition-all duration-150 hover:scale-[1.02] hover:border-indigo-500/20 hover:bg-indigo-500/5 active:scale-[0.98]"
+                    class="bg-background/50 relative w-full rounded-lg border border-white/5 p-3 text-left transition-colors duration-150 hover:border-border-default/70 hover:bg-background/70"
                   >
                     <div class="text-sm font-medium">Libcurl</div>
                     <div class="text-text-secondary text-xs">Fastest</div>
                     <span class="proxy-check absolute top-2 right-2 hidden">
-                      <i data-lucide="check-circle" class="h-4 w-4 text-[#6366f1]"></i>
+                      <i data-lucide="check-circle" class="h-4 w-4 text-[color:var(--accent)]"></i>
                     </span>
                   </button>
                 </div>
@@ -272,9 +285,9 @@ if (STATIC) {
               />
             </div>
           </section>
-          <section id="advanced" data-section="advanced">
+          <section id="system" data-section="system">
             <h2 class="mb-4 flex items-center gap-2 text-base font-semibold">
-              <i data-lucide="wrench" class="h-5 w-5 text-amber-400"></i>Advanced
+              <i data-lucide="wrench" class="h-5 w-5 text-[color:var(--accent-light)]"></i>System
             </h2>
             <div class="space-y-3">
               <SettingsCard type="card" title="Wisp Server" desc="Change the websocket server URL">
@@ -284,7 +297,7 @@ if (STATIC) {
 
               <SettingsCard type="card">
                 <h3 class="mb-1.5 flex items-center gap-1.5 text-sm font-medium">
-                  <i data-lucide="alert-triangle" class="h-3.5 w-3.5 text-orange-400/80"></i>
+                  <i data-lucide="alert-triangle" class="h-3.5 w-3.5 text-[color:var(--accent-light)]/80"></i>
                   Reset settings to default
                 </h3>
                 <p class="text-text-secondary mb-2.5 text-xs">This action cannot be undone</p>
@@ -294,15 +307,13 @@ if (STATIC) {
           </section>
           <section id="about" data-section="about">
             <h2 class="mb-4 flex items-center gap-2 text-base font-semibold">
-              <i data-lucide="info" class="h-5 w-5 text-[#6366f1]"></i>About
+              <i data-lucide="info" class="h-5 w-5 text-[color:var(--accent)]"></i>About
             </h2>
             <div class="space-y-3">
               <SettingsCard type="card">
                 <div class="flex items-center gap-3">
-                  <div
-                    class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#6366f1]/15"
-                  >
-                    <i data-lucide="moon" class="h-5 w-5 text-[#6366f1]"></i>
+                  <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-[color:var(--accent)]/15">
+                    <i data-lucide="moon" class="h-5 w-5 text-[color:var(--accent)]"></i>
                   </div>
                   <h3 class="text-base font-semibold">{NAME} v{VERSION}</h3>
                 </div>
@@ -310,7 +321,7 @@ if (STATIC) {
 
               <SettingsCard type="card">
                 <h3 class="mb-3 flex items-center gap-1.5 text-xs font-semibold">
-                  <i data-lucide="badge-info" class="h-3.5 w-3.5 text-[#6366f1]"></i>Credits
+                  <i data-lucide="badge-info" class="h-3.5 w-3.5 text-[color:var(--accent)]"></i>Credits
                 </h3>
                 <div class="space-y-3 text-xs">
                   <div>
@@ -325,7 +336,7 @@ if (STATIC) {
                           href="https://github.com/bearcattt"
                           target="_blank"
                           rel="noopener noreferrer"
-                          class="transition-colors hover:text-[#6366f1]">Bearcattt</a
+                          class="transition-colors hover:text-[color:var(--accent)]">Bearcattt</a
                         >
                         <span class="text-text-secondary">Founder</span>
                       </div>
@@ -334,7 +345,7 @@ if (STATIC) {
                           href="https://github.com/cattreats"
                           target="_blank"
                           rel="noopener noreferrer"
-                          class="transition-colors hover:text-[#6366f1]">Shade</a
+                          class="transition-colors hover:text-[color:var(--accent)]">Shade</a
                         >
                         <span class="text-text-secondary">Owner & Moral Support</span>
                       </div>
@@ -343,7 +354,7 @@ if (STATIC) {
                           href="https://github.com/not-amplify"
                           target="_blank"
                           rel="noopener noreferrer"
-                          class="transition-colors hover:text-[#6366f1]">Amplify</a
+                          class="transition-colors hover:text-[color:var(--accent)]">Amplify</a
                         >
                         <span class="text-text-secondary">Co Owner & VPS host</span>
                       </div>

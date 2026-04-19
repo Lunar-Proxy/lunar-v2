@@ -2,17 +2,21 @@ import { writeFileSync, mkdirSync } from 'fs';
 import { join } from 'path';
 import http from 'http';
 import { execSync } from 'child_process';
+import fs from 'node:fs';
 
 const ROUTES = ['/', '/math', '/new', '/st', '/welcome'];
 const OUT_DIR = './dist/client';
 const wisp = 'wss://lunaron.top/w/'; // change to wtv to change wisp server
 
+if (!fs.existsSync('dist')) {
 console.log('Building...\n');
 execSync('pnpm build --static --wisp ' + wisp, { stdio: 'inherit' });
+}
+
+
 console.log('\nBuild complete, generating pages...\n');
 
 const { handler } = await import('./dist/server/entry.mjs');
-
 const server = http.createServer(handler);
 
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));

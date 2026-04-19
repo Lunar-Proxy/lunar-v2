@@ -26,14 +26,11 @@ const shortcuts: Shortcut[] = [
   {
     shortcuts.map(s => (
       <a
-        href={s.url}
         data-short={s.url}
-        class="shortcut-card group relative flex h-32 w-28 cursor-pointer flex-col items-center justify-center space-y-2 rounded-xl border p-3 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5"
-        style="background-color: rgba(31, 29, 46, 0.45); border-color: rgba(99, 102, 241, 0.15);"
+        class="shortcut-card group relative flex h-32 w-28 cursor-pointer flex-col items-center justify-center space-y-2 rounded-xl border border-border-default/70 bg-background-overlay/50 p-3 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5"
       >
         <div
-          class="flex h-13 w-13 items-center justify-center rounded-full border transition-colors"
-          style="background-color: rgba(58, 61, 96, 0.6); border-color: rgba(99, 102, 241, 0.2);"
+          class="flex h-13 w-13 items-center justify-center rounded-full border border-border-default/60 bg-background-disabled/55 transition-colors"
         >
           {s.svg ? (
             <Fragment set:html={s.svg} />
@@ -45,7 +42,7 @@ const shortcuts: Shortcut[] = [
             />
           )}
         </div>
-        <p class="text-center text-sm font-medium text-white/85 transition-colors group-hover:text-white">
+        <p class="text-text-secondary/85 group-hover:text-text-header text-center text-sm font-medium transition-colors">
           {s.name}
         </p>
       </a>

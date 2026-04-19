@@ -121,32 +121,32 @@ export class SettingsManager {
     doc.addEventListener('keydown', this.panicHandler);
   }
   static highlightEngine(btn: Element) {
-    btn.classList.add('bg-[#6366f1]/15', 'border-[#6366f1]/50');
+    btn.classList.add('bg-[color:var(--accent)]/15', 'border-[color:var(--accent)]/50');
     const check = btn.querySelector('.engine-check');
     if (check) check.classList.remove('hidden');
   }
   static unhighlightEngine(btn: Element) {
-    btn.classList.remove('bg-[#6366f1]/15', 'border-[#6366f1]/50');
+    btn.classList.remove('bg-[color:var(--accent)]/15', 'border-[color:var(--accent)]/50');
     const check = btn.querySelector('.engine-check');
     if (check) check.classList.add('hidden');
   }
   static highlightProxy(btn: Element) {
-    btn.classList.add('border-[#6366f1]', 'bg-[#6366f1]/10');
+    btn.classList.add('border-[color:var(--accent)]', 'bg-[color:var(--accent)]/10');
     const check = btn.querySelector('.proxy-check');
     if (check) check.classList.remove('hidden');
   }
   static unhighlightProxy(btn: Element) {
-    btn.classList.remove('border-[#6366f1]', 'bg-[#6366f1]/10');
+    btn.classList.remove('border-[color:var(--accent)]', 'bg-[color:var(--accent)]/10');
     const check = btn.querySelector('.proxy-check');
     if (check) check.classList.add('hidden');
   }
   static highlightTransport(btn: Element) {
-    btn.classList.add('border-[#6366f1]', 'bg-[#6366f1]/10');
+    btn.classList.add('border-[color:var(--accent)]', 'bg-[color:var(--accent)]/10');
     const check = btn.querySelector('.proxy-check');
     if (check) check.classList.remove('hidden');
   }
   static unhighlightTransport(btn: Element) {
-    btn.classList.remove('border-[#6366f1]', 'bg-[#6366f1]/10');
+    btn.classList.remove('border-[color:var(--accent)]', 'bg-[color:var(--accent)]/10');
     const check = btn.querySelector('.proxy-check');
     if (check) check.classList.add('hidden');
   }
@@ -176,21 +176,30 @@ export class SettingsManager {
     });
     ConfigAPI.get('transport').then(val => update(val === 'lc' ? 'lc' : 'ep'));
   }
+  static setActiveNav(target: string) {
+    document.querySelectorAll('[data-nav]').forEach(item => {
+      if (item.getAttribute('data-nav') === target) {
+        item.classList.remove('text-text-secondary');
+        item.classList.add('bg-[color:var(--accent)]/10', 'text-[color:var(--accent)]');
+      } else {
+        item.classList.remove('bg-[color:var(--accent)]/10', 'text-[color:var(--accent)]');
+        item.classList.add('text-text-secondary');
+      }
+    });
+  }
   static initNav() {
     const items = document.querySelectorAll('[data-nav]');
-    const activate = (item: Element, target: string) => {
-      items.forEach(n => {
-        n.classList.remove('bg-[#6366f1]/10', 'text-[#6366f1]');
-        n.classList.add('text-text-secondary');
-      });
-      item.classList.remove('text-text-secondary');
-      item.classList.add('bg-[#6366f1]/10', 'text-[#6366f1]');
-      const section = document.querySelector(`[data-section="${target}"]`);
+    const scrollToSection = (target: string, behavior: ScrollBehavior = 'smooth') => {
+      const section = document.querySelector(`[data-section="${target}"]`) as HTMLElement | null;
       if (!section) return;
       window.scrollTo({
-        top: section.getBoundingClientRect().top + window.pageYOffset - 20,
-        behavior: 'smooth',
+        top: Math.max(section.offsetTop - 20, 0),
+        behavior,
       });
+    };
+    const activate = (target: string, behavior: ScrollBehavior = 'smooth') => {
+      this.setActiveNav(target);
+      scrollToSection(target, behavior);
       try {
         history.replaceState(null, '', `#${target}`);
       } catch (_) {}
@@ -198,52 +207,63 @@ export class SettingsManager {
     items.forEach(item => {
       item.addEventListener('click', (e: Event) => {
         e.preventDefault();
-        activate(item, item.getAttribute('data-nav') || '');
+        const target = item.getAttribute('data-nav') || '';
+        if (!target) return;
+        activate(target, 'smooth');
       });
     });
     const hash = (window.location.hash || '').replace('#', '');
-    if (hash) {
-      const match = Array.from(items).find(i => i.getAttribute('data-nav') === hash);
-      if (match) activate(match, hash);
+    if (hash && document.querySelector(`[data-section="${hash}"]`)) {
+      this.setActiveNav(hash);
+      scrollToSection(hash, 'auto');
+      return;
     }
+    const first = items[0];
+    const firstTarget = first?.getAttribute('data-nav') || '';
+    if (first && firstTarget) this.setActiveNav(firstTarget);
   }
   static initScrollSpy() {
-    const sections = document.querySelectorAll('[data-section]');
-    const items = document.querySelectorAll('[data-nav]');
-    let active = 'privacy';
+    const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-section]'));
+    if (!sections.length) return;
+    let active = '';
     let ticking = false;
     const update = () => {
-      let current = 'privacy';
-      let last: Element | null = null;
-      sections.forEach(section => {
-        if (section.getBoundingClientRect().top <= 120)
-          current = section.getAttribute('data-section') || current;
-        last = section;
-      });
+      const topLine = 96;
+      let current = '';
+      let fallback = sections[0]?.getAttribute('data-section') || '';
+      for (const section of sections) {
+        const rect = section.getBoundingClientRect();
+        const id = section.getAttribute('data-section') || '';
+        if (!id) continue;
+        if (rect.top <= topLine) fallback = id;
+        if (rect.top <= topLine && rect.bottom > topLine) {
+          current = id;
+          break;
+        }
+      }
+      current = current || fallback;
       const root = document.documentElement as HTMLElement | null;
       if (root && window.innerHeight + window.scrollY >= root.scrollHeight - 2) {
-        current = (last as unknown as Element)?.getAttribute('data-section') || current;
+        current = sections[sections.length - 1]?.getAttribute('data-section') || current;
       }
       if (current !== active) {
         active = current;
-        items.forEach(item => {
-          if (item.getAttribute('data-nav') === active) {
-            item.classList.remove('text-text-secondary');
-            item.classList.add('bg-[#6366f1]/10', 'text-[#6366f1]');
-          } else {
-            item.classList.remove('bg-[#6366f1]/10', 'text-[#6366f1]');
-            item.classList.add('text-text-secondary');
-          }
-        });
+        this.setActiveNav(current);
+        try {
+          history.replaceState(null, '', `#${current}`);
+        } catch (_) {}
       }
       ticking = false;
     };
-    window.addEventListener('scroll', () => {
+    const onScroll = () => {
       if (!ticking) {
         requestAnimationFrame(update);
         ticking = true;
       }
-    });
+    };
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
   }
   static initToggles() {
     document.querySelectorAll('.toggle').forEach(toggle => {
@@ -410,7 +430,7 @@ export class SettingsManager {
     input.addEventListener('focus', () => {
       recording = true;
       input.value = 'Press keys...';
-      input.classList.add('border-[#6366f1]/50', 'ring-2', 'ring-[#6366f1]/20');
+      input.classList.add('border-[color:var(--accent)]/50', 'ring-2', 'ring-[color:var(--accent)]/20');
     });
     input.addEventListener('keydown', async e => {
       if (!recording) return;
@@ -441,7 +461,7 @@ export class SettingsManager {
     });
     input.addEventListener('blur', () => {
       recording = false;
-      input.classList.remove('border-[#6366f1]/50', 'ring-2', 'ring-[#6366f1]/20');
+      input.classList.remove('border-[color:var(--accent)]/50', 'ring-2', 'ring-[color:var(--accent)]/20');
       if (input.value === 'Press keys...') {
         ConfigAPI.get('panicKeyBind').then(saved => {
           input.value = saved ? this.formatKeybind(saved as string) : '';
