@@ -1,6 +1,7 @@
 ---
 import '@/main.css';
 import ImportLucide from '../layouts/lucide.astro';
+import DevConsole from '../components/DevConsole.astro';
 ---
 
 <!doctype html>
@@ -27,6 +28,7 @@ import ImportLucide from '../layouts/lucide.astro';
     </style>
     <script src="@scripts/config"></script>
     <script src="@scripts/index"></script>
+    <script src="@scripts/devconsole"></script>
     <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-DQZPCVEF89"></script>
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
@@ -75,5 +77,6 @@ import ImportLucide from '../layouts/lucide.astro';
       </div>
     </div>
     <ImportLucide />
+    <DevConsole />
   </body>
 </html>

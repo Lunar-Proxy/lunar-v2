@@ -1,0 +1,101 @@
+---
+---
+
+<div id="dev-console" class="fixed bottom-0 left-0 right-0 z-[1000] max-w-4xl mx-auto h-96 bg-gray-900/95 backdrop-blur-lg border-t border-gray-700 shadow-2xl transition-all duration-300 ease-in-out" style="transform: translateY(100%); opacity: 0; pointer-events: none;">
+  <div class="flex items-center justify-between p-4 border-b border-gray-700">
+    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+      <i data-lucide="bug" class="w-5 h-5"></i>
+      Developer Console
+    </h3>
+    <div class="flex items-center gap-2">
+      <button id="clear-log" class="px-3 py-1 text-sm bg-gray-700 text-white rounded hover:bg-gray-600 transition-colors">Clear</button>
+      <button id="exec-btn" class="px-4 py-1 bg-blue-600 text-white rounded hover:bg-blue-500 transition-colors">Exec</button>
+      <button id="close-console" class="p-1 text-gray-400 hover:text-white rounded hover:bg-gray-700 transition-colors">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </div>
+  <div class="flex h-full font-mono">
+    <textarea 
+      id="js-input" 
+      placeholder="Enter JavaScript code to execute in iframe (Ctrl+Enter)..."
+      class="flex-1 resize-none p-3 text-sm bg-gray-800 text-white border-r border-gray-700 focus:outline-none focus:ring-2 ring-blue-500/50 font-mono"
+    ></textarea>
+    <div id="output-log" class="w-80 p-3 bg-gray-900 text-xs overflow-auto text-green-400 border-l border-gray-700 font-mono max-h-full">
+      Ready...
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  // Inline bootstrap for console
+  (function() {
+    const devConsole = document.getElementById('dev-console');
+    const toggleBtn = document.getElementById('devtools-toggle');
+    const input = document.getElementById('js-input');
+    const output = document.getElementById('output-log');
+    const execBtn = document.getElementById('exec-btn');
+    const closeBtn = document.getElementById('close-console');
+    const clearBtn = document.getElementById('clear-log');
+    const frame = document.getElementById('frame');
+    
+    function toggle() {
+      const open = devConsole.style.transform === 'translateY(0px)';
+      if (open) {
+        devConsole.style.transform = 'translateY(100%)';
+        devConsole.style.opacity = '0';
+        devConsole.style.pointerEvents = 'none';
+      } else {
+        devConsole.style.transform = 'translateY(0px)';
+        devConsole.style.opacity = '1';
+        devConsole.style.pointerEvents = 'auto';
+        input.focus();
+      }
+    }
+    
+    function log(msg) {
+      const div = document.createElement('div');
+      div.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+      output.appendChild(div);
+      output.scrollTop = output.scrollHeight;
+    }
+    
+    function exec(code) {
+      if (!frame || !frame.contentWindow) {
+        log('Error: Iframe not loaded');
+        return;
+      }
+      log(`Executing: ${code}`);
+      try {
+        frame.contentWindow.postMessage({type: 'DEV_EXEC', code}, '*');
+        log('Sent to iframe');
+      } catch (e) {
+        log(`Error: ${e.message}`);
+      }
+    }
+    
+    if (toggleBtn) toggleBtn.onclick = toggle;
+    if (closeBtn) closeBtn.onclick = toggle;
+    if (execBtn) execBtn.onclick = () => exec(input.value.trim());
+    if (clearBtn) clearBtn.onclick = () => output.innerHTML = '';
+    if (input) {
+      input.onkeydown = (e) => {
+        if (e.ctrlKey && e.key === 'Enter') exec(input.value.trim());
+      };
+    }
+    
+    // Shortcut
+    document.onkeydown = (e) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'I') {
+        e.preventDefault();
+        toggle();
+      }
+    };
+    
+    // Results
+    window.addEventListener('message', (e) => {
+      if (e.data.type === 'DEV_RESULT') log(`Result: ${e.data.result || e.data.error}`);
+    });
+  })();
+</script>
+

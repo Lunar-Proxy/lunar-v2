@@ -50,4 +50,14 @@
   body {
     @apply bg-background;
   }
+
+  /* DevConsole styles */
+  #js-input {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  }
+  
+  #output-log {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    max-height: 100%;
+  }
 }
