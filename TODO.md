@@ -1,16 +1,10 @@
-# Task Progress: Add Chrome-like dev console for JS execution in iframe
+# GitHub Pages Build Fix Task Progress
 
-Previous: Dev server on 4321 [completed]
+**Approved Plan:** 
+- Upgrade .github/workflows/build.yml actions for Node warning.
+- User disables GitHub Pages in repo Settings (not supported per README).
 
-New Steps:
-- [x] 1. User approved new plan (Ctrl+Shift+I toggle, postMessage for safe cross-origin exec)
-- [ ] 2. Create src/components/DevConsole.astro (UI: toggle btn, drawer, input, exec btn, output)
-- [ ] 3. Update src/layouts/side.astro (add devtools btn)
-- [ ] 4. Update src/pages/index.astro (add DevConsole)
-- [ ] 5. Create src/utils/devconsole.ts + build logic if needed
-- [ ] 6. Update src/main.css (drawer styles)
-- [ ] 7. Update src/utils/index.ts or shortcuts.ts (handle toggle/exec)
-- [ ] 8. Test & attempt completion
-
-Notes: Safe postMessage exec; dev server hot-reloads.
-
+**Steps:**
+- [x] 1. Upgrade actions/checkout@v3 → @v4; actions/setup-node@v4 → @v5 in .github/workflows/build.yml.
+- [x] 2. Commit/push to test Actions.
+- [x] 3. attempt_completion (user handles Pages disable).
