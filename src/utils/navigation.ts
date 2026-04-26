@@ -28,16 +28,21 @@ const hist = new Map<string, { stack: string[]; idx: number }>();
 
 let wisp: string;
 
+async function ensureTransport() {
+  if (!wisp) wisp = await ConfigAPI.get('wispUrl');
+  const conn = new BareMux.BareMuxConnection('/bm/worker.js');
+  try {
+    const trans = await conn.getTransport();
+    if (trans === '/lc/index.mjs') return;
+  } catch {}
+  await conn.setTransport('/lc/index.mjs', [{ wisp }]);
+}
+
 async function setup() {
   wisp = await ConfigAPI.get('wispUrl');
   scramjetWrapper.init();
   await navigator.serviceWorker.register('./sw.js');
-  
-  const conn = new BareMux.BareMuxConnection('/bm/worker.js');
-  const trans = await conn.getTransport();
-  if (trans !== '/lc/index.mjs') {
-    await conn.setTransport('/lc/index.mjs', [{ wisp }]);
-  }
+  await ensureTransport();
 }
 
 function frame(): HTMLIFrameElement | null {
@@ -73,9 +78,10 @@ function record(url: string) {
 function nav(url: string, save = true) {
   const f = frame();
   if (!f) return;
-  
+
   if (save) record(url);
   f.src = url;
+  void TabManager.saveTabs();
 }
 
 function back() {
@@ -133,19 +139,21 @@ function norm(url: string): string {
 async function sync() {
   const f = frame();
   if (!f) return;
-  
+
   record(f.src);
-  
+
   const s = strip(f.src);
   const d = await decode(s);
   const bm = (await ConfigAPI.get('bm')) || [];
   const active = bm.some((b: any) => norm(b.redir) === norm(d));
-  
+
   const svg = favBtn?.querySelector('svg');
   if (svg) {
     svg.style.fill = active ? '#a8a3c7' : 'none';
     svg.style.stroke = active ? '#a8a3c7' : '';
   }
+
+  void TabManager.saveTabs();
 }
 
 async function toggleFav() {
@@ -190,12 +198,8 @@ async function submit() {
     return;
   }
   
-  const conn = new BareMux.BareMuxConnection('/bm/worker.js');
-  const trans = await conn.getTransport();
-  if (trans !== '/lc/index.mjs') {
-    await conn.setTransport('/lc/index.mjs', [{ wisp }]);
-  }
-  
+  await ensureTransport();
+
   const val = await validateUrl(v);
   const backend = await ConfigAPI.get('backend');
   
@@ -291,3 +295,5 @@ if (sidebar) {
 TabManager.onUrlChange(sync);
 
 setup();
+
+export { ensureTransport };

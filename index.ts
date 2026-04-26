@@ -24,8 +24,9 @@ const port = Number(process.env.PORT) || 6060;
 logging.set_level(logging.ERROR);
 Object.assign(wisp.options, {
   dns_method: 'resolve',
-  dns_servers: ['1.1.1.3', '1.0.0.3'],
+  dns_servers: ['1.1.1.1', '1.0.0.1'],
   dns_result_order: 'ipv4first',
+  dns_ttl: 300000, // 5 min in ms (wisp-js compares ms timestamps against this value)
   wisp_version: 2,
   wisp_motd: 'wisp server',
 });

@@ -7,6 +7,41 @@ const { ScramjetServiceWorker } = $scramjetLoadWorker();
 const scramjet = new ScramjetServiceWorker();
 const v = new UVServiceWorker();
 
+// Ensure cookies are loaded from IndexedDB before handling any requests.
+// ScramjetServiceWorker loads cookies async in its constructor, but fetch
+// events can fire before that completes, causing requests to go out without
+// cookies (which makes sites log the user out).
+let cookiesReady = false;
+const cookiesLoaded = (async () => {
+  try {
+    // Wait for Scramjet's internal IDB cookie load to complete.
+    // The constructor opens "$scramjet" DB and reads "cookies" store.
+    // We mirror that read to ensure it's done before serving fetches.
+    const db = await new Promise((resolve) => {
+      const req = indexedDB.open('$scramjet', 1);
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => resolve(null);
+    });
+    if (!db) { cookiesReady = true; return; }
+    const tx = db.transaction('cookies', 'readonly');
+    const store = tx.objectStore('cookies');
+    await new Promise((resolve, reject) => {
+      const req = store.get('cookies');
+      req.onsuccess = () => {
+        if (req.result) {
+          scramjet.cookieStore.load(req.result);
+        }
+        resolve();
+      };
+      req.onerror = () => resolve(); // don't block on error
+    });
+    db.close();
+  } catch {
+    // If IDB fails, continue without cookies rather than blocking forever
+  }
+  cookiesReady = true;
+})();
+
 self.addEventListener('message', event => {
   const { type, data } = event.data || {};
   if (type === 'playgroundData') playgroundData = event.data;
@@ -26,20 +61,10 @@ const BLOCK_RULES = [
   '**://*.amazon-adsystem.com/**',
   '**://*.adcolony.com/**',
   '**://*.unityads.unity3d.com/**',
-  '**://*.facebook.com/**',
-  '**://*.facebook.net/**',
+  '**://pixel.facebook.com/**',
+  '**://connect.facebook.net/*/fbevents.js',
   '**://*.ads-twitter.com/**',
   '**://ads-api.twitter.com/**',
-  '**://*.linkedin.com/**',
-  '**://*.pinterest.com/**',
-  '**://*.reddit.com/**',
-  '**://*.redditmedia.com/**',
-  '**://*.tiktok.com/**',
-  '**://*.byteoversea.com/**',
-  '**://*.yahoo.com/**',
-  '**://*.yahooinc.com/**',
-  '**://*.yandex.ru/**',
-  '**://*.yandex.net/**',
   '**://*.hotjar.com/**',
   '**://*.hotjar.io/**',
   '**://*.mouseflow.com/**',
@@ -49,20 +74,7 @@ const BLOCK_RULES = [
   '**://*.bugsnag.com/**',
   '**://*.sentry.io/**',
   '**://*.sentry-cdn.com/**',
-  '**://*.realme.com/**',
-  '**://*.realmemobile.com/**',
-  '**://*.xiaomi.com/**',
-  '**://*.miui.com/**',
-  '**://*.oppomobile.com/**',
-  '**://*.hicloud.com/**',
-  '**://*.oneplus.net/**',
-  '**://*.oneplus.cn/**',
-  '**://*.samsung.com/**',
   '**://*.2o7.net/**',
-  '**://*.apple.com/**',
-  '**://*.icloud.com/**',
-  '**/cdn-cgi/**',
-  '**://*.mzstatic.com/**',
   '**://*.google-analytics.com/**',
   '**://analytics.google.com/**',
   '**://ssl.google-analytics.com/**',
@@ -121,10 +133,10 @@ function isAdRequest(url, request) {
 }
 
 async function handleFetch(event) {
+  if (!cookiesReady) await cookiesLoaded;
   await scramjet.loadConfig();
   const url = event.request.url;
-  const cdnCgiRegex = /\/cdn-cgi\//i;
-  if ((adblockEnabled && isAdRequest(url, event.request)) || cdnCgiRegex.test(url)) {
+  if (adblockEnabled && isAdRequest(url, event.request)) {
     return new Response(null, { status: 204 });
   }
 

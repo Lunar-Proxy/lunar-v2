@@ -10,6 +10,13 @@ interface Tab {
   el?: HTMLDivElement;
   titleTimer?: number;
   isReady: boolean;
+  pendingSrc?: string; // lazy load: URL to load when tab is first activated
+}
+
+interface SavedTab {
+  url: string;
+  title: string;
+  favicon: string;
 }
 
 const internalRoutes: Record<string, string> = {
@@ -35,21 +42,165 @@ let onUrlChange: ((href: string) => void) | null = null;
 let tabBar: HTMLDivElement | null = null;
 let frameContainer: HTMLDivElement | null = null;
 const faviconCache = new Map<string, string>();
+let isRestoring = false;
+
+const reverseInternalRoutes = Object.fromEntries(
+  Object.entries(internalRoutes).map(([k, v]) => [v, k]),
+);
+
+function getPersistableUrl(tab: Tab): string | null {
+  try {
+    const href = tab.iframe?.contentWindow?.location.href || tab.iframe?.src;
+    if (!href) return null;
+
+    const url = new URL(href, location.origin);
+    const pathname = url.pathname;
+
+    // Check internal routes
+    const route = reverseInternalRoutes[pathname];
+    if (route) return route;
+
+    // Skip blank/new tabs early
+    if (pathname === '/new' || pathname === '/' || href === 'about:blank') return null;
+
+    // Only attempt decode if it looks like a proxy path
+    const scPrefix = scramjetWrapper.getConfig().prefix;
+    const uvPrefix = vWrapper.getConfig().prefix;
+    const isProxyPath = pathname.startsWith(scPrefix) || pathname.startsWith(uvPrefix);
+
+    if (isProxyPath) {
+      const decoded = decodeProxyUrl(pathname);
+      // Only persist if we got a valid canonical URL back
+      if (decoded && /^https?:\/\//.test(decoded)) return decoded;
+      // Could not decode — don't persist garbage
+      return null;
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+async function resolveRestoredUrl(saved: string): Promise<string> {
+  // Internal routes
+  if (internalRoutes[saved]) return internalRoutes[saved];
+
+  // External URL — encode with current backend
+  return encodeProxyUrl(saved);
+}
+
+async function saveTabs(): Promise<void> {
+  if (isRestoring) return;
+  try {
+    const saved: SavedTab[] = [];
+    for (const tab of tabs) {
+      const url = tab.pendingSrc
+        ? tab.pendingSrc // lazy tab — save the pending URL as-is (already canonical)
+        : getPersistableUrl(tab);
+      if (url) {
+        saved.push({
+          url,
+          title: tab.title || 'New Tab',
+          favicon: tab.favicon || defaultIcon,
+        });
+      }
+    }
+    const activeIndex = tabs.findIndex(t => t.id === activeId);
+    await ConfigAPI.set('savedTabs', saved);
+    await ConfigAPI.set('activeTabIndex', Math.max(0, activeIndex));
+  } catch (err) {
+    console.warn('[Lunar] Failed to save tabs:', err);
+  }
+}
+
+async function restoreTabs(): Promise<void> {
+  isRestoring = true;
+  try {
+    const saved = await ConfigAPI.get('savedTabs');
+    if (!Array.isArray(saved) || saved.length === 0) {
+      openTab();
+      return;
+    }
+
+    // Support both old format (string[]) and new format (SavedTab[])
+    const entries: SavedTab[] = saved
+      .map((entry: unknown) => {
+        if (typeof entry === 'string') {
+          let title = entry;
+          try { title = entry.startsWith('lunar://') ? entry : new URL(entry).hostname; } catch {}
+          return { url: entry, title, favicon: defaultIcon };
+        }
+        if (entry && typeof entry === 'object' && 'url' in entry) return entry as SavedTab;
+        return null;
+      })
+      .filter((e): e is SavedTab => e !== null && typeof e.url === 'string' && e.url.length > 0);
+
+    if (entries.length === 0) {
+      openTab();
+      return;
+    }
+
+    // Ensure transport is ready before loading any proxy content
+    try {
+      const { ensureTransport } = await import('./navigation');
+      await ensureTransport();
+    } catch {}
+
+    const savedIndex = (await ConfigAPI.get('activeTabIndex')) as number | null;
+    const activeIdx = typeof savedIndex === 'number' && savedIndex < entries.length ? savedIndex : 0;
+
+    for (let i = 0; i < entries.length; i++) {
+      const { url, title, favicon } = entries[i];
+      const isActive = i === activeIdx;
+
+      try {
+        if (isActive) {
+          // Active tab: load immediately
+          const resolved = await resolveRestoredUrl(url);
+          openTab(resolved, { activate: true, persist: false, initialTitle: title, initialFavicon: favicon });
+        } else {
+          // Inactive tabs: create lazy — don't load until clicked
+          openTab(undefined, {
+            activate: false,
+            persist: false,
+            initialTitle: title,
+            initialFavicon: favicon,
+            lazySrc: url,
+          });
+        }
+      } catch {
+        // Skip invalid tab
+      }
+    }
+
+    if (tabs.length === 0) openTab();
+  } catch (err) {
+    console.warn('[Lunar] Failed to restore tabs:', err);
+    if (tabs.length === 0) openTab();
+  } finally {
+    isRestoring = false;
+  }
+}
 
 function nextId() {
   return idCounter++;
 }
 
 function decodeProxyUrl(path: string): string {
-  const scPrefix = scramjetWrapper.getConfig().prefix;
-  const uvPrefix = vWrapper.getConfig().prefix;
-  if (path.startsWith(scPrefix)) {
-    const encoded = path.slice(scPrefix.length);
-    return decodeURIComponent(scramjetWrapper.getConfig().codec.decode(encoded) || '');
-  }
-  if (path.startsWith(uvPrefix)) {
-    return vWrapper.getConfig().decodeUrl(path.slice(uvPrefix.length));
-  }
+  try {
+    const scPrefix = scramjetWrapper.getConfig().prefix;
+    const uvPrefix = vWrapper.getConfig().prefix;
+    if (path.startsWith(scPrefix)) {
+      const encoded = path.slice(scPrefix.length);
+      // codec.decode already calls decodeURIComponent — don't double-decode
+      const decoded = scramjetWrapper.getConfig().codec.decode(encoded);
+      return decoded || '';
+    }
+    if (path.startsWith(uvPrefix)) {
+      return vWrapper.getConfig().decodeUrl(path.slice(uvPrefix.length));
+    }
+  } catch {}
   return '';
 }
 
@@ -291,18 +442,19 @@ function updateActive() {
 function closeTab(id: number) {
   const idx = tabs.findIndex(t => t.id === id);
   if (idx === -1) return;
-  
+
   if (tabs.length === 1) {
-    openTab();
+    openTab(undefined, { persist: false });
     requestAnimationFrame(() => {
       const [removed] = tabs.splice(idx, 1);
       if (removed.titleTimer) clearInterval(removed.titleTimer);
       removed.iframe.remove();
       renderTabs();
+      void saveTabs();
     });
     return;
   }
-  
+
   const [removed] = tabs.splice(idx, 1);
   if (removed.titleTimer) clearInterval(removed.titleTimer);
   removed.iframe.remove();
@@ -311,6 +463,7 @@ function closeTab(id: number) {
     switchTab(newActiveId);
   }
   renderTabs();
+  void saveTabs();
 }
 
 function showLoader() {
@@ -350,20 +503,36 @@ function resetLoader() {
   hideLoader();
 }
 
-function openTab(src?: string) {
+interface OpenTabOpts {
+  activate?: boolean;
+  persist?: boolean;
+  initialTitle?: string;
+  initialFavicon?: string;
+  lazySrc?: string; // canonical URL to load when tab is first activated
+}
+
+function openTab(src?: string, opts?: OpenTabOpts) {
+  const {
+    activate = true,
+    persist = true,
+    initialTitle = 'New Tab',
+    initialFavicon = defaultIcon,
+    lazySrc,
+  } = opts ?? {};
   const id = nextId();
 
   if (!frameContainer) {
-    document.addEventListener('DOMContentLoaded', () => openTab(src), { once: true });
+    document.addEventListener('DOMContentLoaded', () => openTab(src, opts), { once: true });
     return;
   }
 
   const tab: Tab = {
     id,
-    title: 'New Tab',
-    favicon: defaultIcon,
+    title: initialTitle,
+    favicon: initialFavicon,
     iframe: null as any,
     isReady: false,
+    ...(lazySrc ? { pendingSrc: lazySrc } : {}),
   };
 
   tabs.push(tab);
@@ -383,12 +552,20 @@ function openTab(src?: string) {
     }
   }
 
+  // Lazy tabs: don't create iframe until activated
+  if (lazySrc && !activate) {
+    // Tab element is in the tab bar but no iframe yet — will load on switchTab
+    return;
+  }
+
   requestAnimationFrame(() => {
     const frame = createFrame(id, src);
     tab.iframe = frame;
     frameContainer!.appendChild(frame);
 
-    switchTab(id);
+    if (activate) {
+      switchTab(id);
+    }
 
     const urlInput = document.getElementById('urlbar') as HTMLInputElement | null;
     if (urlInput && (!src || src === 'new')) urlInput.value = '';
@@ -396,6 +573,7 @@ function openTab(src?: string) {
     frame.onload = () => {
       handleFrameLoad(tab);
       resetLoader();
+      if (persist) void saveTabs();
     };
     frame.onerror = resetLoader;
   });
@@ -410,6 +588,35 @@ function switchTab(id: number) {
   }
 
   prevHref = '';
+
+  // Lazy load: if this tab has a pending URL but no iframe yet, create it now
+  const lazyTab = tabs.find(t => t.id === id);
+  if (lazyTab && lazyTab.pendingSrc && !lazyTab.iframe) {
+    const pending = lazyTab.pendingSrc;
+    delete lazyTab.pendingSrc;
+
+    // Ensure transport is ready before loading proxy content
+    (async () => {
+      try {
+        const { ensureTransport } = await import('./navigation');
+        await ensureTransport();
+      } catch {}
+      const resolved = await resolveRestoredUrl(pending);
+      if (!frameContainer) return;
+      const frame = createFrame(id, resolved);
+      lazyTab.iframe = frame;
+      frameContainer.appendChild(frame);
+      frame.classList.remove('hidden');
+
+      frame.onload = () => {
+        handleFrameLoad(lazyTab);
+        resetLoader();
+        void saveTabs();
+      };
+      frame.onerror = resetLoader;
+      showLoader();
+    })();
+  }
 
   for (const tab of tabs) {
     if (tab.iframe) tab.iframe.classList.toggle('hidden', tab.id !== id);
@@ -503,7 +710,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tab = tabs.find(t => t.id === activeId);
     if (tab?.iframe?.contentDocument?.readyState === 'complete') resetLoader();
   }, 400);
-  openTab();
+  restoreTabs();
 });
 
 function cleanup() {
@@ -530,6 +737,7 @@ export const TabManager = {
     if (id !== null) switchTab(id);
   },
   openTab,
+  saveTabs,
   onUrlChange: (cb: (href: string) => void) => {
     onUrlChange = cb;
   },
