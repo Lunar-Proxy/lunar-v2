@@ -17,10 +17,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const ampm = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12 || 12;
 
-    hoursEl && (hoursEl.textContent = hours.toString().padStart(2, '0'));
-    minutesEl && (minutesEl.textContent = minutes.toString().padStart(2, '0'));
-    secondsEl && (secondsEl.textContent = seconds.toString().padStart(2, '0'));
-    ampmEl && (ampmEl.textContent = ampm);
+    const hs = hours.toString().padStart(2, '0');
+    const ms = minutes.toString().padStart(2, '0');
+    const ss = seconds.toString().padStart(2, '0');
+
+    if (hoursEl && hoursEl.textContent !== hs) hoursEl.textContent = hs;
+    if (minutesEl && minutesEl.textContent !== ms) minutesEl.textContent = ms;
+    if (secondsEl && secondsEl.textContent !== ss) secondsEl.textContent = ss;
+    if (ampmEl && ampmEl.textContent !== ampm) ampmEl.textContent = ampm;
   }
 
   async function pingServer(url: string) {
