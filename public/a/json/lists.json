@@ -24,6 +24,12 @@
       "icon": "/a/images/ga/r3.webp",
       "url": "https://www.coolmathgames.com/0-run-3/play"
     },
+     {
+      "name": "Krunker (Private Server)",
+      "desc": "Shoot epeople in a private server",
+      "icon": "/a/images/ga/kr.png",
+      "url": "https://totallynotio.krunker.zip"
+    },
     {
       "name": "Moto X3M",
       "desc": "Experience thrilling bike stunts and challenges.",
