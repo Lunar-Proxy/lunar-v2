@@ -1,13 +1,9 @@
 ![Lunar](./lunar.svg)
 
 <p align="left">
-  <a href="https://discord.gg/fuPtWjYuf8">
-    <img src="https://skillicons.dev/icons?i=discord" alt="Join our Discord">
-  </a>
+  <a href="https://discord.gg/fuPtWjYuf8"><img src="https://skillicons.dev/icons?i=discord" alt="Join our Discord"></a>
   &nbsp;
-  <a href="https://github.com/lunar-proxy/lunar-v2">
-    <img src="https://skillicons.dev/icons?i=github" alt="View on GitHub">
-  </a>
+  <a href="https://github.com/lunar-proxy/lunar-v2"><img src="https://skillicons.dev/icons?i=github" alt="View on GitHub"></a>
 </p>
 
 #
@@ -34,13 +30,9 @@
 > Lunar **cannot** be deployed to Netlify, Vercel, GitHub Pages, or any other static hosting platform.
 
 <p>
-  <a href="https://render.com/deploy?repo=https://github.com/lunar-proxy/lunar-v2">
-    <img src="https://raw.githubusercontent.com/BinBashBanana/deploy-buttons/main/buttons/remade/render.svg" alt="Deploy to Render">
-  </a>
+  <a href="https://render.com/deploy?repo=https://github.com/lunar-proxy/lunar-v2"><img src="https://raw.githubusercontent.com/BinBashBanana/deploy-buttons/main/buttons/remade/render.svg" alt="Deploy to Render"></a>
   &nbsp;
-  <a href="https://app.koyeb.com/services/deploy?type=git&repository=github.com/lunar-proxy/lunar-v2&builder=dockerfile&instance_type=free&regions=was&ports=8080%3Bhttp%3B%2F">
-    <img src="https://binbashbanana.github.io/deploy-buttons/buttons/remade/koyeb.svg" alt="Deploy to Koyeb">
-  </a>
+  <a href="https://app.koyeb.com/services/deploy?type=git&repository=github.com/lunar-proxy/lunar-v2&builder=dockerfile&instance_type=free&regions=was&ports=8080%3Bhttp%3B%2F"><img src="https://binbashbanana.github.io/deploy-buttons/buttons/remade/koyeb.svg" alt="Deploy to Koyeb"></a>
 </p>
 
 ---
@@ -106,9 +98,7 @@ Need help or ran into an issue?
 Huge thanks to everyone who has contributed to Lunar.
 
 <p>
-  <a href="https://github.com/lunar-proxy/lunar-v2/graphs/contributors">
-    <img src="https://contrib.rocks/image?repo=lunar-proxy/lunar-v2" alt="Contributors">
-  </a>
+  <a href="https://github.com/lunar-proxy/lunar-v2/graphs/contributors"><img src="https://contrib.rocks/image?repo=lunar-proxy/lunar-v2" alt="Contributors"></a>
 </p>
 
 Lunar is a suborganisation of [Night Network](https://github.com/Night-N3twork/).  
