@@ -348,6 +348,12 @@
       "icon": "/a/images/ga/krunker.jpg",
       "url": "https://krunker.io/"
     },
+      {
+      "name": "Krunker [Private Server]",
+      "desc": "Fast-paced browser FPS game.",
+      "icon": "/a/images/ga/pskrunker.png",
+      "url": "https://totallynotio.krunker.zip"
+    },
     {
       "name": "Vex 5",
       "desc": "Parkour platformer with challenging levels.",
